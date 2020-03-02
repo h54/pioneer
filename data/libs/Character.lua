@@ -1,4 +1,4 @@
--- Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 --
@@ -47,11 +47,11 @@
 -- and counted with the # operator.  The player's sheet is stored as
 -- Character.persistent.player, and is the special case.
 
-local Engine = import("Engine")
-local Game = import("Game")
-local Event = import("Event")
-local NameGen = import("NameGen")
-local Serializer = import("Serializer")
+local Engine = require 'Engine'
+local Game = require 'Game'
+local Event = require 'Event'
+local NameGen = require 'NameGen'
+local Serializer = require 'Serializer'
 
 local Character;
 Character = {

@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _COLLISION_SPACE
@@ -39,7 +39,7 @@ public:
 		sphere.userData = user_data;
 	}
 	void FlagRebuildObjectTrees() { m_needStaticGeomRebuild = true; }
-	void RebuildObjectTrees();
+	inline void RebuildObjectTrees();
 
 	// Geoms with the same handle will not be collision tested against each other
 	// should be used for geoms that are part of the same body
@@ -60,6 +60,8 @@ private:
 	BvhTree *m_staticObjectTree;
 	BvhTree *m_dynamicObjectTree;
 	Sphere sphere;
+
+	int m_oldGeomsNumber;
 
 	static int s_nextHandle;
 };

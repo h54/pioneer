@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "SystemBody.h"
@@ -465,6 +465,27 @@ bool SystemBody::IsPlanet() const
 	} else {
 		return false;
 	}
+}
+
+void CollectSystemBodies(SystemBody *sb, std::vector<SystemBody*> &sb_vector)
+{
+	for (SystemBody *body : sb->GetChildren()) {
+		sb_vector.push_back(body);
+		if (sb->HasChildren()) CollectSystemBodies(body, sb_vector);
+	}
+}
+
+const std::vector<SystemBody *> SystemBody::CollectAllChildren()
+{
+	std::vector<SystemBody*> sb_vector;
+	// At least avoid initial reallocations
+	sb_vector.reserve(m_children.size());
+
+	for (SystemBody *sbody : m_children) {
+		sb_vector.push_back(sbody);
+		if (HasChildren()) CollectSystemBodies(this, sb_vector);
+	}
+	return sb_vector;
 }
 
 double SystemBody::GetMaxChildOrbitalDistance() const

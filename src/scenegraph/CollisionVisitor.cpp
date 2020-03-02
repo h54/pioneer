@@ -1,12 +1,13 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "CollisionVisitor.h"
-#include "CollMesh.h"
+
 #include "CollisionGeometry.h"
 #include "Group.h"
 #include "MatrixTransform.h"
 #include "StaticGeometry.h"
+#include "collider/GeomTree.h"
 
 namespace SceneGraph {
 	CollisionVisitor::CollisionVisitor() :

@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "ShipCpanelMultiFuncDisplays.h"
@@ -7,8 +7,6 @@
 #include "HyperspaceCloud.h"
 #include "KeyBindings.h"
 #include "Lang.h"
-#include "LuaConstants.h"
-#include "LuaTable.h"
 #include "Missile.h"
 #include "Pi.h"
 #include "Player.h"
@@ -20,6 +18,8 @@
 #include "graphics/Renderer.h"
 #include "graphics/VertexArray.h"
 #include "libs.h"
+#include "lua/LuaConstants.h"
+#include "lua/LuaTable.h"
 #include "sound/Sound.h"
 
 using namespace Graphics;

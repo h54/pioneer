@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "StarSystem.h"
@@ -10,10 +10,10 @@
 #include "EnumStrings.h"
 #include "GameSaveError.h"
 #include "Lang.h"
-#include "LuaEvent.h"
 #include "Orbit.h"
 #include "StringF.h"
 #include "enum_table.h"
+#include "lua/LuaEvent.h"
 #include "utils.h"
 #include <SDL_stdinc.h>
 #include <algorithm>
@@ -503,7 +503,7 @@ void StarSystem::ExportToLua(const char *filename)
 	if (f == 0)
 		return;
 
-	fprintf(f, "-- Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details\n");
+	fprintf(f, "-- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details\n");
 	fprintf(f, "-- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt\n\n");
 
 	std::string stars_in_system = GetStarTypes(m_rootBody.Get());

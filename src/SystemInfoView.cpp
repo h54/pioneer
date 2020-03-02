@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "SystemInfoView.h"
@@ -12,7 +12,6 @@
 #include "StringF.h"
 #include "galaxy/Factions.h"
 #include "galaxy/Galaxy.h"
-#include "galaxy/Sector.h"
 #include "galaxy/SystemPath.h"
 #include "galaxy/Polit.h"
 #include "graphics/Drawables.h"

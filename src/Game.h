@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _GAME_H
@@ -6,10 +6,10 @@
 
 #include "JsonFwd.h"
 #include "galaxy/Galaxy.h"
+#include "galaxy/SystemPath.h"
 #include "gameconsts.h"
 #include <string>
 
-class SystemPath;
 class GameLog;
 class HyperspaceCloud;
 class Player;
@@ -34,8 +34,6 @@ class SystemInfoView;
 class SystemView;
 class WorldView;
 class DeathView;
-class UIView;
-class UIView;
 class ShipCpanel;
 class ObjectViewerView;
 
@@ -50,7 +48,7 @@ public:
 	static void SaveGame(const std::string &filename, Game *game);
 
 	// start docked in station referenced by path or nearby to body if it is no station
-	Game(const SystemPath &path, double time = 0.0);
+	Game(const SystemPath &path, const double startDateTime = 0.0);
 
 	// load game
 	Game(const Json &jsonObj);
@@ -61,8 +59,8 @@ public:
 	void ToJson(Json &jsonObj);
 
 	// various game states
-	bool IsNormalSpace() const { return m_state == STATE_NORMAL; }
-	bool IsHyperspace() const { return m_state == STATE_HYPERSPACE; }
+	bool IsNormalSpace() const { return m_state == State::NORMAL; }
+	bool IsHyperspace() const { return m_state == State::HYPERSPACE; }
 
 	RefCountedPtr<Galaxy> GetGalaxy() const { return m_galaxy; }
 	Space *GetSpace() const { return m_space.get(); }
@@ -172,9 +170,9 @@ private:
 
 	std::unique_ptr<Player> m_player;
 
-	enum State {
-		STATE_NORMAL,
-		STATE_HYPERSPACE,
+	enum class State {
+		NORMAL,
+		HYPERSPACE,
 	};
 	State m_state;
 

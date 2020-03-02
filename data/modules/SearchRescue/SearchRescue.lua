@@ -1,4 +1,4 @@
--- Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 
@@ -27,26 +27,27 @@
 -- - "COMPLETE" = finished task
 
 
-local Engine = import("Engine")
-local Lang = import("Lang")
-local Game = import("Game")
-local Space = import("Space")
-local Comms = import("Comms")
-local Event = import("Event")
-local Mission = import("Mission")
-local Format = import("Format")
-local Serializer = import("Serializer")
-local Character = import("Character")
-local Equipment = import("Equipment")
-local ShipDef = import("ShipDef")
-local Ship = import("Ship")
-local utils = import("utils")
-local Timer = import("Timer")
+local Engine = require 'Engine'
+local Lang = require 'Lang'
+local Game = require 'Game'
+local Space = require 'Space'
+local Comms = require 'Comms'
+local Event = require 'Event'
+local Mission = require 'Mission'
+local Format = require 'Format'
+local Serializer = require 'Serializer'
+local Character = require 'Character'
+local Equipment = require 'Equipment'
+local ShipDef = require 'ShipDef'
+local Ship = require 'Ship'
+local utils = require 'utils'
+local Timer = require 'Timer'
+local Rand = require 'Rand'
+local ModelSkin = require 'SceneGraph.ModelSkin'
+local l = Lang.GetResource("module-searchrescue")
+
 local InfoFace = import("ui/InfoFace")
 local NavButton = import("ui/NavButton")
-local Rand = import("Rand")
-local ModelSkin = import("SceneGraph.ModelSkin")
-local l = Lang.GetResource("module-searchrescue")
 
 -- Get the UI class
 local ui = Engine.ui

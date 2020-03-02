@@ -1,15 +1,17 @@
--- Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
-local Engine = import('Engine')
-local Game = import('Game')
-local ui = import('pigui/pigui.lua')
-local Lang = import("Lang")
+local Engine = require 'Engine'
+local Game = require 'Game'
+local utils = require 'utils'
+local Event = require 'Event'
+
+local Lang = require 'Lang'
 local lc = Lang.GetResource("core");
 local lui = Lang.GetResource("ui-core");
 local lec = Lang.GetResource("equipment-core");
-local utils = import("utils")
-local Event = import("Event")
+
+local ui = require 'pigui'
 
 local player = nil
 local colors = ui.theme.colors
@@ -131,7 +133,7 @@ local function displayMissiles(uiPos)
 end
 
 local function displayEquipment()
-	if ui.showOptionsWindow then return end
+	if ui.optionsWindow.isOpen then return end
 	local uiPos = Vector2(15, ui.screenHeight / 3 + 10)
 	uiPos = displayMissiles(uiPos)
 	uiPos = displayECM(uiPos + Vector2(0, 10))

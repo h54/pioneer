@@ -1,11 +1,13 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _COLLMESH_H
 #define _COLLMESH_H
+
 #include "Aabb.h"
 #include "RefCounted.h"
-#include "collider/GeomTree.h"
+
+class GeomTree;
 
 namespace Serializer {
 	class Writer;
@@ -20,12 +22,8 @@ public:
 		m_geomTree(0),
 		m_totalTris(0)
 	{}
-	virtual ~CollMesh()
-	{
-		for (auto it = m_dynGeomTrees.begin(); it != m_dynGeomTrees.end(); ++it)
-			delete *it;
-		delete m_geomTree;
-	}
+	virtual ~CollMesh();
+
 	inline Aabb &GetAabb() { return m_aabb; }
 
 	inline double GetRadius() const { return m_aabb.GetRadius(); }
@@ -35,7 +33,13 @@ public:
 		m_aabb.radius = std::max(v, 0.1);
 	}
 
+	const std::vector<vector3f> &GetGeomTreeVertices() const;
+	const Uint32 *GetGeomTreeIndices() const;
+	const unsigned int *GetGeomTreeTriFlags() const;
+	unsigned int GetGeomTreeNumTris() const;
+
 	inline GeomTree *GetGeomTree() const { return m_geomTree; }
+
 	inline void SetGeomTree(GeomTree *t)
 	{
 		assert(t);

@@ -1,23 +1,23 @@
--- Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 -- TODO: don't move pointer in radial menu
 
-local Format = import('Format')
-local Game = import('Game')
-local Player = import('Player')
-local Space = import('Space')
-local Engine = import('Engine')
-local Event = import("Event")
-local ShipDef = import("ShipDef")
-local Lang = import("Lang")
+local Format = require 'Format'
+local Game = require 'Game'
+local Player = require 'Player'
+local Space = require 'Space'
+local Engine = require 'Engine'
+local Event = require 'Event'
+local ShipDef = require 'ShipDef'
+local Lang = require 'Lang'
 local Vector2 = _G.Vector2
 
 local lui = Lang.GetResource("ui-core");
 local lc = Lang.GetResource("core");
 local lec = Lang.GetResource("equipment-core");
 
-local utils = import("utils")
+local utils = require 'utils'
 local pigui = Engine.pigui
 
 local pi = 3.14159264
@@ -29,18 +29,22 @@ local one_over_sqrt_two = 1 / math.sqrt(2)
 
 local ui = { }
 
-local defaultTheme = import("themes/default")
+local defaultTheme = require '.themes.default'
 ui.theme = defaultTheme
 
-ui.rescaleUI = function(val, baseResolution, rescaleToScreenAspect)
-	local rescaleVector = Vector2(pigui.screen_width / baseResolution.x, pigui.screen_height / baseResolution.y)
+ui.rescaleUI = function(val, baseResolution, rescaleToScreenAspect, targetResolution)
+	if not targetResolution then
+		targetResolution = Vector2(pigui.screen_width, pigui.screen_height)
+	end
+
+	local rescaleVector = Vector2(targetResolution.x / baseResolution.x, targetResolution.y / baseResolution.y)
 	local rescaleFactor = math.min(rescaleVector.x, rescaleVector.y)
 	local type = type(val)
 
 	if type == 'table' then
 		local result = {}
 		for k, v in pairs(val) do
-			result[k] = ui.rescaleUI(v, baseResolution)
+			result[k] = ui.rescaleUI(v, baseResolution, rescaleToScreenAspect, targetResolution)
 		end
 
 		return result
@@ -92,6 +96,14 @@ local textBackgroundMarginPixels = 2
 
 ui.icons_texture = pigui:LoadTextureFromSVG(pigui.DataDirPath({"icons", "icons.svg"}), 16 * 64, 16 * 64)
 
+-- Clean up the ImGui stack in case of an error
+function ui.pcall(fun, ...)
+	local stack = pigui.GetImguiStack()
+	return xpcall(fun, function(msg)
+		return msg .. pigui.CleanupImguiStack(stack)
+	end, ...)
+end
+
 function ui.window(name, params, fun)
 	local ok = pigui.Begin(name, params)
 	if ok then fun() end
@@ -109,13 +121,6 @@ function ui.popup(name, fun)
 		fun()
 		pigui.EndPopup()
 	end
-end
-
-function ui.popupModal(name, flags, fun)
-    if pigui.BeginPopupModal(name, flags) then
-        fun()
-        pigui.EndPopup()
-    end
 end
 
 function ui.child(id, size, flags, fun)
@@ -231,26 +236,24 @@ end
 
 ui.Format = {
 	Latitude = function(decimal_degrees)
-		local deg = math.floor(decimal_degrees + 0.5)
-		local dec = math.abs(decimal_degrees - deg)
 		local prefix = lc.LATITUDE_NORTH_ABBREV
-		if deg < 0 then
+		if decimal_degrees < 0 then
 			prefix = lc.LATITUDE_SOUTH_ABBREV
-			deg = math.abs(deg)
+			decimal_degrees = math.abs(decimal_degrees)
 		end
-		local min = dec * 60
+		local deg = math.floor(decimal_degrees)
+		local min = (decimal_degrees - deg) * 60
 		local sec = (min - math.floor(min)) * 60
 		return string.format('%s %03i°%02i\'%02i"', prefix, deg, min, sec)
 	end,
 	Longitude = function(decimal_degrees)
-		local deg = math.floor(decimal_degrees + 0.5)
-		local dec = math.abs(decimal_degrees - deg)
 		local prefix = lc.LONGITUDE_EAST_ABBREV
-		if deg < 0 then
+		if decimal_degrees < 0 then
 			prefix = lc.LONGITUDE_WEST_ABBREV
-			deg = math.abs(deg)
+			decimal_degrees = math.abs(decimal_degrees)
 		end
-		local min = dec * 60
+		local deg = math.floor(decimal_degrees)
+		local min = (decimal_degrees - deg) * 60
 		local sec = (min - math.floor(min)) * 60
 		return string.format('%s %03i°%02i\'%02i"', prefix, deg, min, sec)
 	end,
@@ -593,6 +596,8 @@ ui.isAnyWindowHovered = function()
 	return ui.isWindowHovered({"AnyWindow"})
 end
 ui.collapsingHeader = pigui.CollapsingHeader
+ui.beginPopupModal = pigui.BeginPopupModal
+ui.endPopup = pigui.EndPopup
 ui.openPopup = pigui.OpenPopup
 ui.closeCurrentPopup = pigui.CloseCurrentPopup
 ui.shouldShowLabels = pigui.ShouldShowLabels

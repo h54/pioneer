@@ -1,12 +1,12 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _SYSTEMINFOVIEW_H
 #define _SYSTEMINFOVIEW_H
 
+#include "Color.h"
 #include "galaxy/SystemPath.h"
-#include "gui/Gui.h"
-#include "libs.h"
+#include "gui/GuiImageRadioButton.h"
 
 #include "UIView.h"
 #include <vector>
@@ -14,8 +14,10 @@
 class Game;
 class StarSystem;
 class SystemBody;
+
 namespace Graphics {
 	class Renderer;
+	class RenderState;
 }
 
 class SystemInfoView : public UIView {

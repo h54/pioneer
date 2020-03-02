@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "pigui/ModelSpinner.h"
@@ -12,7 +12,8 @@
 using namespace PiGUI;
 
 ModelSpinner::ModelSpinner() :
-	m_rot(vector2f(DEG2RAD(-15.0), DEG2RAD(180.0)))
+	m_rot(vector2f(DEG2RAD(-15.0), DEG2RAD(180.0))),
+	m_pauseTime(.0f)
 {
 	Color lc(Color::WHITE);
 	m_light.SetDiffuse(lc);

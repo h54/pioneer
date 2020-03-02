@@ -1,11 +1,16 @@
-local Engine = import('Engine')
-local Game = import('Game')
-local ui = import('pigui/pigui.lua')
-local Event = import('Event')
-local Lang = import("Lang")
+-- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+-- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
+
+local Engine = require 'Engine'
+local Game = require 'Game'
+local Event = require 'Event'
+local Equipment = require 'Equipment'
+
+local Lang = require 'Lang'
 local lc = Lang.GetResource("core")
 local lui = Lang.GetResource("ui-core");
-local Equipment = import("Equipment")
+
+local ui = require 'pigui'
 
 local player = nil
 local colors = ui.theme.colors

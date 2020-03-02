@@ -1,3 +1,74 @@
+March 2020
+   * Internal Changes
+     * Perf counter Windows memory info (#4820)
+
+February 2020
+   * New Features
+     * Convert Police screen to pigui (#4790)
+     * Move ShipRepair screen to pigui (#4791)
+     * Move Bulletin Board view to pigui (#4775)
+     * Make police non-persistent in Goodstrader (#4796)
+     * Update advice for Goodstrader, reflecting new behaviour (#4824)
+     * Move ship jump state strings to translation system (#4814)
+     * Add new icons (#4822)
+
+   * Fixes
+     * Fix on-demand glyph loading (#4779)
+     * Fix unused/free cabins shown in station footer being wrong (#4808)
+     * Re-introduce support for remote Lua console (#4799)
+
+   * Internal Changes
+     * Small additional improvements to orbit calculation (#4784)
+     * Improve System Map rendering and interaction (#4787)
+     * Make continue button load _quicksave if autosave not active (#4758)
+     * Add PiGui docstrings and fix ui.columns (#4792)
+     * Deprecate import() and replace with require() (#4786)
+     * Add rewinding to fix ImGui stack when catching an error (#4776)
+     * Draw performance information with ImGui, new performance counter backend (#4813)
+     * Add a sponsor-button to pioneer's github (#4816)
+
+January 2020
+   * New Features
+     * Move Ship Market to pigui (#4774)
+     * Improve usability of in-space body indicators (#4764)
+
+   * Fixes
+     * Fix scrollbars appearing at different resolutions (#4771)
+     * Fix mission screen obscuring buttons (#4770)
+     * Fix / improve orbit calculations (#4777)
+
+   * Internal Changes
+     * CMake profiler build option: support older versions of cmake (#4772)
+     * Modal Window PiGui class that allows nesting (#4767)
+     * Ship warning system also detects missiles (#4746)
+
+December 2019
+   * Fixes
+     * Fix possible CameraFrame duplication / memory leak when saving (#4754)
+     * Fix calculation of latitude and longitude for PlanetaryInfo (#4757)
+     * Restore feature: maximum display distance for ship indicators (#4761)
+
+   * Internal Changes
+     * Restore lost feature to show/don't show icon / label (#4753)
+     * Upgrade bundled ImGui to v1.74 (#4752)
+     * VS2019 make Debug usable for testing (#4756)
+
+November 2019
+   * New Features
+     * More station names (#4726)
+     * Use system time at start (#4735)
+
+   * Fixes
+     * Make windows installer remove old install (#4748)
+     * Fix segmentation fault & cleanup (#4745)
+     * Modal save/load windows, fixes UI crash (#4743)
+
+   * Internal Changes
+     * Little improvements (#4669)
+     * Fix OSX Travis deployment (#4737)
+     * ASAN/valgrind fixes (#4739)
+     * Add a maximum distance to the hyperspace exit calculation (#4660)
+
 October 2019
    * New Features
      * Music upgrade (#4678)
@@ -15,6 +86,7 @@ October 2019
      * Update vs2019 and profiling (#4711)
      * Optimise sector view and docked face generation (#4722)
      * Fix cmake/bootstrap not running properly (#4724)
+     * Decouple (#4717)
 
 September 2019
    * New Features

@@ -1,12 +1,12 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Face.h"
-#include "LuaConstants.h"
-#include "LuaObject.h"
-#include "LuaPiGui.h"
-#include "LuaTable.h"
-#include "LuaVector2.h"
+#include "lua/LuaConstants.h"
+#include "lua/LuaObject.h"
+#include "lua/LuaPiGui.h"
+#include "lua/LuaTable.h"
+#include "lua/LuaVector2.h"
 
 namespace PiGUI {
 

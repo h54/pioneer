@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "GasGiant.h"
@@ -7,7 +7,6 @@
 #include "Game.h"
 #include "GameConfig.h"
 #include "Pi.h"
-#include "RefCounted.h"
 #include "galaxy/AtmosphereParameters.h"
 #include "graphics/Frustum.h"
 #include "graphics/Graphics.h"
@@ -17,11 +16,8 @@
 #include "graphics/Texture.h"
 #include "graphics/VertexArray.h"
 #include "graphics/opengl/GenGasGiantColourMaterial.h"
-#include "libs.h"
 #include "perlin.h"
 #include "vcacheopt/vcacheopt.h"
-#include <algorithm>
-#include <deque>
 
 RefCountedPtr<GasPatchContext> GasGiant::s_patchContext;
 

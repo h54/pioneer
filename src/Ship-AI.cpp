@@ -1,10 +1,8 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "EnumStrings.h"
 #include "Frame.h"
-#include "LuaConstants.h"
-#include "LuaEvent.h"
 #include "Pi.h"
 #include "Planet.h"
 #include "Player.h"
@@ -13,6 +11,8 @@
 #include "Space.h"
 #include "SpaceStation.h"
 #include "libs.h"
+#include "lua/LuaConstants.h"
+#include "lua/LuaEvent.h"
 #include "perlin.h"
 #include "ship/Propulsion.h"
 

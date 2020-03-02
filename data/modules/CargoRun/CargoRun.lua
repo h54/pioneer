@@ -1,20 +1,20 @@
--- Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
-local Engine = import("Engine")
-local Lang = import("Lang")
-local Game = import("Game")
-local Space = import("Space")
-local Comms = import("Comms")
-local Event = import("Event")
-local Mission = import("Mission")
-local Format = import("Format")
-local Serializer = import("Serializer")
-local Character = import("Character")
-local Equipment = import("Equipment")
-local ShipDef = import("ShipDef")
-local Ship = import("Ship")
-local utils = import("utils")
+local Engine = require 'Engine'
+local Lang = require 'Lang'
+local Game = require 'Game'
+local Space = require 'Space'
+local Comms = require 'Comms'
+local Event = require 'Event'
+local Mission = require 'Mission'
+local Format = require 'Format'
+local Serializer = require 'Serializer'
+local Character = require 'Character'
+local Equipment = require 'Equipment'
+local ShipDef = require 'ShipDef'
+local Ship = require 'Ship'
+local utils = require 'utils'
 
 local InfoFace = import("ui/InfoFace")
 local NavButton = import("ui/NavButton")
@@ -162,6 +162,12 @@ local wedding_dresses = Equipment.EquipType.New({
 	purchasable=false, icon_name="Default",
 	l10n_resource="module-cargorun"
 })
+local stem_bolts = Equipment.EquipType.New({
+	l10n_key = 'STEM_BOLTS', slots="cargo", price=143,
+	capabilities={mass=1},
+	purchasable=false, icon_name="Default",
+	l10n_resource="module-cargorun"
+})
 
 local chemical = {
 	digesters,
@@ -182,6 +188,7 @@ local hardware = {
 	plutonium,
 	semi_finished_products,
 	spaceship_parts,
+	stem_bolts,
 	titanium,
 	tungsten,
 	uranium
@@ -414,7 +421,7 @@ local onDelete = function (ref)
 end
 
 local isEnabled = function (ref)
-	return isQualifiedFor(Character.persistent.player.reputation, ads[ref])
+	return ads[ref] ~= nil and isQualifiedFor(Character.persistent.player.reputation, ads[ref])
 end
 
 local findNearbyStations = function (station, minDist)

@@ -1,14 +1,16 @@
--- Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
-local Engine = import('Engine')
-local Game = import('Game')
-local ui = import('pigui/pigui.lua')
-local Lang = import("Lang")
+local Engine = require 'Engine'
+local Game = require 'Game'
+local utils = require 'utils'
+local Event = require 'Event'
+
+local Lang = require 'Lang'
 local lc = Lang.GetResource("core");
 local lui = Lang.GetResource("ui-core");
-local utils = import("utils")
-local Event = import("Event")
+
+local ui = require 'pigui'
 
 local player = nil
 local colors = ui.theme.colors
@@ -116,24 +118,20 @@ local function button_info(current_view)
 end
 
 local function button_comms(current_view)
-	ui.sameLine()
-	if mainMenuButton(icons.comms, current_view == "space_station", lui.HUD_BUTTON_SHOW_COMMS) or (ui.noModifierHeld() and ui.isKeyReleased(ui.keys.f4)) then
-		if player:IsDocked() then
+	if player:IsDocked() then
+		ui.sameLine()
+		if mainMenuButton(icons.comms, current_view == "space_station", lui.HUD_BUTTON_SHOW_COMMS) or (ui.noModifierHeld() and ui.isKeyReleased(ui.keys.f4)) then
 			if current_view == "space_station" then
 				Game.SetView("world")
 			else
 				Game.SetView("space_station")
-			end
-		else
-			if ui.toggleSystemTargets then
-				ui.toggleSystemTargets()
 			end
 		end
 	end
 end
 
 local function displayFxWindow()
-	if ui.showOptionsWindow then return end
+	if ui.optionsWindow.isOpen then return end
 	player = Game.player
 	local current_view = Game.CurrentView()
 	local aux = Vector2((mainButtonSize.x + mainButtonFramePadding * 2) * 10, (mainButtonSize.y + mainButtonFramePadding * 2) * 1.5)

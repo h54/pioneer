@@ -1,26 +1,28 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _SPACESTATION_H
 #define _SPACESTATION_H
 
 #include "ModelBody.h"
-#include "NavLights.h"
 #include "Quaternion.h"
 #include "SpaceStationType.h"
 
 #define MAX_DOCKING_PORTS 240 //256-(0x10), 0x10 is used because the collision surfaces use it as an identifying flag
 
+class Body;
 class Camera;
 class CityOnPlanet;
-class CollMeshSet;
-class Planet;
+class Frame;
+class NavLights;
 class Ship;
-class SpaceStation;
+class Space;
 class SystemBody;
+
 namespace Graphics {
 	class Renderer;
 }
+
 namespace SceneGraph {
 	class Animation;
 }
@@ -67,7 +69,7 @@ public:
 	bool AllocateStaticSlot(int &slot);
 
 	// use docking bay position, if player has been granted permission
-	virtual vector3d GetTargetIndicatorPosition(const Frame *relTo) const override;
+	virtual vector3d GetTargetIndicatorPosition(FrameId relToId) const override;
 
 	// need this now because stations rotate in their frame
 	virtual void UpdateInterpTransform(double alpha) override;

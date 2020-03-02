@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "SpeedLines.h"
@@ -58,7 +58,7 @@ void SpeedLines::Update(float time)
 	// don't show if
 	//   vel < 100m/s
 	//   in rotating frame (near station or planet surface)
-	if (absVel < 100.f || m_ship->GetFrame()->IsRotFrame()) {
+	if (absVel < 100.f || Frame::GetFrame(m_ship->GetFrame())->IsRotFrame()) {
 		m_visible = false;
 		return;
 	}

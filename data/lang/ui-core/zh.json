@@ -89,7 +89,7 @@
   },
   "CANNOT_SELL_ITEM": {
     "description": "",
-    "message": "This item cannot be sold"
+    "message": "此商品不能出售"
   },
   "CAPACITY": {
     "description": "Capacity of ship to fit more equipment",
@@ -334,6 +334,10 @@
   "DOCK_AT_CURRENT_TARGET": {
     "description": "",
     "message": "停靠在当前目标"
+  },
+  "DRIVE_ACTIVE": {
+    "description": "Ship jump status",
+    "message": "Drive active"
   },
   "DUE": {
     "description": "mission deadline date",
@@ -793,7 +797,7 @@
   },
   "HUD_DELTA_V_PERCENT": {
     "description": "Tooltip: The remaining Δv in percent.",
-    "message": "% of max Δv"
+    "message": "% 最大 Δv"
   },
   "HUD_DISTANCE_TO_SURFACE_OF_FRAME": {
     "description": "Tooltip: Distance to the surface of the frame of reference.",
@@ -962,6 +966,14 @@
   "INEXPERIENCED": {
     "description": "For player reputation",
     "message": "缺乏经验的"
+  },
+  "INITIATED": {
+    "description": "Ship jump status",
+    "message": "Initiated"
+  },
+  "INSUFFICIENT_FUEL": {
+    "description": "Ship jump status",
+    "message": "Insufficient fuel"
   },
   "INSUFFICIENT_FUNDS": {
     "description": "",
@@ -1279,6 +1291,10 @@
     "description": "",
     "message": "{equipment} 无法安装在该飞船上"
   },
+  "NO_DRIVE": {
+    "description": "Ship jump status",
+    "message": "No drive"
+  },
   "NO_FILTER_MATCHES": {
     "description": "No matches to this filter.",
     "message": "没有与该筛选器匹配的内容"
@@ -1339,6 +1355,10 @@
     "description": "Unpaid fines for crimes committed",
     "message": "未缴罚款"
   },
+  "OUT_OF_RANGE": {
+    "description": "Ship jump status",
+    "message": "Out of range"
+  },
   "OVERVIEW_NAME_FILTER": {
     "description": "Filter overview window entries by name",
     "message": "按名称筛选概述窗口项"
@@ -1346,6 +1366,10 @@
   "OWED": {
     "description": "Player owing money to crew members",
     "message": "拖欠"
+  },
+  "PAY": {
+    "description": "Pay for a transaction of services, e.g. for paying fines, (or repairs)",
+    "message": "支付"
   },
   "PAY_FINE_OF_N": {
     "description": "",
@@ -1515,6 +1539,10 @@
     "description": "For hyperjump planner",
     "message": "跳跃路线"
   },
+  "SAFETY_LOCKOUT": {
+    "description": "Ship jump status",
+    "message": "Safety lockout"
+  },
   "SAGITTARIUS_ARM": {
     "description": "Arm of the Milky Way galaxy",
     "message": "射手臂"
@@ -1647,6 +1675,10 @@
     "description": "",
     "message": "星场密度"
   },
+  "STATION_DOCKS": {
+    "description": "Information shown in the station lobby, for total number of docking pads",
+    "message": "我们的总容量是 {total_docking_pads} 对接垫."
+  },
   "STATION_MANAGER": {
     "description": "",
     "message": "空间站管理者"
@@ -1657,7 +1689,7 @@
   },
   "STATION_TECH_TOO_LOW": {
     "description": "",
-    "message": "Station tech level too low to sell this item"
+    "message": "空间站技术水平太低，无法出售此商品"
   },
   "STATUS": {
     "description": "",
@@ -1686,6 +1718,10 @@
   "THE_SHIP_IS_UNDER_STATION_CONTROL_COMMANDER": {
     "description": "",
     "message": "飞船处于空间站控制下了, 指挥官."
+  },
+  "THIS_IS_FACTION_POLICE": {
+    "description": "Greeting message in police station. 'faction' is one of (English, non-translatable) strings: 'Solar Federation', 'Commonwealth of Independent Worlds', or 'Haber Corporation', and 'faction_police' is one of: 'SolFed Police Force', 'Confederal Police' or, 'Haber Enforcement Division'",
+    "message": "这是 {faction_police} 的 {faction}"
   },
   "THREE_KPC_ARM": {
     "description": "Arm of the Milky Way galaxy",

@@ -1,14 +1,16 @@
--- Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
-local Engine = import('Engine')
-local Game = import('Game')
-local ui = import('pigui/pigui.lua')
-local Lang = import("Lang")
+local Engine = require 'Engine'
+local Game = require 'Game'
+local utils = require 'utils'
+local Event = require 'Event'
+
+local Lang = require 'Lang'
 local lc = Lang.GetResource("core");
 local lui = Lang.GetResource("ui-core");
-local utils = import("utils")
-local Event = import("Event")
+
+local ui = require 'pigui'
 
 local player = nil
 local pionillium = ui.fonts.pionillium
@@ -101,7 +103,7 @@ end
 local click_on_radar = false
 -- display either the 3D or the 2D radar, show a popup on right click to select
 local function displayRadar()
-	if ui.showOptionsWindow then return end
+	if ui.optionsWindow.isOpen then return end
 	player = Game.player
 	local radar = player:GetEquip("radar")
 	-- only display if there actually *is* a radar installed
@@ -169,7 +171,7 @@ end)
 Event.Register("onGameEnd", function() shouldDisplay2DRadar = false end)
 
 -- save/load preference
-import("Serializer"):Register("PiguiRadar", function () return shouldDisplay2DRadar end, function (data) shouldDisplay2DRadar = data end)
+require 'Serializer':Register("PiguiRadar", function () return shouldDisplay2DRadar end, function (data) shouldDisplay2DRadar = data end)
 
 ui.registerModule("game", displayRadar)
 

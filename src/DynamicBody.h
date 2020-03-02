@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _DYNAMICBODY_H
@@ -25,7 +25,7 @@ public:
 
 	virtual vector3d GetVelocity() const override;
 	virtual void SetVelocity(const vector3d &v) override;
-	virtual void SetFrame(Frame *f) override;
+	virtual void SetFrame(FrameId fId) override;
 	vector3d GetAngVelocity() const;
 	void SetAngVelocity(const vector3d &v);
 	virtual bool OnCollision(Object *o, Uint32 flags, double relVel) override;

@@ -1,4 +1,4 @@
--- Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local ui = import 'pigui/pigui.lua'
@@ -14,7 +14,8 @@ local Comms = import 'Comms'
 
 local InfoFace = import 'ui/PiguiFace'
 local PiImage = import 'ui/PiImage'
-local drawTable = import 'pigui/libs/table.lua'
+local textTable = import 'pigui/libs/text-table.lua'
+local ModalWindow = import 'pigui/libs/modal-win.lua'
 
 local pionillium = ui.fonts.pionillium
 local orbiteer = ui.fonts.orbiteer
@@ -49,7 +50,14 @@ local hydrogenIcon = PiImage.New("icons/goods/Hydrogen.png")
 local hyperdriveIcon = PiImage.New("icons/goods/Hydrogen.png")
 
 local popupMsg = ''
-local popupId = 'lobbyPopup'
+local popup = ModalWindow.New('lobbyPopup', function(self)
+	ui.text(popupMsg)
+	ui.dummy(Vector2((ui.getContentRegion().x - 100*rescaleVector.x) / 2, 0))
+	ui.sameLine()
+	if ui.button("OK", Vector2(100*rescaleVector.x, 0)) then
+		self:close()
+	end
+end)
 
 local requestLaunch = function ()
 	local crimes, fine = Game.player:GetCrimeOutstanding()
@@ -58,15 +66,15 @@ local requestLaunch = function ()
 	if not Game.player:HasCorrectCrew() then
 		Comms.ImportantMessage(l.LAUNCH_PERMISSION_DENIED_CREW, station.label)
 		popupMsg = l.LAUNCH_PERMISSION_DENIED_CREW
-		ui.openPopup(popupId)
+		popup:open()
 	elseif fine > 0 then
 		Comms.ImportantMessage(l.LAUNCH_PERMISSION_DENIED_FINED, station.label)
 		popupMsg = l.LAUNCH_PERMISSION_DENIED_FINED
-		ui.openPopup(popupId)
+		popup:open()
 	elseif not Game.player:Undock() then
 		Comms.ImportantMessage(l.LAUNCH_PERMISSION_DENIED_BUSY, station.label)
 		popupMsg = l.LAUNCH_PERMISSION_DENIED_BUSY
-		ui.openPopup(popupId)
+		popup:open()
 	else
 		Game.SwitchView()
 	end
@@ -202,19 +210,10 @@ local function lobbyMenu(startPos)
 
 	ui.columns(1, '', false)
 	ui.withFont(orbiteer.xlarge.name, orbiteer.xlarge.size, function()
-		ui.dummy(Vector2(ui.getContentRegion().x - widgetSizes.windowPadding.x/2 - widgetSizes.itemSpacing.x*2 - widgetSizes.buttonLaunchSize.x, 0))
-		ui.sameLine()
+		local buttonPos = ui.getCursorScreenPos()
+		buttonPos.x = gaugePos.x + gaugeWidth - widgetSizes.buttonLaunchSize.x
+		ui.setCursorScreenPos(buttonPos)
 		if ui.coloredSelectedButton(l.REQUEST_LAUNCH, widgetSizes.buttonLaunchSize, false, colors.buttonBlue, nil, true) then requestLaunch() end
-	end)
-
-	ui.setNextWindowSize(Vector2(0, 0), "Always")
-	ui.popupModal(popupId, {"NoTitleBar", "NoResize"}, function ()
-		ui.text(popupMsg)
-		ui.dummy(Vector2((ui.getContentRegion().x - 100*rescaleVector.x) / 2, 0))
-		ui.sameLine()
-		if ui.button("OK", Vector2(100*rescaleVector.x, 0)) then
-			ui.closeCurrentPopup()
-		end
 	end)
 end
 
@@ -230,6 +229,8 @@ local function drawPlayerInfo()
 	else
 		tech_certified = string.interp(l.TECH_CERTIFIED, { tech_level = station.techLevel})
 	end
+
+	local station_docks = string.interp(l.STATION_DOCKS, { total_docking_pads = string.format("%d", station.numDocks),})
 
 	local orbit_period = station.path:GetSystemBody().orbitPeriod
 
@@ -250,8 +251,9 @@ local function drawPlayerInfo()
 			ui.child("Wrapper", Vector2(0, widgetSizes.faceSize.y + widgetSizes.windowPadding.y*2 + widgetSizes.itemSpacing.y), {}, function()
 				ui.child("PlayerShipFuel", Vector2(infoColumnWidth, 0), {"AlwaysUseWindowPadding"}, function()
 					local curPos = ui.getCursorPos()
-					drawTable.withHeading(station.label, orbiteer.xlarge, {
+					textTable.withHeading(station.label, orbiteer.xlarge, {
 						{ tech_certified, "" },
+						{ station_docks, "" },
 						{ station_orbit_info, "" },
 					})
 
@@ -263,7 +265,7 @@ local function drawPlayerInfo()
 				ui.sameLine()
 				ui.child("StationManager", Vector2(0, 0), {"AlwaysUseWindowPadding", "NoScrollbar"}, function ()
 					if(face ~= nil) then
-						face:Draw(widgetSizes.faceSize)
+						face:render()
 					end
 				end)
 			end)
@@ -296,7 +298,7 @@ StationView:registerView({
 			if (stationSeed ~= station.seed) then
 				stationSeed = station.seed
 				local rand = Rand.New(station.seed)
-				face = InfoFace.New(Character.New({ title = l.STATION_MANAGER }, rand), {windowPadding = widgetSizes.windowPadding, itemSpacing = widgetSizes.itemSpacing})
+				face = InfoFace.New(Character.New({ title = l.STATION_MANAGER }, rand), {windowPadding = widgetSizes.windowPadding, itemSpacing = widgetSizes.itemSpacing, size = widgetSizes.faceSize})
 			end
 			hyperdrive = table.unpack(Game.player:GetEquip("engine")) or nil
 			hyperdrive_fuel = hyperdrive and hyperdrive.fuel or Equipment.cargo.hydrogen

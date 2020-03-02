@@ -1,12 +1,12 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef UI_LUASIGNAL_H
 #define UI_LUASIGNAL_H
 
 #include "Event.h"
-#include "LuaPushPull.h"
 #include "Widget.h"
+#include "lua/LuaPushPull.h"
 
 inline void pi_lua_generic_push(lua_State *l, const UI::Event &value) { value.ToLuaTable(l); }
 

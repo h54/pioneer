@@ -1,8 +1,10 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _STATS_H
 #define _STATS_H
+
+#include "PerfStats.h"
 
 #include "SDL_stdinc.h"
 #include <utility>
@@ -10,7 +12,11 @@
 
 namespace Graphics {
 
-	class Stats {
+	/**
+	* Graphics::Stats is a wrapper over a PerfStats instance.
+	* Use AddToStatCount(Stats::StatType, uint32_t) to easily update renderer stats.
+	*/
+	class Stats : protected Perf::Stats {
 	public:
 		static const Uint32 MAX_FRAMES_STORE = 30U;
 		enum StatType {
@@ -48,15 +54,20 @@ namespace Graphics {
 		Stats();
 		~Stats() {}
 
-		void AddToStatCount(const StatType type, const Uint32 count);
+		void AddToStatCount(const StatType type, const Uint32 count) const
+		{
+			CounterAdd(m_counterRefs[type], count);
+		}
+
 		void NextFrame();
 
-		const TFrameData &FrameStats() const { return m_frameStats[m_currentFrame]; }
 		const TFrameData &FrameStatsPrevious() const;
 
 	private:
 		TFrameData m_frameStats[MAX_FRAMES_STORE];
 		Uint32 m_currentFrame;
+
+		std::vector<Perf::Stats::CounterRef> m_counterRefs;
 	};
 
 } // namespace Graphics

@@ -479,6 +479,10 @@
     "description": "like wheat or barley",
     "message": "粮食"
   },
+  "GRID_DISPLAY_MODE_TOGGLE": {
+    "description": "Switch show no grid",
+    "message": "在网格显示模式之间切换。"
+  },
   "HAND_WEAPONS": {
     "description": "",
     "message": "手持武器"
@@ -882,6 +886,10 @@
   "MISSILE": {
     "description": "",
     "message": "导弹"
+  },
+  "MISSILE_DETECTED": {
+    "description": "",
+    "message": "探测到导弹发射."
   },
   "MIXED_ECONOMY": {
     "description": "",

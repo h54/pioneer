@@ -479,6 +479,10 @@
     "description": "like wheat or barley",
     "message": "Búza"
   },
+  "GRID_DISPLAY_MODE_TOGGLE": {
+    "description": "Switch show no grid",
+    "message": "Váltás rács megjelenítési módjai között"
+  },
   "HAND_WEAPONS": {
     "description": "",
     "message": "Kézifegyverek"
@@ -882,6 +886,10 @@
   "MISSILE": {
     "description": "",
     "message": "rakéta"
+  },
+  "MISSILE_DETECTED": {
+    "description": "",
+    "message": "Rakétakilővés detektálva"
   },
   "MIXED_ECONOMY": {
     "description": "",

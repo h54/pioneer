@@ -1,11 +1,12 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _BACKGROUND_H
 #define _BACKGROUND_H
 
-#include "Random.h"
 #include "graphics/Drawables.h"
+
+class Random;
 
 namespace Graphics {
 	class Renderer;

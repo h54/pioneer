@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "GeoPatch.h"
@@ -15,6 +15,7 @@
 #include "graphics/Graphics.h"
 #include "graphics/Material.h"
 #include "graphics/Renderer.h"
+#include "graphics/VertexBuffer.h"
 #include "perlin.h"
 #include "vcacheopt/vcacheopt.h"
 #include <algorithm>

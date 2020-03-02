@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Player.h"
@@ -10,16 +10,16 @@
 #include "HyperspaceCloud.h"
 #include "KeyBindings.h"
 #include "Lang.h"
-#include "LuaObject.h"
 #include "Pi.h"
 #include "SectorView.h"
 #include "Sfx.h"
-#include "ship/PlayerShipController.h"
 #include "ShipCpanel.h"
 #include "SpaceStation.h"
 #include "StringF.h"
 #include "SystemView.h" // for the transfer planner
 #include "WorldView.h"
+#include "lua/LuaObject.h"
+#include "ship/PlayerShipController.h"
 #include "sound/Sound.h"
 
 //Some player specific sounds
@@ -178,6 +178,11 @@ void Player::SetAlertState(Ship::AlertState as)
 		Pi::game->log->Add(Lang::LASER_FIRE_DETECTED);
 		Sound::PlaySfx("warning", 0.2f, 0.2f, 0);
 		break;
+
+	case ALERT_MISSILE_DETECTED:
+		Pi::game->log->Add(Lang::MISSILE_DETECTED);
+		Sound::PlaySfx("warning", 0.2f, 0.2f, 0);
+		break;
 	}
 
 	Ship::SetAlertState(as);
@@ -306,9 +311,9 @@ int Player::GetManeuverTime() const
 
 vector3d Player::GetManeuverVelocity() const
 {
-	const Frame *frame = GetFrame();
+	Frame *frame = Frame::GetFrame(GetFrame());
 	if (frame->IsRotFrame())
-		frame = frame->GetNonRotFrame();
+		frame = Frame::GetFrame(frame->GetNonRotFrame());
 	const SystemBody *systemBody = frame->GetSystemBody();
 
 	if (Pi::planner->GetOffsetVel().ExactlyEqual(vector3d(0, 0, 0))) {

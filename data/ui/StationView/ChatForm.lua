@@ -1,4 +1,4 @@
--- Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Engine = import("Engine")
@@ -9,7 +9,7 @@ local Face = import("UI.Game.Face")
 local SmallLabeledButton = import("ui/SmallLabeledButton")
 local NavButton = import("ui/NavButton")
 
-local EquipmentTableWidgets = import("EquipmentTableWidgets")
+local EquipmentTableWidgets = import(".EquipmentTableWidgets")
 
 local ui = Engine.ui
 

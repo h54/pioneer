@@ -335,6 +335,10 @@
     "description": "",
     "message": "Meer aan bij huidig doel"
   },
+  "DRIVE_ACTIVE": {
+    "description": "Ship jump status",
+    "message": "Drive active"
+  },
   "DUE": {
     "description": "mission deadline date",
     "message": "Uiterlijk"
@@ -963,6 +967,14 @@
     "description": "For player reputation",
     "message": "Onervaren"
   },
+  "INITIATED": {
+    "description": "Ship jump status",
+    "message": "Initiated"
+  },
+  "INSUFFICIENT_FUEL": {
+    "description": "Ship jump status",
+    "message": "Insufficient fuel"
+  },
   "INSUFFICIENT_FUNDS": {
     "description": "",
     "message": "Onvoldoende saldo"
@@ -1279,6 +1291,10 @@
     "description": "",
     "message": "{equipment} wordt niet ondersteund op dit model schip"
   },
+  "NO_DRIVE": {
+    "description": "Ship jump status",
+    "message": "No drive"
+  },
   "NO_FILTER_MATCHES": {
     "description": "No matches to this filter.",
     "message": "Geen resultaten voor dat filter"
@@ -1339,6 +1355,10 @@
     "description": "Unpaid fines for crimes committed",
     "message": "Onbetaalde boetes"
   },
+  "OUT_OF_RANGE": {
+    "description": "Ship jump status",
+    "message": "Out of range"
+  },
   "OVERVIEW_NAME_FILTER": {
     "description": "Filter overview window entries by name",
     "message": "Filter overzicht-window entries op naam"
@@ -1346,6 +1366,10 @@
   "OWED": {
     "description": "Player owing money to crew members",
     "message": "Was schuldig"
+  },
+  "PAY": {
+    "description": "Pay for a transaction of services, e.g. for paying fines, (or repairs)",
+    "message": "Pay"
   },
   "PAY_FINE_OF_N": {
     "description": "",
@@ -1515,6 +1539,10 @@
     "description": "For hyperjump planner",
     "message": "Route-sprongen"
   },
+  "SAFETY_LOCKOUT": {
+    "description": "Ship jump status",
+    "message": "Safety lockout"
+  },
   "SAGITTARIUS_ARM": {
     "description": "Arm of the Milky Way galaxy",
     "message": "Sagittarius-arm"
@@ -1647,6 +1675,10 @@
     "description": "",
     "message": "Sterrendichtheid"
   },
+  "STATION_DOCKS": {
+    "description": "Information shown in the station lobby, for total number of docking pads",
+    "message": "Our total capacity is {total_docking_pads} docking pads."
+  },
   "STATION_MANAGER": {
     "description": "",
     "message": "Stationsmanager"
@@ -1686,6 +1718,10 @@
   "THE_SHIP_IS_UNDER_STATION_CONTROL_COMMANDER": {
     "description": "",
     "message": "Het schip in onder stationsbeheer, Commandant."
+  },
+  "THIS_IS_FACTION_POLICE": {
+    "description": "Greeting message in police station. 'faction' is one of (English, non-translatable) strings: 'Solar Federation', 'Commonwealth of Independent Worlds', or 'Haber Corporation', and 'faction_police' is one of: 'SolFed Police Force', 'Confederal Police' or, 'Haber Enforcement Division'",
+    "message": "This is the {faction_police} of the {faction}"
   },
   "THREE_KPC_ARM": {
     "description": "Arm of the Milky Way galaxy",

@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "TerrainBody.h"
@@ -10,7 +10,6 @@
 #include "Json.h"
 #include "Space.h"
 #include "galaxy/SystemBody.h"
-#include "graphics/Graphics.h"
 #include "graphics/Renderer.h"
 
 TerrainBody::TerrainBody(SystemBody *sbody) :
@@ -124,14 +123,18 @@ void TerrainBody::Render(Graphics::Renderer *renderer, const Camera *camera, con
 		renderer->ClearDepthBuffer();
 }
 
-void TerrainBody::SetFrame(Frame *f)
+void TerrainBody::SetFrame(FrameId fId)
 {
-	if (GetFrame()) {
-		GetFrame()->SetPlanetGeom(0, 0);
-	}
-	Body::SetFrame(f);
+	Frame *f = Frame::GetFrame(GetFrame());
+
 	if (f) {
-		GetFrame()->SetPlanetGeom(0, 0);
+		f->SetPlanetGeom(0, nullptr);
+	}
+	Body::SetFrame(fId);
+
+	f = Frame::GetFrame(fId);
+	if (f) {
+		f->SetPlanetGeom(0, nullptr);
 	}
 }
 

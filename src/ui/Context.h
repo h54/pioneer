@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef UI_CONTEXT_H
@@ -41,8 +41,8 @@
 
 #include "MousePointer.h"
 
-#include "Lua.h"
-#include "LuaTable.h"
+#include "lua/LuaTable.h"
+#include "ui/Lua.h"
 
 #include <stack>
 

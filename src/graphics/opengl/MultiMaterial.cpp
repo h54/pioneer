@@ -1,9 +1,10 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "MultiMaterial.h"
+
 #include "RendererGL.h"
-#include "Ship.h"
+#include "HeatGradientPar.h"
 #include "StringF.h"
 #include "TextureGL.h"
 #include "graphics/Graphics.h"

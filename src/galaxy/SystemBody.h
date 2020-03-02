@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef SYSTEMBODY_H
@@ -88,6 +88,8 @@ public:
 	Uint32 GetNumChildren() const { return static_cast<Uint32>(m_children.size()); }
 	IterationProxy<std::vector<SystemBody *>> GetChildren() { return MakeIterationProxy(m_children); }
 	const IterationProxy<const std::vector<SystemBody *>> GetChildren() const { return MakeIterationProxy(m_children); }
+
+	const std::vector<SystemBody *> CollectAllChildren();
 
 	inline const std::string &GetName() const { return m_name; }
 	std::string GetAstroDescription() const;

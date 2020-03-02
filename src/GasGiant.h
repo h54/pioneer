@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _GASGIANT_H
@@ -7,8 +7,6 @@
 #include "BaseSphere.h"
 #include "GasGiantJobs.h"
 #include "JobQueue.h"
-#include "graphics/Material.h"
-#include "terrain/Terrain.h"
 #include "vector3.h"
 
 #include <deque>
@@ -17,6 +15,7 @@ namespace Graphics {
 	class Renderer;
 	class RenderState;
 	class RenderTarget;
+	class Texture;
 }
 
 class SystemBody;

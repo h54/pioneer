@@ -1,19 +1,16 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _WORLDVIEW_H
 #define _WORLDVIEW_H
 
-#include "Camera.h"
-#include "SpeedLines.h"
 #include "UIView.h"
 #include "gui/GuiWidget.h"
 #include "ship/ShipViewController.h"
 
 class Body;
-class Frame;
-class LabelSet;
-class Ship;
+class Camera;
+class SpeedLines;
 class NavTunnelWidget;
 class Game;
 

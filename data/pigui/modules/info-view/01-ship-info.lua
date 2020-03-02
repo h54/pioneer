@@ -1,20 +1,20 @@
--- Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
-local ui = import 'pigui/pigui.lua'
-local InfoView = import 'pigui/views/info-view'
-local ModelSpinner = import 'PiGui.Modules.ModelSpinner'
-local Lang = import 'Lang'
-local Game = import 'Game'
-local ShipDef = import 'ShipDef'
-local Equipment = import 'Equipment'
+local ui = require 'pigui'
+local InfoView = require 'pigui.views.info-view'
+local ModelSpinner = require 'PiGui.Modules.ModelSpinner'
+local Lang = require 'Lang'
+local Game = require 'Game'
+local ShipDef = require 'ShipDef'
+local Equipment = require 'Equipment'
 local Vector2 = _G.Vector2
 
 local l = Lang.GetResource("ui-core")
 
 local fonts = ui.fonts
 
-local drawTable = import 'pigui.libs.table'
+local textTable = require 'pigui.libs.text-table'
 
 -- use the old InfoView style layout instead of the new sidebar layout.
 local _OLD_LAYOUT = true
@@ -82,7 +82,7 @@ local function shipStats()
 	local bwd_acc = player:GetAcceleration("reverse")
 	local up_acc = player:GetAcceleration("up")
 
-	drawTable.draw {
+	textTable.draw {
 		{ l.REGISTRATION_NUMBER..":",	shipLabel},
 		{ l.HYPERDRIVE..":",			hyperdrive and hyperdrive:GetName() or l.NONE },
 		{

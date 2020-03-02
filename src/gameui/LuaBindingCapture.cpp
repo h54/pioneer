@@ -1,9 +1,9 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "BindingCapture.h"
-#include "LuaObject.h"
-#include "LuaPushPull.h"
+#include "lua/LuaObject.h"
+#include "lua/LuaPushPull.h"
 #include "ui/LuaSignal.h"
 
 inline void pi_lua_generic_push(lua_State *l, const KeyBindings::KeyBinding &value)

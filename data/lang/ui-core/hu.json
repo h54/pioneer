@@ -335,6 +335,10 @@
     "description": "",
     "message": "Dokkolj a célponttal."
   },
+  "DRIVE_ACTIVE": {
+    "description": "Ship jump status",
+    "message": "Hiperhajtómű aktív"
+  },
   "DUE": {
     "description": "mission deadline date",
     "message": "Lejár"
@@ -963,6 +967,14 @@
     "description": "For player reputation",
     "message": "Tapasztalatlan"
   },
+  "INITIATED": {
+    "description": "Ship jump status",
+    "message": "Elindítva"
+  },
+  "INSUFFICIENT_FUEL": {
+    "description": "Ship jump status",
+    "message": "Elégtelen üzemanyag"
+  },
   "INSUFFICIENT_FUNDS": {
     "description": "",
     "message": "Insufficient funds."
@@ -1279,6 +1291,10 @@
     "description": "",
     "message": "Ezen a típuson nincs {equipment} foglalat."
   },
+  "NO_DRIVE": {
+    "description": "Ship jump status",
+    "message": "Nincs hiperhajtómű"
+  },
   "NO_FILTER_MATCHES": {
     "description": "No matches to this filter.",
     "message": "Nincs találat"
@@ -1339,6 +1355,10 @@
     "description": "Unpaid fines for crimes committed",
     "message": "Kiszabott bírságok"
   },
+  "OUT_OF_RANGE": {
+    "description": "Ship jump status",
+    "message": "Hatótávon kívül"
+  },
   "OVERVIEW_NAME_FILTER": {
     "description": "Filter overview window entries by name",
     "message": "Név szerinti szűrés"
@@ -1346,6 +1366,10 @@
   "OWED": {
     "description": "Player owing money to crew members",
     "message": "Tartozás"
+  },
+  "PAY": {
+    "description": "Pay for a transaction of services, e.g. for paying fines, (or repairs)",
+    "message": "Fizetés"
   },
   "PAY_FINE_OF_N": {
     "description": "",
@@ -1515,6 +1539,10 @@
     "description": "For hyperjump planner",
     "message": "Ugrások száma"
   },
+  "SAFETY_LOCKOUT": {
+    "description": "Ship jump status",
+    "message": "Biztonsági zár"
+  },
   "SAGITTARIUS_ARM": {
     "description": "Arm of the Milky Way galaxy",
     "message": "Sagittarius kar"
@@ -1647,6 +1675,10 @@
     "description": "",
     "message": "Csillagos ég sűrűsége"
   },
+  "STATION_DOCKS": {
+    "description": "Information shown in the station lobby, for total number of docking pads",
+    "message": "Kapacitásunk {total_docking_pads} dokk."
+  },
   "STATION_MANAGER": {
     "description": "",
     "message": "Diszpécser"
@@ -1686,6 +1718,10 @@
   "THE_SHIP_IS_UNDER_STATION_CONTROL_COMMANDER": {
     "description": "",
     "message": "Vezérlést átvette az állomás, parancsnok."
+  },
+  "THIS_IS_FACTION_POLICE": {
+    "description": "Greeting message in police station. 'faction' is one of (English, non-translatable) strings: 'Solar Federation', 'Commonwealth of Independent Worlds', or 'Haber Corporation', and 'faction_police' is one of: 'SolFed Police Force', 'Confederal Police' or, 'Haber Enforcement Division'",
+    "message": " {faction} {faction_police} "
   },
   "THREE_KPC_ARM": {
     "description": "Arm of the Milky Way galaxy",

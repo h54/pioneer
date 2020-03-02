@@ -1,4 +1,4 @@
--- Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 local Lang = import 'Lang'
 local Game = import 'Game'
@@ -48,11 +48,12 @@ if not stationView then
 					ui.nextColumn()
 					ui.text(l.CABINS .. ': ')
 					ui.sameLine()
+					local cabins_total = Game.player:GetEquipCountOccupied("cabin")
 					local cabins_free = player.cabin_cap or 0
-					local cabins = player:GetEquipCountOccupied("cabin")
+					local cabins_used = cabins_total - cabins_free
 					gaugePos = ui.getWindowPos() + ui.getCursorPos() + self.style.inventoryPadding
 					gaugeWidth = ui.getContentRegion().x - self.style.inventoryPadding.x - self.style.itemSpacing.x
-					ui.gauge(gaugePos, cabins - cabins_free, '', string.format('%%it %s / %it %s', l.USED, cabins, l.FREE), 0, cabins, icons.personal, colors.gaugeEquipmentMarket, '', gaugeWidth, ui.getTextLineHeight())
+					ui.gauge(gaugePos, cabins_used, '', string.format('%%i %s / %i %s', l.USED, cabins_free, l.FREE), 0, cabins_total, icons.personal, colors.gaugeEquipmentMarket, '', gaugeWidth, ui.getTextLineHeight())
 					ui.nextColumn()
 					ui.text(legalText)
 					ui.columns(1, '', false)

@@ -479,6 +479,10 @@
     "description": "like wheat or barley",
     "message": "Grano e altri cereali"
   },
+  "GRID_DISPLAY_MODE_TOGGLE": {
+    "description": "Switch show no grid",
+    "message": "Commuta tra le visualizzazioni della griglia."
+  },
   "HAND_WEAPONS": {
     "description": "",
     "message": "Armi a mano"
@@ -882,6 +886,10 @@
   "MISSILE": {
     "description": "",
     "message": "missile"
+  },
+  "MISSILE_DETECTED": {
+    "description": "",
+    "message": "Rilevato lancio di missili."
   },
   "MIXED_ECONOMY": {
     "description": "",

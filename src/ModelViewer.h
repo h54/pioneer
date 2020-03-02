@@ -1,15 +1,15 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef MODELVIEWER_H
 #define MODELVIEWER_H
-#include "LuaManager.h"
 #include "NavLights.h"
 #include "Shields.h"
 #include "graphics/Drawables.h"
 #include "graphics/Renderer.h"
 #include "graphics/Texture.h"
 #include "libs.h"
+#include "lua/LuaManager.h"
 #include "scenegraph/SceneGraph.h"
 #include "ui/Context.h"
 

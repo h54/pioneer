@@ -1,14 +1,16 @@
--- Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
-local Engine = import('Engine')
-local Game = import('Game')
-local ui = import('pigui/pigui.lua')
-local Lang = import("Lang")
+local Engine = require 'Engine'
+local Game = require 'Game'
+local utils = require 'utils'
+local Event = require 'Event'
+
+local Lang = require 'Lang'
 local lc = Lang.GetResource("core");
 local lui = Lang.GetResource("ui-core");
-local utils = import("utils")
-local Event = import("Event")
+
+local ui = require 'pigui'
 
 local player = nil
 local colors = ui.theme.colors
@@ -126,12 +128,12 @@ local function button_rotation_damping()
 end
 
 local function displayShipFunctionWindow()
-	if ui.showOptionsWindow then return end
+	if ui.optionsWindow.isOpen then return end
 	player = Game.player
 	local current_view = Game.CurrentView()
 	local buttons = 6
 	ui.setNextWindowPos(Vector2(ui.screenWidth/2 - ui.reticuleCircleRadius - (mainButtonSize.x + 2 * mainButtonFramePadding) * buttons, ui.screenHeight - mainButtonSize.y * 3 - 8) , "Always")
-	ui.window("ShipFunctions", {"NoTitleBar", "NoResize", "NoFocusOnAppearing", "NoBringToFrontOnFocus"},
+	ui.window("ShipFunctions", {"NoTitleBar", "NoResize", "NoFocusOnAppearing", "NoBringToFrontOnFocus", "NoSavedSettings"},
 						function()
 							if current_view == "world" then
 								local v = ui.getCursorPos()

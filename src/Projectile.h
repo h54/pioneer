@@ -1,11 +1,10 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _PROJECTILE_H
 #define _PROJECTILE_H
 
 #include "Body.h"
-#include "graphics/Material.h"
 
 struct ProjectileData {
 	ProjectileData() :
@@ -30,6 +29,7 @@ struct ProjectileData {
 class Frame;
 
 namespace Graphics {
+	class Material;
 	class Renderer;
 	class RenderState;
 	class VertexArray;

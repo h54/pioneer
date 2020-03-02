@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "FileSystem.h"
@@ -123,7 +123,7 @@ int main(int argc, char **argv)
 	Graphics::RendererOGL::RegisterRenderer();
 
 	Graphics::Settings videoSettings;
-	videoSettings.rendererType = Graphics::RENDERER_OPENGL;
+	videoSettings.rendererType = Graphics::RENDERER_OPENGL_3x;
 	videoSettings.width = WIDTH;
 	videoSettings.height = HEIGHT;
 	videoSettings.fullscreen = false;

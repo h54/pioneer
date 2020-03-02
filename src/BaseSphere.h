@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _BASESPHERE_H
@@ -7,13 +7,15 @@
 #include "Camera.h"
 #include "vector3.h"
 #include "galaxy/AtmosphereParameters.h"
-#include "graphics/Drawables.h"
+#include "graphics/Material.h"
 #include "terrain/Terrain.h"
 
 namespace Graphics {
 	class Renderer;
 	class RenderState;
-	class Material;
+	namespace Drawables {
+		class Sphere3D;
+	}
 } // namespace Graphics
 
 class BaseSphere {

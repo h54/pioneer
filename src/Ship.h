@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _SHIP_H
@@ -7,11 +7,9 @@
 #include <unordered_map>
 
 #include "DynamicBody.h"
-#include "LuaRef.h"
-#include "NavLights.h"
-#include "Sensors.h"
 #include "ShipType.h"
 #include "galaxy/SystemPath.h"
+#include "lua/LuaRef.h"
 #include "scenegraph/ModelSkin.h"
 #include "sound/Sound.h"
 
@@ -24,19 +22,18 @@ class CargoBody;
 class SpaceStation;
 class HyperspaceCloud;
 class Missile;
+class NavLights;
 class Planet;
+class Sensors;
 class ShipController;
 class Space;
+
+struct CollisionContact;
+struct HeatGradientParameters_t;
 
 namespace Graphics {
 	class Renderer;
 }
-
-struct HeatGradientParameters_t {
-	matrix3x3f heatingMatrix;
-	vector3f heatingNormal; // normalised
-	float heatingAmount; // 0.0 to 1.0 used for `u` component of heatGradient texture
-};
 
 struct shipstats_t {
 	int used_capacity;
@@ -68,7 +65,7 @@ public:
 	Ship(const ShipType::Id &shipId);
 	virtual ~Ship();
 
-	virtual void SetFrame(Frame *f) override;
+	virtual void SetFrame(FrameId fId) override;
 
 	void SetController(ShipController *c); //deletes existing
 	ShipController *GetController() const { return m_controller; }
@@ -177,6 +174,7 @@ public:
 		ALERT_NONE,
 		ALERT_SHIP_NEARBY,
 		ALERT_SHIP_FIRING,
+		ALERT_MISSILE_DETECTED,
 	};
 	AlertState GetAlertState() { return m_alertState; }
 
@@ -299,6 +297,7 @@ private:
 	double m_lastFiringAlert;
 	bool m_shipNear;
 	bool m_shipFiring;
+	bool m_missileDetected;
 
 	HyperspaceCloud *m_hyperspaceCloud;
 

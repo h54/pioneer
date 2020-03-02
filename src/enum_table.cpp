@@ -1,4 +1,4 @@
-/* Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details */
+/* Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details */
 /* Licensed under the terms of the GPL v3. See licenses/GPL-3.txt        */
 
 /* THIS FILE IS AUTO-GENERATED, CHANGES WILL BE OVERWRITTEN */
@@ -6,8 +6,6 @@
 
 #include "enum_table.h"
 #include "DynamicBody.h"
-#include "LuaEngine.h"
-#include "LuaFileSystem.h"
 #include "Object.h"
 #include "Ship.h"
 #include "ShipAICmd.h"
@@ -17,6 +15,8 @@
 #include "galaxy/StarSystem.h"
 #include "gameui/Face.h"
 #include "gameui/LabelOverlay.h"
+#include "lua/LuaEngine.h"
+#include "lua/LuaFileSystem.h"
 #include "scenegraph/Model.h"
 #include "ship/PlayerShipController.h"
 #include "ship/Propulsion.h"

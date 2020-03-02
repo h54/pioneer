@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Sensors.h"
@@ -138,7 +138,7 @@ void Sensors::Update(float time)
 				it->distance = m_owner->GetPositionRelTo(it->body).Length();
 				it->trail->Update(time);
 			} else {
-				it->trail->Reset(nullptr);
+				it->trail->Reset(FrameId::Invalid);
 			}
 			it->fresh = false;
 			++it;

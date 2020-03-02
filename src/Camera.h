@@ -1,15 +1,17 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _CAMERA_H
 #define _CAMERA_H
 
-#include "Body.h"
+#include "Color.h"
+#include "FrameId.h"
 #include "graphics/Frustum.h"
 #include "graphics/Light.h"
 #include "matrix4x4.h"
 #include "vector3.h"
 
+class Body;
 class Frame;
 class ShipCockpit;
 
@@ -31,13 +33,13 @@ public:
 	float GetZFar() const { return m_zFar; }
 
 	// frame to position the camera relative to
-	void SetFrame(Frame *frame) { m_frame = frame; }
+	void SetCameraFrame(FrameId frame) { m_frame = frame; }
 
 	// camera position relative to the frame origin
-	void SetPosition(const vector3d &pos) { m_pos = pos; }
+	void SetCameraPosition(const vector3d &pos) { m_pos = pos; }
 
 	// camera orientation relative to the frame origin
-	void SetOrient(const matrix3x3d &orient) { m_orient = orient; }
+	void SetCameraOrient(const matrix3x3d &orient) { m_orient = orient; }
 
 	// get the frustum. use for projection
 	const Graphics::Frustum &GetFrustum() const { return m_frustum; }
@@ -46,10 +48,9 @@ public:
 	void BeginFrame();
 	void EndFrame();
 
-	// valid between BeginFrame and EndFrame
-	Frame *GetCamFrame() const
+	// only returns a valid frameID between BeginFrame and EndFrame
+	FrameId GetCamFrame() const
 	{
-		assert(m_camFrame);
 		return m_camFrame;
 	}
 
@@ -65,11 +66,11 @@ private:
 
 	Graphics::Frustum m_frustum;
 
-	Frame *m_frame;
+	FrameId m_frame;
 	vector3d m_pos;
 	matrix3x3d m_orient;
 
-	Frame *m_camFrame;
+	FrameId m_camFrame;
 };
 
 class Camera {
@@ -139,23 +140,13 @@ private:
 		Color billboardColor;
 
 		// for sorting. "should a be drawn before b?"
+		// NOTE: Add below function (thus an indirection) in order
+		// to decouple Camera from Body.h
+		static bool sort_BodyAttrs(const BodyAttrs &a, const BodyAttrs &b);
 		friend bool operator<(const BodyAttrs &a, const BodyAttrs &b)
 		{
-			// both drawing last; distance order
-			if (a.bodyFlags & Body::FLAG_DRAW_LAST && b.bodyFlags & Body::FLAG_DRAW_LAST)
-				return a.camDist > b.camDist;
-
-			// a drawing last; draw b first
-			if (a.bodyFlags & Body::FLAG_DRAW_LAST)
-				return false;
-
-			// b drawing last; draw a first
-			if (b.bodyFlags & Body::FLAG_DRAW_LAST)
-				return true;
-
-			// both in normal draw; distance order
-			return a.camDist > b.camDist;
-		}
+			return sort_BodyAttrs(a, b);
+		};
 	};
 
 	std::list<BodyAttrs> m_sortedBodies;

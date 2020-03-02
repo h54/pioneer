@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _MODELBODY_H
@@ -6,6 +6,7 @@
 
 #include "Body.h"
 #include "CollMesh.h"
+#include "FrameId.h"
 
 class Shields;
 class Geom;
@@ -29,7 +30,7 @@ public:
 	virtual ~ModelBody();
 	void SetPosition(const vector3d &p) override;
 	void SetOrient(const matrix3x3d &r) override;
-	virtual void SetFrame(Frame *f) override;
+	virtual void SetFrame(FrameId fId) override;
 	// Colliding: geoms are checked against collision space
 	void SetColliding(bool colliding);
 	bool IsColliding() const { return m_colliding; }

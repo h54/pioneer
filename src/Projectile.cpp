@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Projectile.h"
@@ -8,22 +8,23 @@
 #include "Game.h"
 #include "GameSaveError.h"
 #include "Json.h"
-#include "LuaEvent.h"
-#include "LuaUtils.h"
 #include "Pi.h"
 #include "Planet.h"
 #include "Player.h"
 #include "Sfx.h"
 #include "Ship.h"
 #include "Space.h"
-#include "collider/collider.h"
+#include "collider/CollisionContact.h"
+#include "collider/CollisionSpace.h"
 #include "galaxy/StarSystem.h"
 #include "graphics/Graphics.h"
 #include "graphics/Material.h"
-#include "graphics/Renderer.h"
 #include "graphics/RenderState.h"
+#include "graphics/Renderer.h"
 #include "graphics/TextureBuilder.h"
 #include "graphics/VertexArray.h"
+#include "lua/LuaEvent.h"
+#include "lua/LuaUtils.h"
 
 std::unique_ptr<Graphics::VertexArray> Projectile::s_sideVerts;
 std::unique_ptr<Graphics::VertexArray> Projectile::s_glowVerts;
@@ -219,7 +220,7 @@ double Projectile::GetRadius() const
 	return sqrt(m_length * m_length + m_width * m_width);
 }
 
-void MiningLaserSpawnTastyStuff(Frame *f, const SystemBody *asteroid, const vector3d &pos)
+void MiningLaserSpawnTastyStuff(FrameId fId, const SystemBody *asteroid, const vector3d &pos)
 {
 	lua_State *l = Lua::manager->GetLuaState();
 
@@ -243,7 +244,7 @@ void MiningLaserSpawnTastyStuff(Frame *f, const SystemBody *asteroid, const vect
 	lua_pop(l, 1);
 	LUA_DEBUG_END(l, 0);
 
-	cargo->SetFrame(f);
+	cargo->SetFrame(fId);
 	cargo->SetPosition(pos);
 	const double x = Pi::rng.Double();
 	vector3d dir = pos.Normalized();
@@ -258,7 +259,8 @@ void Projectile::StaticUpdate(const float timeStep)
 	CollisionContact c;
 	// Collision spaces don't store velocity, so dirvel-only is still wrong but less awful than dirvel+basevel
 	vector3d vel = m_dirVel * timeStep;
-	GetFrame()->GetCollisionSpace()->TraceRay(GetPosition(), vel.Normalized(), vel.Length(), &c);
+	Frame *frame = Frame::GetFrame(GetFrame());
+	frame->GetCollisionSpace()->TraceRay(GetPosition(), vel.Normalized(), vel.Length(), &c);
 
 	if (c.userData1) {
 		Object *o = static_cast<Object *>(c.userData1);
@@ -278,7 +280,7 @@ void Projectile::StaticUpdate(const float timeStep)
 	if (m_mining) // mining lasers can break off chunks of terrain
 	{
 		// need to test for terrain hit
-		Planet *const planet = static_cast<Planet *>(GetFrame()->GetBody()); // cache the value even for the if statement
+		Planet *const planet = static_cast<Planet *>(frame->GetBody()); // cache the value even for the if statement
 		if (planet && planet->IsType(Object::PLANET)) {
 			vector3d pos = GetPosition();
 			double terrainHeight = planet->GetTerrainHeight(pos.Normalized());

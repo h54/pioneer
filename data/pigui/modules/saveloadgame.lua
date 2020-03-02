@@ -1,22 +1,25 @@
--- Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
-local Engine = import('Engine')
-local Game = import('Game')
-local ui = import('pigui/pigui.lua')
-local Event = import('Event')
-local Lang = import("Lang")
+local Engine = require 'Engine'
+local Game = require 'Game'
+local Event = require 'Event'
+local FileSystem = require 'FileSystem'
+local Format = require 'Format'
+local utils = require 'utils'
+
+local Lang = require 'Lang'
 local lc = Lang.GetResource("core")
 local lui = Lang.GetResource("ui-core")
-local FileSystem = import("FileSystem")
-local Format = import("Format")
 
-local utils = import("utils")
+local ui = require 'pigui'
+local ModalWindow = require 'pigui.libs.modal-win'
 
 local player = nil
 local colors = ui.theme.colors
 local icons = ui.theme.icons
 local pionillium = ui.fonts.pionillium
+local popupOpened = false
 
 local mainButtonSize = Vector2(40,40) * (ui.screenHeight / 1200)
 local optionButtonSize = Vector2(125,40) * (ui.screenHeight / 1200)
@@ -80,7 +83,7 @@ local function showSaveFiles()
 		table.sort(files, function(a,b) return (a.mtime.timestamp > b.mtime.timestamp) end)
 		ui.columns(2,"##saved_games",true)
 		for _,f in pairs(files) do
-			if ui.selectable(f.name, f.name == selectedSave, {"SpanAllColumns"}) then
+			if ui.selectable(f.name, f.name == selectedSave, {"SpanAllColumns", "DontClosePopups"}) then
 				selectedSave = f.name
 			end
 			if Engine.pigui.IsItemHovered() then
@@ -97,44 +100,39 @@ local function showSaveFiles()
 end
 
 local function closeAndClearCache()
-	ui.showSavedGameWindow = nil
+	ui.saveLoadWindow:close()
+	ui.saveLoadWindow.mode = nil
 	saveFileCache = {}
+	popupOpened = false
 end
 
 local function closeAndLoadOrSave()
 	if selectedSave ~= nil and selectedSave ~= '' then
-		if ui.showSavedGameWindow == "LOAD" then
+		if ui.saveLoadWindow.mode == "LOAD" then
 			Game.LoadGame(selectedSave)
-		elseif ui.showSavedGameWindow == "SAVE" then
+		elseif ui.saveLoadWindow.mode == "SAVE" then
 			Game.SaveGame(selectedSave)
 		end
 		closeAndClearCache()
 	end
 end
 
-local function savedGameWindow()
-	if ui.showSavedGameWindow then
-		ui.setNextWindowPosCenter('Always')
-		ui.withStyleColors({["WindowBg"] = Color(20, 20, 80, 230)}, function()
-			-- TODO: this window should be ShowBorders
-			ui.window("LoadGame", {"NoTitleBar", "NoResize", "AlwaysAutoResize"}, function()
-				local mode
-				mode = ui.showSavedGameWindow == 'SAVE' and lui.SAVE or lui.LOAD
-				optionTextButton(mode, nil, selectedSave~=nil, closeAndLoadOrSave)
-				ui.sameLine()
-				optionTextButton(lui.CANCEL, nil, true, closeAndClearCache)
+ui.saveLoadWindow = ModalWindow.New("LoadGame", function()
+	local mode = ui.saveLoadWindow.mode == 'SAVE' and lui.SAVE or lui.LOAD
+	optionTextButton(mode, nil, selectedSave ~= nil and selectedSave ~= '', closeAndLoadOrSave)
+	ui.sameLine()
+	optionTextButton(lui.CANCEL, nil, true, closeAndClearCache)
 
-				if ui.showSavedGameWindow == "SAVE" then
-					selectedSave = ui.inputText("##saveFileName", selectedSave or "", {})
-				end
-
-				showSaveFiles()
-			end)
-		end)
+	if ui.saveLoadWindow.mode == "SAVE" then
+		selectedSave = ui.inputText("##saveFileName", selectedSave or "", {})
 	end
-end
 
-ui.registerModule("game", savedGameWindow)
-ui.registerModule("mainMenu", savedGameWindow)
+	showSaveFiles()
+end, function (self, drawPopupFn)
+	ui.setNextWindowPosCenter('Always')
+	ui.withStyleColorsAndVars({PopupBg = Color(20, 20, 80, 230)}, {WindowBorderSize = 1}, drawPopupFn)
+end)
+
+ui.saveLoadWindow.mode = "LOAD"
 
 return {}

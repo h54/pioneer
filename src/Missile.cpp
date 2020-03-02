@@ -1,16 +1,17 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Missile.h"
 
 #include "Game.h"
 #include "Lang.h"
-#include "LuaEvent.h"
 #include "Pi.h"
 #include "Sfx.h"
 #include "Ship.h"
 #include "ShipAICmd.h"
 #include "Space.h"
+#include "collider/CollisionContact.h"
+#include "lua/LuaEvent.h"
 
 Missile::Missile(const ShipType::Id &shipId, Body *owner, int power)
 {

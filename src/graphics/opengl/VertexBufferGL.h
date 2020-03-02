@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef OGL_VERTEXBUFFER_H
@@ -80,7 +80,7 @@ namespace Graphics {
 				INSTOFFS_MAT2 = 8,
 				INSTOFFS_MAT3 = 9
 			};
-			std::unique_ptr<matrix4x4f> m_data;
+			std::unique_ptr<matrix4x4f[]> m_data;
 		};
 
 	} // namespace OGL

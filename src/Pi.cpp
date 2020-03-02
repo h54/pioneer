@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "buildopts.h"
@@ -6,7 +6,6 @@
 #include "Pi.h"
 
 #include "BaseSphere.h"
-#include "CargoBody.h"
 #include "CityOnPlanet.h"
 #include "DeathView.h"
 #include "EnumStrings.h"
@@ -20,49 +19,24 @@
 #include "Intro.h"
 #include "KeyBindings.h"
 #include "Lang.h"
-#include "LuaColor.h"
-#include "LuaComms.h"
-#include "LuaConsole.h"
-#include "LuaConstants.h"
-#include "LuaDev.h"
-#include "LuaEngine.h"
-#include "LuaEvent.h"
-#include "LuaFileSystem.h"
-#include "LuaFormat.h"
-#include "LuaGame.h"
-#include "LuaInput.h"
-#include "LuaJson.h"
-#include "LuaLang.h"
-#include "LuaManager.h"
-#include "LuaMissile.h"
-#include "LuaMusic.h"
-#include "LuaNameGen.h"
-#include "LuaPiGui.h"
-#include "LuaRef.h"
-#include "LuaSerializer.h"
-#include "LuaServerAgent.h"
-#include "LuaShipDef.h"
-#include "LuaSpace.h"
-#include "LuaTimer.h"
-#include "LuaVector.h"
-#include "LuaVector2.h"
 #include "Missile.h"
 #include "ModManager.h"
 #include "ModelCache.h"
 #include "NavLights.h"
 #include "OS.h"
+#include "lua/Lua.h"
+#include "lua/LuaConsole.h"
+#include "lua/LuaEvent.h"
+#include "lua/LuaTimer.h"
+#include "profiler/Profiler.h"
 #include "sound/AmbientSounds.h"
 #if WITH_OBJECTVIEWER
 #include "ObjectViewerView.h"
 #endif
 #include "Beam.h"
-#include "PiGui.h"
-#include "Planet.h"
 #include "Player.h"
 #include "Projectile.h"
-#include "SDLWrappers.h"
 #include "SectorView.h"
-#include "ServerAgent.h"
 #include "Sfx.h"
 #include "Shields.h"
 #include "ShipCpanel.h"
@@ -77,9 +51,10 @@
 #include "UIView.h"
 #include "WorldView.h"
 #include "galaxy/GalaxyGenerator.h"
-#include "galaxy/StarSystem.h"
 #include "gameui/Lua.h"
 #include "libs.h"
+#include "pigui/PerfInfo.h"
+#include "pigui/PiGui.h"
 #include "pigui/PiGuiLua.h"
 #include "ship/PlayerShipController.h"
 #include "ship/ShipViewController.h"
@@ -96,8 +71,6 @@
 
 #include "scenegraph/Lua.h"
 #include "versioningInfo.h"
-#include <algorithm>
-#include <sstream>
 
 #ifdef PROFILE_LUA_TIME
 #include <time.h>
@@ -266,88 +239,10 @@ static void draw_progress(float progress)
 {
 
 	Pi::renderer->ClearScreen();
-	PiGui::NewFrame(Pi::renderer->GetSDLWindow());
+	Pi::pigui->NewFrame(Pi::renderer->GetSDLWindow());
 	Pi::DrawPiGui(progress, "INIT");
+	Pi::pigui->Render();
 	Pi::renderer->SwapBuffers();
-}
-
-static void LuaInit()
-{
-	PROFILE_SCOPED()
-	LuaObject<PropertiedObject>::RegisterClass();
-
-	LuaObject<Body>::RegisterClass();
-	LuaObject<Ship>::RegisterClass();
-	LuaObject<SpaceStation>::RegisterClass();
-	LuaObject<Planet>::RegisterClass();
-	LuaObject<Star>::RegisterClass();
-	LuaObject<Player>::RegisterClass();
-	LuaObject<Missile>::RegisterClass();
-	LuaObject<CargoBody>::RegisterClass();
-	LuaObject<ModelBody>::RegisterClass();
-	LuaObject<HyperspaceCloud>::RegisterClass();
-
-	LuaObject<StarSystem>::RegisterClass();
-	LuaObject<SystemPath>::RegisterClass();
-	LuaObject<SystemBody>::RegisterClass();
-	LuaObject<Random>::RegisterClass();
-	LuaObject<Faction>::RegisterClass();
-
-	Pi::luaSerializer = new LuaSerializer();
-	Pi::luaTimer = new LuaTimer();
-
-	LuaObject<LuaSerializer>::RegisterClass();
-	LuaObject<LuaTimer>::RegisterClass();
-
-	LuaConstants::Register(Lua::manager->GetLuaState());
-	LuaLang::Register();
-	LuaEngine::Register();
-	LuaInput::Register();
-	LuaFileSystem::Register();
-	LuaJson::Register();
-#ifdef ENABLE_SERVER_AGENT
-	LuaServerAgent::Register();
-#endif
-	LuaGame::Register();
-	LuaComms::Register();
-	LuaFormat::Register();
-	LuaSpace::Register();
-	LuaShipDef::Register();
-	LuaMusic::Register();
-	LuaDev::Register();
-	LuaConsole::Register();
-	LuaVector::Register(Lua::manager->GetLuaState());
-	LuaVector2::Register(Lua::manager->GetLuaState());
-	LuaColor::Register(Lua::manager->GetLuaState());
-
-	// XXX sigh
-	UI::Lua::Init();
-	GameUI::Lua::Init();
-	SceneGraph::Lua::Init();
-
-	LuaObject<PiGui>::RegisterClass();
-	PiGUI::Lua::Init();
-
-	// XXX load everything. for now, just modules
-	lua_State *l = Lua::manager->GetLuaState();
-	pi_lua_import(l, "libs/autoload.lua", true);
-	pi_lua_import_recursive(l, "ui");
-	pi_lua_import(l, "pigui/pigui.lua", true);
-	pi_lua_import_recursive(l, "pigui/modules");
-	pi_lua_import_recursive(l, "pigui/views");
-	pi_lua_import_recursive(l, "modules");
-
-	Pi::luaNameGen = new LuaNameGen(Lua::manager);
-}
-
-static void LuaUninit()
-{
-	delete Pi::luaNameGen;
-
-	delete Pi::luaSerializer;
-	delete Pi::luaTimer;
-
-	Lua::Uninit();
 }
 
 static void LuaInitGame()
@@ -585,7 +480,7 @@ void Pi::Init(const std::map<std::string, std::string> &options, bool no_gui)
 	}
 #endif
 
-	LuaInit();
+	Lua::InitModules();
 
 	Gui::Init(renderer, Graphics::GetScreenWidth(), Graphics::GetScreenHeight(), 800, 600);
 
@@ -655,70 +550,6 @@ void Pi::Init(const std::map<std::string, std::string> &options, bool no_gui)
 
 	OS::NotifyLoadEnd();
 	draw_progress(0.95f);
-
-#if 0
-	// frame test code
-
-	Frame *root = new Frame(0, "root", 0);
-	Frame *p1 = new Frame(root, "p1", Frame::FLAG_HAS_ROT);
-	Frame *p1r = new Frame(p1, "p1r", Frame::FLAG_ROTATING);
-	Frame *m1 = new Frame(p1, "m1", Frame::FLAG_HAS_ROT);
-	Frame *m1r = new Frame(m1, "m1r", Frame::FLAG_ROTATING);
-	Frame *p2 = new Frame(root, "p2", Frame::FLAG_HAS_ROT);
-	Frame *p2r = new Frame(p2, "pr2", Frame::FLAG_ROTATING);
-
-	p1->SetPosition(vector3d(1000,0,0));
-	p1->SetVelocity(vector3d(0,1,0));
-	p2->SetPosition(vector3d(0,2000,0));
-	p2->SetVelocity(vector3d(-2,0,0));
-	p1r->SetAngVelocity(vector3d(0,0,0.0001));
-	p1r->SetOrient(matrix3x3d::BuildRotate(M_PI/4, vector3d(0,0,1)));
-	p2r->SetAngVelocity(vector3d(0,0,-0.0004));
-	p2r->SetOrient(matrix3x3d::BuildRotate(-M_PI/2, vector3d(0,0,1)));
-	root->UpdateOrbitRails(0, 0);
-
-	CargoBody *c1 = new CargoBody(Equip::Type::SLAVES);
-	c1->SetFrame(p1r);
-	c1->SetPosition(vector3d(0,180,0));
-//	c1->SetVelocity(vector3d(1,0,0));
-	CargoBody *c2 = new CargoBody(Equip::Type::SLAVES);
-	c2->SetFrame(p1r);
-	c2->SetPosition(vector3d(0,200,0));
-//	c2->SetVelocity(vector3d(1,0,0));
-
-	vector3d pos = c1->GetPositionRelTo(p1);
-	vector3d vel = c1->GetVelocityRelTo(p1);
-	double speed = vel.Length();
-	vector3d pos2 = c2->GetPositionRelTo(p1);
-	vector3d vel2 = c2->GetVelocityRelTo(p1);
-	double speed2 = vel2.Length();
-
-	double speed3 = c2->GetVelocityRelTo(c1).Length();
-	c2->SwitchToFrame(p1);
-	vector3d vel4 = c2->GetVelocityRelTo(c1);
-	double speed4 = c2->GetVelocityRelTo(c1).Length();
-
-	root->UpdateOrbitRails(0, 1.0);
-
-	//buildrotate test
-
-	matrix3x3d m = matrix3x3d::BuildRotate(M_PI/2, vector3d(0,0,1));
-	vector3d v = m * vector3d(1,0,0);
-
-/*	vector3d pos = p1r->GetPositionRelTo(p2r);
-	vector3d vel = p1r->GetVelocityRelTo(p2r);
-	matrix3x3d o1 = p1r->GetOrientRelTo(p2r);
-	double speed = vel.Length();
-	vector3d pos2 = p2r->GetPositionRelTo(p1r);
-	vector3d vel2 = p2r->GetVelocityRelTo(p1r);
-	matrix3x3d o2 = p2r->GetOrientRelTo(p1r);
-	double speed2 = vel2.Length();
-*/	root->UpdateOrbitRails(0, 1.0/60);
-
-	delete p2r; delete p2; delete m1r; delete m1; delete p1r; delete p1; delete root;
-	delete c1; delete c2;
-
-#endif
 
 #if 0
 	// test code to produce list of ship stats
@@ -807,7 +638,8 @@ void Pi::Quit()
 	Pi::pigui->Uninit();
 	Pi::ui.Reset(0);
 	Pi::pigui.Reset(0);
-	LuaUninit();
+	Lua::UninitModules();
+	Lua::Uninit();
 	Gui::Uninit();
 	delete Pi::modelCache;
 	delete Pi::renderer;
@@ -1230,31 +1062,6 @@ void Pi::Start(const SystemPath &startPath)
 					}
 				}
 
-#if 0 // Moved to Input::HandleSDLEvent, can be deleted when confirmed working \
-	// joystick stuff for the options window
-				switch (event.type) {
-				case SDL_JOYAXISMOTION:
-					if (!joysticks[event.jaxis.which].joystick)
-						break;
-					if (event.jaxis.value == -32768)
-						joysticks[event.jaxis.which].axes[event.jaxis.axis] = 1.f;
-					else
-						joysticks[event.jaxis.which].axes[event.jaxis.axis] = -event.jaxis.value / 32767.f;
-					break;
-				case SDL_JOYBUTTONUP:
-				case SDL_JOYBUTTONDOWN:
-					if (!joysticks[event.jaxis.which].joystick)
-						break;
-					joysticks[event.jbutton.which].buttons[event.jbutton.button] = event.jbutton.state != 0;
-					break;
-				case SDL_JOYHATMOTION:
-					if (!joysticks[event.jaxis.which].joystick)
-						break;
-					joysticks[event.jhat.which].hats[event.jhat.hat] = event.jhat.value;
-					break;
-				default: break;
-				}
-#endif
 				ui->DispatchSDLEvent(event);
 
 				input.HandleSDLEvent(event);
@@ -1272,9 +1079,10 @@ void Pi::Start(const SystemPath &startPath)
 		intro->Draw(_time);
 		Pi::renderer->EndFrame();
 
-		PiGui::NewFrame(Pi::renderer->GetSDLWindow());
+		Pi::pigui->NewFrame(Pi::renderer->GetSDLWindow());
 		DrawPiGui(Pi::frameTime, "MAINMENU");
 
+		Pi::pigui->Render();
 		Pi::EndRenderTarget();
 
 		// render the rendertarget texture
@@ -1347,13 +1155,22 @@ void Pi::MainLoop()
 	Uint32 last_stats = SDL_GetTicks();
 	int frame_stat = 0;
 	int phys_stat = 0;
-	char fps_readout[2048];
-	memset(fps_readout, 0, sizeof(fps_readout));
+	// FIXME: this is a hack, this class should have its lifecycle managed elsewhere
+	// Ideally an application framework class handles this (as well as the rest of the main loop)
+	// but for now this is the best we have.
+	std::unique_ptr<PiGUI::PerfInfo> perfInfoDisplay(new PiGUI::PerfInfo());
 #endif
 
 	int MAX_PHYSICS_TICKS = Pi::config->Int("MaxPhysicsCyclesPerRender");
 	if (MAX_PHYSICS_TICKS <= 0)
 		MAX_PHYSICS_TICKS = 4;
+
+	// Used to measure frame and physics performance timing info
+	// with no portable way to map cycles -> ns, Profiler::Timer is useless for taking measurements
+	// Use Profiler::Clock which is backed by std::chrono::steady_clock (== high_resolution_clock for 99% of uses)
+	Profiler::Clock perfTimer;
+	float frame_time_real = 0; // higher resolution than SDL's 1ms, for detailed frame info
+	float phys_time = 0;
 
 	double currentTime = 0.001 * double(SDL_GetTicks());
 	double accumulator = Pi::game->GetTimeStep();
@@ -1365,6 +1182,8 @@ void Pi::MainLoop()
 
 	while (Pi::game) {
 		PROFILE_SCOPED()
+		perfTimer.Reset();
+		perfTimer.Start();
 
 #ifdef ENABLE_SERVER_AGENT
 		Pi::serverAgent->ProcessResponses();
@@ -1409,6 +1228,9 @@ void Pi::MainLoop()
 #if WITH_DEVKEYS
 		frame_stat++;
 #endif
+		// Record physics timestep but keep information about current frame timing.
+		perfTimer.SoftStop();
+		phys_time = perfTimer.milliseconds();
 
 		// did the player die?
 		if (Pi::player->IsDead()) {
@@ -1437,7 +1259,7 @@ void Pi::MainLoop()
 		for (Body *b : game->GetSpace()->GetBodies()) {
 			b->UpdateInterpTransform(Pi::GetGameTickAlpha());
 		}
-		game->GetSpace()->GetRootFrame()->UpdateInterpTransform(Pi::GetGameTickAlpha());
+		Frame::GetFrame(game->GetSpace()->GetRootFrame())->UpdateInterpTransform(Pi::GetGameTickAlpha());
 
 		currentView->Update();
 		currentView->Draw3D();
@@ -1472,28 +1294,28 @@ void Pi::MainLoop()
 
 		Pi::EndRenderTarget();
 		Pi::DrawRenderTarget();
+
+		// TODO: the escape menu depends on HandleEvents() being called before NewFrame()
+		// Move HandleEvents to either the end of the loop or the very start of the loop
+		// The goal is to be able to call imgui functions for debugging inside C++ code
+		Pi::pigui->NewFrame(Pi::renderer->GetSDLWindow());
+
 		if (Pi::game && !Pi::player->IsDead()) {
 			// FIXME: Always begin a camera frame because WorldSpaceToScreenSpace
 			// requires it and is exposed to pigui.
 			Pi::game->GetWorldView()->BeginCameraFrame();
-			PiGui::NewFrame(Pi::renderer->GetSDLWindow());
 			DrawPiGui(Pi::frameTime, "GAME");
 			Pi::game->GetWorldView()->EndCameraFrame();
 		}
 
 #if WITH_DEVKEYS
-		// NB: this needs to be rendered last so that it appears over all other game elements
-		//	preferrably like this where it is just before the buffer swap
+		// Render this even when we're dead.
 		if (Pi::showDebugInfo) {
-			Gui::Screen::EnterOrtho();
-			Gui::Screen::PushFont("ConsoleFont");
-			static RefCountedPtr<Graphics::VertexBuffer> s_debugInfovb;
-			Gui::Screen::RenderStringBuffer(s_debugInfovb, fps_readout, 0, 0);
-			Gui::Screen::PopFont();
-			Gui::Screen::LeaveOrtho();
+			perfInfoDisplay->Draw();
 		}
 #endif
 
+		Pi::pigui->Render();
 		Pi::renderer->SwapBuffers();
 
 		// game exit will have cleared Pi::game. we can't continue.
@@ -1518,41 +1340,9 @@ void Pi::MainLoop()
 		HandleRequests();
 
 #if WITH_DEVKEYS
-		if (Pi::showDebugInfo && SDL_GetTicks() - last_stats > 1000) {
-			size_t lua_mem = Lua::manager->GetMemoryUsage();
-			int lua_memB = int(lua_mem & ((1u << 10) - 1));
-			int lua_memKB = int(lua_mem >> 10) % 1024;
-			int lua_memMB = int(lua_mem >> 20);
-			const Graphics::Stats::TFrameData &stats = Pi::renderer->GetStats().FrameStatsPrevious();
-			const Uint32 numDrawCalls = stats.m_stats[Graphics::Stats::STAT_DRAWCALL];
-			const Uint32 numBuffersCreated = stats.m_stats[Graphics::Stats::STAT_CREATE_BUFFER];
-			const Uint32 numDrawTris = stats.m_stats[Graphics::Stats::STAT_DRAWTRIS];
-			const Uint32 numDrawPointSprites = stats.m_stats[Graphics::Stats::STAT_DRAWPOINTSPRITES];
-			const Uint32 numDrawBuildings = stats.m_stats[Graphics::Stats::STAT_BUILDINGS];
-			const Uint32 numDrawCities = stats.m_stats[Graphics::Stats::STAT_CITIES];
-			const Uint32 numDrawGroundStations = stats.m_stats[Graphics::Stats::STAT_GROUNDSTATIONS];
-			const Uint32 numDrawSpaceStations = stats.m_stats[Graphics::Stats::STAT_SPACESTATIONS];
-			const Uint32 numDrawAtmospheres = stats.m_stats[Graphics::Stats::STAT_ATMOSPHERES];
-			const Uint32 numDrawPatches = stats.m_stats[Graphics::Stats::STAT_PATCHES];
-			const Uint32 numDrawPlanets = stats.m_stats[Graphics::Stats::STAT_PLANETS];
-			const Uint32 numDrawGasGiants = stats.m_stats[Graphics::Stats::STAT_GASGIANTS];
-			const Uint32 numDrawStars = stats.m_stats[Graphics::Stats::STAT_STARS];
-			const Uint32 numDrawShips = stats.m_stats[Graphics::Stats::STAT_SHIPS];
-			const Uint32 numDrawBillBoards = stats.m_stats[Graphics::Stats::STAT_BILLBOARD];
-			snprintf(
-				fps_readout, sizeof(fps_readout),
-				"%d fps (%.1f ms/f), %d phys updates, %d triangles, %.3f M tris/sec, %d glyphs/sec, %d patches/frame\n"
-				"Lua mem usage: %d MB + %d KB + %d bytes (stack top: %d)\n\n"
-				"Draw Calls (%u), of which were:\n Tris (%u)\n Point Sprites (%u)\n Billboards (%u)\n"
-				"Buildings (%u), Cities (%u), GroundStations (%u), SpaceStations (%u), Atmospheres (%u)\n"
-				"Patches (%u), Planets (%u), GasGiants (%u), Stars (%u), Ships (%u)\n"
-				"Buffers Created(%u)\n",
-				frame_stat, (1000.0 / frame_stat), phys_stat, Pi::statSceneTris, Pi::statSceneTris * frame_stat * 1e-6,
-				Text::TextureFont::GetGlyphCount(), Pi::statNumPatches,
-				lua_memMB, lua_memKB, lua_memB, lua_gettop(Lua::manager->GetLuaState()),
-				numDrawCalls, numDrawTris, numDrawPointSprites, numDrawBillBoards,
-				numDrawBuildings, numDrawCities, numDrawGroundStations, numDrawSpaceStations, numDrawAtmospheres,
-				numDrawPatches, numDrawPlanets, numDrawGasGiants, numDrawStars, numDrawShips, numBuffersCreated);
+		perfInfoDisplay->Update(frame_time_real, phys_time);
+		if (Pi::showDebugInfo && SDL_GetTicks() - last_stats >= 1000) {
+			perfInfoDisplay->UpdateFrameInfo(frame_stat, phys_stat);
 			frame_stat = 0;
 			phys_stat = 0;
 			Text::TextureFont::ClearGlyphCount();
@@ -1592,6 +1382,9 @@ void Pi::MainLoop()
 #ifdef PIONEER_PROFILER
 		Profiler::reset();
 #endif
+
+		perfTimer.Stop();
+		frame_time_real = perfTimer.milliseconds();
 	}
 }
 
@@ -1621,7 +1414,5 @@ void Pi::DrawPiGui(double delta, std::string handler)
 	PROFILE_SCOPED()
 
 	if (!IsConsoleActive())
-		Pi::pigui->Render(delta, handler);
-
-	PiGui::RenderImGui();
+		Pi::pigui->RunHandler(delta, handler);
 }

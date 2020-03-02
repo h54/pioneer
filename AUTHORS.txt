@@ -27,6 +27,7 @@ The Pioneer Developers are:
 * Chris Collins
 * Chris Dennett
 * Christian Koch
+* Christian Wyss
 * Claudius Mueller
 * Clinton Mead
 * ColdSpirit
@@ -119,7 +120,7 @@ The Pioneer Developers are:
 Licensing
 =========
 
-Copyright © 2008-2019 Pioneer Developers
+Copyright © 2008-2020 Pioneer Developers
 Portions copyright © 2013-2014 Meteoric Games Ltd.
 
 Pioneer's core code and extension modules are licensed under the terms of the

@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef SCENEGRAPH_MODELSKIN_H
@@ -6,8 +6,8 @@
 
 #include "Color.h"
 #include "Json.h"
-#include "LuaWrappable.h"
 #include "Random.h"
+#include "lua/LuaWrappable.h"
 #include <string>
 
 namespace Serializer {

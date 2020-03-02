@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "buildopts.h"
@@ -12,9 +12,10 @@
 #include "GameLog.h"
 #include "GameSaveError.h"
 #include "HyperspaceCloud.h"
-#include "LuaEvent.h"
-#include "LuaSerializer.h"
 #include "MathUtil.h"
+#include "Object.h"
+#include "lua/LuaEvent.h"
+#include "lua/LuaSerializer.h"
 #if WITH_OBJECTVIEWER
 #include "ObjectViewerView.h"
 #endif
@@ -30,15 +31,14 @@
 #include "UIView.h"
 #include "WorldView.h"
 #include "galaxy/GalaxyGenerator.h"
-#include "graphics/Renderer.h"
 #include "ship/PlayerShipController.h"
 
-static const int s_saveVersion = 85;
+static const int s_saveVersion = 86;
 
-Game::Game(const SystemPath &path, double time) :
+Game::Game(const SystemPath &path, const double startDateTime) :
 	m_galaxy(GalaxyGenerator::Create()),
-	m_time(time),
-	m_state(STATE_NORMAL),
+	m_time(startDateTime),
+	m_state(State::NORMAL),
 	m_wantHyperspace(false),
 	m_timeAccel(TIMEACCEL_1X),
 	m_requestedTimeAccel(TIMEACCEL_1X),
@@ -204,6 +204,10 @@ void Game::ToJson(Json &jsonObj)
 	jsonObj["hyperspace_duration"] = m_hyperspaceDuration;
 	jsonObj["hyperspace_end_time"] = m_hyperspaceEndTime;
 
+	// Delete camera frame from frame structure:
+	bool have_cam_frame = m_gameViews->m_worldView->GetCameraContext()->GetCamFrame().valid();
+	if (have_cam_frame) m_gameViews->m_worldView->EndCameraFrame();
+
 	// space, all the bodies and things
 	m_space->ToJson(jsonObj);
 	jsonObj["player"] = m_space->GetIndexForBody(m_player.get());
@@ -267,13 +271,16 @@ void Game::ToJson(Json &jsonObj)
 	jsonObj["game_info"] = gameInfo;
 
 	Pi::luaSerializer->UninitTableRefs();
+
+	// Bring back camera frame:
+	if (have_cam_frame) m_gameViews->m_worldView->BeginCameraFrame();
 }
 
 void Game::TimeStep(float step)
 {
 	PROFILE_SCOPED()
 	m_time += step; // otherwise planets lag time accel changes by a frame
-	if (m_state == STATE_HYPERSPACE && Pi::game->GetTime() >= m_hyperspaceEndTime)
+	if (m_state == State::HYPERSPACE && Pi::game->GetTime() >= m_hyperspaceEndTime)
 		m_time = m_hyperspaceEndTime;
 
 	m_space->TimeStep(step);
@@ -282,7 +289,7 @@ void Game::TimeStep(float step)
 	m_gameViews->m_cpan->TimeStepUpdate(step);
 	SfxManager::TimeStepAll(step, m_space->GetRootFrame());
 
-	if (m_state == STATE_HYPERSPACE) {
+	if (m_state == State::HYPERSPACE) {
 		if (Pi::game->GetTime() >= m_hyperspaceEndTime) {
 			SwitchToNormalSpace();
 			m_player->EnterSystem();
@@ -293,7 +300,7 @@ void Game::TimeStep(float step)
 	}
 
 	if (m_wantHyperspace) {
-		assert(m_state == STATE_NORMAL);
+		assert(m_state == State::NORMAL);
 		SwitchToHyperspace();
 		return;
 	}
@@ -387,7 +394,7 @@ bool Game::UpdateTimeAccel()
 
 void Game::WantHyperspace()
 {
-	assert(m_state == STATE_NORMAL);
+	assert(m_state == State::NORMAL);
 	m_wantHyperspace = true;
 }
 
@@ -450,6 +457,7 @@ void Game::SwitchToHyperspace()
 	m_space->RemoveBody(m_player.get());
 
 	// create hyperspace :)
+	m_space.reset(); // HACK: Here because next line will create Frames *before* deleting existing ones
 	m_space.reset(new Space(this, m_galaxy, m_space.get()));
 
 	m_space->GetBackground()->SetDrawFlags(Background::Container::DRAW_STARS);
@@ -473,7 +481,7 @@ void Game::SwitchToHyperspace()
 	m_hyperspaceDuration = m_player->GetHyperspaceDuration();
 	m_hyperspaceEndTime = Pi::game->GetTime() + m_hyperspaceDuration;
 
-	m_state = STATE_HYPERSPACE;
+	m_state = State::HYPERSPACE;
 	m_wantHyperspace = false;
 
 	Output("Started hyperspacing...\n");
@@ -486,6 +494,7 @@ void Game::SwitchToNormalSpace()
 	m_space->RemoveBody(m_player.get());
 
 	// create a new space for the system
+	m_space.reset(); // HACK: Here because next line will create Frames *before* deleting existing ones
 	m_space.reset(new Space(this, m_galaxy, m_hyperspaceDest, m_space.get()));
 
 	// put the player in it
@@ -605,7 +614,7 @@ void Game::SwitchToNormalSpace()
 
 	m_space->GetBackground()->SetDrawFlags(Background::Container::DRAW_SKYBOX | Background::Container::DRAW_STARS);
 
-	m_state = STATE_NORMAL;
+	m_state = State::NORMAL;
 }
 
 const float Game::s_timeAccelRates[] = {
@@ -811,7 +820,7 @@ Game::Views::~Views()
 // manage creation and destruction here to get the timing and order right
 void Game::CreateViews()
 {
-	Pi::SetView(0);
+	Pi::SetView(nullptr);
 
 	// XXX views expect Pi::game and Pi::player to exist
 	Pi::game = this;
@@ -826,7 +835,7 @@ void Game::CreateViews()
 // XXX mostly a copy of CreateViews
 void Game::LoadViewsFromJson(const Json &jsonObj)
 {
-	Pi::SetView(0);
+	Pi::SetView(nullptr);
 
 	// XXX views expect Pi::game and Pi::player to exist
 	Pi::game = this;
@@ -840,7 +849,7 @@ void Game::LoadViewsFromJson(const Json &jsonObj)
 
 void Game::DestroyViews()
 {
-	Pi::SetView(0);
+	Pi::SetView(nullptr);
 
 	m_gameViews.reset();
 

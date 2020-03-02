@@ -1,14 +1,14 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #define ALLOW_LUA_SHIP_DEF 0
 
 #include "ShipType.h"
 #if ALLOW_LUA_SHIP_DEF
-#include "LuaConstants.h"
 #include "LuaTable.h"
 #include "LuaUtils.h"
 #include "LuaVector.h"
+#include "lua/LuaConstants.h"
 #endif
 #include "FileSystem.h"
 #include "Json.h"

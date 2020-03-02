@@ -1,7 +1,7 @@
 {
   "AIR_PROCESSORS": {
     "description": "",
-    "message": "Hava işlemciler"
+    "message": "Hava işlemcileri"
   },
   "ALERT_CANCELLED": {
     "description": "",
@@ -81,7 +81,7 @@
   },
   "A_FEW_THOUSAND": {
     "description": "regarding population",
-    "message": "Sadece bir kaç bin"
+    "message": "Sadece birkaç bin"
   },
   "BATTLE_WEAPONS": {
     "description": "",
@@ -478,6 +478,10 @@
   "GRAIN": {
     "description": "like wheat or barley",
     "message": "Tahıl"
+  },
+  "GRID_DISPLAY_MODE_TOGGLE": {
+    "description": "Switch show no grid",
+    "message": "Izgara görüntüleme modları arasında geçiş yap"
   },
   "HAND_WEAPONS": {
     "description": "",
@@ -882,6 +886,10 @@
   "MISSILE": {
     "description": "",
     "message": "füze"
+  },
+  "MISSILE_DETECTED": {
+    "description": "",
+    "message": "Füze fırlatması tespit edildi."
   },
   "MIXED_ECONOMY": {
     "description": "",

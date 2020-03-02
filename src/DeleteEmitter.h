@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _DELETEEMITTER_H
@@ -11,7 +11,7 @@
 // including sigc++ directly so we don't get circular dependencies
 #include <sigc++/sigc++.h>
 
-#include "LuaWrappable.h"
+#include "lua/LuaWrappable.h"
 
 class DeleteEmitter : public LuaWrappable {
 public:

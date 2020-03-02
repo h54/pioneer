@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _GEOPATCH_H
@@ -6,12 +6,14 @@
 
 #include <SDL_stdinc.h>
 
+#include "Color.h"
 #include "GeoPatchID.h"
 #include "JobQueue.h"
+#include "RefCounted.h"
+#include "matrix4x4.h"
 #include "vector3.h"
-#include "graphics/VertexBuffer.h"
-
 #include <deque>
+#include <memory>
 
 //#define DEBUG_BOUNDING_SPHERES
 
@@ -25,6 +27,7 @@ namespace Graphics {
 namespace Graphics {
 	class Renderer;
 	class Frustum;
+	class VertexBuffer;
 }
 
 class GeoPatchContext;

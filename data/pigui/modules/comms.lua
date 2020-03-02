@@ -1,14 +1,16 @@
--- Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
-local Engine = import('Engine')
-local Game = import('Game')
-local ui = import('pigui/pigui.lua')
-local Lang = import("Lang")
+local Engine = require 'Engine'
+local Game = require 'Game'
+local utils = require 'utils'
+local Event = require 'Event'
+
+local Lang = require 'Lang'
 local lc = Lang.GetResource("core");
 local lui = Lang.GetResource("ui-core");
-local utils = import("utils")
-local Event = import("Event")
+
+local ui = require 'pigui'
 
 local colors = ui.theme.colors
 local icons = ui.theme.icons
@@ -35,7 +37,7 @@ local function displayCommsLog()
 	local current_view = Game.CurrentView()
 	if current_view == "world" then
 		ui.setNextWindowPos(Vector2(10, 10) , "Always")
-		ui.window("CommsLogButton", {"NoTitleBar", "NoResize", "NoFocusOnAppearing", "NoBringToFrontOnFocus"},
+		ui.window("CommsLogButton", {"NoTitleBar", "NoResize", "NoFocusOnAppearing", "NoBringToFrontOnFocus", "NoSavedSettings"},
 							function()
 								if ui.coloredSelectedIconButton(icons.comms, mainButtonSize, nil, mainButtonFramePadding, colors.buttonBlue, colors.white, 'Toggle full comms window') then
 									fullComms = not fullComms

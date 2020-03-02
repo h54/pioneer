@@ -1,12 +1,17 @@
-local Engine = import('Engine')
-local Game = import('Game')
-local ui = import('pigui/pigui.lua')
-local Lang = import("Lang")
+-- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+-- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
+
+local Engine = require 'Engine'
+local Game = require 'Game'
+local utils = require 'utils'
+local Event = require 'Event'
+local SystemPath = require 'SystemPath'
+
+local Lang = require 'Lang'
 local lc = Lang.GetResource("core");
 local lui = Lang.GetResource("ui-core");
-local utils = import("utils")
-local Event = import("Event")
-local SystemPath = import("SystemPath")
+
+local ui = require 'pigui'
 
 local player = nil
 local colors = ui.theme.colors
@@ -146,7 +151,7 @@ local function showSearch()
 									 for _,item in pairs(data) do
 										 local system = item.path:GetStarSystem()
 										 local label = system.name
-										 label = label .. '  ' .. item.jumpStatus .. ", " .. string.format("%.2f", item.distance) .. lc.UNIT_LY .. ", " .. item.fuelRequired .. lc.UNIT_TONNES .. ", " .. ui.Format.Duration(item.duration, 2)
+										 label = label .. '  (' .. lui[item.jumpStatus] .. "), " .. string.format("%.2f", item.distance) .. lc.UNIT_LY .. ", " .. item.fuelRequired .. lc.UNIT_TONNES .. ", " .. ui.Format.Duration(item.duration, 2)
 
 										 if ui.selectable(label, false, {}) then
 											 Engine.SetSectorMapSelected(item.path)

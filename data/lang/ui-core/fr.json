@@ -335,6 +335,10 @@
     "description": "",
     "message": "S'arrimer a la cible actuelle"
   },
+  "DRIVE_ACTIVE": {
+    "description": "Ship jump status",
+    "message": "Propulsion active"
+  },
   "DUE": {
     "description": "mission deadline date",
     "message": "Dois"
@@ -963,6 +967,14 @@
     "description": "For player reputation",
     "message": "Inexpérimenté"
   },
+  "INITIATED": {
+    "description": "Ship jump status",
+    "message": "Amorcée"
+  },
+  "INSUFFICIENT_FUEL": {
+    "description": "Ship jump status",
+    "message": "Carburant insuffisant"
+  },
   "INSUFFICIENT_FUNDS": {
     "description": "",
     "message": "Fonds insuffisants"
@@ -1279,6 +1291,10 @@
     "description": "",
     "message": "{equipment} n'est pas compatible avec ce type de vaisseau"
   },
+  "NO_DRIVE": {
+    "description": "Ship jump status",
+    "message": "Pas de propulsion"
+  },
   "NO_FILTER_MATCHES": {
     "description": "No matches to this filter.",
     "message": "Rien ne correspond à ce filtre"
@@ -1339,6 +1355,10 @@
     "description": "Unpaid fines for crimes committed",
     "message": "Amendes impayées"
   },
+  "OUT_OF_RANGE": {
+    "description": "Ship jump status",
+    "message": "Hors de portée"
+  },
   "OVERVIEW_NAME_FILTER": {
     "description": "Filter overview window entries by name",
     "message": "Filtrer les entrées de la fenêtre d'aperçu par nom"
@@ -1346,6 +1366,10 @@
   "OWED": {
     "description": "Player owing money to crew members",
     "message": "Dû"
+  },
+  "PAY": {
+    "description": "Pay for a transaction of services, e.g. for paying fines, (or repairs)",
+    "message": "Payer"
   },
   "PAY_FINE_OF_N": {
     "description": "",
@@ -1515,6 +1539,10 @@
     "description": "For hyperjump planner",
     "message": "Sauts de l'itinéraire"
   },
+  "SAFETY_LOCKOUT": {
+    "description": "Ship jump status",
+    "message": "Vérouillage de sécurité"
+  },
   "SAGITTARIUS_ARM": {
     "description": "Arm of the Milky Way galaxy",
     "message": "Bras du Sagittaire"
@@ -1647,6 +1675,10 @@
     "description": "",
     "message": "Densité du champ d'étoile."
   },
+  "STATION_DOCKS": {
+    "description": "Information shown in the station lobby, for total number of docking pads",
+    "message": "Notre capacité totale est de {total_docking_pads} stations d'arrimages."
+  },
   "STATION_MANAGER": {
     "description": "",
     "message": "Gestionnaire de station"
@@ -1686,6 +1718,10 @@
   "THE_SHIP_IS_UNDER_STATION_CONTROL_COMMANDER": {
     "description": "",
     "message": "Le vaisseau est sous le contrôle de la station, Commandant."
+  },
+  "THIS_IS_FACTION_POLICE": {
+    "description": "Greeting message in police station. 'faction' is one of (English, non-translatable) strings: 'Solar Federation', 'Commonwealth of Independent Worlds', or 'Haber Corporation', and 'faction_police' is one of: 'SolFed Police Force', 'Confederal Police' or, 'Haber Enforcement Division'",
+    "message": "C'est la police nommée {faction_police} appartenant à la faction {faction}"
   },
   "THREE_KPC_ARM": {
     "description": "Arm of the Milky Way galaxy",

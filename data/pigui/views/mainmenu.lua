@@ -1,21 +1,23 @@
--- Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
-local Engine = import('Engine')
-local Game = import('Game')
-local Ship = import("Ship")
-local ShipDef = import("ShipDef")
-local SystemPath = import("SystemPath")
-local Equipment = import("Equipment")
-local Format = import("Format")
-local ui = import('pigui/pigui.lua')
-local Event = import('Event')
-local Lang = import("Lang")
+local Engine = require 'Engine'
+local Game = require 'Game'
+local Ship = require 'Ship'
+local ShipDef = require 'ShipDef'
+local SystemPath = require 'SystemPath'
+local Equipment = require 'Equipment'
+local Format = require 'Format'
+local Event = require 'Event'
+local Lang = require 'Lang'
+
 local lc = Lang.GetResource("core")
 local lui = Lang.GetResource("ui-core")
 local qlc = Lang.GetResource("quitconfirmation-core")
 local elc = Lang.GetResource("equipment-core")
 local clc = Lang.GetResource("commodity")
+
+local ui = require 'pigui'
 
 local cargo = Equipment.cargo
 local misc = Equipment.misc
@@ -121,7 +123,7 @@ local function confirmQuit()
 end
 
 local function showOptions()
-	ui.showOptionsWindow = true
+	ui.optionsWindow:open()
 end
 
 local function quitGame()
@@ -134,7 +136,19 @@ local function quitGame()
 end
 
 local function continueGame()
-	Game.LoadGame("_exit")
+	if Game.CanLoadGame('_exit') and ( Engine.GetAutosaveEnabled() or not Game.CanLoadGame('_quicksave') ) then
+		Game.LoadGame("_exit")
+	else
+		Game.LoadGame('_quicksave')
+	end
+end
+
+local function canContinue()
+	if Game.CanLoadGame('_exit') or Game.CanLoadGame('_quicksave') then
+		return true
+	else
+		return false
+	end
 end
 
 local function startAtLocation(location)
@@ -157,7 +171,7 @@ local function callModules(mode)
 end
 
 local function showMainMenu()
-	local canContinue = Game.CanLoadGame('_exit')
+	local showContinue = canContinue()
 	local buttons = 4
 
 	local winPos = Vector2(ui.screenWidth - mainButtonSize.x - 100, ui.screenHeight/2 - (buttons * mainButtonSize.y)/2 - (2*mainButtonSize.y)/2 - 8)
@@ -200,7 +214,7 @@ local function showMainMenu()
 	ui.setNextWindowSize(Vector2(0,0), 'Always')
 	ui.withStyleColors({["WindowBg"] = colors.lightBlackBackground}, function()
 		ui.window("MainMenuButtons", {"NoTitleBar", "NoResize", "NoFocusOnAppearing", "NoBringToFrontOnFocus"}, function()
-			mainTextButton(lui.CONTINUE_GAME, nil, canContinue, continueGame)
+			mainTextButton(lui.CONTINUE_GAME, nil, showContinue, continueGame)
 
 			for _,loc in pairs(startLocations) do
 				local desc = loc.desc .. "\n"
@@ -229,7 +243,11 @@ local function showMainMenu()
 				mainTextButton(loc.name, desc, true, function() startAtLocation(loc) end)
 			end
 
-			mainTextButton(lui.LOAD_GAME, nil, true, function() ui.showSavedGameWindow = "LOAD" end)
+			mainTextButton(lui.LOAD_GAME, nil, true, function()
+				ui.saveLoadWindow.mode = "LOAD"
+				ui.saveLoadWindow:open()
+			end)
+
 			mainTextButton(lui.OPTIONS, nil, true, showOptions)
 			mainTextButton(lui.QUIT, nil, true, quitGame)
 

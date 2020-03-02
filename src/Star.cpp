@@ -1,13 +1,15 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Star.h"
-#include <memory>
 
 #include "Pi.h"
+#include "galaxy/SystemBody.h"
 #include "galaxy/StarSystem.h"
 #include "graphics/RenderState.h"
 #include "graphics/Renderer.h"
+#include "graphics/VertexArray.h"
+#include "graphics/VertexBuffer.h"
 
 Star::Star(SystemBody *sbody) :
 	TerrainBody(sbody)
@@ -19,6 +21,10 @@ Star::Star(const Json &jsonObj, Space *space) :
 	TerrainBody(jsonObj, space)
 {
 	InitStar();
+}
+
+Star::~Star()
+{
 }
 
 void Star::InitStar()

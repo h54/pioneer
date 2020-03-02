@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 #include "BinaryConverter.h"
 #include "FileSystem.h"
@@ -147,10 +147,9 @@ void BinaryConverter::Save(const std::string &filename, const std::string &savep
 
 	// compress in memory, write to open file
 	size_t outSize = 0;
-	size_t nwritten = 0;
 	const std::string &data = wr.GetData();
 	try {
-		std::unique_ptr<char> compressedData = lz4::CompressLZ4(data, 6, outSize);
+		std::unique_ptr<char[]> compressedData = lz4::CompressLZ4(data, 6, outSize);
 		Output("Compressed model (%s): %.2f KB -> %.2f KB\n", filename.c_str(), data.size() / 1024.f, outSize / 1024.f);
 		fwrite(compressedData.get(), outSize, 1, f);
 		fclose(f);

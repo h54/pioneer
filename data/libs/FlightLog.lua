@@ -1,4 +1,4 @@
--- Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 --
@@ -8,10 +8,10 @@
 -- player. Can be used by scripts to find out where the player has been
 -- recently.
 
-local Game = import("Game")
-local Event = import("Event")
-local Format = import("Format")
-local Serializer = import("Serializer")
+local Game = require 'Game'
+local Event = require 'Event'
+local Format = require 'Format'
+local Serializer = require 'Serializer'
 
 -- default values (private)
 local FlightLogSystemQueueLength = 1000

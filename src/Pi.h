@@ -1,4 +1,4 @@
-// Copyright © 2008-2019 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _PI_H
@@ -13,7 +13,6 @@
 #include <string>
 #include <vector>
 
-class Frame;
 class Game;
 
 class GameConfig;
@@ -25,12 +24,8 @@ class ModelCache;
 class ObjectViewerView;
 class PiGui;
 class Player;
-class Ship;
-class SpaceStation;
-class StarSystem;
 class SystemPath;
 class TransferPlanner;
-class UIView;
 class View;
 class SDLGraphics;
 class LuaSerializer;
