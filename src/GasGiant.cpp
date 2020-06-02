@@ -11,12 +11,13 @@
 #include "graphics/Frustum.h"
 #include "graphics/Graphics.h"
 #include "graphics/Material.h"
-#include "graphics/Renderer.h"
 #include "graphics/RenderState.h"
+#include "graphics/Renderer.h"
 #include "graphics/Texture.h"
 #include "graphics/VertexArray.h"
 #include "graphics/opengl/GenGasGiantColourMaterial.h"
 #include "perlin.h"
+#include "utils.h"
 #include "vcacheopt/vcacheopt.h"
 
 RefCountedPtr<GasPatchContext> GasGiant::s_patchContext;
@@ -27,7 +28,7 @@ namespace {
 	static Uint32 s_texture_size_gpu[5];
 	static Uint32 s_noiseOctaves[5];
 	static float s_initialCPUDelayTime = 60.0f; // (perhaps) 60 seconds seems like a reasonable default
-	static float s_initialGPUDelayTime = 5.0f; // (perhaps) 5 seconds seems like a reasonable default
+	static float s_initialGPUDelayTime = 5.0f;	// (perhaps) 5 seconds seems like a reasonable default
 	static std::vector<GasGiant *> s_allGasGiants;
 
 	static const std::string GGJupiter("GGJupiter");
@@ -79,7 +80,7 @@ namespace {
 
 		return i == 4;
 	}
-}; // namespace
+} // namespace
 
 class GasPatchContext : public RefCounted {
 public:
@@ -430,7 +431,7 @@ bool GasGiant::AddTextureFaceResult(GasGiantJobs::STextureFaceResult *res)
 	if (bCreateTexture) {
 		// create texture
 		const vector2f texSize(1.0f, 1.0f);
-		const vector2f dataSize(uvDims, uvDims);
+		const vector3f dataSize(uvDims, uvDims, 0.0f);
 		const Graphics::TextureDescriptor texDesc(
 			Graphics::TEXTURE_RGBA_8888,
 			dataSize, texSize, Graphics::LINEAR_CLAMP,
@@ -533,7 +534,7 @@ void GasGiant::GenerateTexture()
 	// scope the small texture generation
 	{
 		const vector2f texSize(1.0f, 1.0f);
-		const vector2f dataSize(s_texture_size_small, s_texture_size_small);
+		const vector3f dataSize(s_texture_size_small, s_texture_size_small, 0.0f);
 		const Graphics::TextureDescriptor texDesc(
 			Graphics::TEXTURE_RGBA_8888,
 			dataSize, texSize, Graphics::LINEAR_CLAMP,
@@ -544,7 +545,7 @@ void GasGiant::GenerateTexture()
 		const double fracStep = 1.0 / double(s_texture_size_small - 1);
 
 		Graphics::TextureCubeData tcd;
-		std::unique_ptr<Color> bufs[NUM_PATCHES];
+		std::unique_ptr<Color[]> bufs[NUM_PATCHES];
 		for (int i = 0; i < NUM_PATCHES; i++) {
 			Color *colors = new Color[(s_texture_size_small * s_texture_size_small)];
 			for (Uint32 v = 0; v < s_texture_size_small; v++) {
@@ -592,7 +593,7 @@ void GasGiant::GenerateTexture()
 		// use m_surfaceTexture texture?
 		// create texture
 		const vector2f texSize(1.0f, 1.0f);
-		const vector2f dataSize(s_texture_size_gpu[Pi::detail.planets], s_texture_size_gpu[Pi::detail.planets]);
+		const vector3f dataSize(s_texture_size_gpu[Pi::detail.planets], s_texture_size_gpu[Pi::detail.planets], 0.0f);
 		const Graphics::TextureDescriptor texDesc(
 			Graphics::TEXTURE_RGBA_8888,
 			dataSize, texSize, Graphics::LINEAR_CLAMP,
