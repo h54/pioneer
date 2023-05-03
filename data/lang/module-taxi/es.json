@@ -101,7 +101,11 @@
   },
   "FLAVOUR_0_ADTEXT": {
     "description": "",
-    "message": "SE BUSCA: Pasaje para un pequeño grupo al Sistema {system}. Se pagará {cash}."
+    "message": "Se Busca: Pasaje para un grupo pequeño al sistema {system}. Se pagarán {cash}."
+  },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "SE REQUIERE PASAJE"
   },
   "FLAVOUR_0_DANGER": {
     "description": "",
@@ -133,7 +137,11 @@
   },
   "FLAVOUR_10_ADTEXT": {
     "description": "",
-    "message": "SE BUSCA NAVE: Pasaje en una nave rápida al Sistema {system}."
+    "message": "VIP necesita pasaje urgente en una nave rápida al sistema {system}. Sin preguntas."
+  },
+  "FLAVOUR_10_ADTITLE": {
+    "description": "",
+    "message": "SE REQUIERE NAVE DISCRETA"
   },
   "FLAVOUR_10_DANGER": {
     "description": "",
@@ -165,7 +173,11 @@
   },
   "FLAVOUR_11_ADTEXT": {
     "description": "",
-    "message": "NAVE RÁPIDA: Pasaje en nave rápida al Sistema {system}."
+    "message": "Inspector corporativo requiere pasaje en una nave rápida al sistema {system}."
+  },
+  "FLAVOUR_11_ADTITLE": {
+    "description": "",
+    "message": "SE NECESITA NAVE RÁPIDA"
   },
   "FLAVOUR_11_DANGER": {
     "description": "",
@@ -197,7 +209,11 @@
   },
   "FLAVOUR_12_ADTEXT": {
     "description": "",
-    "message": "SE REQUIERE NAVE: Pasaje al Sistema {system}."
+    "message": "Transporte urgente requerido para un ciudadano en fuga. Se necesita pasaje al sistema {system}."
+  },
+  "FLAVOUR_12_ADTITLE": {
+    "description": "",
+    "message": "SE REQUIERE NAVE"
   },
   "FLAVOUR_12_DANGER": {
     "description": "",
@@ -229,7 +245,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "SE BUSCA: Pasaje para un grupo pequeño al Sistema {system}. Se abonará {cash}."
+    "message": "Se Busca: Pasaje para un grupo pequeño al sistema {system}. Se pagarán {cash}."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "SE REQUIERE PASAJE"
   },
   "FLAVOUR_1_DANGER": {
     "description": "",
@@ -261,7 +281,11 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "SE BUSCA: Pasaje para un grupo pequeño al Sistema {system}. Se pagarán {cash}."
+    "message": "Se Busca: Pasaje para un grupo pequeño al sistema {system}. Se pagarán {cash}."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "PASAJE PARA GRUPO PEQUEÑO"
   },
   "FLAVOUR_2_DANGER": {
     "description": "",
@@ -293,7 +317,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "SE REQUIERE NAVE: Pasaje al Sistema {system}. Se pagará {cash}."
+    "message": "Se requiere nave para un pasaje de alto riesgo al sistema {system}. Se pagarán {cash}."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "SE REQUIERE NAVE"
   },
   "FLAVOUR_3_DANGER": {
     "description": "",
@@ -325,7 +353,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "SE BUSCA NAVE: Pasaje al Sistema {system}. Se abonarán {cash}."
+    "message": "Se busca una nave para un pasaje de negocios al sistema {system}. Pagamos {cash}."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "PASAJE DE NEGOCIOS"
   },
   "FLAVOUR_4_DANGER": {
     "description": "",
@@ -357,7 +389,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "SE BUSCA: Pasaje al Sistema {system}. Se paga {cash}."
+    "message": "Requerimos el pasaje confidencial de un VIP anónimo al sistema {system}. Se pagarán {cash}."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "PASAJE CONFIDENCIAL"
   },
   "FLAVOUR_5_DANGER": {
     "description": "",
@@ -389,7 +425,11 @@
   },
   "FLAVOUR_6_ADTEXT": {
     "description": "",
-    "message": "SE BUSCA NAVE: Pasaje al Sistema {system}. Se abonará {cash}."
+    "message": "Periodista necesita aproximación para el desarrollo de una historia en el sistema {system}. Se pagará {cash}."
+  },
+  "FLAVOUR_6_ADTITLE": {
+    "description": "",
+    "message": "SE REQUIERE NAVE"
   },
   "FLAVOUR_6_DANGER": {
     "description": "",
@@ -421,7 +461,11 @@
   },
   "FLAVOUR_7_ADTEXT": {
     "description": "",
-    "message": "SE REQUIERE NAVE: Pasaje seguro al Sistema {system}. Pagaré {cash}."
+    "message": "Se busca nave para un pasaje seguro al sistema {system}. Se requiere transporte seguro. Se pagará {cash}."
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "SE NECESITA PASAJE SEGURO"
   },
   "FLAVOUR_7_DANGER": {
     "description": "",
@@ -453,7 +497,11 @@
   },
   "FLAVOUR_8_ADTEXT": {
     "description": "",
-    "message": "SE BUSCA NAVE: Pasaje en una nave rápida al Sistema {system}."
+    "message": "Se requiere pasaje personal urgente al sistema {system}. Recargos incluídos en el pago."
+  },
+  "FLAVOUR_8_ADTITLE": {
+    "description": "",
+    "message": "TRANSPORTE RÁPIDO PERSONAL"
   },
   "FLAVOUR_8_DANGER": {
     "description": "",
@@ -485,7 +533,11 @@
   },
   "FLAVOUR_9_ADTEXT": {
     "description": "",
-    "message": "SE BUSCA NAVE: Pasaje en nave rápida al Sistema {system}."
+    "message": "Requiero transporte urgente para un ciudadano honesto. Se necesita pasaje rápido al sistema {system}."
+  },
+  "FLAVOUR_9_ADTITLE": {
+    "description": "",
+    "message": "PASAJE LEGAL"
   },
   "FLAVOUR_9_DANGER": {
     "description": "",
@@ -538,10 +590,6 @@
   "I_MUST_BE_THERE_BEFORE": {
     "description": "",
     "message": "Debo estar allí antes de "
-  },
-  "LY": {
-    "description": "",
-    "message": "AL"
   },
   "OK_AGREED": {
     "description": "",

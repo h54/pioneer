@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _LUAREF_H
@@ -14,7 +14,7 @@ public:
 	LuaRef() :
 		m_lua(0),
 		m_id(LUA_NOREF),
-		m_copycount(new int(0)) {}
+		m_copycount(nullptr) {}
 	LuaRef(lua_State *l, int index);
 	LuaRef(const LuaRef &ref);
 	~LuaRef();
@@ -26,6 +26,7 @@ public:
 	lua_State *GetLua() const { return m_lua; }
 
 	bool IsValid() const { return m_lua && m_id != LUA_NOREF; }
+	bool IsNil() const { return m_lua && m_id == LUA_REFNIL; }
 
 	void SaveToJson(Json &jsonObj);
 	void LoadFromJson(const Json &jsonObj);

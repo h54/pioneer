@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _GAME_H
@@ -30,12 +30,9 @@ struct InvalidGameStartLocation {
 
 class View;
 class SectorView;
-class UIView;
-class SystemInfoView;
 class SystemView;
 class WorldView;
 class DeathView;
-class ShipCpanel;
 class ObjectViewerView;
 
 class Game {
@@ -117,13 +114,11 @@ public:
 	float GetTimeStep() const { return s_timeAccelRates[m_timeAccel] * (1.0f / PHYSICS_HZ); }
 
 	SectorView *GetSectorView() const { return m_gameViews->m_sectorView; }
-	SystemInfoView *GetSystemInfoView() const { return m_gameViews->m_systemInfoView; }
 	SystemView *GetSystemView() const { return m_gameViews->m_systemView; }
 	WorldView *GetWorldView() const { return m_gameViews->m_worldView; }
 	DeathView *GetDeathView() const { return m_gameViews->m_deathView; }
 	View *GetSpaceStationView() const { return m_gameViews->m_spaceStationView; }
-	UIView *GetInfoView() const { return m_gameViews->m_infoView; }
-	ShipCpanel *GetCpan() const { return m_gameViews->m_cpan; }
+	View *GetInfoView() const { return m_gameViews->m_infoView; }
 
 	/* Only use #if WITH_OBJECTVIEWER */
 	ObjectViewerView *GetObjectViewerView() const;
@@ -141,13 +136,11 @@ private:
 		void SetRenderer(Graphics::Renderer *r);
 
 		SectorView *m_sectorView;
-		SystemInfoView *m_systemInfoView;
 		SystemView *m_systemView;
 		WorldView *m_worldView;
 		DeathView *m_deathView;
 		View *m_spaceStationView;
-		UIView *m_infoView;
-		ShipCpanel *m_cpan;
+		View *m_infoView;
 
 		/* Only use #if WITH_OBJECTVIEWER */
 		ObjectViewerView *m_objectViewerView;

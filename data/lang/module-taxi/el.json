@@ -53,7 +53,7 @@
   },
   "DANGER": {
     "description": "",
-    "message": "Κίνδυνος:"
+    "message": "Ανασφάλεια:"
   },
   "DEADLINE": {
     "description": "",
@@ -61,35 +61,35 @@
   },
   "DENY_0": {
     "description": "",
-    "message": "I'm sorry, but I don't think I could trust you with my safety."
+    "message": "Λυπάμαι, αλλά δεν νομίζω ότι μπορώ να σου εμπιστευτώ την ασφάλειά μου."
   },
   "DENY_1": {
     "description": "",
-    "message": "Επιστρέψτε όταν έχετε επαρκή προσόντα."
+    "message": "Επιστρέψτε όταν θα έχετε κάποια προσόντα."
   },
   "DENY_2": {
     "description": "",
-    "message": "I don't think you're the pilot I'm looking for."
+    "message": "Δεν νομίζω ότι είσαι ο πιλότος που ψάχνω."
   },
   "DENY_3": {
     "description": "",
-    "message": "You don't look like someone capable of transporting people."
+    "message": "Δεν φαίνεσαι ικανός να μεταφέρεις κόσμο."
   },
   "DENY_4": {
     "description": "",
-    "message": "You're not the kind of pilot I'm looking for."
+    "message": "Δεν είσαι το είδος του πιλότου που ψάχνω."
   },
   "DENY_5": {
     "description": "",
-    "message": "You seem much too inexperienced to handle a transport of this importance."
+    "message": "Φαίνεσαι πολύ άπειρος ώστε να χειριστείς μια μεταφορά τέτοιας σημασίας."
   },
   "DENY_6": {
     "description": "",
-    "message": "I have never heard of you. I need someone experienced for this journey."
+    "message": "Δεν άκουσα ποτέ για σένα. Ψάχνω κάποιον έμπειρο γι' αυτό το ταξίδι."
   },
   "DENY_7": {
     "description": "",
-    "message": "I'm not willing to risk my life on someone without any qualifications like you."
+    "message": "Δεν προτίθεμαι να ριψοκινδυνεύσω την ζωή μου με κάποιον χωρίς κανένα προσόν σαν του λόγου σου."
   },
   "DISTANCE": {
     "description": "",
@@ -97,27 +97,31 @@
   },
   "EXCELLENT": {
     "description": "",
-    "message": "Εξαίσια."
+    "message": "Έξοχα."
   },
   "FLAVOUR_0_ADTEXT": {
     "description": "",
-    "message": "WANTED: Passage for a small group to {system} system. Will pay {cash}."
+    "message": "Wanted: Passage for a small group to {system} system. Will pay {cash}."
+  },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "PASSAGE WANTED"
   },
   "FLAVOUR_0_DANGER": {
     "description": "",
-    "message": "No."
+    "message": "Όχι."
   },
   "FLAVOUR_0_FAILUREMSG": {
     "description": "",
-    "message": "Unacceptable! You took forever. We are not willing to pay you."
+    "message": "Απαράδεκτο! Σου πήρε επ' άπειρο. Δεν επιθυμούμε να σε πληρώσουμε."
   },
   "FLAVOUR_0_HOWMANY": {
     "description": "",
-    "message": "There are {group} of us."
+    "message": "Είμαστε {group}."
   },
   "FLAVOUR_0_INTROTEXT": {
     "description": "",
-    "message": "Hi, I'm {name} and I need passage for a small group to {system} ({sectorx}, {sectory}, {sectorz}) system, a distance of {dist} ly. I will pay {cash}."
+    "message": "Γεια, λέγομαι {name} και χρειάζομαι να περάσει μια μικρή ομάδα στο {system} ({sectorx}, {sectory}, {sectorz}) σύστημα, μια απόσταση {dist} ly. Θα πληρώσω {cash}."
   },
   "FLAVOUR_0_SUCCESSMSG": {
     "description": "",
@@ -125,79 +129,91 @@
   },
   "FLAVOUR_0_WHEREAREWE": {
     "description": "",
-    "message": "Where are we? We've waited enough - take us to the nearest station NOW!"
+    "message": "Πού βρισκόμαστε: Περιμέναμε αρκετά - πήγαινέ μας στο κοντινότερο κοσμοδρόμιο ΤΏΡΑ!"
   },
   "FLAVOUR_0_WHYSOMUCH": {
     "description": "",
-    "message": "Κάνουμε επίσκεψη σε φίλο."
+    "message": "Επισκεπτόμαστε έναν φίλο."
   },
   "FLAVOUR_10_ADTEXT": {
     "description": "",
-    "message": "SHIP WANTED: Passage on a fast ship to {system} system."
+    "message": "VIP needs urgent passage on a fast ship to {system} system. No questions asked."
+  },
+  "FLAVOUR_10_ADTITLE": {
+    "description": "",
+    "message": "DISCREET SHIP WANTED"
   },
   "FLAVOUR_10_DANGER": {
     "description": "",
-    "message": "I think someone is following me."
+    "message": "Νομίζω κάποιος με ακολουθεί."
   },
   "FLAVOUR_10_FAILUREMSG": {
     "description": "",
-    "message": "You are such an inexperienced pilot. I'm not going to pay for this."
+    "message": "Είσαι τόσο άσχετος πιλότος. Δεν πρόκειται να πληρώσω γι' αυτό."
   },
   "FLAVOUR_10_HOWMANY": {
     "description": "",
-    "message": "Just one."
+    "message": "Μόνον ένας."
   },
   "FLAVOUR_10_INTROTEXT": {
     "description": "",
-    "message": "My name is {name}. I want fast passage to {system} ({sectorx}, {sectory}, {sectorz}) system, a distance of {dist} ly. Paying {cash}."
+    "message": "Λέγομαι {name}. Θέλω ταχεία δίοδο στο {system} ({sectorx}, {sectory}, {sectorz}) σύστημα, απόστασης {dist} ly. Αμοιβή {cash}."
   },
   "FLAVOUR_10_SUCCESSMSG": {
     "description": "",
-    "message": "Thank you for the fast ride. You have been paid in full."
+    "message": "Ευχαριστούμε για την γρήγορη διαδρομή. Πληρώθηκες στο ακέραιο."
   },
   "FLAVOUR_10_WHEREAREWE": {
     "description": "",
-    "message": "Where are we? I've waited enough - take me to the nearest station NOW!"
+    "message": "Που βρισκόμαστε; Περίμενα αρκετά - πήγαινέ με στον κοντινότερο σταθμό ΤΏΡΑ!"
   },
   "FLAVOUR_10_WHYSOMUCH": {
     "description": "",
-    "message": "I would rather someone didn't find me."
+    "message": "Θα προτιμούσα κάποιος να μην με βρει."
   },
   "FLAVOUR_11_ADTEXT": {
     "description": "",
-    "message": "FAST SHIP: Passage on a fast ship to {system} system."
+    "message": "Corporate inspector needs passage on a fast ship to {system} system."
+  },
+  "FLAVOUR_11_ADTITLE": {
+    "description": "",
+    "message": "FAST SHIP NEEDED"
   },
   "FLAVOUR_11_DANGER": {
     "description": "",
-    "message": "Sometimes people don't want to be inspected."
+    "message": "Μερικές φορές ο κόσμος δεν θέλει να τον επιθεωρούν."
   },
   "FLAVOUR_11_FAILUREMSG": {
     "description": "",
-    "message": "I'm going to lose my job because of your incompetence. So I need that money more than you."
+    "message": "Θα χάσω την δουλειά μου εξ αιτίας της αδιαφορίας σου. Έτσι χρειάζομαι αυτά τα χρήματα περισσότερο από σένα."
   },
   "FLAVOUR_11_HOWMANY": {
     "description": "",
-    "message": "Just one."
+    "message": "Μόνον ένας."
   },
   "FLAVOUR_11_INTROTEXT": {
     "description": "",
-    "message": "My name is {name}. I need fast passage to {system} ({sectorx}, {sectory}, {sectorz}) system, a distance of {dist} ly. Will pay {cash}."
+    "message": "Ονομάζομαι {name}. Ζητώ γρήγορη δίοδο στο {system} ({sectorx}, {sectory}, {sectorz}) σύστημα, απόστασης {dist} ly. Πληρώνω {cash}."
   },
   "FLAVOUR_11_SUCCESSMSG": {
     "description": "",
-    "message": "Thank you for the fast ride. You have been paid in full."
+    "message": "Ευχαριστούμε για την γρήγορη διαδρομή. Πληρώθηκες στο ακέραιο."
   },
   "FLAVOUR_11_WHEREAREWE": {
     "description": "",
-    "message": "Where are we? I've waited enough - take me to the nearest station NOW!"
+    "message": "Που βρισκόμαστε; Περίμενα αρκετά - πήγαινέ με στον κοντινότερο σταθμό ΤΏΡΑ!"
   },
   "FLAVOUR_11_WHYSOMUCH": {
     "description": "",
-    "message": "I'm a factory inspector doing my rounds."
+    "message": "Είμαι επιθεωρητής εργοστασίων σε περιοδεία."
   },
   "FLAVOUR_12_ADTEXT": {
     "description": "",
-    "message": "SHIP REQUIRED: Passage to {system} system."
+    "message": "Urgent transport required for fleeing citizen. Passage to {system} system needed."
+  },
+  "FLAVOUR_12_ADTITLE": {
+    "description": "",
+    "message": "SHIP REQUIRED"
   },
   "FLAVOUR_12_DANGER": {
     "description": "",
@@ -205,87 +221,95 @@
   },
   "FLAVOUR_12_FAILUREMSG": {
     "description": "",
-    "message": "I do not have enough money. Sorry."
+    "message": "Δεν διαθέτω αρκετά χρήματα. Λυπάμαι."
   },
   "FLAVOUR_12_HOWMANY": {
     "description": "",
-    "message": "Just one."
+    "message": "Μόνον ένας."
   },
   "FLAVOUR_12_INTROTEXT": {
     "description": "",
-    "message": "My name is {name}. I need passage to {system} ({sectorx}, {sectory}, {sectorz}) system, a distance of {dist} ly. Will pay {cash}."
+    "message": "Ονομάζομαι {name}. Ζητώ πέρασμα στο {system} ({sectorx}, {sectory}, {sectorz}) σύστημα, μια απόσταση {dist} ly. Πληρώνουμε {cash}."
   },
   "FLAVOUR_12_SUCCESSMSG": {
     "description": "",
-    "message": "Σας ευχαριστούμε για τη μεταφορά,  πληρώσαμε στο ακέραιο."
+    "message": "Σας ευχαριστούμε για την διαδρομή, Πληρώσαμε στο ακέραιο."
   },
   "FLAVOUR_12_WHEREAREWE": {
     "description": "",
-    "message": "Where are we? I've waited enough - take me to the nearest station NOW!"
+    "message": "Πού βρισκόμαστε; Περίμενα αρκετά - πήγαινέ με στον κοντινότερο σταθμό ΤΏΡΑ!"
   },
   "FLAVOUR_12_WHYSOMUCH": {
     "description": "",
-    "message": "I owe someone some money, and they're after me."
+    "message": "Χρωστώ σε κάποιον κάποια χρήματα και με κυνηγούν."
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "WANTED: Passage for a small group to {system} system. Will pay {cash}."
+    "message": "Wanted: Passage for a small group to {system} system. Will pay {cash}."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "PASSAGE WANTED"
   },
   "FLAVOUR_1_DANGER": {
     "description": "",
-    "message": "No."
+    "message": "Όχι."
   },
   "FLAVOUR_1_FAILUREMSG": {
     "description": "",
-    "message": "Unacceptable! You took forever. We are not willing to pay you."
+    "message": "Απαράδεκτο! Σου πήρε επ' άπειρο. Δεν επιθυμούμε να σε πληρώσουμε."
   },
   "FLAVOUR_1_HOWMANY": {
     "description": "",
-    "message": "There are {group} of us."
+    "message": "Θα 'ναι {group} από μας."
   },
   "FLAVOUR_1_INTROTEXT": {
     "description": "",
-    "message": "Hi, I'm {name} and I need passage for a small group to {system} ({sectorx}, {sectory}, {sectorz}) system, a distance of {dist} ly. I will pay {cash}."
+    "message": "Γεια, λέγομαι {name} και χρειάζομαι δίοδο μιας μικρής ομάδας στο {system} ({sectorx}, {sectory}, {sectorz}) σύστημα, μια απόσταση {dist} ly. Θα πληρώσω {cash}."
   },
   "FLAVOUR_1_SUCCESSMSG": {
     "description": "",
-    "message": "Σας ευχαριστούμε για το ταξίδι,  πληρώσαμε στο ακέραιο."
+    "message": "Σας ευχαριστούμε για το όμορφο ταξίδι. Πληρώθηκες στο ακέραιο."
   },
   "FLAVOUR_1_WHEREAREWE": {
     "description": "",
-    "message": "Where are we? We've waited enough - take us to the nearest station NOW!"
+    "message": "Πού βρισκόμαστε; Περιμέναμε αρκετά - πήγαινέ μας στο κοντινότερο κοσμοδρόμιο ΤΏΡΑ!"
   },
   "FLAVOUR_1_WHYSOMUCH": {
     "description": "",
-    "message": "We work for {corp} corporation and they are paying."
+    "message": "Δουλεύουμε για την εταιρία {corp} και πληρώνει αυτή."
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "WANTED: Passage for a small group to {system} system. Will pay {cash}."
+    "message": "Wanted: Passage for a small group to {system} system. Will pay {cash}."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "SMALL GROUP PASSAGE"
   },
   "FLAVOUR_2_DANGER": {
     "description": "",
-    "message": "No."
+    "message": "Όχι."
   },
   "FLAVOUR_2_FAILUREMSG": {
     "description": "",
-    "message": "Unacceptable! You took forever. We are not willing to pay you."
+    "message": "Απαράδεκτο! Σου πήρε επ' άπειρο. Δεν επιθυμούμε να σε πληρώσουμε."
   },
   "FLAVOUR_2_HOWMANY": {
     "description": "",
-    "message": "There are {group} of us."
+    "message": "Είμαστε {group}."
   },
   "FLAVOUR_2_INTROTEXT": {
     "description": "",
-    "message": "Hi, I'm {name} and I need passage for a small group to {system} ({sectorx}, {sectory}, {sectorz}) system, a distance of {dist} ly. I will pay {cash}."
+    "message": "Γεια, λέγομαι {name} και χρειάζομαι δίοδο μιας μικρής ομάδας στο {system} ({sectorx}, {sectory}, {sectorz}) σύστημα, μια απόσταση {dist} ly. Θα πληρώσω {cash}."
   },
   "FLAVOUR_2_SUCCESSMSG": {
     "description": "",
-    "message": "Thanks for bringing us here. We've now paid in full. Good Luck!"
+    "message": "Ευχαριστούμε που μας έφερες εδώ. Πληρώνουμε στο ακέραιο αυτήν την στιγμή. Καλή τύχη!"
   },
   "FLAVOUR_2_WHEREAREWE": {
     "description": "",
-    "message": "Where are we? We've waited enough - take us to the nearest station NOW!"
+    "message": "Πού βρισκόμαστε; Περιμέναμε αρκετά - πήγαινέ μας στο κοντινότερο κοσμοδρόμιο ΤΏΡΑ!"
   },
   "FLAVOUR_2_WHYSOMUCH": {
     "description": "",
@@ -293,31 +317,35 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "SHIP REQUIRED: Passage to {system} system. Will pay {cash}."
+    "message": "Ship required for high-risk passage to {system} system. Will pay {cash}."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "SHIP REQUIRED"
   },
   "FLAVOUR_3_DANGER": {
     "description": "",
-    "message": "I think there is an assassin on my trail, and they may come after you."
+    "message": "Νομίζω πως ένας πληρωμένος δολοφόνος βρίσκεται στα ίχνη μου, και μπορεί να σε κυνηγήσουν."
   },
   "FLAVOUR_3_FAILUREMSG": {
     "description": "",
-    "message": "Unacceptable! You took forever. I'm not willing to pay you."
+    "message": "Απαράδεκτο! Σου πήρε αιώνες. Δεν θέλω να σε πληρώσω."
   },
   "FLAVOUR_3_HOWMANY": {
     "description": "",
-    "message": "It's only me."
+    "message": "Είμαι μόνον εγώ."
   },
   "FLAVOUR_3_INTROTEXT": {
     "description": "",
-    "message": "Hi, I'm {name} and I need passage to {system} ({sectorx}, {sectory}, {sectorz}) system, a distance of {dist} ly. I will pay {cash}."
+    "message": "Γεια, λέγομαι {name} και χρειάζομαι πέρασμα στο {system} ({sectorx}, {sectory}, {sectorz}) σύστημα, απόστασης {dist} ly. Πληρώνω {cash}."
   },
   "FLAVOUR_3_SUCCESSMSG": {
     "description": "",
-    "message": "Σας ευχαριστούμε για το ταξίδι,  πληρώσαμε στο ακέραιο."
+    "message": "Σας ευχαριστούμε για το όμορφο ταξίδι. Πληρωθήκες στο ακέραιο."
   },
   "FLAVOUR_3_WHEREAREWE": {
     "description": "",
-    "message": "Where are we? I've waited enough - take me to the nearest station NOW!"
+    "message": "Που βρισκόμαστε; Περίμενα αρκετά - πήγαινέ με στον κοντινότερο σταθμό ΤΏΡΑ!"
   },
   "FLAVOUR_3_WHYSOMUCH": {
     "description": "",
@@ -325,15 +353,19 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "SHIP WANTED: Passage to {system} system. Will pay {cash}."
+    "message": "Ship wanted for business-class passage to {system} system. Will pay {cash}."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "BUSINESS PASSAGE"
   },
   "FLAVOUR_4_DANGER": {
     "description": "",
-    "message": "No."
+    "message": "Όχι."
   },
   "FLAVOUR_4_FAILUREMSG": {
     "description": "",
-    "message": "Don't even ask for payment! I'm reporting you to the authorities."
+    "message": "Ούτε καν να διανοηθείς για πληρωμή! Σε αναφέρω στις Αρχές."
   },
   "FLAVOUR_4_HOWMANY": {
     "description": "",
@@ -341,79 +373,87 @@
   },
   "FLAVOUR_4_INTROTEXT": {
     "description": "",
-    "message": "Hi, I'm {name} and I need passage to {system} ({sectorx}, {sectory}, {sectorz}) system, a distance of {dist} ly. I will pay {cash}."
+    "message": "Γεια, λέγομαι {name} και χρειάζομαι δίοδο στο {system} ({sectorx}, {sectory}, {sectorz}) σύστημα, απόστασης {dist} ly. Πληρώνω {cash}."
   },
   "FLAVOUR_4_SUCCESSMSG": {
     "description": "",
-    "message": "Thanks for carrying me here. I've paid in full. Good Luck!"
+    "message": "Ευχαριστώ που με μετέφερες εδώ. Πλήρωσα στο ακέραιο. Καλή τύχη!"
   },
   "FLAVOUR_4_WHEREAREWE": {
     "description": "",
-    "message": "Where are we? I've waited enough - take me to the nearest station NOW!"
+    "message": "Που βρισκόμαστε; Περίμενα αρκετά - πήγαινέ με στον κοντινότερο σταθμό ΤΏΡΑ!"
   },
   "FLAVOUR_4_WHYSOMUCH": {
     "description": "",
-    "message": "I'm traveling salesman."
+    "message": "Είμαι περιπλανώμενος πωλητής."
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "WANTED: Passage to {system} system. Will pay {cash}."
+    "message": "Require confidential passage of anonymous VIP to {system} system. Will pay {cash}."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "CONFIDENTIAL PASSAGE"
   },
   "FLAVOUR_5_DANGER": {
     "description": "",
-    "message": "You might get some interest from the press. Just ignore them."
+    "message": "Μπορεί να προσελκύσεις κάποιο ενδιαφέρον του τύπου. Απλά αγνόησέ τους. "
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
-    "message": "What have you done! My tour is all spoilt and I lost half of my fans."
+    "message": "Τι έχεις κάνει! Όλη η περιοδεία μου καταστράφηκε και έχασα τους μισούς θαυμαστές μου."
   },
   "FLAVOUR_5_HOWMANY": {
     "description": "",
-    "message": "It's only me."
+    "message": "Είμαι μόνον εγώ."
   },
   "FLAVOUR_5_INTROTEXT": {
     "description": "",
-    "message": "Hi, I'm {name} and I need passage to {system} ({sectorx}, {sectory}, {sectorz}) system, a distance of {dist} ly. I will pay {cash}."
+    "message": "Γεια, λέγομαι {name} και χρειάζομαι δίοδο στο {system} ({sectorx}, {sectory}, {sectorz}) σύστημα, απόστασης {dist} ly. Πληρώνω {cash}."
   },
   "FLAVOUR_5_SUCCESSMSG": {
     "description": "",
-    "message": "Σας ευχαριστούμε για το ταξίδι,  πληρώσαμε στο ακέραιο."
+    "message": "Σε ευχαριστούμε για το ευχάριστο ταξίδι. Πληρώθηκες στο ακέραιο."
   },
   "FLAVOUR_5_WHEREAREWE": {
     "description": "",
-    "message": "Where are we? I've waited enough - take me to the nearest station NOW!"
+    "message": "Που βρισκόμαστε; Περίμενα αρκετά - πήγαινέ με στον κοντινότερο σταθμό ΤΏΡΑ!"
   },
   "FLAVOUR_5_WHYSOMUCH": {
     "description": "",
-    "message": "Didn't you know - I'm a well known dream star."
+    "message": "Δεν το 'ξερες - Είμαι πασίγνωστος ονειρεμένος αστέρας."
   },
   "FLAVOUR_6_ADTEXT": {
     "description": "",
-    "message": "SHIP WANTED: Passage to {system} system. Will pay {cash}."
+    "message": "Reporter needs proximity to story developing in the {system} system. Will pay {cash}."
+  },
+  "FLAVOUR_6_ADTITLE": {
+    "description": "",
+    "message": "SHIP REQUIRED"
   },
   "FLAVOUR_6_DANGER": {
     "description": "",
-    "message": "No."
+    "message": "Όχι."
   },
   "FLAVOUR_6_FAILUREMSG": {
     "description": "",
-    "message": "Unacceptable! You took forever. I'm not willing to pay you."
+    "message": "Απαράδεκτο! Σου πήρε αιώνες. Δεν θέλω να σε πληρώσω."
   },
   "FLAVOUR_6_HOWMANY": {
     "description": "",
-    "message": "It's only me."
+    "message": "Είμαι μόνον εγώ."
   },
   "FLAVOUR_6_INTROTEXT": {
     "description": "",
-    "message": "Hi, I'm {name} and I need passage to {system} ({sectorx}, {sectory}, {sectorz}) system, a distance of {dist} ly. I will pay {cash}."
+    "message": "Γεια, λέγομαι {name} και χρειάζομαι δίοδο στο {system} ({sectorx}, {sectory}, {sectorz}) σύστημα, απόστασης {dist} ly. Πληρώνω {cash}."
   },
   "FLAVOUR_6_SUCCESSMSG": {
     "description": "",
-    "message": "Σας ευχαριστούμε για το ταξίδι,  πληρώσαμε στο ακέραιο."
+    "message": "Σας ευχαριστούμε για το όμορφο ταξίδι,  πληρώσαμε στο ακέραιο."
   },
   "FLAVOUR_6_WHEREAREWE": {
     "description": "",
-    "message": "Where are we? I've waited enough - take me to the nearest station NOW!"
+    "message": "Που βρισκόμαστε; Περίμενα αρκετά - πήγαινέ με στον κοντινότερο σταθμό ΤΏΡΑ!"
   },
   "FLAVOUR_6_WHYSOMUCH": {
     "description": "",
@@ -421,15 +461,19 @@
   },
   "FLAVOUR_7_ADTEXT": {
     "description": "",
-    "message": "SHIP WANTED: Safe passage to {system} system. Will pay {cash}."
+    "message": "Ship wanted for safe passage to {system} system. Secure transport required. Will pay {cash}."
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "SAFE PASSAGE NEEDED"
   },
   "FLAVOUR_7_DANGER": {
     "description": "",
-    "message": "The Mafia don't take kindly to people helping their enemies."
+    "message": "Η Μαφία δεν είναι ευγενική με όσους βοηθούν τους εχθρούς της."
   },
   "FLAVOUR_7_FAILUREMSG": {
     "description": "",
-    "message": "Unacceptable! You took forever. I'm not willing to pay you."
+    "message": "Απαράδεκτο! Σου πήρε αιώνες. Δεν θέλω να σε πληρώσω."
   },
   "FLAVOUR_7_HOWMANY": {
     "description": "",
@@ -437,15 +481,15 @@
   },
   "FLAVOUR_7_INTROTEXT": {
     "description": "",
-    "message": "Hi, my name is {name} and I need safe passage to {system} ({sectorx}, {sectory}, {sectorz}) system, a distance of {dist} ly. I will pay {cash}."
+    "message": "Γεια, λέγομαι {name} και ψάχνω ασφαλές πέρασμα στο {system} ({sectorx}, {sectory}, {sectorz}) σύστημα, μια απόσταση {dist} ly. Πληρώνω {cash}."
   },
   "FLAVOUR_7_SUCCESSMSG": {
     "description": "",
-    "message": "Thanks for carrying me safely here. I've paid in full. Good Luck!"
+    "message": "Ευχαριστώ που με έφερες με ασφάλεια εδώ. Πλήρωσα στο ακέραιο. Καλή τύχη!"
   },
   "FLAVOUR_7_WHEREAREWE": {
     "description": "",
-    "message": "Where are we? I've waited enough - take me to the nearest station NOW!"
+    "message": "Που βρισκόμαστε; Περίμενα αρκετά - πήγαινέ με στον κοντινότερο σταθμό ΤΏΡΑ!"
   },
   "FLAVOUR_7_WHYSOMUCH": {
     "description": "",
@@ -453,15 +497,19 @@
   },
   "FLAVOUR_8_ADTEXT": {
     "description": "",
-    "message": "SHIP WANTED: Passage on a fast ship to {system} system."
+    "message": "Urgent personal passage to {system} system required. Surcharge included in payment."
+  },
+  "FLAVOUR_8_ADTITLE": {
+    "description": "",
+    "message": "FAST PERSONAL TRANSPORT"
   },
   "FLAVOUR_8_DANGER": {
     "description": "",
-    "message": "No."
+    "message": "Όχι."
   },
   "FLAVOUR_8_FAILUREMSG": {
     "description": "",
-    "message": "Unacceptable! You took forever. I'm not willing to pay you."
+    "message": "Απαράδεκτο! Σου πήρε αιώνες. Δεν θέλω να σε πληρώσω."
   },
   "FLAVOUR_8_HOWMANY": {
     "description": "",
@@ -469,15 +517,15 @@
   },
   "FLAVOUR_8_INTROTEXT": {
     "description": "",
-    "message": "My name is {name}. I need fast passage to {system} ({sectorx}, {sectory}, {sectorz}) system, a distance of {dist} ly. Will pay {cash}."
+    "message": "Ονομάζομαι {name}. Ζητώ γρήγορη δίοδο στο {system} ({sectorx}, {sectory}, {sectorz}) σύστημα, απόστασης {dist} ly. Πληρώνω {cash}."
   },
   "FLAVOUR_8_SUCCESSMSG": {
     "description": "",
-    "message": "Thank you for the fast ride. You have been paid in full."
+    "message": "Ευχαριστούμε για την γρήγορη διαδρομή. Πληρώθηκες στο ακέραιο."
   },
   "FLAVOUR_8_WHEREAREWE": {
     "description": "",
-    "message": "Where are we? I've waited enough - take me to the nearest station NOW!"
+    "message": "Πού βρισκόμαστε; Περίμενα αρκετά - πήγαινέ με στον κοντινότερο σταθμό ΤΏΡΑ!"
   },
   "FLAVOUR_8_WHYSOMUCH": {
     "description": "",
@@ -485,15 +533,19 @@
   },
   "FLAVOUR_9_ADTEXT": {
     "description": "",
-    "message": "SHIP WANTED: Passage on a fast ship to {system} system."
+    "message": "Require urgent transport for honest citizen. Fast passage needed to {system} system."
+  },
+  "FLAVOUR_9_ADTITLE": {
+    "description": "",
+    "message": "LEGITIMATE PASSAGE"
   },
   "FLAVOUR_9_DANGER": {
     "description": "",
-    "message": "Η αστυνομία ίσως σας σταματήσει"
+    "message": "Ίσως σε σταματήσει η αστυνομία."
   },
   "FLAVOUR_9_FAILUREMSG": {
     "description": "",
-    "message": "Useless! You took forever. I'm not willing to pay you."
+    "message": "Άχρηστο! Σου πήρε για πάντα. Δεν προτίθεμαι να σε πληρώσω."
   },
   "FLAVOUR_9_HOWMANY": {
     "description": "",
@@ -501,47 +553,43 @@
   },
   "FLAVOUR_9_INTROTEXT": {
     "description": "",
-    "message": "My name is {name}. I need fast passage to {system} ({sectorx}, {sectory}, {sectorz}) system, a distance of {dist} ly. Will pay {cash}."
+    "message": "Ονομάζομαι {name}. Ζητώ ταχεία δίοδο στο {system} ({sectorx}, {sectory}, {sectorz}) σύστημα, απόστασης {dist} ly. Πληρώνω {cash}."
   },
   "FLAVOUR_9_SUCCESSMSG": {
     "description": "",
-    "message": "Thank you for the fast ride. You have been paid in full."
+    "message": "Ευχαριστούμε για την γρήγορη διαδρομή. Πληρώθηκες στο ακέραιο."
   },
   "FLAVOUR_9_WHEREAREWE": {
     "description": "",
-    "message": "Where are we? I've waited enough - take me to the nearest station NOW!"
+    "message": "Που βρισκόμαστε; Περίμενα αρκετά - πήγαινέ με στον κοντινότερο σταθμό ΤΏΡΑ!"
   },
   "FLAVOUR_9_WHYSOMUCH": {
     "description": "",
-    "message": "The Police want me to help them with their enquiries."
+    "message": "Η Αστυνομία με θέλει να την βοηθήσω στις έρευνές της."
   },
   "FROM": {
     "description": "",
-    "message": "From:"
+    "message": "Από:"
   },
   "GROUP_DETAILS": {
     "description": "",
-    "message": "Πληροφορίες Γκρούπ:"
+    "message": "Στοιχεία ομάδας:"
   },
   "HEY_YOU_ARE_GOING_TO_PAY_FOR_THIS": {
     "description": "",
-    "message": "θα το πληρώσεις αυτό που έκανες."
+    "message": "E!; Θα πληρώσεις για αυτό!!!"
   },
   "HOW_MANY_OF_YOU_ARE_THERE": {
     "description": "",
-    "message": "Πόσοι είστε ?"
+    "message": "Πόσοι θα 'στε;"
   },
   "HOW_SOON_YOU_MUST_BE_THERE": {
     "description": "",
-    "message": "How soon you must be there?"
+    "message": "Πόσο σύντομα πρέπει να βρίσκομαι εκεί;"
   },
   "I_MUST_BE_THERE_BEFORE": {
     "description": "",
-    "message": "Πρέπει να είμαι εκεί πριν την"
-  },
-  "LY": {
-    "description": "",
-    "message": "ly"
+    "message": "Πρέπει να είμαι εκεί πριν την "
   },
   "OK_AGREED": {
     "description": "",
@@ -549,11 +597,11 @@
   },
   "PIRATE_TAUNTS_0": {
     "description": "",
-    "message": "You're going to regret dealing with {client}"
+    "message": "Θα το μετανιώσεις που συμφώνησες με τον {client}"
   },
   "PIRATE_TAUNTS_1": {
     "description": "",
-    "message": "έχεις τον {client} στο σκάφος? πολύ κακή κίνηση."
+    "message": "Έχεις τον {client} στο σκάφος; Ήταν κακή ιδέα."
   },
   "PIRATE_TAUNTS_2": {
     "description": "",
@@ -561,11 +609,11 @@
   },
   "PIRATE_TAUNTS_3": {
     "description": "",
-    "message": "You're not going to dock today!"
+    "message": "Δεν πρόκειται να πλευρίσεις σήμερα!"
   },
   "SET_AS_TARGET": {
     "description": "",
-    "message": "Set as navigation target"
+    "message": "Θέσε ως στόχο πλοήγησης."
   },
   "TAXI": {
     "description": "",
@@ -573,7 +621,7 @@
   },
   "TO": {
     "description": "",
-    "message": "To:"
+    "message": "Προς:"
   },
   "WE_WANT_TO_BE_THERE_BEFORE": {
     "description": "",
@@ -581,7 +629,7 @@
   },
   "WHY_SO_MUCH_MONEY": {
     "description": "",
-    "message": "Γαιτί τόσα πολλά χρήματα ?"
+    "message": "Γιατί τόσα πολλά χρήματα ?"
   },
   "WILL_I_BE_IN_ANY_DANGER": {
     "description": "",
@@ -589,10 +637,10 @@
   },
   "WRONG_SYSTEM": {
     "description": "Shown if system name is right, but coordinates are wrong",
-    "message": "The system name is right, but not the coordinates."
+    "message": "Το όνομα του συστήματος είναι σωστό, αλλά όχι οι συντεταγμένες."
   },
   "YOU_DO_NOT_HAVE_ENOUGH_CABIN_SPACE_ON_YOUR_SHIP": {
     "description": "",
-    "message": "Δεν υπάρχουν επαρκείς καμπίνες στο σκάφος."
+    "message": "Δεν υπάρχουν αρκετές καμπίνες στο σκάφος σου."
   }
 }

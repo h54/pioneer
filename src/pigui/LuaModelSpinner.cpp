@@ -1,12 +1,13 @@
 
 #include "Pi.h"
+#include "lua/LuaMetaType.h"
 #include "lua/LuaObject.h"
 #include "lua/LuaPushPull.h"
 #include "lua/LuaVector.h"
 #include "lua/LuaVector2.h"
 #include "pigui/ModelSpinner.h"
 
-namespace PiGUI {
+namespace PiGui {
 	namespace LuaPiguiModelSpinner {
 		static int l_model_new(lua_State *l)
 		{
@@ -14,9 +15,8 @@ namespace PiGUI {
 			return 1;
 		}
 
-		static int l_model_set_model(lua_State *l)
+		static int l_model_set_model(lua_State *l, ModelSpinner *obj)
 		{
-			auto *obj = LuaObject<ModelSpinner>::CheckFromLua(1);
 			const std::string name(luaL_checkstring(l, 2));
 			SceneGraph::ModelSkin *skin = LuaObject<SceneGraph::ModelSkin>::CheckFromLua(3);
 			unsigned int pattern = 0;
@@ -28,81 +28,37 @@ namespace PiGUI {
 			return 0;
 		}
 
-		static int l_model_set_size(lua_State *l)
-		{
-			auto *obj = LuaObject<ModelSpinner>::CheckFromLua(1);
-			vector2d &size = *LuaVector2::CheckFromLua(l, 2);
-			obj->SetSize(size);
-			return 0;
-		}
+	} // namespace LuaPiguiModelSpinner
+} // namespace PiGui
 
-		static int l_model_attr_size(lua_State *l)
-		{
-			auto *obj = LuaObject<ModelSpinner>::CheckFromLua(1);
-			LuaPush<vector2d>(l, obj->GetSize());
-			return 1;
-		}
+using namespace PiGui::LuaPiguiModelSpinner;
 
-		static int l_model_space_to_screen_space(lua_State *l)
-		{
-			auto *obj = LuaObject<ModelSpinner>::CheckFromLua(1);
-			vector3d modelSpaceVec = LuaPull<vector3d>(l, 2);
-			LuaPush<vector2d>(l, obj->ModelSpaceToScreenSpace(modelSpaceVec));
-			return 1;
-		}
+template <>
+const char *LuaObject<PiGui::ModelSpinner>::s_type = "PiGui.Modules.ModelSpinner";
 
-		static int l_model_draw(lua_State *l)
-		{
-			auto *obj = LuaObject<ModelSpinner>::CheckFromLua(1);
+template <>
+void LuaObject<PiGui::ModelSpinner>::RegisterClass()
+{
+	using T = PiGui::ModelSpinner;
+
+	static LuaMetaType<T> s_metaType(s_type);
+	s_metaType.CreateMetaType(Lua::manager->GetLuaState());
+
+	s_metaType.StartRecording()
+		.AddCallCtor(&l_model_new)
+		.AddMember("size", &T::GetSize)
+		.AddMember("spinning", &T::GetSpinning, &T::SetSpinning)
+		.AddFunction("setSize", &T::SetSize)
+		.AddFunction("setModel", &l_model_set_model)
+		.AddFunction("getTagPos", &T::GetTagPos)
+		.AddFunction("draw", [](lua_State *l, T *obj) {
 			obj->Render();
 			obj->DrawPiGui();
-
 			return 0;
-		}
-	} // namespace LuaPiguiModelSpinner
-} // namespace PiGUI
+		})
+		.StopRecording();
 
-using namespace PiGUI::LuaPiguiModelSpinner;
-
-template <>
-const char *LuaObject<PiGUI::ModelSpinner>::s_type = "PiGui.Modules.ModelSpinner";
-
-template <>
-void LuaObject<PiGUI::ModelSpinner>::RegisterClass()
-{
-
-	const luaL_Reg l_meta[] = {
-		{ "__call", l_model_new },
-		{ NULL, NULL }
-	};
-
-	const luaL_Reg l_attrs[] = {
-		{ "size", l_model_attr_size },
-		{ NULL, NULL }
-	};
-
-	const luaL_Reg l_methods[] = {
-		{ "new", l_model_new },
-		{ "draw", l_model_draw },
-		{ "setModel", l_model_set_model },
-		{ "setSize", l_model_set_size },
-		{ "modelSpaceToScreenSpace", l_model_space_to_screen_space },
-		{ NULL, NULL }
-	};
-
-	LuaObjectBase::CreateClass(s_type, NULL, l_methods, l_attrs, NULL);
-
-	lua_State *l = Lua::manager->GetLuaState();
-	LUA_DEBUG_START(l);
-
-	// Set the metatable to allow calling ModelSpinner() to create a new instance.
-	pi_lua_split_table_path(l, s_type); // table, name
-	lua_gettable(l, -2);
-
-	lua_newtable(l);
-	luaL_setfuncs(l, l_meta, 0);
-	lua_setmetatable(l, -2);
-	lua_pop(l, 2);
+	LuaObjectBase::CreateClass(&s_metaType);
 
 	LUA_DEBUG_END(l, 0);
 }

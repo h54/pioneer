@@ -57,7 +57,11 @@
   },
   "FLAVOUR_0_ADTEXT": {
     "description": "",
-    "message": "VIAJA al sistema {system}? Se paga dinero por la entrega de un pequeño paquete."
+    "message": "¿Pasa por el sistema {system}? Se paga dinero por la entrega de un paquete pequeño."
+  },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "ENVÍO INTERESTELAR"
   },
   "FLAVOUR_0_FAILUREMSG": {
     "description": "",
@@ -77,7 +81,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "SE BUSCA. Entrega de un paquete al sistema {system}."
+    "message": "Se Busca: Envío de un paquete al sistema {system}."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "SE NECESITA ENTREGA"
   },
   "FLAVOUR_1_FAILUREMSG": {
     "description": "",
@@ -97,7 +105,11 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "URGENTE. Se necesita una nave rápida para la entrega de un paquete en el sistema {system}."
+    "message": "¡Urgente! Se necesita nave rápida para el envío de un paquete al sistema {system}."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "ENTREGA URGENTE"
   },
   "FLAVOUR_2_FAILUREMSG": {
     "description": "",
@@ -117,7 +129,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "ENTREGA. Documentos al sistema {system}. {cash} para un piloto experimentado."
+    "message": "Envío de documentos sensibles al sistema {system}. {cash} para un piloto experimentado."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "ENTREGA DE DOCUMENTOS"
   },
   "FLAVOUR_3_FAILUREMSG": {
     "description": "",
@@ -137,7 +153,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "SERVICIO POSTAL. Se requiere una nave para una entrega en el sistema {system}."
+    "message": "Servicios Postales Interestelares. Necesitamos una nave para un envío al sistema {system}"
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "SERVICIO POSTAL"
   },
   "FLAVOUR_4_FAILUREMSG": {
     "description": "",
@@ -157,7 +177,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "MUDANZA. Traslado de soportes físicos a {starport} desde almacén."
+    "message": "Transporte de propiedades a {starport} desde una instalación portuaria de almacenamiento."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "VUELTA A CASA"
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
@@ -177,7 +201,11 @@
   },
   "FLAVOUR_6_ADTEXT": {
     "description": "",
-    "message": "MENSAJERO DE CORTA DISTANCIA. Entrega de un paquete pequeño en {starport}."
+    "message": "Se requiere mensajero de dentro del sistema. Envío de un paquete pequeño a {starport}."
+  },
+  "FLAVOUR_6_ADTITLE": {
+    "description": "",
+    "message": "MENSAJERO DE CORTO ALCANCE"
   },
   "FLAVOUR_6_FAILUREMSG": {
     "description": "",
@@ -197,7 +225,11 @@
   },
   "FLAVOUR_7_ADTEXT": {
     "description": "",
-    "message": "CARGAMENTO INTERPLANETARIO. Transporte de carga local a {starport}."
+    "message": "Contrato de transporte interplanetario estandarizado. Transporte de mercancía local a {starport}."
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "MERCANCÍA INTERPLANETARIA"
   },
   "FLAVOUR_7_FAILUREMSG": {
     "description": "",
@@ -217,7 +249,11 @@
   },
   "FLAVOUR_8_ADTEXT": {
     "description": "",
-    "message": "ENTREGA INMEDIATA. Se requiere la entrega express de un objeto a {starport}."
+    "message": "Contrato personal de entrega urgente. Se requiere una entrega rápida de un objeto en {starport}."
+  },
+  "FLAVOUR_8_ADTITLE": {
+    "description": "",
+    "message": "ENTREGA CERCANA"
   },
   "FLAVOUR_8_FAILUREMSG": {
     "description": "",
@@ -237,7 +273,11 @@
   },
   "FLAVOUR_9_ADTEXT": {
     "description": "",
-    "message": "PAQUETE PENDIENTE. Despacho urgente de alimentos perecederos a {starport}."
+    "message": "Requerimos el lanzamiento de un paquete. Envío urgente de perecederos a {starport}."
+  },
+  "FLAVOUR_9_ADTITLE": {
+    "description": "",
+    "message": "LANZAMIENTO DE PAQUETE"
   },
   "FLAVOUR_9_FAILUREMSG": {
     "description": "",
@@ -270,10 +310,6 @@
   "I_HIGHLY_DOUBT_IT": {
     "description": "",
     "message": "Lo dudo mucho."
-  },
-  "LY": {
-    "description": "",
-    "message": "AL"
   },
   "NOT_ANY_MORE_THAN_USUAL": {
     "description": "",

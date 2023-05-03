@@ -1,4 +1,4 @@
--- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local utils = require 'utils'
@@ -7,6 +7,9 @@ local Serializer = require 'Serializer'
 -- Class: EquipSet
 --
 -- A container for a ship's equipment.
+
+---@class EquipSet
+---@field meta table
 local EquipSet = utils.inherits(nil, "EquipSet")
 
 EquipSet.default = {
@@ -29,11 +32,12 @@ EquipSet.default = {
 	cargo_life_support=1,
 	autopilot=1,
 	trade_computer=1,
-	sensor = 8,
+	sensor = 2,
 	thruster = 1
 }
 
 function EquipSet.New (slots)
+	---@class EquipSet
 	local obj = {}
 	obj.slots = {}
 	for k, n in pairs(EquipSet.default) do
@@ -48,13 +52,33 @@ end
 
 local listeners = {}
 function EquipSet:AddListener(listener)
-	listeners[self] = listener
+	listeners[self] = listeners[self] or {}
+	table.insert(listeners[self], listener)
 end
 
-function EquipSet:CallListener()
-	if listeners[self] then
-		listeners[self]()
+function EquipSet:CallListener(slot)
+	if not listeners[self] then return end
+
+	for _, listener in ipairs(listeners[self]) do
+		listener(slot)
 	end
+end
+
+function EquipSet:Serialize()
+	local serialize = {
+		slots = {}
+	}
+
+	for k, v in pairs(self.slots) do
+		serialize.slots[k] = v
+	end
+
+	return serialize
+end
+
+function EquipSet.Unserialize(data)
+	setmetatable(data, EquipSet.meta)
+	return data
 end
 
 --
@@ -154,12 +178,9 @@ end
 
 function EquipSet:__TriggerCallbacks(ship, slot)
 	ship:UpdateEquipStats()
-	if slot == "cargo" then -- TODO: build a proper property system for the slots
-		ship:setprop("usedCargo", self.slots.cargo.__occupied)
-	else
-		ship:setprop("totalCargo", math.min(self.slots.cargo.__limit, self.slots.cargo.__occupied+ship.freeCapacity))
-	end
-	self:CallListener()
+	-- if we reduce the available capacity, we need to update the maximum amount of cargo available
+	ship:setprop("totalCargo", math.min(self.slots.cargo.__limit, ship.usedCargo+ship.freeCapacity))
+	self:CallListener(slot)
 end
 
 -- Method: __Remove_NoCheck (PRIVATE)
@@ -253,6 +274,7 @@ function EquipSet:Add(ship, item, num, slot)
 	elseif not item:IsValidSlot(slot, ship) then
 		return -1
 	end
+	assert(slot ~= "cargo", "Cargo slots for equipment are no longer valid")
 
 	local added = self:__Add_NoCheck(item, num, slot)
 	if added == 0 then
@@ -289,6 +311,8 @@ function EquipSet:Remove(ship, item, num, slot)
 	if not slot then
 		slot = item:GetDefaultSlot(ship)
 	end
+	assert(slot ~= "cargo", "Cargo slots for equipment are no longer valid")
+
 	local removed = self:__Remove_NoCheck(item, num, slot)
 	if removed == 0 then
 		return 0

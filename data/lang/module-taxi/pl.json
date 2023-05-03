@@ -103,6 +103,10 @@
     "description": "",
     "message": "POSZUKUJĘ: Przelot małej grupy do systemu {system}. Płacę {cash}."
   },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "TRANSPORT OSOBOWY POSZUKIWANY"
+  },
   "FLAVOUR_0_DANGER": {
     "description": "",
     "message": "Nie."
@@ -133,7 +137,11 @@
   },
   "FLAVOUR_10_ADTEXT": {
     "description": "",
-    "message": "SZUKAM STATKU: Przelot szybkim statkiem do systemu {system}."
+    "message": "VIP potrzebuje pilnego transportu na szybkim statku do systemu {system}. Bez zbędnych pytań."
+  },
+  "FLAVOUR_10_ADTITLE": {
+    "description": "",
+    "message": "DYSKRETNY STATEK POSZUKIWANY"
   },
   "FLAVOUR_10_DANGER": {
     "description": "",
@@ -165,7 +173,11 @@
   },
   "FLAVOUR_11_ADTEXT": {
     "description": "",
-    "message": "SZYBKI STATEK: Przelot szybkim statkiem do systemu {system}."
+    "message": "Inspektor korporacyjny potrzebuje transportu szybkim statkiem do systemu {system}."
+  },
+  "FLAVOUR_11_ADTITLE": {
+    "description": "",
+    "message": "POTRZBNY SZYBKI STATEK"
   },
   "FLAVOUR_11_DANGER": {
     "description": "",
@@ -197,7 +209,11 @@
   },
   "FLAVOUR_12_ADTEXT": {
     "description": "",
-    "message": "POTRZEBNY STATEK: Przelot do systemu {system}."
+    "message": "Pilny transport potrzebny dla uciekającego mieszkańca. Potrzebny transport do systemu {system}"
+  },
+  "FLAVOUR_12_ADTITLE": {
+    "description": "",
+    "message": "POTRZEBNY STATEK"
   },
   "FLAVOUR_12_DANGER": {
     "description": "",
@@ -229,7 +245,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "POSZUKUJĘ: Przelot dla małej grupy do systemu {system}. Płacę {cash}."
+    "message": "POSZUKUJĘ: Przelot małej grupy do systemu {system}. Płacę {cash}."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "TRANSPORT OSOBOWY POSZUKIWANY"
   },
   "FLAVOUR_1_DANGER": {
     "description": "",
@@ -263,6 +283,10 @@
     "description": "",
     "message": "POSZUKUJĘ: Przelot małej grupy do systemu {system}. Płacę {cash}."
   },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "TRANSPORT MAŁEJ GRUPY"
+  },
   "FLAVOUR_2_DANGER": {
     "description": "",
     "message": "Nie."
@@ -293,7 +317,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "POTRZEBNY STATEK: Przelot do systemu {system}. Płacę {cash}."
+    "message": "Statek potrzebny do transportu wysokiego ryzyka, do systemu {system}. Płacę {cash}."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "POTRZEBNY STATEK"
   },
   "FLAVOUR_3_DANGER": {
     "description": "",
@@ -325,7 +353,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "SZUKAM STATKU: Przelot do systemu {system}. Płacę {cash}."
+    "message": "Statek poszukiwany do transportu biznes klasy, do systemu {system}. Płacę {cash}."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "BIZNESOWY TRANSPORT OSOBOWY"
   },
   "FLAVOUR_4_DANGER": {
     "description": "",
@@ -357,7 +389,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "POSZUKUJĘ: Przelot do systemu {system}. Płacę {cash}."
+    "message": "Potrzebuje poufnego transportu anonimowego VIPa do systemu {system}. Płacę {cash}."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "POUFNY TRANSPORT OSOBOWY"
   },
   "FLAVOUR_5_DANGER": {
     "description": "",
@@ -389,7 +425,11 @@
   },
   "FLAVOUR_6_ADTEXT": {
     "description": "",
-    "message": "SZUKAM STATKU: Przelot do systemu {system}. Płacę {cash}."
+    "message": "Reporter potrzebuje się zbliżyć do historii powstania systemu {system}. Zapłacę {cash}"
+  },
+  "FLAVOUR_6_ADTITLE": {
+    "description": "",
+    "message": "POTRZEBNY STATEK"
   },
   "FLAVOUR_6_DANGER": {
     "description": "",
@@ -421,7 +461,11 @@
   },
   "FLAVOUR_7_ADTEXT": {
     "description": "",
-    "message": "SZUKAM STATKU: Przelot do systemu {system}. Płacę {cash}."
+    "message": "Statek poszukiwany do bezpiecznego transportu do systemu {system}. Zabezpieczenie transportu wymagane. Zapłacę {cash}."
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "BEZPIECZNY TRANSPORT OSOBOWY POTRZEBNY"
   },
   "FLAVOUR_7_DANGER": {
     "description": "",
@@ -453,7 +497,11 @@
   },
   "FLAVOUR_8_ADTEXT": {
     "description": "",
-    "message": "SZUKAM STATKU: Przelot szybkim statkiem do systemu {system}."
+    "message": "Pilny transport osobowy do systemu {system} potrzebny. Opłaty wliczone w wynagrodzenie."
+  },
+  "FLAVOUR_8_ADTITLE": {
+    "description": "",
+    "message": "SZYBKI TRANSPORT OSOBOWY"
   },
   "FLAVOUR_8_DANGER": {
     "description": "",
@@ -485,7 +533,11 @@
   },
   "FLAVOUR_9_ADTEXT": {
     "description": "",
-    "message": "SZUKAM STATKU: Przelot szybkim statkiem do systemu {system}."
+    "message": "Potrzeba pilnego transportu dla uczciwego obywatela. Potrzebny szybki transport do systemu {system}."
+  },
+  "FLAVOUR_9_ADTITLE": {
+    "description": "",
+    "message": "UZASADNIONY TRANSPORT OSOBOWY"
   },
   "FLAVOUR_9_DANGER": {
     "description": "",
@@ -538,10 +590,6 @@
   "I_MUST_BE_THERE_BEFORE": {
     "description": "",
     "message": "Muszę tam być przed "
-  },
-  "LY": {
-    "description": "",
-    "message": "lś"
   },
   "OK_AGREED": {
     "description": "",

@@ -59,6 +59,10 @@
     "description": "",
     "message": "Permet de récupérer des conteneurs dans l'espace."
   },
+  "DAMAGE_PER_SHOT": {
+    "description": "Tooltip explaining weapon damage per shot",
+    "message": "Dégât par coup"
+  },
   "DRIVE_CLASS1": {
     "description": "",
     "message": "Hyperpropulsion Classe 1"
@@ -147,6 +151,18 @@
     "description": "",
     "message": "Système de contremesures électroniques, capable de détruire certains missiles guidés."
   },
+  "EMPTY_SLOT": {
+    "description": "Text indicating an empty equipment slot.",
+    "message": "VIDE"
+  },
+  "EQUIPMENT_INTEGRITY": {
+    "description": "Tooltip explaining remaining equipment integrity",
+    "message": "Intégrité de l'équipement"
+  },
+  "EQUIPMENT_WEIGHT": {
+    "description": "Tooltip explaining equipment weight",
+    "message": "Poids de l'équipement"
+  },
   "FUEL_SCOOP": {
     "description": "",
     "message": "Écope à carburant"
@@ -191,6 +207,18 @@
     "description": "",
     "message": "Utilisé pour l'extraction du minerai des astéroïdes."
   },
+  "MININGCANNON_5MW": {
+    "description": "",
+    "message": "Canon d'exploitation minière 5MW"
+  },
+  "MININGCANNON_5MW_DESCRIPTION": {
+    "description": "",
+    "message": "Utilisé pour l'extraction du minerai des astéroïdes."
+  },
+  "MISSILES": {
+    "description": "Category name of missile-related equipment",
+    "message": "Missiles"
+  },
   "MISSILE_GUIDED": {
     "description": "",
     "message": "Missile guidé"
@@ -208,12 +236,28 @@
     "message": "Roquette R40 non guidée"
   },
   "MULTI_SCOOP": {
-    "description": "A ship equipment: a cargo scoop and fuel scoop combined to one",
+    "description": "A ship equipment: a cargo scoop and fuel scoop combined into one",
     "message": "Multi Scoop"
   },
   "MULTI_SCOOP_DESCRIPTION": {
     "description": "",
     "message": "Malgré une efficacité moindre que celle d'une écope à carubrant, cela permet d'écoper et la cargaison, et le carburant."
+  },
+  "ORBIT_SCANNER": {
+    "description": "A ship equipment that records data of terrain, for cartography mapping/geological survey. Note: Scout Mission module reference and distinguishes between 'orbital' and 'surface' scanner types, the former scans planet from orbit, the latter from low altitude.",
+    "message": "Scanner orbital XKM-650"
+  },
+  "ORBIT_SCANNER_DESCRIPTION": {
+    "description": "tooltip",
+    "message": "Scanne les planètes depuis l'orbite, pour des données scientifique"
+  },
+  "ORBIT_SCANNER_GOOD": {
+    "description": "A sensor used to scan planets from high altitude / orbit + model number (that's minimum km altitude)",
+    "message": "Scanner orbital XKM-1750"
+  },
+  "ORBIT_SCANNER_GOOD_DESCRIPTION": {
+    "description": "tooltip",
+    "message": "Scanne les planètes depuis l'orbite, avec une haute résolution et une optique à grande ouverture"
   },
   "OUT_OF_SCANRANGE": {
     "description": "",
@@ -223,13 +267,9 @@
     "description": "",
     "message": "Cabine passager"
   },
-  "PLANETSCANNER": {
-    "description": "Scans the nearest body for resources",
-    "message": "Scannage de l'objet"
-  },
-  "PLANETSCANNER_DESCRIPTION": {
-    "description": "",
-    "message": "Scanne les plus proches objets afin de trouver des ressources."
+  "PROPULSION": {
+    "description": "Category name of propulsion-related equipment",
+    "message": "Propulsion"
   },
   "PULSECANNON_10MW": {
     "description": "",
@@ -275,6 +315,26 @@
     "description": "",
     "message": "Reprise du scannage"
   },
+  "SCOOPS": {
+    "description": "Category name of scoop-related equipment",
+    "message": "Pelles"
+  },
+  "SENSORS": {
+    "description": "Category name of sensor-related equipment",
+    "message": "Capteurs"
+  },
+  "SENSOR_MIN_ALTITUDE": {
+    "description": "",
+    "message": "Altitude min du capteur"
+  },
+  "SENSOR_RESOLUTION": {
+    "description": "Resolution of e.g. optical sensor",
+    "message": "Résolution du capteur"
+  },
+  "SHIELDS": {
+    "description": "Category name of shield-related equipment",
+    "message": "Boucliers"
+  },
   "SHIELD_ENERGY_BOOSTER": {
     "description": "",
     "message": "Booster énergétique de bouclier"
@@ -291,6 +351,10 @@
     "description": "",
     "message": "Procure une protection de coque supplémentaire pour chaque unité installée."
   },
+  "SHOTS_PER_MINUTE": {
+    "description": "Tooltip explaining weapon fire rate / RPM counter",
+    "message": "Cadence de tir / minute"
+  },
   "SMALL_PLASMA_ACCEL": {
     "description": "",
     "message": "Petit accélérateur à plasma"
@@ -298,6 +362,22 @@
   "STARTING_SCAN": {
     "description": "",
     "message": "Démarrage du scannage, la distance de cible est "
+  },
+  "SURFACE_SCANNER": {
+    "description": "A ship equipment that records data of terrain, for cartography mapping/geological survey. Note: Scout Mission module reference and distinguishes between 'orbital' and 'surface' scanner types, the former scans planet from orbit, the latter from low altitude. Model manufacturer name is meant to sound like a cheap brand.",
+    "message": "Scanner de surface Nadir-150"
+  },
+  "SURFACE_SCANNER_DESCRIPTION": {
+    "description": "tooltip",
+    "message": "Enregistreur géologique et cartographique"
+  },
+  "SURFACE_SCANNER_GOOD": {
+    "description": "A ship equipment that records data of terrain, for cartography mapping/geological survey. Note: Scout Mission module reference and distinguishes between 'orbital' and 'surface' scanner types. Model manufacturer name is meant to be associated with high quality.",
+    "message": "Scanner de surface Xeiss-250"
+  },
+  "SURFACE_SCANNER_GOOD_DESCRIPTION": {
+    "description": "tooltip",
+    "message": "Enregistreur de géologie et cartographe haute-résolution"
   },
   "TARGET_SCANNER": {
     "description": "ship equipment showing target information/stats",
@@ -331,6 +411,14 @@
     "description": "",
     "message": "Les réacteurs qui ont été optimisés afin de réduire les inéfficacités et améliorer la consommation d'énergie."
   },
+  "TOTAL_MODULE_CAPACITY": {
+    "description": "Tooltip explaining module capacity of specific slot",
+    "message": "Capacité totale"
+  },
+  "TOTAL_MODULE_WEIGHT": {
+    "description": "Tooltip explaining total equipped weight of specific slot",
+    "message": "Poids total"
+  },
   "TRADE_COMPUTER": {
     "description": "Ship equipment computing profitable commodities to trade between two systems",
     "message": "Détecteur de profits"
@@ -346,5 +434,13 @@
   "UNOCCUPIED_CABIN_DESCRIPTION": {
     "description": "",
     "message": "Requis pour le transport d'un passager."
+  },
+  "UTILITY": {
+    "description": "Category name of utility equipment",
+    "message": "Utilitaire"
+  },
+  "WEAPONS": {
+    "description": "Category name of weapon-related equipment",
+    "message": "Armes"
   }
 }

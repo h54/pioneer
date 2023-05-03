@@ -13,23 +13,43 @@
   },
   "ADTEXT_1": {
     "description": "",
-    "message": "POSZUKIWANY RZETELNY PILOT: Płacę {cash}"
+    "message": "Kwalifikowany pilot do tajnego zlecenia. Płacę {cash}."
   },
   "ADTEXT_2": {
     "description": "",
-    "message": "WYZWANIE: Statek i załoga poszukiwane do misji bojowej w systemie {system}."
+    "message": "Statek razem z załogą poszukiwany do udziału w misji bojowej, w systemie {system}."
   },
   "ADTEXT_3": {
     "description": "",
-    "message": "BITWA: Potrzebujesz wykwalifikowanego najemnika z dobrze wyposażonym statkiem."
+    "message": "Poszukiwany doświadczony najemnik z dobrze wyposażonym statkiem. Szczegóły zadania w ogłoszeniu."
   },
   "ADTEXT_4": {
     "description": "",
-    "message": "POSZUKIWANY NIEUSTRASZONY NAJEMNIK: Płaca {cash} za misje w systemie {system}."
+    "message": "{org} poszukuje odważnego najemnika do misji w systemie {system}. Płatność {cash}."
   },
   "ADTEXT_5": {
     "description": "",
     "message": "{mission} Misja: Wynagrodzenie {cash}."
+  },
+  "ADTITLE_1": {
+    "description": "",
+    "message": "RZETELNY PILOT POSZUKIWANY"
+  },
+  "ADTITLE_2": {
+    "description": "",
+    "message": "ROZSTRZYGNIĘCIĘ WYZWANIA"
+  },
+  "ADTITLE_3": {
+    "description": "",
+    "message": "LOT BOJOWY"
+  },
+  "ADTITLE_4": {
+    "description": "",
+    "message": "NIEUSTRASZONY NAJEMNIK POSZUKIWANY"
+  },
+  "ADTITLE_5": {
+    "description": "",
+    "message": "AUTORYZOWANA MISJA BOJOWA"
   },
   "AGENT": {
     "description": "Secret Service Agent",
@@ -175,10 +195,6 @@
     "description": "",
     "message": "Czy jest jakiś limit czasowy?"
   },
-  "LY": {
-    "description": "",
-    "message": "lś"
-  },
   "MANAGER": {
     "description": "",
     "message": "Menadżer"
@@ -235,6 +251,10 @@
     "description": "Message from the ship computer",
     "message": "Główny cel misji ukończony"
   },
+  "MISSION_INFO": {
+    "description": "Message from the ship computer",
+    "message": "Miejsce celu osiągnięte. Przewidywany czas trwania misji {duration}."
+  },
   "MISSION_TYPE_1": {
     "description": "Name of mission type",
     "message": "Zwiad"
@@ -246,6 +266,10 @@
   "MISSION_TYPE_3": {
     "description": "Name of mission type. Derived from Fighter Sweep. An aggressive mission to hunt down and destroy every enemy fighter in the allotted area.",
     "message": "Oczyszczenie Obszaru"
+  },
+  "MISSION_WARNING": {
+    "description": "Message from the ship computer",
+    "message": "Miejsce celu jest za daleko. Nie można wykonać zbioru danych."
   },
   "OBJECTIVE_1": {
     "description": "",
@@ -285,11 +309,15 @@
   },
   "POLICE_IT_MUST_BE_COMPLETED_BY": {
     "description": "",
-    "message": "It's important that the mission is completed by {date}, because more hostile ships are on their way."
+    "message": "To ważne, aby zakończyć misję przed {date}, ponieważ nadciągają kolejne wrogie statki."
   },
   "POLICE_LAND_THERE": {
     "description": "",
     "message": "Po prostu wyląduj na stacji z biurem {org}."
+  },
+  "RADAR_NOT_INSTALLED": {
+    "description": "",
+    "message": "Przykro mi, ale nie sądzę, abyś sobie z tym poradził bez radaru."
   },
   "RISK_1": {
     "description": "",
@@ -330,6 +358,10 @@
   "SYSTEM": {
     "description": "",
     "message": "System:"
+  },
+  "TARGET_AREA_REACHED": {
+    "description": "",
+    "message": "Osiągnięto obszar docelowy. Rozpoczęcie rejestracji danych."
   },
   "TIME_LIMIT": {
     "description": "",

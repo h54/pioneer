@@ -1,51 +1,127 @@
 {
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "DONATE!"
+  },
+  "FLAVOUR_0_DESC": {
+    "description": "",
+    "message": "La Chiesta del Celeste Mostro di Spaghetti Volante ha bisogno dei TUOI soldi per diffondere la parola del dio."
+  },
   "FLAVOUR_0_MESSAGE": {
     "description": "",
     "message": "Prego, selezionare l'ammontare da donare alla Chiesa del Celeste Mostro di Spaghetti Volante."
   },
-  "FLAVOUR_0_TITLE": {
+  "FLAVOUR_1_ADTITLE": {
     "description": "",
-    "message": "DONATE! La Chiesta del Celestiale Mostro di Spaghetti Volante ha bisogno del VOSTRO contributo per diffondere la parola di dio."
+    "message": "DONAZIONE"
+  },
+  "FLAVOUR_1_DESC": {
+    "description": "",
+    "message": "I Guardiani del Libero Spirito chiedono umilmente la tua carità per sostenere i propri monasteri."
   },
   "FLAVOUR_1_MESSAGE": {
     "description": "",
     "message": "Che la pace sia con te, fratello. Prego, selezionare l'ammontare da donare ai Guardiani del Libero Spirito."
   },
-  "FLAVOUR_1_TITLE": {
+  "FLAVOUR_2_ADTITLE": {
     "description": "",
-    "message": "DONATE. I Guardiani del Libero Spirito chiedono umilmente la tua carità per sostenere i propri monasteri."
+    "message": "CARITATEVOLE?"
+  },
+  "FLAVOUR_2_DESC": {
+    "description": "",
+    "message": "Il Fondo per gli Orfani di Guerra ti chiede aiuto per proseguire con la propria missione."
   },
   "FLAVOUR_2_MESSAGE": {
     "description": "",
     "message": "Prego, selezionare l'ammontare da donare al Sostegno Orfani di Guerra, e porre fine alla sofferenza dei bambini in tutta la galassia."
   },
-  "FLAVOUR_2_TITLE": {
+  "FLAVOUR_3_ADTITLE": {
     "description": "",
-    "message": "VI SENTITE GENEROSI? Sostegno Orfani di Guerra ha bisogno del vostro aiuto per poter proseguire con il proprio indispensabile lavoro."
+    "message": "CONTRIBUTO"
+  },
+  "FLAVOUR_3_DESC": {
+    "description": "",
+    "message": "Gli Amici della campagna Galattica \"Abolizione Propulsori Militari\" hanno bisogno del tuo contributo."
   },
   "FLAVOUR_3_MESSAGE": {
     "description": "",
     "message": "Prego, selezionare l'ammontare da donare a GreenWatch, e porre fine all'inquinamento della nostra galassia."
   },
-  "FLAVOUR_3_TITLE": {
+  "FLAVOUR_4_ADTITLE": {
     "description": "",
-    "message": "CONTRIBUITE. La campagna 'Aboliamo i Propulsori Militari', degli Amici della Galassia, ha bisogno del tuo contributo."
+    "message": "DONAZIONE!"
+  },
+  "FLAVOUR_4_DESC": {
+    "description": "",
+    "message": "Salva le nostre specie. Ferma la carneficina delle nuove colonie."
   },
   "FLAVOUR_4_MESSAGE": {
     "description": "",
     "message": "Prego selezionare l'ammontare da donare."
   },
-  "FLAVOUR_4_TITLE": {
+  "FLAVOUR_5_ADTITLE": {
     "description": "",
-    "message": "DONA! Salva le nostre specie. Ferma la carneficina dei nuovi insediamenti planetari."
+    "message": "SOSTIENI LA LIBERTÀ"
+  },
+  "FLAVOUR_5_DESC": {
+    "description": "",
+    "message": "Ferma la grande frode del software proprietario che controlla le nostre navi."
   },
   "FLAVOUR_5_MESSAGE": {
     "description": "",
     "message": "Libera la tua nave! Prego, seleziona l'ammontare da donare. Felice hacking."
   },
-  "FLAVOUR_5_TITLE": {
+  "FLAVOUR_6_ADTITLE": {
     "description": "",
-    "message": "SOSTIENI LA LIBERTÀ! Non permettere al software proprietario di controllare ingiustamente la tua nave."
+    "message": "GIORNATA DEI VETERANI!"
+  },
+  "FLAVOUR_6_DESC": {
+    "description": "",
+    "message": "Sostieni i veterani di {MILITARY}."
+  },
+  "FLAVOUR_6_MESSAGE": {
+    "description": "",
+    "message": "{MILITARY}. Puoi sempre contare su di loro.\nE su di te possono contare?"
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "HANNO IL TUO SOSTEGNO?"
+  },
+  "FLAVOUR_7_DESC": {
+    "description": "",
+    "message": "Sostieni i veterani di  {POLICE}."
+  },
+  "FLAVOUR_7_MESSAGE": {
+    "description": "",
+    "message": "I coraggiosi e le coraggiose di {POLICE} che hanno dedicato la vita a mantenere sicuro {SYSTEM} hanno bisogno del tuo sostegno!"
+  },
+  "FLAVOUR_8_ADTITLE": {
+    "description": "",
+    "message": "SOSTIENI I NOSTRI VETERANI!"
+  },
+  "FLAVOUR_8_DESC": {
+    "description": "",
+    "message": "Sostieni i veterani delle nostre forze armate."
+  },
+  "FLAVOUR_8_MESSAGE": {
+    "description": "",
+    "message": "I coraggiosi soldati di {MILITARY} affrontano ogni giorni il pericolo per te!"
+  },
+  "FLAVOUR_9_ADTITLE": {
+    "description": "",
+    "message": "FERMA LA POVERTÀ!"
+  },
+  "FLAVOUR_9_DESC": {
+    "description": "",
+    "message": "Sostieni la battaglia contro la povertà a {FACTION}."
+  },
+  "FLAVOUR_9_MESSAGE": {
+    "description": "",
+    "message": "Rendiamo indipendenti finanziariamente le famiglie di {FACTION} per creare un futuro migliore per tutti."
+  },
+  "SALES_PITCH": {
+    "description": "",
+    "message": "Se donassi {cash} alla nostra causa, la tua reputazione ne beneficerebbe, ma qualsiasi somma sarebbe d'aiuto."
   },
   "THANK_YOU_ALL_DONATIONS_ARE_WELCOME": {
     "description": "",

@@ -19,6 +19,14 @@
     "description": "",
     "message": "Załoga do wynajęcia"
   },
+  "CREW_FOR_HIRE_DESC": {
+    "description": "",
+    "message": "Potencjalna załoga jest możliwa do zatrudnienia na tej stacji kosmicznej."
+  },
+  "CREW_FOR_HIRE_TITLE": {
+    "description": "",
+    "message": "ZAŁOGA DO WYNAJĘCIA"
+  },
   "GO_BACK": {
     "description": "",
     "message": "Powrót"

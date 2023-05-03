@@ -1,20 +1,20 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "GameConfig.h"
 #include "FileSystem.h"
-#include "KeyBindings.h"
+#include "core/OS.h"
 
 GameConfig::GameConfig(const map_string &override_)
 {
 	// set defaults
 	std::map<std::string, std::string> &map = m_map[""];
-	map["Lang"] = "en";
+	map["Lang"] = OS::GetUserLangCode();
 	map["AMD_MESA_HACKS"] = "0";
 	map["DisableSound"] = "0";
 	map["StartFullscreen"] = "0";
-	map["ScrWidth"] = "800";
-	map["ScrHeight"] = "600";
+	map["ScrWidth"] = "1280";
+	map["ScrHeight"] = "720";
 	map["UIScaleFactor"] = "1";
 	map["DetailCities"] = "1";
 	map["DetailPlanets"] = "1";
@@ -44,28 +44,24 @@ GameConfig::GameConfig(const map_string &override_)
 	map["EnableCockpit"] = "0";
 	map["HudTrails"] = "0";
 	map["EnableServerAgent"] = "0";
-	map["AmountOfBackgroundStars"] = "1.0";
+	map["AmountOfBackgroundStars"] = "0.25";
+	map["StarFieldStarSizeFactor"] = "0.7";
 	map["UseAnisotropicFiltering"] = "0";
 	map["RendererName"] = "Opengl 3.x"; // default to our best renderer
 	map["EnableGLDebug"] = "0";
 	map["EnableGPUJobs"] = "1";
 	map["GL3ForwardCompatible"] = "1";
+	map["LogVerbose"] = "1";
+	map["ProfileSlowFrames"] = "0";
+	map["ProfilerZoneOutput"] = "0";
+	map["CameraSmoothing"] = "0";
+	map["AimingSensitivity"] = "1.0";
 
-	Load();
+	Read(FileSystem::userFiles, "config.ini");
 
 	for (auto i = override_.begin(); i != override_.end(); ++i) {
 		const std::string &key = (*i).first;
 		const std::string &val = (*i).second;
 		map[key] = val;
 	}
-}
-
-void GameConfig::Load()
-{
-	Read(FileSystem::userFiles, "config.ini");
-}
-
-bool GameConfig::Save()
-{
-	return Write(FileSystem::userFiles, "config.ini");
 }

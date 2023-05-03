@@ -165,7 +165,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "Wrak wylądował na {planet}"
+    "message": "Lokalna Komisja ruchu kosmicznego otrzymała raport, o rozbitym statku na {planet}. Potrzebne wsparcie."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "ROZBITY STATEK"
   },
   "FLAVOUR_1_FAILUREMSG": {
     "description": "",
@@ -197,7 +201,11 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "OKRĘT BEZ PALIWA na trasie do {starport}."
+    "message": "Komisja ruchu kosmicznego {starport} otrzymała informacje o potrzebie zatankowania nadlatującego statku. Poszukiwany dostawca paliwa."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "STATEK BEZ PALIWA"
   },
   "FLAVOUR_2_FAILUREMSG": {
     "description": "",
@@ -229,7 +237,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "NAGŁY WYPADEK na statku w pobliżu {starport}."
+    "message": "Statek niedaleko {starport} zgłosił potrzebe pomocy medycznej. Pilny transport szpitalny potrzebny."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "POMOC MEDYCZNA"
   },
   "FLAVOUR_3_FAILUREMSG": {
     "description": "",
@@ -241,7 +253,7 @@
   },
   "FLAVOUR_3_INTROTEXT": {
     "description": "",
-    "message": "Nazywam się {name} z kontroli lotów {starport}. Wzywam do pomocy w odpowiedzi na nagłą potrzebę medyczną dla pilota lotu {shiplabel}, kierowaną z {starport}."
+    "message": "Nazywam się {name} z kontroli lotów {starport}. W odpowiedzi na nagłą potrzebę medyczną dla pilota lotu {shiplabel}, kierowaną z {starport} - wzywam do udzielenia pomocy."
   },
   "FLAVOUR_3_LOCATIONTEXT": {
     "description": "",
@@ -261,7 +273,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "OKRĘT BEZ PALIWA na {planet}."
+    "message": "Otrzymano sygnał rozpaczy: statek osiadł na mieliźnie i nie ma paliwa na {planet}."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "STATEK BEZ PALIWA"
   },
   "FLAVOUR_4_FAILUREMSG": {
     "description": "",
@@ -293,7 +309,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "STATEK BEZ PALIWA w pobliżu {starport}"
+    "message": "Osierocony statek potrzebuje tankowania w pobliżu {starport}."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "STATEK BEZ PALIWA"
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
@@ -325,7 +345,11 @@
   },
   "FLAVOUR_6_ADTEXT": {
     "description": "",
-    "message": "OKRĘT NIE ODPOWIADA w systemie {system}"
+    "message": "Pomoc: jednostka korporacyjna nie odpowiada w systemie {system}."
+  },
+  "FLAVOUR_6_ADTITLE": {
+    "description": "",
+    "message": "JEDNOSTKA NIE ODPOWIADA"
   },
   "FLAVOUR_6_FAILUREMSG": {
     "description": "",
@@ -357,7 +381,11 @@
   },
   "FLAVOUR_7_ADTEXT": {
     "description": "",
-    "message": "NATYCHMIASTOWY TRANSPORT ZAŁOGI do układu {system}."
+    "message": "Potrzebny natychmiastowy transport załogi do dryfującego statku w systemie {system}."
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "AWARYJNY TRANSPORT ZAŁOGI"
   },
   "FLAVOUR_7_FAILUREMSG": {
     "description": "",
@@ -434,10 +462,6 @@
   "LON": {
     "description": "",
     "message": "Dług.:"
-  },
-  "LY": {
-    "description": "",
-    "message": "lś"
   },
   "MISSING_COMM": {
     "description": "",

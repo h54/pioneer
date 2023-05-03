@@ -19,6 +19,14 @@
     "description": "",
     "message": "Najmout posádku"
   },
+  "CREW_FOR_HIRE_DESC": {
+    "description": "",
+    "message": "Potential crew available for hire at this starport."
+  },
+  "CREW_FOR_HIRE_TITLE": {
+    "description": "",
+    "message": "CREW FOR HIRE"
+  },
   "GO_BACK": {
     "description": "",
     "message": "Zpět"
@@ -41,7 +49,7 @@
   },
   "NO_CREW_AVAILABLE": {
     "description": "",
-    "message": "Sorry, no candidates are currently seeking employment at {station}"
+    "message": "Omlouváme se, ale žádní kandidáti momentálně nehledají zaměstnání na {station}"
   },
   "NO_EXPERIENCE": {
     "description": "",

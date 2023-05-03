@@ -1,4 +1,4 @@
--- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Engine = require 'Engine'
@@ -7,11 +7,11 @@ local Game = require 'Game'
 local Comms = require 'Comms'
 local Event = require 'Event'
 local Rand = require 'Rand'
-local NameGen = require 'NameGen'
 local Format = require 'Format'
 local Serializer = require 'Serializer'
-local Equipment = require 'Equipment'
 local Character = require 'Character'
+local utils = require 'utils'
+local Commodities = require 'Commodities'
 
 local l = Lang.GetResource("module-breakdownservicing")
 local lui = Lang.GetResource("ui-core")
@@ -54,6 +54,7 @@ local flavours = {
 -- add strings to flavours
 for i = 1,#flavours do
 	local f = flavours[i]
+	f.adtitle   = l["FLAVOUR_" .. i-1 .. "_ADTITLE"]
 	f.title     = l["FLAVOUR_" .. i-1 .. "_TITLE"]
 	f.intro     = l["FLAVOUR_" .. i-1 .. "_INTRO"]
 	f.price     = l["FLAVOUR_" .. i-1 .. "_PRICE"]
@@ -107,7 +108,7 @@ local onChat = function (form, ref, option)
 	})[hyperdrive.l10n_key] or 10)) or 0
 
 	-- Now make it bigger (-:
-	price = price * 10
+	price = utils.round(price * 10, 5)
 
 	-- Replace those tokens into ad's intro text that can change during play
 	local pricesuggestion = string.interp(ad.price, {
@@ -130,7 +131,7 @@ local onChat = function (form, ref, option)
 	if option == 0 then
 		-- Initial proposal
 		form:SetTitle(ad.title)
-		form:SetFace(Character.New({ female = ad.isfemale, seed = ad.faceseed, name = ad.name }))
+		form:SetFace(ad.mechanic)
 		-- Replace token with details of last service (which might have
 		-- been seconds ago)
 		form:SetMessage(string.interp(message, {
@@ -150,7 +151,7 @@ local onChat = function (form, ref, option)
 		-- Yes please, service my engine
 		form:Clear()
 		form:SetTitle(ad.title)
-		form:SetFace(Character.New({ female = ad.isfemale, seed = ad.faceseed, name = ad.name }))
+		form:SetFace(ad.mechanic)
 		if Game.player:GetMoney() >= price then -- We did check earlier, but...
 			-- Say thanks
 			form:SetMessage(ad.response)
@@ -186,31 +187,30 @@ end
 local onCreateBB = function (station)
 	local rand = Rand.New(station.seed + seedbump)
 	local n = rand:Integer(1,#flavours)
-	local isfemale = rand:Integer(1) == 1
-	local name = NameGen.FullName(isfemale,rand)
+	local mechanic = Character.New({seed=rand:Integer()})
 
 	local ad = {
-		name = name,
-		isfemale = isfemale,
+		mechanic = mechanic,
 		-- Only replace tokens which are not subject to further change
 		title = string.interp(flavours[n].title, {
 			name = station.label,
-			proprietor = name,
+			proprietor = mechanic.name,
 		}),
 		intro = string.interp(flavours[n].intro, {
 			name = station.label,
-			proprietor = name,
+			proprietor = mechanic.name,
 		}),
 		price = flavours[n].price,
 		yesplease = flavours[n].yesplease,
 		response = flavours[n].response,
 		station = station,
-		faceseed = rand:Integer(),
 		strength = flavours[n].strength,
 		baseprice = flavours[n].baseprice *rand:Number(0.8,1.2), -- A little per-station flavouring
+		n         = n
 	}
 
 	local ref = station:AddAdvert({
+		title       = flavours[n].adtitle,
 		description = ad.title,
 		icon        = "breakdown_servicing",
 		onChat      = onChat,
@@ -225,7 +225,7 @@ local onGameStart = function ()
 
 	if not loaded_data then
 		service_history = {
-			lastdate = 0, -- Default will be overwritten on game start
+			lastdate = Game.time,
 			company = nil, -- Name of company that did the last service
 			service_period = oneyear, -- default
 			jumpcount = 0, -- Number of jumps made after the service_period
@@ -233,6 +233,7 @@ local onGameStart = function ()
 	elseif loaded_data.ads then
 		for k,ad in pairs(loaded_data.ads) do
 		local ref = ad.station:AddAdvert({
+			title       = flavours[ad.n].adtitle,
 			description = ad.title,
 			icon        = "breakdown_servicing",
 			onChat      = onChat,
@@ -285,13 +286,16 @@ local onEnterSystem = function (ship)
 		else
 			-- Destroy the engine
 			local engine = ship:GetEquip('engine',1)
-			if engine.fuel == Equipment.cargo.military_fuel then
+
+			if engine.fuel.name == 'military_fuel' then
 				pigui.playSfx("Hyperdrive_Breakdown_Military", 1.0, 1.0)
 			else
 				pigui.playSfx("Hyperdrive_Breakdown", 1.0, 1.0)
 			end
+
 			ship:RemoveEquip(engine)
-			ship:AddEquip(Equipment.cargo.rubbish, engine.capabilities.mass)
+			ship:GetComponent('CargoManager'):AddCommodity(Commodities.rubbish, engine.capabilities.mass)
+
 			Comms.Message(l.THE_SHIPS_HYPERDRIVE_HAS_BEEN_DESTROYED_BY_A_MALFUNCTION)
 		end
 	end

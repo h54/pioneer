@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _GRAPHICS_RENDERSTATE_H
@@ -11,27 +11,25 @@ namespace Graphics {
 		RenderStateDesc() :
 			blendMode(BLEND_SOLID),
 			cullMode(CULL_BACK),
+			primitiveType(PrimitiveType::TRIANGLES),
 			depthTest(true),
-			depthWrite(true)
+			depthWrite(true),
+			scissorTest(false)
 		{
+		}
+
+		bool operator!=(const RenderStateDesc &rhs) const { return !(*this == rhs); }
+		bool operator==(const RenderStateDesc &rhs) const
+		{
+			return blendMode == rhs.blendMode && cullMode == rhs.cullMode && primitiveType == rhs.primitiveType && depthTest == rhs.depthTest && depthWrite == rhs.depthWrite && scissorTest == rhs.scissorTest;
 		}
 
 		BlendMode blendMode;
 		FaceCullMode cullMode;
+		PrimitiveType primitiveType;
 		bool depthTest;
 		bool depthWrite;
-	};
-
-	class RenderState {
-	public:
-		virtual ~RenderState() {}
-
-		const RenderStateDesc &GetDesc() const { return m_desc; }
-
-	protected:
-		RenderState(const RenderStateDesc &d) :
-			m_desc(d) {}
-		RenderStateDesc m_desc;
+		bool scissorTest;
 	};
 
 } // namespace Graphics

@@ -31,13 +31,21 @@
     "description": "",
     "message": "Carne animale"
   },
+  "AN_AR_ATMOSPHERE": {
+    "description": "",
+    "message": "un'atmosfera di argon"
+  },
+  "AN_O2_ATMOSPHERE": {
+    "description": "",
+    "message": "un'atmosfera d'ossigeno"
+  },
   "APOAPSIS_DISTANCE": {
     "description": "",
     "message": "Distanza dall'apoapside"
   },
   "AR_ATMOSPHERE": {
     "description": "",
-    "message": "\" atmosfera a prevalenza di argon\""
+    "message": "atmosfera d'argon"
   },
   "ASTEROID": {
     "description": "",
@@ -79,9 +87,37 @@
     "description": "",
     "message": "Inclinazione"
   },
+  "A_CH4_ATMOSPHERE": {
+    "description": "",
+    "message": "un'atmosfera di metano"
+  },
+  "A_CO2_ATMOSPHERE": {
+    "description": "",
+    "message": "un'atmosfera di diossido di carbonio"
+  },
+  "A_CO_ATMOSPHERE": {
+    "description": "",
+    "message": "un'atmosfera di monossido di carbonio"
+  },
   "A_FEW_THOUSAND": {
     "description": "regarding population",
     "message": "Poche migliaia"
+  },
+  "A_HE_ATMOSPHERE": {
+    "description": "",
+    "message": "un'atmosfera d'elio"
+  },
+  "A_H_ATMOSPHERE": {
+    "description": "",
+    "message": "un'atmosfera d'idrogeno"
+  },
+  "A_N_ATMOSPHERE": {
+    "description": "",
+    "message": "un'atmosfera d'azoto"
+  },
+  "A_S_ATMOSPHERE": {
+    "description": "",
+    "message": "un'atmosfera solforosa"
   },
   "BATTLE_WEAPONS": {
     "description": "",
@@ -102,10 +138,6 @@
   "BROWN_DWARF": {
     "description": "",
     "message": "Nana Bruna (oggetto substellare)"
-  },
-  "BUTTON": {
-    "description": "",
-    "message": "\" Pulsante \""
   },
   "CAMERA_BOTTOM_VIEW": {
     "description": "",
@@ -173,27 +205,11 @@
   },
   "CH4_ATMOSPHERE": {
     "description": "",
-    "message": "\" atmosfera a prevalenza di metano\""
-  },
-  "CLEARANCE_ALREADY_GRANTED_BAY_N": {
-    "description": "",
-    "message": "Autorizzazione già concessa. Procedere al ponte %bay."
-  },
-  "CLEARANCE_DENIED_NO_BAYS": {
-    "description": "",
-    "message": "Autorizzazione negata. Non ci sono attracchi liberi."
-  },
-  "CLEARANCE_DENIED_TOO_FAR": {
-    "description": "Shown if player requests docking too far away from station",
-    "message": "Autorizzazione negata. La vostra nave è troppo lontana per poter verificare l'ID."
-  },
-  "CLEARANCE_GRANTED_BAY_N": {
-    "description": "",
-    "message": "Autorizzazione concessa. Procedere al ponte %bay."
+    "message": "atmosfera di metano"
   },
   "CO2_ATMOSPHERE": {
     "description": "",
-    "message": "\" atmosfera a prevalenza di anidride carbonica\""
+    "message": "atmosfera di diossido di carbonio"
   },
   "COMMA_HIGHLY_VOLCANIC": {
     "description": "",
@@ -212,7 +228,7 @@
     "message": "Analisi dello scambio merci di #fff%system#fff"
   },
   "COMMS": {
-    "description": "",
+    "description": "Title of communications log window, on world view",
     "message": "Comunicazioni"
   },
   "COMMUNIST": {
@@ -289,7 +305,7 @@
   },
   "CO_ATMOSPHERE": {
     "description": "",
-    "message": "\" atmosfera a prevalenza di monossido di carbonio\""
+    "message": "atmosfera di monossido di carbonio"
   },
   "CTRL": {
     "description": "Ctrl key on keyboard",
@@ -327,10 +343,6 @@
     "description": "",
     "message": "Destinazione"
   },
-  "DIRECTION": {
-    "description": "Direction",
-    "message": "\" Dir \""
-  },
   "DISTANCE_LY": {
     "description": "",
     "message": "Distanza: %distance{f.2} AL"
@@ -342,10 +354,6 @@
   "DOCKING": {
     "description": "",
     "message": "Ancoraggio"
-  },
-  "DOCKING_CLEARANCE_EXPIRED": {
-    "description": "",
-    "message": "Autorizzazione all'attracco scaduta. Se desidera ancora attraccare deve ripetere la richiesta."
   },
   "DOWNGRADING_ALERT_STATUS": {
     "description": "",
@@ -363,9 +371,21 @@
     "description": "",
     "message": "Disegna linee verticali"
   },
-  "EARTH": {
+  "DWARF_PLANET_CONTAINING_LIQUID_WATER": {
     "description": "",
-    "message": "Terrestre"
+    "message": "Pianeta nano contenente acqua in stato liquido"
+  },
+  "DWARF_PLANET_CONTAINING_SOME_LIQUIDS": {
+    "description": "",
+    "message": "Pianeta nano contenente dei liquidi,"
+  },
+  "DWARF_PLANET_MOSTLY_COVERED_IN_ICE": {
+    "description": "",
+    "message": "Pianeta nano, quasi del tutto coperto di ghiaccio"
+  },
+  "DWARF_PLANET_TERRESTRIAL": {
+    "description": "",
+    "message": "Pianeta nano"
   },
   "EARTH_FEDERATION_COLONIAL_RULE": {
     "description": "",
@@ -495,10 +515,6 @@
     "description": "",
     "message": "Capitalismo perfetto - nessun intervento dello Stato in economia"
   },
-  "HAT": {
-    "description": "Hat switch: Is the top button on a joystick",
-    "message": "\" Hat\""
-  },
   "HEADING_LOCK_ANTINORMAL": {
     "description": "Autopilot direction (perpendicular, down), relative to plane of orbit",
     "message": "Mantieni {target} anti-normale"
@@ -533,7 +549,7 @@
   },
   "HE_ATMOSPHERE": {
     "description": "",
-    "message": "\" atmosfera a prevalenza di elio\""
+    "message": "atmosfera d'elio"
   },
   "HIGHLY_VOLCANIC": {
     "description": "",
@@ -597,7 +613,15 @@
   },
   "H_ATMOSPHERE": {
     "description": "",
-    "message": "\" atmosfera a prevalenza di idrogeno\""
+    "message": "atmosfera d'idrogeno"
+  },
+  "ICE_DWARF_PLANET": {
+    "description": "",
+    "message": "Pianeta nano congelato"
+  },
+  "ICE_MOON": {
+    "description": "",
+    "message": "\" luna ghiacciata\""
   },
   "ICE_WORLD": {
     "description": "",
@@ -650,10 +674,6 @@
   "JOYSTICK_INPUT": {
     "description": "",
     "message": "Joystick"
-  },
-  "JOY_AXIS": {
-    "description": "Regarding joystick",
-    "message": "%{sign}%joyname Asse %axis"
   },
   "L4L5_DISPLAY_MODE_TOGGLE": {
     "description": "Either show L4/L5 points or don't",
@@ -751,76 +771,12 @@
     "description": "",
     "message": "Modalità controllo manuale"
   },
-  "MAP_LOCK_HYPERSPACE_TARGET": {
-    "description": "",
-    "message": "Blocca Destinazione Iperspaziale"
-  },
-  "MAP_TOGGLE_INFO_PANEL": {
-    "description": "",
-    "message": "Mostra/nascondi Pannello Informazioni"
-  },
-  "MAP_TOGGLE_SELECTION_FOLLOW_VIEW": {
-    "description": "",
-    "message": "Attiva/disattiva Visuale Centrata sulla Selezione"
-  },
-  "MAP_VIEW_ROTATE_DOWN": {
-    "description": "",
-    "message": "Ruota Visuale in Giù"
-  },
-  "MAP_VIEW_ROTATE_LEFT": {
-    "description": "",
-    "message": "Ruota Visuale a Sinistra"
-  },
-  "MAP_VIEW_ROTATE_RIGHT": {
-    "description": "",
-    "message": "Ruota Visuale a Destra"
-  },
-  "MAP_VIEW_ROTATE_UP": {
-    "description": "",
-    "message": "Ruota Visuale in Su"
-  },
-  "MAP_VIEW_SHIFT_BACKWARD": {
-    "description": "",
-    "message": "Scorri Visuale Indietro"
-  },
-  "MAP_VIEW_SHIFT_DOWN": {
-    "description": "",
-    "message": "Scorri Visuale in Giù"
-  },
-  "MAP_VIEW_SHIFT_FORWARD": {
-    "description": "",
-    "message": "Scorri Visuale in Avanti"
-  },
-  "MAP_VIEW_SHIFT_LEFT": {
-    "description": "",
-    "message": "Scorri Visuale a Sinistra"
-  },
-  "MAP_VIEW_SHIFT_RIGHT": {
-    "description": "",
-    "message": "Scorri Visuale a Destra"
-  },
-  "MAP_VIEW_SHIFT_UP": {
-    "description": "",
-    "message": "Scorri Visuale in Su"
-  },
-  "MAP_WARP_TO_CURRENT_SYSTEM": {
-    "description": "",
-    "message": "Salta al Sistema Corrente"
-  },
-  "MAP_WARP_TO_HYPERSPACE_TARGET": {
-    "description": "",
-    "message": "Salta alla Destinazione Iperspaziale"
-  },
-  "MAP_WARP_TO_SELECTED_SYSTEM": {
-    "description": "",
-    "message": "Salta al Sistema Selezionato"
-  },
   "MASS": {
     "description": "",
     "message": "Massa"
   },
   "MASSIVE": {
-    "description": "",
+    "description": "Adjective used to describe the size of an object.",
     "message": "Massiccio"
   },
   "MASS_N_TONNES": {
@@ -830,6 +786,10 @@
   "MEDICINES": {
     "description": "",
     "message": "Medicinali"
+  },
+  "MEDIUM": {
+    "description": "Adjective used to describe the size of an object.",
+    "message": "Medio"
   },
   "MEDIUM_GAS_GIANT": {
     "description": "",
@@ -947,6 +907,14 @@
     "description": "",
     "message": "Set"
   },
+  "MOON_CONTAINING_LIQUID_WATER": {
+    "description": "",
+    "message": "\" luna contenente acqua liquida\""
+  },
+  "MOON_WITH_SOME_ICE": {
+    "description": "",
+    "message": "\" luna con del ghiaccio\""
+  },
   "NAME_OBJECT": {
     "description": "For an item or object",
     "message": "Nome"
@@ -970,6 +938,10 @@
   "NERVE_GAS": {
     "description": "",
     "message": "Gas nervini"
+  },
+  "NONE": {
+    "description": "To indicate the absence of something",
+    "message": "<None>"
   },
   "NOT_FOUND": {
     "description": "searching star system in sector view",
@@ -1049,7 +1021,7 @@
   },
   "N_ATMOSPHERE": {
     "description": "",
-    "message": "\" atmosfera a prevalenza di azoto\""
+    "message": "atmosfera d'azoto"
   },
   "N_CELSIUS": {
     "description": "",
@@ -1065,15 +1037,23 @@
   },
   "N_EARTH_DAYS": {
     "description": "",
-    "message": "%days{f.1} giorni terrestri"
+    "message": "%days{f.1} Giorni Terrestri"
   },
-  "N_WHATEVER_MASSES": {
+  "N_EARTH_MASSES": {
     "description": "",
-    "message": "%mass{f.3} volte la massa %units"
+    "message": "%mass{f.3} Massa Terrestre"
   },
-  "N_WHATEVER_RADII": {
+  "N_EARTH_RADII": {
+    "description": "Used in system info view. E.g.: \"0.17 Earth radii (118235 km)\"",
+    "message": "%radius{f.3} Raggo Terrestre (%radkm{f.0} km)"
+  },
+  "N_SOLAR_MASSES": {
+    "description": "",
+    "message": "%mass{f.3} Massa solare"
+  },
+  "N_SOLAR_RADII": {
     "description": "Used in system info view. E.g. for Barnard's star: \"0.17 Solar radii (118235 km)\"",
-    "message": "%radius{f.3} volte il raggio %units (%radkm{f.0} km)"
+    "message": "%radius{f.3} Raggio Solare (%radkm{f.0} km)"
   },
   "N_YEARS": {
     "description": "",
@@ -1081,7 +1061,15 @@
   },
   "O2_ATMOSPHERE": {
     "description": "",
-    "message": "\" atmosfera a prevalenza di ossigeno\""
+    "message": "atmosfera d'ossigeno"
+  },
+  "OBJECT_INFO": {
+    "description": "Originally for use as a window title and a button tooltip in the system map",
+    "message": "Informazioni Oggetto"
+  },
+  "OCEANICMOON": {
+    "description": "",
+    "message": "\" luna oceanica\""
   },
   "OCEANICWORLD": {
     "description": "",
@@ -1227,13 +1215,17 @@
     "description": "",
     "message": "Azzera Zoom"
   },
-  "RESET_ORIENTATION_AND_ZOOM": {
-    "description": "",
-    "message": "Reimposta Orientamento e Zoom"
-  },
   "ROBOTS": {
     "description": "",
     "message": "Robot"
+  },
+  "ROCKY_MOON": {
+    "description": "",
+    "message": "\" luna rocciosa\""
+  },
+  "ROCKY_MOON_CONTAINING_SOME_LIQUIDS": {
+    "description": "",
+    "message": "\" luna rocciosa contenente alcuni liquidi,\""
   },
   "ROCKY_PLANET": {
     "description": "",
@@ -1351,6 +1343,10 @@
     "description": "",
     "message": "Imposta livello di spinta ridotta a %power%%"
   },
+  "SET_MAXIMUM_SPEED_LIMIT": {
+    "description": "Speed limiter tooltip.",
+    "message": "Imposta velocità massima"
+  },
   "SET_NAVTARGET_TO": {
     "description": "",
     "message": "Impostata destinazione di navigazione verso: "
@@ -1416,7 +1412,7 @@
     "message": "Schiavi"
   },
   "SMALL": {
-    "description": "",
+    "description": "Adjective used to describe the size of an object.",
     "message": "Piccolo"
   },
   "SMALL_GAS_GIANT": {
@@ -1434,10 +1430,6 @@
   "SOCIAL_DEMOCRACY": {
     "description": "",
     "message": "Social-Democrazia"
-  },
-  "SOLAR": {
-    "description": "",
-    "message": "solare"
   },
   "SOME_ESTABLISHED_MINING": {
     "description": "",
@@ -1633,7 +1625,7 @@
   },
   "S_ATMOSPHERE": {
     "description": "",
-    "message": "\" atmosfera di composti sulfurei\""
+    "message": "atmosfera solforosa"
   },
   "TAKEOFF": {
     "description": "",
@@ -1645,7 +1637,7 @@
   },
   "TENUOUS": {
     "description": "atmosphere thickness",
-    "message": "Tenue"
+    "message": "\"una tenue\""
   },
   "TEXTILES": {
     "description": "",
@@ -1653,11 +1645,11 @@
   },
   "THICK": {
     "description": "",
-    "message": "spessa"
+    "message": "\"una spessa\""
   },
   "THIN": {
     "description": "",
-    "message": "sottile"
+    "message": "\"una sottile\""
   },
   "THRIVING_OUTDOOR_WORLD": {
     "description": "",
@@ -1692,7 +1684,7 @@
     "message": "Asse del tempo:"
   },
   "TINY": {
-    "description": "",
+    "description": "Adjective used to describe the size of an object.",
     "message": "Minuscolo"
   },
   "TOGGLE_EQUIPMENT_VIEW": {
@@ -1702,10 +1694,6 @@
   "TOGGLE_HUD_MODE": {
     "description": "",
     "message": "Modalità HUD"
-  },
-  "TOGGLE_LUA_CONSOLE": {
-    "description": "",
-    "message": "(Dis)Attiva Console LUA"
   },
   "TOGGLE_RADAR_MODE": {
     "description": "",
@@ -1755,9 +1743,21 @@
     "description": "Duration unit: one 24-hour day",
     "message": "g"
   },
+  "UNIT_EARTH_GRAVITY": {
+    "description": "Acceleration unit: one earth gravity (g)",
+    "message": "g"
+  },
+  "UNIT_GIGATONNES": {
+    "description": "Mass unit: one gigatonne",
+    "message": "GT"
+  },
   "UNIT_HOURS": {
     "description": "Duration unit: one 60-minute hour",
     "message": "o"
+  },
+  "UNIT_KILOGRAMS": {
+    "description": "Mass unit: one kilogram",
+    "message": "Kg"
   },
   "UNIT_KILOMETERS": {
     "description": "Distance unit: one kilometer",
@@ -1767,9 +1767,17 @@
     "description": "Speed unit: one kilometer per second",
     "message": "km/s"
   },
+  "UNIT_KILOTONNES": {
+    "description": "Mass unit: one kilotonne",
+    "message": "KT"
+  },
   "UNIT_LY": {
     "description": "Distance unit: a light year",
     "message": "AL"
+  },
+  "UNIT_MEGATONNES": {
+    "description": "Mass unit: one megatonne",
+    "message": "MT"
   },
   "UNIT_METERS": {
     "description": "Distance unit: one meter",
@@ -1791,9 +1799,21 @@
     "description": "Duration unit: one 60-second minute",
     "message": "m"
   },
+  "UNIT_PETATONNES": {
+    "description": "Mass unit: one petatonne",
+    "message": "PT"
+  },
+  "UNIT_PRESSURE_ATMOSPHERES": {
+    "description": "Pressure unit: one earth atmosphere (atm)",
+    "message": "atm"
+  },
   "UNIT_SECONDS": {
     "description": "Duration unit: one second",
     "message": "s"
+  },
+  "UNIT_TERATONNES": {
+    "description": "Mass unit: one teratonne",
+    "message": "TT"
   },
   "UNIT_TONNES": {
     "description": "Mass unit: one tonne (t)",
@@ -1821,7 +1841,7 @@
   },
   "VERY_DENSE": {
     "description": "",
-    "message": "spessa"
+    "message": "\"una molto densa\""
   },
   "VERY_LARGE_GAS_GIANT": {
     "description": "",
@@ -1859,21 +1879,13 @@
     "description": "",
     "message": "Residui stellari di nana bianca"
   },
-  "WITH_A": {
+  "WITH": {
     "description": "",
-    "message": "\" con una \""
+    "message": "\" con \""
   },
   "WITH_NO_SIGNIFICANT_ATMOSPHERE": {
     "description": "",
     "message": "\" con atmosfera insignificante\""
-  },
-  "X": {
-    "description": "keybinding: x axis",
-    "message": "X"
-  },
-  "Y": {
-    "description": "keybinding: y axis",
-    "message": "Y"
   },
   "YAW": {
     "description": "",
@@ -1890,10 +1902,6 @@
   "YOUNG_FARMING_COLONY": {
     "description": "",
     "message": "Giovane colonia agricola."
-  },
-  "Z": {
-    "description": "keybinding: z axis",
-    "message": "Z"
   },
   "ZOOM_IN": {
     "description": "",

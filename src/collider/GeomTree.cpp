@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "GeomTree.h"
@@ -7,30 +7,23 @@
 #include "Weld.h"
 #include "scenegraph/Serializer.h"
 
+#pragma GCC optimize("O3")
+
 GeomTree::~GeomTree()
 {
 }
 
-GeomTree::GeomTree(const int numVerts, const int numTris, const std::vector<vector3f> &vertices, const Uint32 *indices, const Uint32 *triflags) :
+GeomTree::GeomTree(const int numVerts, const int numTris, const std::vector<vector3f> &vertices, const std::vector<Uint32> indices, const std::vector<Uint32> triFlags) :
 	m_numVertices(numVerts),
 	m_numTris(numTris),
-	m_vertices(vertices)
+	m_vertices(vertices),
+	m_indices(indices),
+	m_triFlags(triFlags)
 {
 	PROFILE_SCOPED()
 	assert(static_cast<int>(vertices.size()) == m_numVertices);
 	Profiler::Timer timer;
 	timer.Start();
-
-	const int numIndices = numTris * 3;
-	m_indices.reserve(numIndices);
-	for (int i = 0; i < numIndices; ++i) {
-		m_indices.push_back(indices[i]);
-	}
-
-	m_triFlags.reserve(numTris);
-	for (int i = 0; i < numTris; ++i) {
-		m_triFlags.push_back(triflags[i]);
-	}
 
 	m_aabb.min = vector3d(FLT_MAX, FLT_MAX, FLT_MAX);
 	m_aabb.max = vector3d(-FLT_MAX, -FLT_MAX, -FLT_MAX);
@@ -219,12 +212,14 @@ GeomTree::GeomTree(Serializer::Reader &rd)
 	for (int i = 0; i < m_numEdges; i++) {
 		edgeIdxs[i] = i;
 	}
+
 	m_edgeTree.reset(new BVHTree(m_numEdges, edgeIdxs, &m_aabbs[0]));
+	delete[] edgeIdxs;
 }
 
 static bool SlabsRayAabbTest(const BVHNode *n, const vector3f &start, const vector3f &invDir, isect_t *isect)
 {
-	PROFILE_SCOPED()
+	// PROFILE_SCOPED()
 	float
 		l1 = (n->aabb.min.x - start.x) * invDir.x,
 		l2 = (n->aabb.max.x - start.x) * invDir.x,
@@ -246,13 +241,12 @@ static bool SlabsRayAabbTest(const BVHNode *n, const vector3f &start, const vect
 
 void GeomTree::TraceRay(const vector3f &start, const vector3f &dir, isect_t *isect) const
 {
-	PROFILE_SCOPED()
 	TraceRay(m_triTree->GetRoot(), start, dir, isect);
 }
 
 void GeomTree::TraceRay(const BVHNode *currnode, const vector3f &a_origin, const vector3f &a_dir, isect_t *isect) const
 {
-	PROFILE_SCOPED()
+	// PROFILE_SCOPED()
 	BVHNode *stack[32];
 	int stackpos = -1;
 	const vector3f invDir( // avoid division by zero please
@@ -281,7 +275,7 @@ void GeomTree::TraceRay(const BVHNode *currnode, const vector3f &a_origin, const
 
 void GeomTree::RayTriIntersect(int numRays, const vector3f &origin, const vector3f *dirs, int triIdx, isect_t *isects) const
 {
-	PROFILE_SCOPED()
+	// PROFILE_SCOPED()
 	const vector3f a(m_vertices[m_indices[triIdx + 0]]);
 	const vector3f b(m_vertices[m_indices[triIdx + 1]]);
 	const vector3f c(m_vertices[m_indices[triIdx + 2]]);

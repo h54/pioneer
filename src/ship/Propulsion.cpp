@@ -1,13 +1,23 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Propulsion.h"
 
 #include "Game.h"
 #include "GameSaveError.h"
-#include "Object.h" // <- here only for comment in AIFaceDirection (line 320)
 #include "Pi.h"
+#include "Player.h"
 #include "PlayerShipController.h"
+
+// #include "lua/LuaBodyComponent.h"
+
+REGISTER_COMPONENT_TYPE(Propulsion) {
+	BodyComponentDB::RegisterComponent<Propulsion>("Propulsion");
+	// Commented out as serialization is still handled in Ship
+	// BodyComponentDB::RegisterSerializer<Propulsion>();
+	// Commented out as Propulsion has no lua interface at current
+	// BodyComponentDB::RegisterLuaInterface<Propulsion>();
+}
 
 void Propulsion::SaveToJson(Json &jsonObj, Space *space)
 {
@@ -113,7 +123,7 @@ double Propulsion::ClampLinThrusterState(int axis, double level) const
 		thruster = (level > 0) ? THRUSTER_REVERSE : THRUSTER_FORWARD;
 	}
 
-	return level * GetThrust(thruster) / m_linThrust[thruster];
+	return m_linThrust[thruster] > 0.0 ? level * GetThrust(thruster) / m_linThrust[thruster] : 0.0;
 }
 
 vector3d Propulsion::ClampLinThrusterState(const vector3d &levels) const
@@ -175,9 +185,9 @@ vector3d Propulsion::GetThrust(const vector3d &dir) const
 double Propulsion::GetThrustMin() const
 {
 	// These are the weakest thrusters in a ship
-	double val = static_cast<double>(m_linThrust[THRUSTER_UP]);
-	val = std::min(val, static_cast<double>(m_linThrust[THRUSTER_RIGHT]));
-	val = std::min(val, static_cast<double>(m_linThrust[THRUSTER_LEFT]));
+	double val = GetThrust(THRUSTER_UP);
+	val = std::min(val, GetThrust(THRUSTER_RIGHT));
+	val = std::min(val, GetThrust(THRUSTER_LEFT));
 	return val;
 }
 
@@ -231,23 +241,6 @@ void Propulsion::Render(Graphics::Renderer *r, const Camera *camera, const vecto
 	*/
 	//angthrust negated, for some reason
 	if (m_smodel != nullptr) m_smodel->SetThrust(vector3f(GetLinThrusterState()), -vector3f(GetAngThrusterState()));
-}
-
-void Propulsion::AIModelCoordsMatchAngVel(const vector3d &desiredAngVel, double softness)
-{
-	double angAccel = m_angThrust / m_dBody->GetAngularInertia();
-	const double softTimeStep = Pi::game->GetTimeStep() * softness;
-
-	vector3d angVel = desiredAngVel - m_dBody->GetAngVelocity() * m_dBody->GetOrient();
-	vector3d thrust;
-	for (int axis = 0; axis < 3; axis++) {
-		if (angAccel * softTimeStep >= fabs(angVel[axis])) {
-			thrust[axis] = angVel[axis] / (softTimeStep * angAccel);
-		} else {
-			thrust[axis] = (angVel[axis] > 0.0 ? 1.0 : -1.0);
-		}
-	}
-	SetAngThrusterState(thrust);
 }
 
 void Propulsion::AIModelCoordsMatchSpeedRelTo(const vector3d &v, const DynamicBody *other)
@@ -323,15 +316,15 @@ double calc_ivel_pos(double dist, double vel, double acc)
 
 // vel is desired velocity in ship's frame
 // returns true if this can be attained in a single timestep
-bool Propulsion::AIMatchVel(const vector3d &vel)
+bool Propulsion::AIMatchVel(const vector3d &vel, const vector3d &powerLimit)
 {
 	vector3d diffvel = (vel - m_dBody->GetVelocity()) * m_dBody->GetOrient();
-	return AIChangeVelBy(diffvel);
+	return AIChangeVelBy(diffvel, powerLimit);
 }
 
 // diffvel is required change in velocity in object space
 // returns true if this can be done in a single timestep
-bool Propulsion::AIChangeVelBy(const vector3d &diffvel)
+bool Propulsion::AIChangeVelBy(const vector3d &diffvel, const vector3d &powerLimit)
 {
 	// counter external forces
 	vector3d extf = m_dBody->GetExternalForce() * (Pi::game->GetTimeStep() / m_dBody->GetMass());
@@ -339,9 +332,10 @@ bool Propulsion::AIChangeVelBy(const vector3d &diffvel)
 
 	vector3d maxThrust = GetThrust(diffvel2);
 	vector3d maxFrameAccel = maxThrust * (Pi::game->GetTimeStep() / m_dBody->GetMass());
-	vector3d thrust(diffvel2.x / maxFrameAccel.x,
-		diffvel2.y / maxFrameAccel.y,
-		diffvel2.z / maxFrameAccel.z);
+	vector3d thrust(
+		Clamp(diffvel2.x / maxFrameAccel.x, -powerLimit.x, powerLimit.x),
+		Clamp(diffvel2.y / maxFrameAccel.y, -powerLimit.y, powerLimit.y),
+		Clamp(diffvel2.z / maxFrameAccel.z, -powerLimit.z, powerLimit.z));
 	SetLinThrusterState(thrust); // use clamping
 	if (thrust.x * thrust.x > 1.0 || thrust.y * thrust.y > 1.0 || thrust.z * thrust.z > 1.0) return false;
 	return true;
@@ -364,18 +358,30 @@ vector3d Propulsion::AIChangeVelDir(const vector3d &reqdiffvel)
 	if (fabs(diffvel.y) > maxFA.y) diffvel *= maxFA.y / fabs(diffvel.y);
 	if (fabs(diffvel.z) > maxFA.z) diffvel *= maxFA.z / fabs(diffvel.z);
 
-	AIChangeVelBy(diffvel); // should always return true because it's already capped?
+	AIChangeVelBy(diffvel);								  // should always return true because it's already capped?
 	return m_dBody->GetOrient() * (reqdiffvel - diffvel); // should be remaining diffvel to correct
 }
 
 // Input in object space
-void Propulsion::AIMatchAngVelObjSpace(const vector3d &angvel)
+void Propulsion::AIMatchAngVelObjSpace(const vector3d &angvel, const vector3d &powerLimit, bool ignoreZeroValues)
 {
 	double maxAccel = m_angThrust / m_dBody->GetAngularInertia();
-	double invFrameAccel = 1.0 / (maxAccel * Pi::game->GetTimeStep());
+	double invFrameAccel = 1.0 / maxAccel / Pi::game->GetTimeStep();
 
-	vector3d diff = angvel - m_dBody->GetAngVelocity() * m_dBody->GetOrient(); // find diff between current & desired angvel
-	SetAngThrusterState(diff * invFrameAccel);
+	vector3d currAngVel = m_dBody->GetAngVelocity() * m_dBody->GetOrient();
+	vector3d diff;
+
+	for (int axis = 0; axis < 3; axis++) {
+
+		if (!ignoreZeroValues || abs(angvel[axis]) > 0.001) {
+			diff[axis] = (angvel[axis] - currAngVel[axis]);
+			diff[axis] = diff[axis] * invFrameAccel;
+			diff[axis] = Clamp(diff[axis], -powerLimit[axis], powerLimit[axis]);
+		} else
+			diff[axis] = 0.0;
+	}
+
+	SetAngThrusterState(diff);
 }
 
 // get updir as close as possible just using roll thrusters
@@ -385,19 +391,19 @@ double Propulsion::AIFaceUpdir(const vector3d &updir, double av)
 	double frameAccel = maxAccel * Pi::game->GetTimeStep();
 
 	vector3d uphead = updir * m_dBody->GetOrient(); // create desired object-space updir
-	if (uphead.z > 0.99999) return 0; // bail out if facing updir
+	if (uphead.z > 0.99999) return 0;				// bail out if facing updir
 	uphead.z = 0;
 	uphead = uphead.Normalized(); // only care about roll axis
 
 	double ang = 0.0, dav = 0.0;
 	if (uphead.y < 0.99999999) {
-		ang = acos(Clamp(uphead.y, -1.0, 1.0)); // scalar angle from head to curhead
+		ang = acos(Clamp(uphead.y, -1.0, 1.0));					 // scalar angle from head to curhead
 		double iangvel = av + calc_ivel_pos(ang, 0.0, maxAccel); // ideal angvel at current time
 
 		dav = uphead.x > 0 ? -iangvel : iangvel;
 	}
 	double cav = (m_dBody->GetAngVelocity() * m_dBody->GetOrient()).z; // current obj-rel angvel
-	double diff = (dav - cav) / frameAccel; // find diff between current & desired angvel
+	double diff = (dav - cav) / frameAccel;							   // find diff between current & desired angvel
 
 	SetAngThrusterState(2, diff);
 	return ang;
@@ -413,11 +419,11 @@ double Propulsion::AIFaceDirection(const vector3d &dir, double av)
 	double maxAccel = m_angThrust / m_dBody->GetAngularInertia(); // should probably be in stats anyway
 
 	vector3d head = (dir * m_dBody->GetOrient()).Normalized(); // create desired object-space heading
-	vector3d dav(0.0, 0.0, 0.0); // desired angular velocity
+	vector3d dav(0.0, 0.0, 0.0);							   // desired angular velocity
 
 	double ang = 0.0;
 	if (head.z > -0.99999999) {
-		ang = acos(Clamp(-head.z, -1.0, 1.0)); // scalar angle from head to curhead
+		ang = acos(Clamp(-head.z, -1.0, 1.0));					 // scalar angle from head to curhead
 		double iangvel = av + calc_ivel_pos(ang, 0.0, maxAccel); // ideal angvel at current time
 
 		// Normalize (head.x, head.y) to give desired angvel direction
@@ -431,13 +437,17 @@ double Propulsion::AIFaceDirection(const vector3d &dir, double av)
 	vector3d diff = is_zero_exact(frameAccel) ? vector3d(0.0) : (dav - cav) / frameAccel; // find diff between current & desired angvel
 
 	// If the player is pressing a roll key, don't override roll.
-	// XXX this really shouldn't be here. a better way would be to have a
+	// HACK this really shouldn't be here. a better way would be to have a
 	// field in Ship describing the wanted angvel adjustment from input. the
 	// baseclass version in Ship would always be 0. the version in Player
 	// would be constructed from user input. that adjustment could then be
 	// considered by this method when computing the required change
-	if (m_dBody->IsType(Object::PLAYER) && (PlayerShipController::InputBindings.roll->IsActive()))
-		diff.z = GetAngThrusterState().z;
+	if (m_dBody->IsType(ObjectType::PLAYER)) {
+		auto *playerController = static_cast<const Player *>(m_dBody)->GetPlayerController();
+		if (playerController->InputBindings.roll->IsActive())
+			diff.z = GetAngThrusterState().z;
+	}
+
 	SetAngThrusterState(diff);
 	return ang;
 }

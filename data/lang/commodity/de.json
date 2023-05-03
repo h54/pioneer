@@ -157,7 +157,7 @@
   },
   "MILITARY_FUEL_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Wird in hochwertigen militärischen Antrieben genutzt. Diese Antriebe produzieren nukleare Abfälle, die sicher entsorgt werden müssen. Wegen seiner synthetischen Natur ist er teurer und weniger verbreitet als Wasserstoff und kommt nicht frei in der Umwelt vor."
+    "message": "Wird in hochwertigen militärischen Antrieben genutzt. Diese Antriebe produzieren radioaktive Abfälle, die sicher entsorgt werden müssen. Wegen seiner synthetischen Natur ist er teurer und weniger verbreitet als Wasserstoff und kommt nicht frei in der Umwelt vor."
   },
   "MINING_MACHINERY": {
     "description": "",
@@ -205,7 +205,7 @@
   },
   "RADIOACTIVES_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Nuklearer Abfall wird von nuklearen Reaktoren und militärischen Hyperraumantrieben erzeugt und ist die vermutlich die gefährlichste und am schwierigsten zu entsorgende Fracht. Viele Raumhäfen zahlen gut, um ihre Abfälle loszuwerden. Nukleare Abfälle einfach auszulassen ist ein schweres Vergehen."
+    "message": "Radioaktiver Abfall wird von nuklearen Reaktoren und militärischen Hyperraumantrieben erzeugt und ist die vermutlich die gefährlichste und am schwierigsten zu entsorgende Fracht. Viele Raumhäfen zahlen gut, um ihre Abfälle loszuwerden. Radioaktive Abfälle einfach abzulassen ist ein schweres Vergehen."
   },
   "ROBOTS": {
     "description": "",

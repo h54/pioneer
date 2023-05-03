@@ -9,6 +9,7 @@ local Game = require 'Game'
 local Character = require 'Character'
 local Format = require 'Format'
 local Timer = require 'Timer'
+local utils = require 'utils'
 
 -- This module allows the player to hire crew members through BB adverts
 -- on stations, and handles periodic events such as their wages.
@@ -180,6 +181,7 @@ local onChat = function (form,ref,option)
 							+c.sensors
 			-- Base wage on experience
 			c.estimatedWage = c.estimatedWage or wageFromScore(c.experience)
+			c.estimatedWage = utils.round(c.estimatedWage, 1)
 		end
 
 		-- Now look for any persistent characters that are available in this station
@@ -205,6 +207,7 @@ local onChat = function (form,ref,option)
 			-- Either base wage on experience, or as a slight increase on their previous wage
 			-- (which should only happen if this candidate was dismissed with wages owing)
 			c.estimatedWage = math.max(c.contract and (c.contract.wage + 5) or 0, c.estimatedWage or wageFromScore(c.experience))
+			c.estimatedWage = utils.round(c.estimatedWage, 1)
 		end
 
 		form:ClearFace()
@@ -382,7 +385,8 @@ local onCreateBB = function (station)
 
 	-- Only one crew hiring thingy per station
 	stationsWithAdverts[station:AddAdvert({
-		description = l.CREW_FOR_HIRE,
+		title       = l.CREW_FOR_HIRE_TITLE,
+		description = l.CREW_FOR_HIRE_DESC,
 		icon        = "crew_contracts",
 		onChat      = onChat,
 		isEnabled   = isEnabled})] = station
@@ -427,7 +431,8 @@ Event.Register("onGameStart", function()
 		nonPersistentCharactersForCrew = loaded_data.nonPersistentCharactersForCrew
 		for k,station in pairs(loaded_data.stationsWithAdverts) do
 		stationsWithAdverts[station:AddAdvert({
-			description = l.CREW_FOR_HIRE,
+			title       = l.CREW_FOR_HIRE_TITLE,
+			description = l.CREW_FOR_HIRE_DESC,
 			icon        = "crew_contracts",
 			onChat      = onChat,
 			isEnabled   = isEnabled})] = station

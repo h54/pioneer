@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Stats.h"
@@ -14,13 +14,22 @@ namespace Graphics {
 		memset(&m_frameStats[0], 0, sizeof(TFrameData) * MAX_FRAMES_STORE);
 
 		m_counterRefs = {
-			GetOrCreateCounter("DrawBuffer Calls"),
-			GetOrCreateCounter("DrawTriangles Calls"),
-			GetOrCreateCounter("DrawPointSprites Calls"),
+			GetOrCreateCounter("DrawMesh Calls"),
+			GetOrCreateCounter("Num Points Drawn"),
+			GetOrCreateCounter("Num Lines Drawn"),
+			GetOrCreateCounter("Num Tris Drawn"),
 
 			GetOrCreateCounter("Buffers Created"),
 			GetOrCreateCounter("Buffers Destroyed"),
 			GetOrCreateCounter("Buffers In Use", false),
+			GetOrCreateCounter("Num Uniform Draw Buffers"),
+			GetOrCreateCounter("Num Uniform Draw Buffer Suballocs"),
+			GetOrCreateCounter("Dynamic Draw Buffers In Use"),
+			GetOrCreateCounter("Dynamic Draw Buffers Created", false),
+
+			GetOrCreateCounter("Num Cached Render States"),
+			GetOrCreateCounter("Num Cached Shader Programs"),
+			GetOrCreateCounter("Num CommandList Flushes"),
 
 			GetOrCreateCounter("Num Buildings"),
 			GetOrCreateCounter("Num Cities"),
@@ -61,7 +70,6 @@ namespace Graphics {
 
 	const Stats::TFrameData &Stats::FrameStatsPrevious() const
 	{
-		uint32_t frameIdx = m_currentFrame > 0 ? m_currentFrame - 1 : MAX_FRAMES_STORE - 1;
 		return m_frameStats[Clamp(m_currentFrame - 1, 0U, MAX_FRAMES_STORE - 1)];
 	}
 

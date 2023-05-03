@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "AmbientSounds.h"
@@ -66,7 +66,7 @@ static sigc::connection onChangeCamTypeConnection;
 
 void AmbientSounds::Init()
 {
-	onChangeCamTypeConnection = Pi::game->GetWorldView()->shipView.onChangeCamType.connect(sigc::ptr_fun(&AmbientSounds::UpdateForCamType));
+	onChangeCamTypeConnection = Pi::game->GetWorldView()->shipView->onChangeCamType.connect(sigc::ptr_fun(&AmbientSounds::UpdateForCamType));
 }
 
 void AmbientSounds::Uninit()
@@ -76,7 +76,7 @@ void AmbientSounds::Uninit()
 
 void AmbientSounds::Update()
 {
-	const float v_env = (Pi::game->GetWorldView()->shipView.GetCameraController()->IsExternal() ? 1.0f : 0.5f) * Sound::GetSfxVolume();
+	const float v_env = (Pi::game->GetWorldView()->shipView->IsExteriorView() ? 1.0f : 0.5f) * Sound::GetSfxVolume();
 
 	if (Pi::player->GetFlightState() == Ship::DOCKED) {
 		if (s_starNoise.IsPlaying()) {
@@ -148,16 +148,16 @@ void AmbientSounds::Update()
 			}
 		}
 	} else if (s_planetSurfaceNoise.IsPlaying()) {
-		// s_planetSurfaceNoise.IsPlaying() - if we are out of the atmosphere then stop playing
+		// s_planetSurfaceNoise.IsPlaying() - if player is no longer on the ground then stop playing
 		Frame *playerFrame = Frame::GetFrame(Pi::player->GetFrame());
 		if (playerFrame->IsRotFrame()) {
 			const Body *astro = playerFrame->GetBody();
-			if (astro->IsType(Object::PLANET)) {
+			if (astro->IsType(ObjectType::PLANET)) {
 				const double dist = Pi::player->GetPosition().Length();
 				double pressure, density;
 				static_cast<const Planet *>(astro)->GetAtmosphericState(dist, &pressure, &density);
-				if (pressure < 0.001) {
-					// Stop playing surface noise once out of the atmosphere
+				if (Pi::player->GetFlightState() != Ship::LANDED) {
+					// Stop playing surface noise once the ship is off the ground
 					s_planetSurfaceNoise.Stop();
 				}
 			}
@@ -230,7 +230,7 @@ void AmbientSounds::Update()
 
 		Frame *playerFrame = Frame::GetFrame(Pi::player->GetFrame());
 		const Body *astro = playerFrame->GetBody();
-		if (astro && playerFrame->IsRotFrame() && (astro->IsType(Object::PLANET))) {
+		if (astro && playerFrame->IsRotFrame() && (astro->IsType(ObjectType::PLANET))) {
 			double dist = Pi::player->GetPosition().Length();
 			double pressure, density;
 			static_cast<const Planet *>(astro)->GetAtmosphericState(dist, &pressure, &density);
@@ -267,7 +267,7 @@ void AmbientSounds::Update()
 
 void AmbientSounds::UpdateForCamType()
 {
-	const ShipViewController::CamType cam = Pi::game->GetWorldView()->shipView.GetCamType();
+	const ShipViewController::CamType cam = Pi::game->GetWorldView()->shipView->GetCamType();
 	float v_env = (cam == ShipViewController::CAM_EXTERNAL ? 1.0f : 0.5f) * Sound::GetSfxVolume();
 
 	if (s_stationNoise.IsPlaying())

@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "GeoPatchJobs.h"
@@ -6,6 +6,7 @@
 #include "GeoSphere.h"
 #include "libs.h"
 #include "perlin.h"
+#include "profiler/Profiler.h"
 
 inline void setColour(Color3ub &r, const vector3d &v)
 {
@@ -27,8 +28,11 @@ inline vector3d GetSpherePoint(const vector3d &v0, const vector3d &v1, const vec
 // Generates full-detail vertices, and also non-edge normals and colors
 void SSingleSplitRequest::GenerateMesh() const
 {
+	PROFILE_SCOPED()
 	const int borderedEdgeLen = edgeLen + (BORDER_SIZE * 2);
+#ifndef NDEBUG
 	const int numBorderedVerts = borderedEdgeLen * borderedEdgeLen;
+#endif
 
 	// generate heights plus a 1 unit border
 	double *bhts = borderHeights.get();
@@ -91,6 +95,7 @@ void SinglePatchJob::OnFinish() // runs in primary thread of the context
 
 void SinglePatchJob::OnRun() // RUNS IN ANOTHER THREAD!! MUST BE THREAD SAFE!
 {
+	PROFILE_SCOPED()
 	BasePatchJob::OnRun();
 
 	const SSingleSplitRequest &srd = *mData;
@@ -128,6 +133,7 @@ void QuadPatchJob::OnFinish() // runs in primary thread of the context
 
 void QuadPatchJob::OnRun() // RUNS IN ANOTHER THREAD!! MUST BE THREAD SAFE!
 {
+	PROFILE_SCOPED()
 	BasePatchJob::OnRun();
 
 	const SQuadSplitRequest &srd = *mData;
@@ -182,8 +188,11 @@ QuadPatchJob::~QuadPatchJob()
 // Generates full-detail vertices, and also non-edge normals and colors
 void SQuadSplitRequest::GenerateBorderedData() const
 {
+	PROFILE_SCOPED()
 	const int borderedEdgeLen = (edgeLen * 2) + (BORDER_SIZE * 2) - 1;
+#ifndef NDEBUG
 	const int numBorderedVerts = borderedEdgeLen * borderedEdgeLen;
+#endif
 
 	// generate heights plus a N=BORDER_SIZE unit border
 	double *bhts = borderHeights.get();
@@ -213,6 +222,7 @@ void SQuadSplitRequest::GenerateSubPatchData(
 	const int yoff,
 	const int borderedEdgeLen) const
 {
+	PROFILE_SCOPED()
 	// Generate normals & colors for vertices
 	vector3d *vrts = borderVertexs.get();
 	Color3ub *col = colors[quadrantIndex];

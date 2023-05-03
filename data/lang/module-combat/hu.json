@@ -13,23 +13,43 @@
   },
   "ADTEXT_1": {
     "description": "",
-    "message": "MEGBÍZHATÓ PILÓTÁT KERESEK: Díj: {cash}."
+    "message": "Jól képzett pilótát keresünk fedett megbízásra: Javadalmazás: {cash}."
   },
   "ADTEXT_2": {
     "description": "",
-    "message": "KIHÍVÁS: Hajó és legényéség kerestetik harci bevetésre a {system} rendszerben."
+    "message": "Hajót és legénységet keresünk harci küldetéshez, {system} rendszerben."
   },
   "ADTEXT_3": {
     "description": "",
-    "message": "HARC: Képzett, jól felszerelt zsoldost keresek."
+    "message": "Jól felszerelt hajóval rendelkező gyakorlott pilótát keresünk. Részleteket kérésre elküldjük."
   },
   "ADTEXT_4": {
     "description": "",
-    "message": "RETTENTHETETLEN ZSOLDOST KERESÜNK: megbízás {cash} - ért a {system} rendszerben."
+    "message": "{org} félelmet nem ismerő zsoldost keres egy {system}-beli küldetésre. Fizettség: {cash}."
   },
   "ADTEXT_5": {
     "description": "",
     "message": "{mission} küldetés: Fizetés {cash}."
+  },
+  "ADTITLE_1": {
+    "description": "",
+    "message": "MEGBÍZHATÓ PILÓTA KERESTETIK"
+  },
+  "ADTITLE_2": {
+    "description": "",
+    "message": "FELELŐSSÉGRE VONÁS"
+  },
+  "ADTITLE_3": {
+    "description": "",
+    "message": "HARCI FELADAT"
+  },
+  "ADTITLE_4": {
+    "description": "",
+    "message": "FÉLELMET NEM ISMERŐ PILÓTÁT KERESÜNK"
+  },
+  "ADTITLE_5": {
+    "description": "",
+    "message": "ENGEDÉLYEZETT HARCI KÜLDETÉS"
   },
   "AGENT": {
     "description": "Secret Service Agent",
@@ -175,10 +195,6 @@
     "description": "",
     "message": "Van valamilyen időkorlát?"
   },
-  "LY": {
-    "description": "",
-    "message": "fé"
-  },
   "MANAGER": {
     "description": "",
     "message": "Menedzser"
@@ -235,6 +251,10 @@
     "description": "Message from the ship computer",
     "message": "Elsődleges feladat végrehajtva"
   },
+  "MISSION_INFO": {
+    "description": "Message from the ship computer",
+    "message": "Célterület elérve. Adatgyűjtés megkezdve. Várható maximális küldetés idő: {duration}."
+  },
   "MISSION_TYPE_1": {
     "description": "Name of mission type",
     "message": "Felderítés"
@@ -246,6 +266,10 @@
   "MISSION_TYPE_3": {
     "description": "Name of mission type. Derived from Fighter Sweep. An aggressive mission to hunt down and destroy every enemy fighter in the allotted area.",
     "message": "Terület megtisztítása"
+  },
+  "MISSION_WARNING": {
+    "description": "Message from the ship computer",
+    "message": "Célterület hatótávon kívül. Adatgyűjtés nem teljesíthető."
   },
   "OBJECTIVE_1": {
     "description": "",
@@ -291,6 +315,10 @@
     "description": "",
     "message": "Elég, ha egy olyan helyen landolsz, ahol van {org} iroda."
   },
+  "RADAR_NOT_INSTALLED": {
+    "description": "",
+    "message": "Sajnálom, de nem hinném, hogy radar nélkül meg tudnád oldani a feladatot."
+  },
   "RISK_1": {
     "description": "",
     "message": "A konkurenciának korlátozott források állnak rendelkezésére. Nincs mitől tartania."
@@ -330,6 +358,10 @@
   "SYSTEM": {
     "description": "",
     "message": "Rendszer:"
+  },
+  "TARGET_AREA_REACHED": {
+    "description": "",
+    "message": "Célterület elérve. Adatgyűjtés indul"
   },
   "TIME_LIMIT": {
     "description": "",

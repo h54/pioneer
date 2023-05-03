@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _GASGIANT_H
@@ -13,10 +13,9 @@
 
 namespace Graphics {
 	class Renderer;
-	class RenderState;
 	class RenderTarget;
 	class Texture;
-}
+} // namespace Graphics
 
 class SystemBody;
 class GasGiant;
@@ -67,7 +66,6 @@ private:
 	static RefCountedPtr<GasPatchContext> s_patchContext;
 
 	static Graphics::RenderTarget *s_renderTarget;
-	static Graphics::RenderState *s_quadRenderState;
 
 	std::unique_ptr<GasPatch> m_patches[NUM_PATCHES];
 

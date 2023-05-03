@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _INTRO_H
@@ -16,6 +16,7 @@ public:
 	virtual void Draw(float deltaTime);
 	SceneGraph::Model *getCurrentModel() const { return m_model; }
 	bool isZooming() const { return m_dist == m_zoomEnd; }
+	void RefreshBackground(Graphics::Renderer *r);
 
 private:
 	void Reset();

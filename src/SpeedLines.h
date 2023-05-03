@@ -1,18 +1,20 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _SPEEDLINES_H
 #define _SPEEDLINES_H
 
+#include "graphics/Material.h"
+#include "graphics/VertexBuffer.h"
 #include "matrix4x4.h"
 #include "vector3.h"
-#include "graphics/VertexBuffer.h"
-#include "graphics/Material.h"
+
+#include <memory>
+#include <vector>
 
 namespace Graphics {
 	class Renderer;
-	class RenderState;
-}
+} // namespace Graphics
 
 class Ship;
 
@@ -42,10 +44,9 @@ private:
 
 	std::vector<vector3f> m_points;
 
-	Graphics::RenderState *m_renderState;
 	RefCountedPtr<Graphics::Material> m_material;
 	std::unique_ptr<Graphics::VertexArray> m_varray;
-	std::unique_ptr<Graphics::VertexBuffer> m_vbuffer;
+	std::unique_ptr<Graphics::MeshObject> m_mesh;
 
 	matrix4x4d m_transform;
 

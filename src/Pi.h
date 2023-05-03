@@ -1,10 +1,9 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _PI_H
 #define _PI_H
 
-#include "JobQueue.h"
 #include "Random.h"
 #include "core/GuiApplication.h"
 #include "gameconsts.h"
@@ -16,15 +15,18 @@
 #include <string>
 #include <vector>
 
+namespace Input {
+	class Manager;
+} //namespace Input
+
 namespace PiGui {
 	class Instance;
 } //namespace PiGui
 
 class Game;
-
 class GameConfig;
-class Input;
 class Intro;
+class JobSet;
 class LuaConsole;
 class LuaNameGen;
 class LuaTimer;
@@ -43,12 +45,6 @@ class ServerAgent;
 
 namespace Graphics {
 	class Renderer;
-	class Texture;
-	class RenderState;
-	class RenderTarget;
-	namespace Drawables {
-		class TexturedQuad;
-	}
 } // namespace Graphics
 
 namespace SceneGraph {
@@ -57,10 +53,6 @@ namespace SceneGraph {
 
 namespace Sound {
 	class MusicPlayer;
-}
-
-namespace UI {
-	class Context;
 }
 
 class DetailLevel {
@@ -83,6 +75,16 @@ public:
 
 		void SetStartPath(const SystemPath &startPath);
 
+		// Returns a pointer to the async JobSet for the current startup loading step.
+		// The current load step will not complete until all ordered jobs have finished.
+		// NOTE: this queue runs on a different thread.
+		JobSet *GetCurrentLoadStepQueue() const;
+
+		// Returns a pointer to the async JobSet for the entire startup loading screen.
+		// Loading will not finish until all ordered jobs have finished.
+		// NOTE: this queue runs on a different thread.
+		JobSet *GetAsyncStartupQueue() const;
+
 	protected:
 		// for compatibility, while we're moving Pi's internals into App
 		friend class Pi;
@@ -104,22 +106,22 @@ public:
 		void RunJobs();
 
 		void HandleRequests();
-		bool HandleEvent(SDL_Event &ev) override;
 
 	private:
 		// msgs/requests that can be posted which the game processes at the end of a game loop in HandleRequests
 		enum class InternalRequests {
 			END_GAME = 0,
 			QUIT_GAME,
+			DETAIL_LEVEL_CHANGED // FIXME: right idea, wrong place
 		};
 
 		std::vector<InternalRequests> internalRequests;
 
 		bool m_noGui;
 
-		std::shared_ptr<Lifecycle> m_loader;
-		std::shared_ptr<Lifecycle> m_mainMenu;
-		std::shared_ptr<Lifecycle> m_gameLoop;
+		RefCountedPtr<Lifecycle> m_loader;
+		RefCountedPtr<Lifecycle> m_mainMenu;
+		RefCountedPtr<Lifecycle> m_gameLoop;
 	};
 
 public:
@@ -142,17 +144,12 @@ public:
 	// FIXME: hacked-in singleton pattern, find a better way to locate the application
 	static App *GetApp() { return m_instance; }
 
-	static bool IsConsoleActive();
-
 	static bool IsNavTunnelDisplayed() { return navTunnelDisplayed; }
 	static void SetNavTunnelDisplayed(bool state) { navTunnelDisplayed = state; }
 	static bool AreSpeedLinesDisplayed() { return speedLinesDisplayed; }
 	static void SetSpeedLinesDisplayed(bool state) { speedLinesDisplayed = state; }
 	static bool AreHudTrailsDisplayed() { return hudTrailsDisplayed; }
 	static void SetHudTrailsDisplayed(bool state) { hudTrailsDisplayed = state; }
-
-	static void SetMouseGrab(bool on);
-	static bool DoingMouseGrab() { return doingMouseGrab; }
 
 	// Get the default speed modifier to apply to movement (scrolling, zooming...), depending on the "shift" keys.
 	// This is a default value only, centralized here to promote uniform user expericience.
@@ -163,9 +160,6 @@ public:
 
 	static const char SAVE_DIR_NAME[];
 
-	static sigc::signal<void> onPlayerChangeTarget; // navigation or combat
-	static sigc::signal<void> onPlayerChangeFlightControlState;
-
 	static LuaSerializer *luaSerializer;
 	static LuaTimer *luaTimer;
 
@@ -175,7 +169,6 @@ public:
 	static ServerAgent *serverAgent;
 #endif
 
-	static RefCountedPtr<UI::Context> ui;
 	static PiGui::Instance *pigui;
 
 	static Random rng;
@@ -187,10 +180,16 @@ public:
 
 	static void SetAmountBackgroundStars(const float pc)
 	{
-		amountOfBackgroundStarsDisplayed = Clamp(pc, 0.01f, 1.0f);
+		amountOfBackgroundStarsDisplayed = Clamp(pc, 0.0f, 1.0f);
 		bRefreshBackgroundStars = true;
 	}
 	static float GetAmountBackgroundStars() { return amountOfBackgroundStarsDisplayed; }
+	static void SetStarFieldStarSizeFactor(const float pc)
+	{
+		starFieldStarSizeFactor = Clamp(pc, 0.0f, 1.0f);
+		bRefreshBackgroundStars = true;
+	}
+	static float GetStarFieldStarSizeFactor() { return starFieldStarSizeFactor; }
 	static bool MustRefreshBackgroundClearFlag()
 	{
 		const bool bRet = bRefreshBackgroundStars;
@@ -201,16 +200,10 @@ public:
 	/* Only use #if WITH_DEVKEYS */
 	static bool showDebugInfo;
 
-#if PIONEER_PROFILER
-	static std::string profilerPath;
-	static bool doProfileSlow;
-	static bool doProfileOne;
-#endif
-
-	static Input *input;
+	static Input::Manager *input;
 	static Player *player;
 	static TransferPlanner *planner;
-	static LuaConsole *luaConsole;
+	static std::unique_ptr<LuaConsole> luaConsole;
 	static Sound::MusicPlayer &GetMusicPlayer() { return musicPlayer; }
 	static Graphics::Renderer *renderer;
 	static ModelCache *modelCache;
@@ -222,19 +215,15 @@ public:
 	static DetailLevel detail;
 	static GameConfig *config;
 
-	static JobQueue *GetAsyncJobQueue() { return asyncJobQueue.get(); }
-	static JobQueue *GetSyncJobQueue() { return syncJobQueue.get(); }
+	static JobQueue *GetAsyncJobQueue() { return GetApp()->GetAsyncJobQueue(); }
+	static JobQueue *GetSyncJobQueue() { return GetApp()->GetSyncJobQueue(); }
 
 	static bool DrawGUI;
 
 private:
 	static void HandleKeyDown(SDL_Keysym *key);
-	static void HandleEscKey();
 
 	// private members
-	static const Uint32 SYNC_JOBS_PER_LOOP = 1;
-	static std::unique_ptr<AsyncJobQueue> asyncJobQueue;
-	static std::unique_ptr<SyncJobQueue> syncJobQueue;
 
 	static bool menuDone;
 
@@ -254,11 +243,7 @@ private:
 	static bool hudTrailsDisplayed;
 	static bool bRefreshBackgroundStars;
 	static float amountOfBackgroundStarsDisplayed;
-
-	static Graphics::RenderTarget *renderTarget;
-	static RefCountedPtr<Graphics::Texture> renderTexture;
-	static std::unique_ptr<Graphics::Drawables::TexturedQuad> renderQuad;
-	static Graphics::RenderState *quadRenderState;
+	static float starFieldStarSizeFactor;
 
 	static bool doingMouseGrab;
 

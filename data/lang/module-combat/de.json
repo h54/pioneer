@@ -13,23 +13,43 @@
   },
   "ADTEXT_1": {
     "description": "",
-    "message": "VERANTWORTUNGSVOLLER PILOT GESUCHT: Zahle {cash}."
+    "message": "Qualifizierter Pilot gesucht für geheimen Kampfeinsatz. Zahle {cash}."
   },
   "ADTEXT_2": {
     "description": "",
-    "message": "HERAUSFORDERUNG: Schiff und Crew gesucht für eine Kampfmission im {system}-System."
+    "message": "Schiff und Mannschaft gesucht für einen Kampfeinsatz im {system} System."
   },
   "ADTEXT_3": {
     "description": "",
-    "message": "KAMPF: Brauche qualifizierten Söldner mit gut ausgerüstetem Schiff."
+    "message": "Brauche qualifizierten Söldner mit gut ausgerüstetem Schiff. Missionsdetails auf Anfrage."
   },
   "ADTEXT_4": {
     "description": "",
-    "message": "FURCHTLOSER KOPFEGEDLJÄGER GESUCHT: Zahle {cash} für eine Mission im {system}-System."
+    "message": "{org} sucht furchtlosen Söldner für eine Mission im {system} System. Wir zahlen {cash}."
   },
   "ADTEXT_5": {
     "description": "",
     "message": "{mission} Mission: Lohn {cash}"
+  },
+  "ADTITLE_1": {
+    "description": "",
+    "message": "SUCHE ZUVERLÄSSIGEN PILOTEN"
+  },
+  "ADTITLE_2": {
+    "description": "",
+    "message": "BEENDEN EINER FEHDE"
+  },
+  "ADTITLE_3": {
+    "description": "",
+    "message": "KAMPFEINSATZ"
+  },
+  "ADTITLE_4": {
+    "description": "",
+    "message": "SUCHE UNERSCHROCKENEN SÖLDNER"
+  },
+  "ADTITLE_5": {
+    "description": "",
+    "message": "LEGALE KAMPFMISSION"
   },
   "AGENT": {
     "description": "Secret Service Agent",
@@ -175,10 +195,6 @@
     "description": "",
     "message": "Gibt es ein Zeitlimit?"
   },
-  "LY": {
-    "description": "",
-    "message": "Lj"
-  },
   "MANAGER": {
     "description": "",
     "message": "Manager"
@@ -235,6 +251,10 @@
     "description": "Message from the ship computer",
     "message": "Primäres Missionsziel erfüllt"
   },
+  "MISSION_INFO": {
+    "description": "Message from the ship computer",
+    "message": "Zielgebiet erreicht. Starte Datenaufzeichnung. Maximal erwartete Missionsdauer: {duration}."
+  },
   "MISSION_TYPE_1": {
     "description": "Name of mission type",
     "message": "Aufklärung"
@@ -246,6 +266,10 @@
   "MISSION_TYPE_3": {
     "description": "Name of mission type. Derived from Fighter Sweep. An aggressive mission to hunt down and destroy every enemy fighter in the allotted area.",
     "message": "Gebiet durchkämmen"
+  },
+  "MISSION_WARNING": {
+    "description": "Message from the ship computer",
+    "message": "Zielgebiet zu weit entfernt. Datensammlung kann nicht abgeschlossen werden."
   },
   "OBJECTIVE_1": {
     "description": "",
@@ -291,6 +315,10 @@
     "description": "",
     "message": "Landen Sie einfach auf einer Station mit einer {org}-Außenstelle."
   },
+  "RADAR_NOT_INSTALLED": {
+    "description": "",
+    "message": "Tut mir leid, ich denke nicht, dass Sie das ohne Radar schaffen."
+  },
   "RISK_1": {
     "description": "",
     "message": "Der Konkurrent hat nur begrenzte Ressourcen. Also nichts, was Sie nicht handhaben könnten."
@@ -330,6 +358,10 @@
   "SYSTEM": {
     "description": "",
     "message": "System:"
+  },
+  "TARGET_AREA_REACHED": {
+    "description": "",
+    "message": "Target area reached. Start data logging."
   },
   "TIME_LIMIT": {
     "description": "",

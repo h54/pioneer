@@ -25,7 +25,7 @@
   },
   "CORPORATIONS_4": {
     "description": "",
-    "message": "Togail Shoitichean a' Ghiùlanair Uisge"
+    "message": "Togail Shoitichean a’ Ghiùlanair Uisge"
   },
   "CORPORATIONS_5": {
     "description": "",
@@ -49,7 +49,7 @@
   },
   "COULD_YOU_REPEAT_THE_ORIGINAL_REQUEST": {
     "description": "",
-    "message": "Dè an t-iarrtas a bh' agaibh a-rithist?"
+    "message": "Dè an t-iarrtas a bh’ agaibh a-rithist?"
   },
   "DANGER": {
     "description": "",
@@ -61,7 +61,7 @@
   },
   "DENY_0": {
     "description": "",
-    "message": "Tha mi duilich ach chan eil mi an earbsa gun cum thu slàn sàbhailte mi."
+    "message": "Tha mi duilich ach chan eil mi an earbsa gun cùm thu slàn sàbhailte mi."
   },
   "DENY_1": {
     "description": "",
@@ -77,7 +77,7 @@
   },
   "DENY_4": {
     "description": "",
-    "message": "Cha tusa an seòrsa de phaidhleat a tha mi a' sireadh."
+    "message": "Cha tusa an seòrsa de phaidhleat a tha mi a’ sireadh."
   },
   "DENY_5": {
     "description": "",
@@ -101,7 +101,11 @@
   },
   "FLAVOUR_0_ADTEXT": {
     "description": "",
-    "message": "'GA IARRAIDH: Cuideachd bheag aiseag gu siostam {system}. Pàighidh sinn {cash}."
+    "message": "Wanted: Passage for a small group to {system} system. Will pay {cash}."
+  },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "PASSAGE WANTED"
   },
   "FLAVOUR_0_DANGER": {
     "description": "",
@@ -109,7 +113,7 @@
   },
   "FLAVOUR_0_FAILUREMSG": {
     "description": "",
-    "message": "Cha dèan seo a' chùis! Thug thu fada ro fhada. Cha doir sinn airgead dhut."
+    "message": "Cha dèan seo a’ chùis! Thug thu fada ro fhada. Cha doir sinn airgead dhut."
   },
   "FLAVOUR_0_HOWMANY": {
     "description": "",
@@ -117,7 +121,7 @@
   },
   "FLAVOUR_0_INTROTEXT": {
     "description": "",
-    "message": "Shin thu, is mise {name} is feumaidh cuideachd bheag a dhol gu siostam {system} ({sectorx}, {sectory}, {sectorz}), tha seo {dist} bliadhna-sholais a dh'astar. Pàighidh mi {cash}."
+    "message": "Shin thu, is mise {name} is feumaidh cuideachd bheag a dhol gu siostam {system} ({sectorx}, {sectory}, {sectorz}), tha seo {dist} bliadhna-sholais a dh’astar. Pàighidh mi {cash}."
   },
   "FLAVOUR_0_SUCCESSMSG": {
     "description": "",
@@ -125,15 +129,19 @@
   },
   "FLAVOUR_0_WHEREAREWE": {
     "description": "",
-    "message": "Cà bheil sinn? Tha sinn seachd searbh a bhith a' feitheamh - thoir dhan stèisean as fhaisge sinn SA BHAD!"
+    "message": "Cà bheil sinn? Tha sinn seachd searbh a bhith a’ feitheamh - thoir dhan stèisean as fhaisge sinn SA BHAD!"
   },
   "FLAVOUR_0_WHYSOMUCH": {
     "description": "",
-    "message": "Tha sinn a' tadhal air caraid."
+    "message": "Tha sinn a’ tadhal air caraid."
   },
   "FLAVOUR_10_ADTEXT": {
     "description": "",
-    "message": "'GA IARRAIDH: Aiseag air soitheach luath gu siostam {system}."
+    "message": "VIP needs urgent passage on a fast ship to {system} system. No questions asked."
+  },
+  "FLAVOUR_10_ADTITLE": {
+    "description": "",
+    "message": "DISCREET SHIP WANTED"
   },
   "FLAVOUR_10_DANGER": {
     "description": "",
@@ -141,7 +149,7 @@
   },
   "FLAVOUR_10_FAILUREMSG": {
     "description": "",
-    "message": "Chan e ach droch-phaidhleat gun eòlas a th' annad. Cha phàigh mi airson seo."
+    "message": "Chan e ach droch-phaidhleat gun eòlas a th’ annad. Cha phàigh mi airson seo."
   },
   "FLAVOUR_10_HOWMANY": {
     "description": "",
@@ -149,7 +157,7 @@
   },
   "FLAVOUR_10_INTROTEXT": {
     "description": "",
-    "message": "Is mise {name}. Tha mi airson dol gu {system} ({sectorx}, {sectory}, {sectorz}) gu luath, tha seo {dist} bliadhna-sholais a dh'astar. Pàighidh mi {cash}."
+    "message": "Is mise {name}. Tha mi airson dol gu {system} ({sectorx}, {sectory}, {sectorz}) gu luath, tha seo {dist} bliadhna-sholais a dh’astar. Pàighidh mi {cash}."
   },
   "FLAVOUR_10_SUCCESSMSG": {
     "description": "",
@@ -157,15 +165,19 @@
   },
   "FLAVOUR_10_WHEREAREWE": {
     "description": "",
-    "message": "Cà bheil sinn? Tha mi seachd searbh a bhith a' feitheamh - thoir dhan stèisean as fhaisge mi SA BHAD!"
+    "message": "Cà bheil sinn? Tha mi seachd searbh a bhith a’ feitheamh - thoir dhan stèisean as fhaisge mi SA BHAD!"
   },
   "FLAVOUR_10_WHYSOMUCH": {
     "description": "",
-    "message": "B' fheairrde mi nach rachadh mo lorg."
+    "message": "B’ fheàirrde mi nach rachadh mo lorg."
   },
   "FLAVOUR_11_ADTEXT": {
     "description": "",
-    "message": "SOITHEACH LUATH: Aiseag air soitheach luath gu siostam {system}."
+    "message": "Corporate inspector needs passage on a fast ship to {system} system."
+  },
+  "FLAVOUR_11_ADTITLE": {
+    "description": "",
+    "message": "FAST SHIP NEEDED"
   },
   "FLAVOUR_11_DANGER": {
     "description": "",
@@ -173,7 +185,7 @@
   },
   "FLAVOUR_11_FAILUREMSG": {
     "description": "",
-    "message": "Caillidh mi m' obair ais sàilleibh do neo-chomasachd. Mar sin, tha mi fhìn feumach air an airgead 's cha doir mi dhutsa e."
+    "message": "Caillidh mi m’ obair ais sàilleibh do neo-chomasachd. Mar sin, tha mi fhìn feumach air an airgead ’s cha doir mi dhutsa e."
   },
   "FLAVOUR_11_HOWMANY": {
     "description": "",
@@ -181,7 +193,7 @@
   },
   "FLAVOUR_11_INTROTEXT": {
     "description": "",
-    "message": "Is mise {name}. Feumaidh mi dol gu siostam {system} ({sectorx}, {sectory}, {sectorz}) le cabhag, seo {dist} bliadhna-sholais a dh'astar. Pàighidh mi {cash}."
+    "message": "Is mise {name}. Feumaidh mi dol gu siostam {system} ({sectorx}, {sectory}, {sectorz}) le cabhag, seo {dist} bliadhna-sholais a dh’astar. Pàighidh mi {cash}."
   },
   "FLAVOUR_11_SUCCESSMSG": {
     "description": "",
@@ -189,15 +201,19 @@
   },
   "FLAVOUR_11_WHEREAREWE": {
     "description": "",
-    "message": "Cà bheil sinn? Tha mi seachd searbh a bhith a' feitheamh - thoir dhan stèisean as fhaisge mi SA BHAD!"
+    "message": "Cà bheil sinn? Tha mi seachd searbh a bhith a’ feitheamh - thoir dhan stèisean as fhaisge mi SA BHAD!"
   },
   "FLAVOUR_11_WHYSOMUCH": {
     "description": "",
-    "message": "'S e neach-sgrùdaidh fhactaraidhean a th' annam a' dol air chuairt."
+    "message": "’S e neach-sgrùdaidh fhactaraidhean a th’ annam a’ dol air chuairt."
   },
   "FLAVOUR_12_ADTEXT": {
     "description": "",
-    "message": "FEUM AIR SOITHEACH: Aiseag gu siostam {system}."
+    "message": "Urgent transport required for fleeing citizen. Passage to {system} system needed."
+  },
+  "FLAVOUR_12_ADTITLE": {
+    "description": "",
+    "message": "SHIP REQUIRED"
   },
   "FLAVOUR_12_DANGER": {
     "description": "",
@@ -213,7 +229,7 @@
   },
   "FLAVOUR_12_INTROTEXT": {
     "description": "",
-    "message": "Is mise {name}. Feumaidh mi dol gu siostam {system} ({sectorx}, {sectory}, {sectorz}), seo {dist} bliadhna-sholais a dh'astar. Pàighidh mi {cash}."
+    "message": "Is mise {name}. Feumaidh mi dol gu siostam {system} ({sectorx}, {sectory}, {sectorz}), seo {dist} bliadhna-sholais a dh’astar. Pàighidh mi {cash}."
   },
   "FLAVOUR_12_SUCCESSMSG": {
     "description": "",
@@ -221,15 +237,19 @@
   },
   "FLAVOUR_12_WHEREAREWE": {
     "description": "",
-    "message": "Cà bheil sinn? Tha mi seachd searbh a bhith a' feitheamh - thoir dhan stèisean as fhaisge mi SA BHAD!"
+    "message": "Cà bheil sinn? Tha mi seachd searbh a bhith a’ feitheamh - thoir dhan stèisean as fhaisge mi SA BHAD!"
   },
   "FLAVOUR_12_WHYSOMUCH": {
     "description": "",
-    "message": "Tha airgead aig cuideigin orm 's esan an tòir orm."
+    "message": "Tha airgead aig cuideigin orm ’s esan an tòir orm."
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "'GA IARRAIDH: Cuideachd bheag aiseag gu siostam {system}. Pàighidh sinn {cash}."
+    "message": "Wanted: Passage for a small group to {system} system. Will pay {cash}."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "PASSAGE WANTED"
   },
   "FLAVOUR_1_DANGER": {
     "description": "",
@@ -237,7 +257,7 @@
   },
   "FLAVOUR_1_FAILUREMSG": {
     "description": "",
-    "message": "Cha dèan seo a' chùis! Thug thu fada ro fhada. Cha doir sinn airgead dhut."
+    "message": "Cha dèan seo a’ chùis! Thug thu fada ro fhada. Cha doir sinn airgead dhut."
   },
   "FLAVOUR_1_HOWMANY": {
     "description": "",
@@ -245,7 +265,7 @@
   },
   "FLAVOUR_1_INTROTEXT": {
     "description": "",
-    "message": "Shin thu, is mise {name} is feumaidh cuideachd bheag a dhol gu siostam {system} ({sectorx}, {sectory}, {sectorz}), tha seo {dist} bliadhna-sholais a dh'astar. Pàighidh mi {cash}."
+    "message": "Shin thu, is mise {name} is feumaidh cuideachd bheag a dhol gu siostam {system} ({sectorx}, {sectory}, {sectorz}), tha seo {dist} bliadhna-sholais a dh’astar. Pàighidh mi {cash}."
   },
   "FLAVOUR_1_SUCCESSMSG": {
     "description": "",
@@ -253,15 +273,19 @@
   },
   "FLAVOUR_1_WHEREAREWE": {
     "description": "",
-    "message": "Cà bheil sinn? Tha sinn seachd searbh a bhith a' feitheamh - thoir dhan stèisean as fhaisge sinn SA BHAD!"
+    "message": "Cà bheil sinn? Tha sinn seachd searbh a bhith a’ feitheamh - thoir dhan stèisean as fhaisge sinn SA BHAD!"
   },
   "FLAVOUR_1_WHYSOMUCH": {
     "description": "",
-    "message": "Tha sinn ag obair airson {corp} 's bidh iadsan a' pàigheadh."
+    "message": "Tha sinn ag obair airson {corp} ’s bidh iadsan a’ pàigheadh."
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "'GA IARRAIDH: Cuideachd bheag aiseag gu siostam {system}. Pàighidh sinn {cash}."
+    "message": "Wanted: Passage for a small group to {system} system. Will pay {cash}."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "SMALL GROUP PASSAGE"
   },
   "FLAVOUR_2_DANGER": {
     "description": "",
@@ -269,7 +293,7 @@
   },
   "FLAVOUR_2_FAILUREMSG": {
     "description": "",
-    "message": "Cha dèan seo a' chùis! Thug thu fada ro fhada. Cha doir sinn airgead dhut."
+    "message": "Cha dèan seo a’ chùis! Thug thu fada ro fhada. Cha doir sinn airgead dhut."
   },
   "FLAVOUR_2_HOWMANY": {
     "description": "",
@@ -277,7 +301,7 @@
   },
   "FLAVOUR_2_INTROTEXT": {
     "description": "",
-    "message": "Shin thu, is mise {name} is feumaidh cuideachd bheag a dhol gu siostam {system} ({sectorx}, {sectory}, {sectorz}), tha seo {dist} bliadhna-sholais a dh'astar. Pàighidh mi {cash}."
+    "message": "Shin thu, is mise {name} is feumaidh cuideachd bheag a dhol gu siostam {system} ({sectorx}, {sectory}, {sectorz}), tha seo {dist} bliadhna-sholais a dh’astar. Pàighidh mi {cash}."
   },
   "FLAVOUR_2_SUCCESSMSG": {
     "description": "",
@@ -285,23 +309,27 @@
   },
   "FLAVOUR_2_WHEREAREWE": {
     "description": "",
-    "message": "Cà bheil sinn? Tha sinn seachd searbh a bhith a' feitheamh - thoir dhan stèisean as fhaisge sinn SA BHAD!"
+    "message": "Cà bheil sinn? Tha sinn seachd searbh a bhith a’ feitheamh - thoir dhan stèisean as fhaisge sinn SA BHAD!"
   },
   "FLAVOUR_2_WHYSOMUCH": {
     "description": "",
-    "message": "'S e turas-gnothaich àbhaisteach a th' ann."
+    "message": "’S e turas-gnothaich àbhaisteach a th’ ann."
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "FEUM AIR SOITHEACH: Aiseag gu siostam {system}. Pàighidh mi {cash}."
+    "message": "Ship required for high-risk passage to {system} system. Will pay {cash}."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "SHIP REQUIRED"
   },
   "FLAVOUR_3_DANGER": {
     "description": "",
-    "message": "Cha chreid mi nach eil murtair an tòir orm agus dh'fhaoite gun dig e às do dhèidh."
+    "message": "Cha chreid mi nach eil murtair an tòir orm agus dh’fhaoite gun dig e às do dhèidh."
   },
   "FLAVOUR_3_FAILUREMSG": {
     "description": "",
-    "message": "Cha dèan seo a' chùis! Thug thu fada ro fhada. Cha doir mi airgead dhut."
+    "message": "Cha dèan seo a’ chùis! Thug thu fada ro fhada. Cha doir mi airgead dhut."
   },
   "FLAVOUR_3_HOWMANY": {
     "description": "",
@@ -309,7 +337,7 @@
   },
   "FLAVOUR_3_INTROTEXT": {
     "description": "",
-    "message": "Haoigh, 's mise {name} is feumaidh mi dol gu siostam {system} ({sectorx}, {sectory}, {sectorz}), tha seo {dist} bliadhna-sholais a dh'astar. Pàighidh mi {cash}."
+    "message": "Haoigh, ’s mise {name} is feumaidh mi dol gu siostam {system} ({sectorx}, {sectory}, {sectorz}), tha seo {dist} bliadhna-sholais a dh’astar. Pàighidh mi {cash}."
   },
   "FLAVOUR_3_SUCCESSMSG": {
     "description": "",
@@ -317,15 +345,19 @@
   },
   "FLAVOUR_3_WHEREAREWE": {
     "description": "",
-    "message": "Cà bheil sinn? Tha mi seachd searbh a bhith a' feitheamh - thoir dhan stèisean as fhaisge mi SA BHAD!"
+    "message": "Cà bheil sinn? Tha mi seachd searbh a bhith a’ feitheamh - thoir dhan stèisean as fhaisge mi SA BHAD!"
   },
   "FLAVOUR_3_WHYSOMUCH": {
     "description": "",
-    "message": "Tha seann-neach-bagairt a' feuchainn ri mo mharbhadh."
+    "message": "Tha seann-neach-bagairt a’ feuchainn ri mo mharbhadh."
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "SOITHEACH 'GA IARRAIDH: Aiseag gu {system}. Pàighidh mi {cash}."
+    "message": "Ship wanted for business-class passage to {system} system. Will pay {cash}."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "BUSINESS PASSAGE"
   },
   "FLAVOUR_4_DANGER": {
     "description": "",
@@ -341,7 +373,7 @@
   },
   "FLAVOUR_4_INTROTEXT": {
     "description": "",
-    "message": "Haoigh, 's mise {name} is feumaidh mi dol gu siostam {system} ({sectorx}, {sectory}, {sectorz}), tha seo {dist} bliadhna-sholais a dh'astar. Pàighidh mi {cash}."
+    "message": "Haoigh, ’s mise {name} is feumaidh mi dol gu siostam {system} ({sectorx}, {sectory}, {sectorz}), tha seo {dist} bliadhna-sholais a dh’astar. Pàighidh mi {cash}."
   },
   "FLAVOUR_4_SUCCESSMSG": {
     "description": "",
@@ -349,19 +381,23 @@
   },
   "FLAVOUR_4_WHEREAREWE": {
     "description": "",
-    "message": "Cà bheil sinn? Tha mi seachd searbh a bhith a' feitheamh - thoir dhan stèisean as fhaisge mi SA BHAD!"
+    "message": "Cà bheil sinn? Tha mi seachd searbh a bhith a’ feitheamh - thoir dhan stèisean as fhaisge mi SA BHAD!"
   },
   "FLAVOUR_4_WHYSOMUCH": {
     "description": "",
-    "message": "'S e marsanta-siubhail a th' annam."
+    "message": "’S e marsanta-siubhail a th’ annam."
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "'GA IARRAIDH: Aiseag gu {system}. Pàighidh mi {cash}."
+    "message": "Require confidential passage of anonymous VIP to {system} system. Will pay {cash}."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "CONFIDENTIAL PASSAGE"
   },
   "FLAVOUR_5_DANGER": {
     "description": "",
-    "message": "'S dòcha gum bi for an luchd-naidheachd ort. Cha leig thu leas feart a ghabhail dhiubh."
+    "message": "’S dòcha gum bi for an luchd-naidheachd ort. Cha leig thu leas feart a ghabhail dhiubh."
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
@@ -373,7 +409,7 @@
   },
   "FLAVOUR_5_INTROTEXT": {
     "description": "",
-    "message": "Haoigh, 's mise {name} is feumaidh mi dol gu siostam {system} ({sectorx}, {sectory}, {sectorz}), tha seo {dist} bliadhna-sholais a dh'astar. Pàighidh mi {cash}."
+    "message": "Haoigh, ’s mise {name} is feumaidh mi dol gu siostam {system} ({sectorx}, {sectory}, {sectorz}), tha seo {dist} bliadhna-sholais a dh’astar. Pàighidh mi {cash}."
   },
   "FLAVOUR_5_SUCCESSMSG": {
     "description": "",
@@ -381,15 +417,19 @@
   },
   "FLAVOUR_5_WHEREAREWE": {
     "description": "",
-    "message": "Cà bheil sinn? Tha mi seachd searbh a bhith a' feitheamh - thoir dhan stèisean as fhaisge mi SA BHAD!"
+    "message": "Cà bheil sinn? Tha mi seachd searbh a bhith a’ feitheamh - thoir dhan stèisean as fhaisge mi SA BHAD!"
   },
   "FLAVOUR_5_WHYSOMUCH": {
     "description": "",
-    "message": "Nach robh fios agad - 's e rionnag chliùiteach a th' annam."
+    "message": "Nach robh fios agad - ’s e rionnag chliùiteach a th’ annam."
   },
   "FLAVOUR_6_ADTEXT": {
     "description": "",
-    "message": "SOITHEACH 'GA IARRAIDH: Aiseag gu {system}. Pàighidh mi {cash}."
+    "message": "Reporter needs proximity to story developing in the {system} system. Will pay {cash}."
+  },
+  "FLAVOUR_6_ADTITLE": {
+    "description": "",
+    "message": "SHIP REQUIRED"
   },
   "FLAVOUR_6_DANGER": {
     "description": "",
@@ -397,7 +437,7 @@
   },
   "FLAVOUR_6_FAILUREMSG": {
     "description": "",
-    "message": "Cha dèan seo a' chùis! Thug thu fada ro fhada. Cha doir mi airgead dhut."
+    "message": "Cha dèan seo a’ chùis! Thug thu fada ro fhada. Cha doir mi airgead dhut."
   },
   "FLAVOUR_6_HOWMANY": {
     "description": "",
@@ -405,7 +445,7 @@
   },
   "FLAVOUR_6_INTROTEXT": {
     "description": "",
-    "message": "Haoigh, 's mise {name} is feumaidh mi dol gu siostam {system} ({sectorx}, {sectory}, {sectorz}), tha seo {dist} bliadhna-sholais a dh'astar. Pàighidh mi {cash}."
+    "message": "Haoigh, ’s mise {name} is feumaidh mi dol gu siostam {system} ({sectorx}, {sectory}, {sectorz}), tha seo {dist} bliadhna-sholais a dh’astar. Pàighidh mi {cash}."
   },
   "FLAVOUR_6_SUCCESSMSG": {
     "description": "",
@@ -413,15 +453,19 @@
   },
   "FLAVOUR_6_WHEREAREWE": {
     "description": "",
-    "message": "Cà bheil sinn? Tha mi seachd searbh a bhith a' feitheamh - thoir dhan stèisean as fhaisge mi SA BHAD!"
+    "message": "Cà bheil sinn? Tha mi seachd searbh a bhith a’ feitheamh - thoir dhan stèisean as fhaisge mi SA BHAD!"
   },
   "FLAVOUR_6_WHYSOMUCH": {
     "description": "",
-    "message": "'S e neach-naidheachd neo-cheangailte a th' annam."
+    "message": "’S e neach-naidheachd neo-cheangailte a th’ annam."
   },
   "FLAVOUR_7_ADTEXT": {
     "description": "",
-    "message": "SOITHEACH 'GA IARRAIDH: Aiseag sàbhailte gu siostam {system}. Pàighidh mi {cash}."
+    "message": "Ship wanted for safe passage to {system} system. Secure transport required. Will pay {cash}."
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "SAFE PASSAGE NEEDED"
   },
   "FLAVOUR_7_DANGER": {
     "description": "",
@@ -429,7 +473,7 @@
   },
   "FLAVOUR_7_FAILUREMSG": {
     "description": "",
-    "message": "Cha dèan seo a' chùis! Thug thu fada ro fhada. Cha doir mi airgead dhut."
+    "message": "Cha dèan seo a’ chùis! Thug thu fada ro fhada. Cha doir mi airgead dhut."
   },
   "FLAVOUR_7_HOWMANY": {
     "description": "",
@@ -437,7 +481,7 @@
   },
   "FLAVOUR_7_INTROTEXT": {
     "description": "",
-    "message": "Shin thu, is mise {name} is feumaidh mi siostam {system} ({sectorx}, {sectory}, {sectorz}) a ruigsinn gu sàbhailte, tha seo {dist} bliadhna-sholais a dh'astar. Pàighidh mi {cash}."
+    "message": "Shin thu, is mise {name} is feumaidh mi siostam {system} ({sectorx}, {sectory}, {sectorz}) a ruigsinn gu sàbhailte, tha seo {dist} bliadhna-sholais a dh’astar. Pàighidh mi {cash}."
   },
   "FLAVOUR_7_SUCCESSMSG": {
     "description": "",
@@ -445,7 +489,7 @@
   },
   "FLAVOUR_7_WHEREAREWE": {
     "description": "",
-    "message": "Cà bheil sinn? Tha mi seachd searbh a bhith a' feitheamh - thoir dhan stèisean as fhaisge mi SA BHAD!"
+    "message": "Cà bheil sinn? Tha mi seachd searbh a bhith a’ feitheamh - thoir dhan stèisean as fhaisge mi SA BHAD!"
   },
   "FLAVOUR_7_WHYSOMUCH": {
     "description": "",
@@ -453,7 +497,11 @@
   },
   "FLAVOUR_8_ADTEXT": {
     "description": "",
-    "message": "'GA IARRAIDH: Aiseag air soitheach luath gu siostam {system}."
+    "message": "Urgent personal passage to {system} system required. Surcharge included in payment."
+  },
+  "FLAVOUR_8_ADTITLE": {
+    "description": "",
+    "message": "FAST PERSONAL TRANSPORT"
   },
   "FLAVOUR_8_DANGER": {
     "description": "",
@@ -461,7 +509,7 @@
   },
   "FLAVOUR_8_FAILUREMSG": {
     "description": "",
-    "message": "Cha dèan seo a' chùis! Thug thu fada ro fhada. Cha doir mi airgead dhut."
+    "message": "Cha dèan seo a’ chùis! Thug thu fada ro fhada. Cha doir mi airgead dhut."
   },
   "FLAVOUR_8_HOWMANY": {
     "description": "",
@@ -469,7 +517,7 @@
   },
   "FLAVOUR_8_INTROTEXT": {
     "description": "",
-    "message": "Is mise {name}. Feumaidh mi dol gu siostam {system} ({sectorx}, {sectory}, {sectorz}) le cabhag, seo {dist} bliadhna-sholais a dh'astar. Pàighidh mi {cash}."
+    "message": "Is mise {name}. Feumaidh mi dol gu siostam {system} ({sectorx}, {sectory}, {sectorz}) le cabhag, seo {dist} bliadhna-sholais a dh’astar. Pàighidh mi {cash}."
   },
   "FLAVOUR_8_SUCCESSMSG": {
     "description": "",
@@ -477,19 +525,23 @@
   },
   "FLAVOUR_8_WHEREAREWE": {
     "description": "",
-    "message": "Cà bheil sinn? Tha mi seachd searbh a bhith a' feitheamh - thoir dhan stèisean as fhaisge mi SA BHAD!"
+    "message": "Cà bheil sinn? Tha mi seachd searbh a bhith a’ feitheamh - thoir dhan stèisean as fhaisge mi SA BHAD!"
   },
   "FLAVOUR_8_WHYSOMUCH": {
     "description": "",
-    "message": "Tha mi a' tadhal air dàimheach a tha tinn."
+    "message": "Tha mi a’ tadhal air dàimheach a tha tinn."
   },
   "FLAVOUR_9_ADTEXT": {
     "description": "",
-    "message": "'GA IARRAIDH: Aiseag air soitheach luath gu siostam {system}."
+    "message": "Require urgent transport for honest citizen. Fast passage needed to {system} system."
+  },
+  "FLAVOUR_9_ADTITLE": {
+    "description": "",
+    "message": "LEGITIMATE PASSAGE"
   },
   "FLAVOUR_9_DANGER": {
     "description": "",
-    "message": "Dh'fhaoidte gum feuch am poileas ri stad a chur ort."
+    "message": "Dh’fhaoidte gum feuch am poileas ri stad a chur ort."
   },
   "FLAVOUR_9_FAILUREMSG": {
     "description": "",
@@ -501,7 +553,7 @@
   },
   "FLAVOUR_9_INTROTEXT": {
     "description": "",
-    "message": "Is mise {name}. Feumaidh mi dol gu siostam {system} ({sectorx}, {sectory}, {sectorz}) le cabhag, seo {dist} bliadhna-sholais a dh'astar. Pàighidh mi {cash}."
+    "message": "Is mise {name}. Feumaidh mi dol gu siostam {system} ({sectorx}, {sectory}, {sectorz}) le cabhag, seo {dist} bliadhna-sholais a dh’astar. Pàighidh mi {cash}."
   },
   "FLAVOUR_9_SUCCESSMSG": {
     "description": "",
@@ -509,7 +561,7 @@
   },
   "FLAVOUR_9_WHEREAREWE": {
     "description": "",
-    "message": "Cà bheil sinn? Tha mi seachd searbh a bhith a' feitheamh - thoir dhan stèisean as fhaisge mi SA BHAD!"
+    "message": "Cà bheil sinn? Tha mi seachd searbh a bhith a’ feitheamh - thoir dhan stèisean as fhaisge mi SA BHAD!"
   },
   "FLAVOUR_9_WHYSOMUCH": {
     "description": "",
@@ -533,15 +585,11 @@
   },
   "HOW_SOON_YOU_MUST_BE_THERE": {
     "description": "",
-    "message": "Dè cho luath 's a dh'fheumas sibh a bhith ann?"
+    "message": "Dè cho luath ’s a dh’fheumas sibh a bhith ann?"
   },
   "I_MUST_BE_THERE_BEFORE": {
     "description": "",
-    "message": "Feumaidh mi bhith ann ro"
-  },
-  "LY": {
-    "description": "",
-    "message": "bl-sol"
+    "message": "Feumaidh mi bhith ann ro "
   },
   "OK_AGREED": {
     "description": "",
@@ -577,11 +625,11 @@
   },
   "WE_WANT_TO_BE_THERE_BEFORE": {
     "description": "",
-    "message": "Tha sin airson a bhith ann ro"
+    "message": "Tha sin airson a bhith ann ro "
   },
   "WHY_SO_MUCH_MONEY": {
     "description": "",
-    "message": "Carson a gheibh mi torr airgid?"
+    "message": "Carson a gheibh mi tòrr airgid?"
   },
   "WILL_I_BE_IN_ANY_DANGER": {
     "description": "",
@@ -593,6 +641,6 @@
   },
   "YOU_DO_NOT_HAVE_ENOUGH_CABIN_SPACE_ON_YOUR_SHIP": {
     "description": "",
-    "message": "Chan eil rum gu leòr sna cèibinnean san t-soitheach agad."
+    "message": "Chan eil rùm gu leòr sna cèibinnean san t-soitheach agad."
   }
 }

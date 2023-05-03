@@ -1,40 +1,33 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "RenderTargetGL.h"
+#include "RenderStateCache.h"
+#include "RendererGL.h"
 #include "TextureGL.h"
 
 namespace Graphics {
 	namespace OGL {
 
-		RenderBuffer::RenderBuffer()
-		{
-			glGenRenderbuffers(1, &buffer);
-		}
+		// RAII helper to push/pop a framebuffer for temporary modification
+		struct ScopedActive {
+			ScopedActive(RenderStateCache *c, RenderTarget *t) :
+				m_cache(c)
+			{
+				m_last = m_cache->GetActiveRenderTarget();
+				m_cache->SetRenderTarget(t);
+			}
+			~ScopedActive() { m_cache->SetRenderTarget(m_last); }
 
-		RenderBuffer::~RenderBuffer()
-		{
-			glDeleteRenderbuffers(1, &buffer);
-		}
+			RenderStateCache *m_cache;
+			RenderTarget *m_last;
+		};
 
-		void RenderBuffer::Bind()
-		{
-			glBindRenderbuffer(GL_RENDERBUFFER, buffer);
-		}
-
-		void RenderBuffer::Unbind()
-		{
-			glBindRenderbuffer(GL_RENDERBUFFER, 0);
-		}
-
-		void RenderBuffer::Attach(GLenum attachment)
-		{
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, buffer);
-		}
-
-		RenderTarget::RenderTarget(const RenderTargetDesc &d) :
+		RenderTarget::RenderTarget(Graphics::RendererOGL *r, const RenderTargetDesc &d) :
 			Graphics::RenderTarget(d),
-			m_active(false)
+			m_renderer(r),
+			m_active(false),
+			m_depthRenderBuffer(0)
 		{
 			glGenFramebuffers(1, &m_fbo);
 		}
@@ -42,6 +35,8 @@ namespace Graphics {
 		RenderTarget::~RenderTarget()
 		{
 			glDeleteFramebuffers(1, &m_fbo);
+			if (m_depthRenderBuffer)
+				glDeleteRenderbuffers(1, &m_depthRenderBuffer);
 		}
 
 		Texture *RenderTarget::GetColorTexture() const
@@ -57,39 +52,35 @@ namespace Graphics {
 
 		void RenderTarget::SetCubeFaceTexture(const Uint32 face, Texture *t)
 		{
-			const bool bound = m_active;
-			if (!bound) Bind();
+			ScopedActive binding(m_renderer->GetStateCache(), this);
+
 			//texture format should match the intended fbo format (aka. the one attached first)
-			GLuint texId = 0;
-			if (t) texId = static_cast<TextureGL *>(t)->GetTextureID();
+			GLuint texId = t ? static_cast<TextureGL *>(t)->GetTextureID() : 0;
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, texId, 0);
 			m_colorTexture.Reset(t);
-			if (!bound) Unbind();
 		}
 
 		void RenderTarget::SetColorTexture(Texture *t)
 		{
-			const bool bound = m_active;
-			if (!bound) Bind();
+			ScopedActive binding(m_renderer->GetStateCache(), this);
+
 			//texture format should match the intended fbo format (aka. the one attached first)
-			GLuint texId = 0;
-			if (t) texId = static_cast<TextureGL *>(t)->GetTextureID();
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texId, 0);
+			GLuint texId = t ? static_cast<TextureGL *>(t)->GetTextureID() : 0;
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+				GetDesc().numSamples ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D, texId, 0);
 			m_colorTexture.Reset(t);
-			if (!bound) Unbind();
 		}
 
 		void RenderTarget::SetDepthTexture(Texture *t)
 		{
 			assert(GetDesc().allowDepthTexture);
-			const bool bound = m_active;
-			if (!bound) Bind();
 			if (!GetDesc().allowDepthTexture) return;
-			GLuint texId = 0;
-			if (t) texId = static_cast<TextureGL *>(t)->GetTextureID();
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texId, 0);
+			ScopedActive binding(m_renderer->GetStateCache(), this);
+
+			GLuint texId = t ? static_cast<TextureGL *>(t)->GetTextureID() : 0;
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+				GetDesc().numSamples ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D, texId, 0);
 			m_depthTexture.Reset(t);
-			if (!bound) Unbind();
 		}
 
 		void RenderTarget::Bind()
@@ -113,11 +104,14 @@ namespace Graphics {
 		{
 			assert(!GetDesc().allowDepthTexture);
 			assert(m_active);
-			m_depthRenderBuffer.Reset(new RenderBuffer());
-			m_depthRenderBuffer->Bind();
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, GetDesc().width, GetDesc().height);
-			m_depthRenderBuffer->Attach(GL_DEPTH_ATTACHMENT);
-			m_depthRenderBuffer->Unbind();
+			assert(m_depthRenderBuffer == 0);
+
+			glGenRenderbuffers(1, &m_depthRenderBuffer);
+			glBindRenderbuffer(GL_RENDERBUFFER, m_depthRenderBuffer);
+			glRenderbufferStorageMultisample(GL_RENDERBUFFER, GetDesc().numSamples, GL_DEPTH_COMPONENT32F, GetDesc().width, GetDesc().height);
+			glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthRenderBuffer);
 		}
 
 	} // namespace OGL

@@ -1,4 +1,20 @@
 {
+  "ADTITLE_0": {
+    "description": "",
+    "message": "CARGO EMPORIUM"
+  },
+  "ADTITLE_1": {
+    "description": "",
+    "message": "TRADING HOUSE"
+  },
+  "ADTITLE_2": {
+    "description": "",
+    "message": "TRADE WAREHOUSE"
+  },
+  "ADTITLE_3": {
+    "description": "",
+    "message": "GOODS EXCHANGE"
+  },
   "GOODS_TRADER_0": {
     "description": "",
     "message": "gun taigh-bhathair onarach aig {name}"
@@ -33,7 +49,7 @@
   },
   "SLOGAN_2": {
     "description": "",
-    "message": "A' toirt brod a' bhathair neo-ghràthaich dhut!"
+    "message": "A’ toirt brod a’ bhathair neo-ghràthaich dhut!"
   },
   "SLOGAN_3": {
     "description": "",
@@ -41,7 +57,7 @@
   },
   "SLOGAN_4": {
     "description": "",
-    "message": "Am margadh neo-riaghlaichte a chum do shaorsa."
+    "message": "Am margadh neo-riaghlaichte a chùm do shaorsa."
   },
   "SLOGAN_5": {
     "description": "",
@@ -53,6 +69,6 @@
   },
   "WELCOME_TO": {
     "description": "",
-    "message": "Fàilte"
+    "message": "Fàilte gu "
   }
 }

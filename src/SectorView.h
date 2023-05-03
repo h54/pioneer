@@ -1,14 +1,18 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _SECTORVIEW_H
 #define _SECTORVIEW_H
 
-#include "UIView.h"
+#include "ConnectionTicket.h"
+#include "DeleteEmitter.h"
+#include "Input.h"
 #include "galaxy/Sector.h"
 #include "galaxy/SystemPath.h"
 #include "graphics/Drawables.h"
-#include "gui/Gui.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_internal.h"
+#include "pigui/PiGuiView.h"
 #include <set>
 #include <string>
 #include <vector>
@@ -16,35 +20,32 @@
 class Game;
 class Galaxy;
 
-namespace Graphics {
-	class RenderState;
-}
-
-class SectorView : public UIView {
+class SectorView : public PiGuiView, public DeleteEmitter {
 public:
 	SectorView(Game *game);
 	SectorView(const Json &jsonObj, Game *game);
-	virtual ~SectorView();
+	~SectorView() override;
 
-	virtual void Update();
-	virtual void ShowAll();
-	virtual void Draw3D();
+	void Update() override;
+	// void ShowAll() override;
+	void Draw3D() override;
+
+	void DrawPiGui() override;
+
 	vector3f GetPosition() const { return m_pos; }
 	SystemPath GetCurrent() const { return m_current; }
 	SystemPath GetSelected() const { return m_selected; }
-	void SetSelected(const SystemPath &path);
+	void SwitchToPath(const SystemPath &path);
 	SystemPath GetHyperspaceTarget() const { return m_hyperspaceTarget; }
 	void SetHyperspaceTarget(const SystemPath &path);
-	void FloatHyperspaceTarget();
-	void LockHyperspaceTarget(bool lock);
 	void ResetHyperspaceTarget();
 	void GotoSector(const SystemPath &path);
 	void GotoSystem(const SystemPath &path);
 	void GotoCurrentSystem() { GotoSystem(m_current); }
 	void GotoSelectedSystem() { GotoSystem(m_selected); }
 	void GotoHyperspaceTarget() { GotoSystem(m_hyperspaceTarget); }
-	void SwapSelectedHyperspaceTarget();
-	virtual void SaveToJson(Json &jsonObj);
+	bool IsCenteredOn(const SystemPath &path);
+	void SaveToJson(Json &jsonObj) override;
 
 	sigc::signal<void> onHyperspaceTargetChanged;
 
@@ -61,43 +62,54 @@ public:
 	const std::set<const Faction *> &GetVisibleFactions() { return m_visibleFactions; }
 	const std::set<const Faction *> &GetHiddenFactions() { return m_hiddenFactions; }
 	void SetFactionVisible(const Faction *faction, bool visible);
+	void SetZoomMode(bool enable);
+	void SetRotateMode(bool enable);
+	void ResetView();
+	void SetLabelParams(std::string fontName, int fontSize, float gap, Color highlight, Color shade);
+	void DrawLabels();
+	void SetLabelsVisibility(bool hideLabels) { m_hideLabels = hideLabels; }
 
 	// HyperJump Route Planner
 	bool MoveRouteItemUp(const std::vector<SystemPath>::size_type element);
 	bool MoveRouteItemDown(const std::vector<SystemPath>::size_type element);
+	void UpdateRouteItem(const std::vector<SystemPath>::size_type element, const SystemPath &path);
 	void AddToRoute(const SystemPath &path);
 	bool RemoveRouteItem(const std::vector<SystemPath>::size_type element);
 	void ClearRoute();
 	std::vector<SystemPath> GetRoute();
-	void AutoRoute(const SystemPath &start, const SystemPath &target, std::vector<SystemPath> &outRoute) const;
+	const std::string AutoRoute(const SystemPath &start, const SystemPath &target, std::vector<SystemPath> &outRoute) const;
 	void SetDrawRouteLines(bool value) { m_drawRouteLines = value; }
 
 protected:
-	virtual void OnSwitchTo();
+	void OnSwitchTo() override;
+	void OnSwitchFrom() override;
+
+	struct InputBinding : public Input::InputFrame {
+		using InputFrame::InputFrame;
+
+		Action *mapToggleSelectionFollowView;
+		Action *mapWarpToCurrent;
+		Action *mapWarpToSelected;
+		Action *mapViewReset;
+
+		Axis *mapViewMoveForward;
+		Axis *mapViewMoveLeft;
+		Axis *mapViewMoveUp;
+		Axis *mapViewYaw;
+		Axis *mapViewPitch;
+		Axis *mapViewZoom;
+
+		void RegisterBindings() override;
+	} InputBindings;
 
 private:
 	void InitDefaults();
 	void InitObject();
 
-	struct DistanceIndicator {
-		Gui::Label *label;
-		Graphics::Drawables::Line3D *line;
-		Color okayColor;
-		Color unsuffFuelColor;
-		Color outOfRangeColor;
-	};
-
-	struct SystemLabels {
-		Gui::Label *systemName;
-		Gui::Label *sector;
-		DistanceIndicator distance;
-		Gui::Label *starType;
-		Gui::Label *shortDesc;
-	};
-
 	void DrawNearSectors(const matrix4x4f &modelview);
-	void DrawNearSector(const int sx, const int sy, const int sz, const vector3f &playerAbsPos, const matrix4x4f &trans);
+	void DrawNearSector(const int sx, const int sy, const int sz, const matrix4x4f &trans);
 	void PutSystemLabels(RefCountedPtr<Sector> sec, const vector3f &origin, int drawRadius);
+	void PutSystemLabel(const Sector::System &sys);
 
 	void DrawFarSectors(const matrix4x4f &modelview);
 	void BuildFarSector(RefCountedPtr<Sector> sec, const vector3f &origin, std::vector<vector3f> &points, std::vector<Color> &colors);
@@ -105,12 +117,13 @@ private:
 	void AddStarBillboard(const matrix4x4f &modelview, const vector3f &pos, const Color &col, float size);
 
 	void OnClickSystem(const SystemPath &path);
+	const SystemPath &CheckPathInRoute(const SystemPath &path);
 
 	RefCountedPtr<Sector> GetCached(const SystemPath &loc) { return m_sectorCache->GetCached(loc); }
 	void ShrinkCache();
+	void SetSelected(const SystemPath &path);
 
 	void MouseWheel(bool up);
-	void OnKeyPressed(SDL_Keysym *keysym);
 
 	RefCountedPtr<Galaxy> m_galaxy;
 
@@ -131,46 +144,44 @@ private:
 	float m_zoomClamped;
 	float m_zoomMovingTo;
 
+	bool m_rotateWithMouseButton = false;
+	bool m_rotateView = false;
+	bool m_zoomView = false;
+	bool m_manualMove = false;
+
 	SystemPath m_hyperspaceTarget;
-	bool m_matchTargetToSelection;
 	bool m_automaticSystemSelection;
 
 	bool m_drawUninhabitedLabels;
 	bool m_drawOutRangeLabels;
 	bool m_drawVerticalLines;
 
-	std::unique_ptr<Graphics::Drawables::Disk> m_disk;
-
-	Gui::LabelSet *m_clickableLabels;
+	//Gui::LabelSet *m_clickableLabels;
 
 	std::set<const Faction *> m_visibleFactions;
 	std::set<const Faction *> m_hiddenFactions;
 
 	Uint8 m_detailBoxVisible;
 
-	void OnToggleFaction(Gui::ToggleButton *button, bool pressed, const Faction *faction);
-
-	sigc::connection m_onMouseWheelCon;
-	sigc::connection m_onKeyPressConnection;
+	ConnectionTicket m_onMouseWheelCon;
+	ConnectionTicket m_onToggleSelectionFollowView;
+	ConnectionTicket m_onWarpToCurrent;
+	ConnectionTicket m_onWarpToSelected;
+	ConnectionTicket m_onViewReset;
 
 	RefCountedPtr<SectorCache::Slave> m_sectorCache;
 	std::string m_previousSearch;
 
 	float m_playerHyperspaceRange;
-	Graphics::Drawables::Line3D m_selectedLine;
-	Graphics::Drawables::Line3D m_secondLine;
-	Graphics::Drawables::Line3D m_jumpLine;
 
 	// HyperJump Route Planner Stuff
 	std::vector<SystemPath> m_route;
-	bool m_drawRouteLines;
-	void DrawRouteLines(const vector3f &playerAbsPos, const matrix4x4f &trans);
 
-	Graphics::RenderState *m_solidState;
-	Graphics::RenderState *m_alphaBlendState;
-	Graphics::RenderState *m_jumpSphereState;
-	RefCountedPtr<Graphics::Material> m_material; //flat colour
-	RefCountedPtr<Graphics::Material> m_starMaterial;
+	bool m_drawRouteLines;
+	bool m_setupRouteLines;
+	void DrawRouteLines(const matrix4x4f &trans);
+	void SetupRouteLines(const vector3f &playerAbsPos);
+	void GetPlayerPosAndStarSize(vector3f &playerPosOut, float &currentStarSizeOut);
 
 	std::vector<vector3f> m_farstars;
 	std::vector<Color> m_farstarsColor;
@@ -186,15 +197,50 @@ private:
 	int m_cacheZMin;
 	int m_cacheZMax;
 
+	std::unique_ptr<ImDrawList> m_drawList;
+
 	std::unique_ptr<Graphics::VertexArray> m_lineVerts;
 	std::unique_ptr<Graphics::VertexArray> m_secLineVerts;
-	RefCountedPtr<Graphics::Material> m_fresnelMat;
-	std::unique_ptr<Graphics::Drawables::Sphere3D> m_jumpSphere;
 	std::unique_ptr<Graphics::VertexArray> m_starVerts;
+
+	RefCountedPtr<Graphics::Material> m_starMaterial;
+	RefCountedPtr<Graphics::Material> m_fresnelMat;
+	RefCountedPtr<Graphics::Material> m_lineMat;
+	RefCountedPtr<Graphics::Material> m_farStarsMat;
+
+	std::unique_ptr<Graphics::Drawables::Sphere3D> m_jumpSphere;
 
 	Graphics::Drawables::Lines m_lines;
 	Graphics::Drawables::Lines m_sectorlines;
+	Graphics::Drawables::Lines m_routeLines;
 	Graphics::Drawables::Points m_farstarsPoints;
+
+	class Label;
+	class StarLabel;
+	class FactionLabel;
+	struct Labels {
+		// the constructor can only be defined after defining the Label class
+		Labels(SectorView &view);
+		// settings and globals for labels
+		// this is not hardcode, these are the defaults
+		std::string fontName = "orbiteer";
+		int fontSize = 15;
+		float gap = 2.f;
+		ImFont *starLabelFont = nullptr;
+		ImFont *factionHomeFont = nullptr;
+		ImFont *factionNameFont = nullptr;
+		ImRect starLabelHoverArea;
+		ImRect factionHomeHoverArea;
+		ImRect factionNameHoverArea;
+		ImU32 highlightColor = IM_COL32(255, 255, 255, 100);
+		ImU32 shadeColor = IM_COL32(25, 51, 82, 200);
+		// owning object
+		SectorView &view;
+		// array
+		std::vector<std::unique_ptr<Label>> array;
+	};
+	Labels m_labels;
+	bool m_hideLabels = false;
 };
 
 #endif /* _SECTORVIEW_H */

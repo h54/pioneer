@@ -25,39 +25,75 @@
   },
   "ADTEXT_1": {
     "description": "",
-    "message": "ÁRU SZÁLLÍTÁS. Kissebb rakomány a {system} rendszerbe."
+    "message": "Hajót keresünk rakomány szállítására {system} rendszerbe."
   },
   "ADTEXT_2": {
     "description": "",
-    "message": "SZÁLLÍTÓT KERES. Fuvart keresek {system} rendszerbe. Fizetés: {cash}."
+    "message": "Termékek szállítása {system} rendszerbe. Díjazás: {cash}."
   },
   "ADTEXT_EXPENSIVE_1": {
     "description": "",
-    "message": "FUVAR. Értékes rakomány {system} rendszerbe. {cash}, tapasztalt pilótának."
+    "message": "Értékes rakomány szállítása {system} rendszerbe. {cash} díjazás gyakorlott pilóta számára."
   },
   "ADTEXT_LOCAL_1": {
     "description": "",
-    "message": "HELYI FUVAR. {startport} kikötöjébe."
+    "message": "Fuvarozót keresünk rendszeren belüli szállításra. Rakomány úticélja {starport}."
   },
   "ADTEXT_LOCAL_2": {
     "description": "",
-    "message": "HELY SZÁLLÍTMÁNY. Áru, cél: {starport}."
+    "message": "Helyi kiszállítót keresek {starport} kikötőjébe."
   },
   "ADTEXT_LOCAL_3": {
     "description": "",
-    "message": "RÖVID TÁVÚ ÁRUSZÁLLÍTÁS. Rakomány {starport} kikötőjébe."
+    "message": "Privát árúszállítási megbízás. Hitelesített kiszállítás {starport} kikötőbe."
   },
   "ADTEXT_PICKUP_1": {
     "description": "",
-    "message": "FUVAR. Rakomány szállítás {system} rendszerbe."
+    "message": "Árúszállítás {system} rendszerből. Keressen meg a részletekért."
   },
   "ADTEXT_PICKUP_LOCAL_1": {
     "description": "",
-    "message": "KÖLTÖZÉS. Szállítót keresek {starport} állomásról."
+    "message": "Rakomány szállító szolgáltatót keresünk. Innen {starport} kikötőjébe szeretnénk szállíttatni."
   },
   "ADTEXT_WHOLESALER_1": {
     "description": "",
-    "message": "KISZÁLLÍTÓT KERES. Hajót keresünk áruszállításra {system} rendszerbe."
+    "message": "Gyakorlott szállítmányozási vállalkozót keresünk, nagy mennyiségű rakomány {system} rendszerbe szállításához."
+  },
+  "ADTITLE_1": {
+    "description": "",
+    "message": "TEFU"
+  },
+  "ADTITLE_2": {
+    "description": "",
+    "message": "ÁRÚSZÁLLÍTÓT KERES"
+  },
+  "ADTITLE_EXPENSIVE_1": {
+    "description": "",
+    "message": "BIZTOSÍTOTT FUVAR"
+  },
+  "ADTITLE_LOCAL_1": {
+    "description": "",
+    "message": "RÖVID-TÁVÚ SZÁLLÍTMÁNY"
+  },
+  "ADTITLE_LOCAL_2": {
+    "description": "",
+    "message": "HELYI TEHERSZÁLLÍTÁS"
+  },
+  "ADTITLE_LOCAL_3": {
+    "description": "",
+    "message": "HELYI TEHERFUVAR"
+  },
+  "ADTITLE_PICKUP_1": {
+    "description": "",
+    "message": "RAKOMÁNY SZÁLLÍTÁS"
+  },
+  "ADTITLE_PICKUP_LOCAL_1": {
+    "description": "",
+    "message": "RENDSZEREN BELÜLI KÖLTÖZTETÉS"
+  },
+  "ADTITLE_WHOLESALER_1": {
+    "description": "",
+    "message": "NAGY RAKOMÁNY SZÁLLÍTÁS"
   },
   "ALUMINIUM_TUBES": {
     "description": "custom cargo",
@@ -135,6 +171,18 @@
     "description": "",
     "message": "Come back when you're more experienced."
   },
+  "DENY_AGAIN_1": {
+    "description": "",
+    "message": "Sajnálom, de már találtunk mást. Mindenesetre örömmel dolgoznánk önnel a jövében, miután teljesített egy szállítást."
+  },
+  "DENY_AGAIN_2": {
+    "description": "",
+    "message": "Sajnálom uram, de előbb teljesítse a szerződését. Utána beszélhetünk egy újabb szállítmányról."
+  },
+  "DENY_AGAIN_3": {
+    "description": "",
+    "message": "Uram, kérem előbb szállítsa le az árumat. Utána újabb szállítmányok várják."
+  },
   "DIAMONDS": {
     "description": "custom cargo",
     "message": "Diamonds"
@@ -199,6 +247,10 @@
     "description": "custom cargo",
     "message": "Bútor"
   },
+  "GO_BACK": {
+    "description": "Shown on a button in a sub-menu, to move back, to previous menu",
+    "message": "Vissza"
+  },
   "GREENHOUSES": {
     "description": "custom cargo",
     "message": "Melegházak"
@@ -228,7 +280,7 @@
     "message": "There are {amount}t."
   },
   "HOWMUCH_SINGULAR_1": {
-    "description": "This string is only used for 1 metric tons (singular)",
+    "description": "This string is only used for 1 metric ton (singular)",
     "message": "It's only {amount}t."
   },
   "HOWMUCH_WHOLESALER_1": {
@@ -315,6 +367,10 @@
     "description": "",
     "message": "Greetings, my name is {name} and I work for Haber Corp. We pay {cash} for the run to {starport} in the {system} ({sectorx}, {sectory}, {sectorz}) system, a distance of {dist} ly."
   },
+  "IS_IT_NEGOTIABLE": {
+    "description": "",
+    "message": "Vállalhatok kisebb szállítmányt?"
+  },
   "I_AM_ON_MY_WAY": {
     "description": "",
     "message": "Sensors show that you are taking damage. I'm on my way."
@@ -327,21 +383,45 @@
     "description": "",
     "message": "I'm taking damage. I need help."
   },
-  "LY": {
-    "description": "",
-    "message": "fé"
-  },
   "MACHINE_TOOLS": {
     "description": "custom cargo",
     "message": "Szerszámgépek"
+  },
+  "NEGOTIABLE_1": {
+    "description": "regarding mass, always more than 1t",
+    "message": "A következő szállítmányok várnak fuvarra:"
+  },
+  "NEGOTIABLE_2": {
+    "description": "regarding mass, always more than 1t",
+    "message": "{amount} tonna {cargoname}, ami felosztható az alábbiak szerint:"
+  },
+  "NEGOTIABLE_3": {
+    "description": "regarding mass, always more than 1t",
+    "message": "Igen, felosztható a rakomány."
+  },
+  "NEGOTIABLE_NO_1": {
+    "description": "regarding mass, always more than 1t",
+    "message": "Sajnálom, de nem tudjuk több fuvarra osztani. Egyben kell leszállítania {amount} tonnát."
+  },
+  "NEGOTIABLE_SINGULAR_1": {
+    "description": "This string is only used for 1 metric ton (singular)",
+    "message": "Nem lehetséges. Mindössze {amount} tonna."
   },
   "NEPTUNIUM": {
     "description": "custom cargo",
     "message": "Neptúnium"
   },
+  "OFFER": {
+    "description": "",
+    "message": "{amount} tonna szállítmány {reward}-ért"
+  },
   "OK_AGREED": {
     "description": "",
     "message": "OK, agreed."
+  },
+  "OK_WE_AGREE": {
+    "description": "",
+    "message": "Rendben, akkor megegyeztünk {amount} tonnában, {reward} díjazásért."
   },
   "PICKUP_FROM": {
     "description": "from a location",
@@ -502,6 +582,10 @@
   "TITANIUM": {
     "description": "custom cargo",
     "message": "Titánium"
+  },
+  "TOO_LATE_TO_PICK_UP": {
+    "description": "",
+    "message": "Túl sokat késett! Olyan rossz teljesítményt nyújt, hogy felmondom a szerződését."
   },
   "TUNGSTEN": {
     "description": "custom cargo",

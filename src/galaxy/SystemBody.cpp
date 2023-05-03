@@ -1,11 +1,13 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "SystemBody.h"
 
-#include "Lang.h"
-#include "EnumStrings.h"
 #include "AtmosphereParameters.h"
+#include "EnumStrings.h"
+#include "Game.h"
+#include "Lang.h"
+#include "Pi.h"
 #include "enum_table.h"
 #include "utils.h"
 
@@ -33,14 +35,11 @@ SystemBody::SystemBody(const SystemPath &path, StarSystem *system) :
 
 bool SystemBody::HasAtmosphere() const
 {
-	PROFILE_SCOPED()
 	return (m_volatileGas > fixed(1, 100));
 }
 
 bool SystemBody::IsScoopable() const
 {
-	PROFILE_SCOPED()
-
 	if (GetSuperType() == SUPERTYPE_GAS_GIANT)
 		return true;
 	if ((m_type == TYPE_PLANET_TERRESTRIAL) &&
@@ -114,7 +113,6 @@ AtmosphereParameters SystemBody::CalcAtmosphereParams() const
 
 SystemBody::BodySuperType SystemBody::GetSuperType() const
 {
-	PROFILE_SCOPED()
 	switch (m_type) {
 	case TYPE_BROWN_DWARF:
 	case TYPE_WHITE_DWARF:
@@ -216,17 +214,47 @@ std::string SystemBody::GetAstroDescription() const
 			return Lang::MEDIUM_GAS_GIANT;
 		else
 			return Lang::SMALL_GAS_GIANT;
-	case TYPE_PLANET_ASTEROID: return Lang::ASTEROID;
+	case TYPE_PLANET_ASTEROID:
 	case TYPE_PLANET_TERRESTRIAL: {
 		std::string s;
+
+		// Is it a moon? or a dwarf planet?
+		bool dwarfplanet = false;
+		bool moon = false;
+		if (m_parent && (m_parent->GetType() == TYPE_PLANET_TERRESTRIAL || m_parent->GetType() == TYPE_PLANET_GAS_GIANT))
+			moon = true;
+
+		// Is it an asteroid or a tiny moon?
+		if (m_type == TYPE_PLANET_ASTEROID) {
+			if (moon) {
+				s += Lang::TINY;
+				s += Lang::ROCKY_MOON;
+				return s;
+			}
+			else return Lang::ASTEROID;
+		}
+
 		if (m_mass > fixed(2, 1))
 			s = Lang::MASSIVE;
 		else if (m_mass > fixed(3, 2))
 			s = Lang::LARGE;
-		else if (m_mass < fixed(1, 10))
-			s = Lang::TINY;
-		else if (m_mass < fixed(1, 5))
-			s = Lang::SMALL;
+		else if (m_mass > fixed(1, 2))
+			s = Lang::MEDIUM;
+		else if (m_mass > fixed(12,1000))		// ~Weight of the moon (By definition here to be
+			s = Lang::SMALL;					// the upper limit of a Dwarf planet
+		else if (m_mass > fixed(1, 12000)) {	// ~Larger than the weight of Salacia (0.7% moon mass)
+			if (moon) {							// which is considered not a dwarf planet
+				s = Lang::TINY;
+			} else {
+				dwarfplanet = true;
+			}
+		} else {
+			if (moon) {
+				s = Lang::TINY;
+			} else {
+				return Lang::ASTEROID;
+			}
+		}
 
 		if (m_volcanicity > fixed(7, 10)) {
 			if (s.size())
@@ -240,13 +268,31 @@ std::string SystemBody::GetAstroDescription() const
 
 		if (m_volatileIces + m_volatileLiquid > fixed(4, 5)) {
 			if (m_volatileIces > m_volatileLiquid) {
-				s += (m_averageTemp < 273) ? Lang::ICE_WORLD : Lang::ROCKY_PLANET;
+				if (moon) {
+					s += (m_averageTemp < 273) ? Lang::ICE_MOON: Lang::ROCKY_MOON;
+				} else if (dwarfplanet) {
+					s += (m_averageTemp < 273) ? Lang::ICE_DWARF_PLANET : Lang::DWARF_PLANET_TERRESTRIAL;
+				} else {
+					s += (m_averageTemp < 273) ? Lang::ICE_WORLD : Lang::ROCKY_PLANET;
+				}
 			} else {
-				s += (m_averageTemp < 273) ? Lang::ICE_WORLD : Lang::OCEANICWORLD;
+				if (moon) {
+					s += (m_averageTemp < 273) ? Lang::ICE_MOON : Lang::OCEANICMOON;
+				} else if (dwarfplanet) {
+					s += (m_averageTemp < 273) ? Lang::DWARF_PLANET_MOSTLY_COVERED_IN_ICE : Lang::DWARF_PLANET_CONTAINING_LIQUID_WATER;
+				} else {
+					s += (m_averageTemp < 273) ? Lang::ICE_WORLD : Lang::OCEANICWORLD;
+				}
 			}
 			// what is a waterworld with temperature above 100C? possible?
+		} else if (m_volatileLiquid > fixed(2, 5) && moon) {
+			s += (m_averageTemp > 273) ? Lang::MOON_CONTAINING_LIQUID_WATER : Lang::MOON_WITH_SOME_ICE;
 		} else if (m_volatileLiquid > fixed(2, 5)) {
 			s += (m_averageTemp > 273) ? Lang::PLANET_CONTAINING_LIQUID_WATER : Lang::PLANET_WITH_SOME_ICE;
+		} else if (moon) {
+			s += (m_volatileLiquid > fixed(1, 5)) ? Lang::ROCKY_MOON_CONTAINING_SOME_LIQUIDS : Lang::ROCKY_MOON;
+		} else if (dwarfplanet) {
+			s += (m_volatileLiquid > fixed(1, 5)) ? Lang::DWARF_PLANET_CONTAINING_SOME_LIQUIDS : Lang::DWARF_PLANET_TERRESTRIAL;
 		} else {
 			s += (m_volatileLiquid > fixed(1, 5)) ? Lang::ROCKY_PLANET_CONTAINING_COME_LIQUIDS : Lang::ROCKY_PLANET;
 		}
@@ -254,36 +300,64 @@ std::string SystemBody::GetAstroDescription() const
 		if (m_volatileGas < fixed(1, 100)) {
 			s += Lang::WITH_NO_SIGNIFICANT_ATMOSPHERE;
 		} else {
+			bool article = false;
 			std::string thickness;
 			if (m_volatileGas < fixed(1, 10))
 				thickness = Lang::TENUOUS;
 			else if (m_volatileGas < fixed(1, 5))
 				thickness = Lang::THIN;
 			else if (m_volatileGas < fixed(2, 1)) // normal atmosphere
-			{
-			} else if (m_volatileGas < fixed(4, 1))
+				article = true;
+			else if (m_volatileGas < fixed(20, 1))
 				thickness = Lang::THICK;
 			else
 				thickness = Lang::VERY_DENSE;
 
 			if (m_atmosOxidizing > fixed(95, 100)) {
-				s += Lang::WITH_A + thickness + Lang::O2_ATMOSPHERE;
+				if  (article) {
+					s += Lang::WITH + thickness + Lang::AN_O2_ATMOSPHERE;
+				} else
+					s += Lang::WITH + thickness + Lang::O2_ATMOSPHERE;
 			} else if (m_atmosOxidizing > fixed(7, 10)) {
-				s += Lang::WITH_A + thickness + Lang::CO2_ATMOSPHERE;
+				if  (article) {
+					s += Lang::WITH + thickness + Lang::A_CO2_ATMOSPHERE;
+				} else
+					s += Lang::WITH + thickness + Lang::CO2_ATMOSPHERE;
 			} else if (m_atmosOxidizing > fixed(65, 100)) {
-				s += Lang::WITH_A + thickness + Lang::CO_ATMOSPHERE;
+				if  (article) {
+					s += Lang::WITH + thickness + Lang::A_CO_ATMOSPHERE;
+				} else
+					s += Lang::WITH + thickness + Lang::CO_ATMOSPHERE;
 			} else if (m_atmosOxidizing > fixed(55, 100)) {
-				s += Lang::WITH_A + thickness + Lang::CH4_ATMOSPHERE;
+				if  (article) {
+					s += Lang::WITH + thickness + Lang::A_CH4_ATMOSPHERE;
+				} else
+					s += Lang::WITH + thickness + Lang::CH4_ATMOSPHERE;
 			} else if (m_atmosOxidizing > fixed(3, 10)) {
-				s += Lang::WITH_A + thickness + Lang::H_ATMOSPHERE; // IsScoopable depends on these if/then/else values fixed(3,10) -> fixed(55,100) == hydrogen
+				if  (article) {
+					s += Lang::WITH + thickness + Lang::A_H_ATMOSPHERE; // IsScoopable depends on these if/then/} else values fixed(3,10) -> fixed(55,100) == hydrogen
+				} else
+					s += Lang::WITH + thickness + Lang::H_ATMOSPHERE;
 			} else if (m_atmosOxidizing > fixed(2, 10)) {
-				s += Lang::WITH_A + thickness + Lang::HE_ATMOSPHERE;
+				if  (article) {
+					s += Lang::WITH + thickness + Lang::A_HE_ATMOSPHERE;
+				} else
+					s += Lang::WITH + thickness + Lang::HE_ATMOSPHERE;
 			} else if (m_atmosOxidizing > fixed(15, 100)) {
-				s += Lang::WITH_A + thickness + Lang::AR_ATMOSPHERE;
+				if  (article) {
+					s += Lang::WITH + thickness + Lang::AN_AR_ATMOSPHERE;
+				} else
+					s += Lang::WITH + thickness + Lang::AR_ATMOSPHERE;
 			} else if (m_atmosOxidizing > fixed(1, 10)) {
-				s += Lang::WITH_A + thickness + Lang::S_ATMOSPHERE;
+				if  (article) {
+					s += Lang::WITH + thickness + Lang::A_S_ATMOSPHERE;
+				} else
+					s += Lang::WITH + thickness + Lang::S_ATMOSPHERE;
 			} else {
-				s += Lang::WITH_A + thickness + Lang::N_ATMOSPHERE;
+				if  (article) {
+					s += Lang::WITH + thickness + Lang::A_N_ATMOSPHERE;
+				} else
+					s += Lang::WITH + thickness + Lang::N_ATMOSPHERE;
 			}
 		}
 
@@ -296,6 +370,8 @@ std::string SystemBody::GetAstroDescription() const
 		} else {
 			s += ".";
 		}
+
+		s[0] = std::toupper(s[0]);
 
 		return s;
 	}
@@ -467,7 +543,7 @@ bool SystemBody::IsPlanet() const
 	}
 }
 
-void CollectSystemBodies(SystemBody *sb, std::vector<SystemBody*> &sb_vector)
+void CollectSystemBodies(SystemBody *sb, std::vector<SystemBody *> &sb_vector)
 {
 	for (SystemBody *body : sb->GetChildren()) {
 		sb_vector.push_back(body);
@@ -477,7 +553,7 @@ void CollectSystemBodies(SystemBody *sb, std::vector<SystemBody*> &sb_vector)
 
 const std::vector<SystemBody *> SystemBody::CollectAllChildren()
 {
-	std::vector<SystemBody*> sb_vector;
+	std::vector<SystemBody *> sb_vector;
 	// At least avoid initial reallocations
 	sb_vector.reserve(m_children.size());
 
@@ -516,7 +592,6 @@ bool SystemBody::IsCoOrbital() const
 
 double SystemBody::CalcSurfaceGravity() const
 {
-	PROFILE_SCOPED()
 	double r = GetRadius();
 	if (r > 0.0) {
 		return G * GetMass() / pow(r, 2);
@@ -574,4 +649,56 @@ void SystemBody::ClearParentAndChildPointers()
 		(*i)->ClearParentAndChildPointers();
 	m_parent = 0;
 	m_children.clear();
+}
+
+SystemBody *SystemBody::GetNearestJumpable()
+{
+	PROFILE_SCOPED()
+	if (IsJumpable()) return this;
+	// trying to find a jumpable parent
+	SystemBody *result = this;
+	while (result->GetParent()) { // we need to remember the last non-null pointer - this is the root systembody
+		result = result->GetParent();
+		if (result->IsJumpable()) return result;
+	}
+
+	//  Now we climbed to the very top of the hierarchy and did not find a jumpable
+	//  parent - we will have to search purely geometrically
+	//  we go through all the bodies of the system, determining the coordinates
+	//  of jumpable objects, and also remember the coordinates of the current
+	//  object
+	//  the result variable now contains the root systembody
+	std::vector<std::pair<SystemBody *, vector3d>> jumpables;
+	vector3d this_position(0.0);
+	std::function<void(SystemBody *, vector3d)> collect_positions = [&](SystemBody *s, vector3d pos) {
+		if (s->IsJumpable() || s->HasChildren() || s == this) {
+			// if the body has a zero orbit or it is a surface port - we assume that
+			// it is at the same point with the parent, just don't touch pos
+			if (!is_zero_general(s->GetOrbit().GetSemiMajorAxis()) && s->GetType() != SystemBody::TYPE_STARPORT_SURFACE)
+				pos += s->GetOrbit().OrbitalPosAtTime(Pi::game->GetTime());
+			if (s->IsJumpable())
+				jumpables.emplace_back(s, pos);
+			else if (s == this) // the current body is definitely not jumpable, otherwise we would not be here
+				this_position = pos;
+			if (s->HasChildren())
+				for (auto kid : s->GetChildren())
+					collect_positions(kid, pos);
+		}
+	};
+	collect_positions(result, vector3d(0.0));
+	// there can be no systems without jumpable systembodies!
+	assert(jumpables.size());
+	// looking for the closest jumpable to given systembody
+	result = jumpables[0].first;
+	double best_dist_sqr = (this_position - jumpables[0].second).LengthSqr();
+	size_t i = 1;
+	while (i < jumpables.size()) {
+		double dist_sqr = (this_position - jumpables[i].second).LengthSqr();
+		if (dist_sqr < best_dist_sqr) {
+			best_dist_sqr = dist_sqr;
+			result = jumpables[i].first;
+		}
+		++i;
+	}
+	return result;
 }

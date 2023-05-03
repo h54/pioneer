@@ -51,6 +51,10 @@
     "description": "",
     "message": "悬赏: 干掉在 {system} 星系的 {target}."
   },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "消除通缉"
+  },
   "FLAVOUR_0_FAILUREMSG": {
     "description": "",
     "message": "我得知了 {target} 还活着的消息, 我非常生气. 毫无疑问你别想拿到你的钱了."
@@ -69,7 +73,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "悬赏令: 现悬赏在 {system} 星系的 {target} 的项上人头."
+    "message": "Wanted: Someone to kill {target} from the {system} system."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "消灭目标"
   },
   "FLAVOUR_1_FAILUREMSG": {
     "description": "",
@@ -89,11 +97,15 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "清除行动: {system} 星系内不允发现 {target} 的活动踪迹."
+    "message": "{target} is tragically no longer wanted in the {system} system. Removal specialist needed."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "拆除作业"
   },
   "FLAVOUR_2_FAILUREMSG": {
     "description": "",
-    "message": "{target} 现在居然还是安然无恙. 你没有履行我们的约定所以你也不会收到我们的钱."
+    "message": "最遗憾的是{target}还活着。你不会收到任何报酬，因为你没有完成你的合同。"
   },
   "FLAVOUR_2_FAILUREMSG2": {
     "description": "",
@@ -109,7 +121,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "终结: 谁来帮我杀了 {target}."
+    "message": "Contract killer needed to eliminate {target}."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "结局"
   },
   "FLAVOUR_3_FAILUREMSG": {
     "description": "",
@@ -117,7 +133,7 @@
   },
   "FLAVOUR_3_FAILUREMSG2": {
     "description": "",
-    "message": "你在向我要由别人完成的任务的工钱? 给我滚."
+    "message": "你为别人的工作找我要钱？滚开。"
   },
   "FLAVOUR_3_INTROTEXT": {
     "description": "",
@@ -129,7 +145,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "\"退休\": 谁能帮我把 {target} \"退休\"了."
+    "message": "Discreet operator needed to ensure fatal retirement of {target}."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "退休"
   },
   "FLAVOUR_4_FAILUREMSG": {
     "description": "",
@@ -149,7 +169,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "任务书: 有些人想让 {target} 下地狱."
+    "message": "Some admirers wish {target} dead. Qualified termination experts apply within."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "传记"
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
@@ -178,10 +202,6 @@
   "IT_MUST_BE_DONE_AFTER": {
     "description": "",
     "message": "在 {target} 离开 {spaceport} 的时候就动手. 别错过了这机会."
-  },
-  "LY": {
-    "description": "",
-    "message": "光年"
   },
   "OK_AGREED": {
     "description": "",

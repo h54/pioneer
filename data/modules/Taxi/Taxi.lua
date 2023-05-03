@@ -1,4 +1,4 @@
--- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Engine = require 'Engine'
@@ -16,14 +16,9 @@ local Ship = require 'Ship'
 local eq = require 'Equipment'
 local utils = require 'utils'
 
-local InfoFace = import("ui/InfoFace")
-local NavButton = import("ui/NavButton")
-
 -- Get the language resource
 local l = Lang.GetResource("module-taxi")
-
--- Get the UI class
-local ui = Engine.ui
+local lc = Lang.GetResource 'core'
 
 -- don't produce missions for further than this many light years away
 local max_taxi_dist = 40
@@ -98,6 +93,7 @@ local flavours = {
 -- add strings to flavours
 for i = 1,#flavours do
 	local f = flavours[i]
+	f.adtitle    = l["FLAVOUR_" .. i-1 .. "_ADTITLE"]
 	f.adtext     = l["FLAVOUR_" .. i-1 .. "_ADTEXT"]
 	f.introtext  = l["FLAVOUR_" .. i-1 .. "_INTROTEXT"]
 	f.whysomuch  = l["FLAVOUR_" .. i-1 .. "_WHYSOMUCH"]
@@ -241,6 +237,25 @@ local isEnabled = function (ref)
 	return ads[ref] ~= nil and isQualifiedFor(Character.persistent.player.reputation, ads[ref])
 end
 
+local placeAdvert = function (station, ad)
+	local desc = string.interp(flavours[ad.flavour].adtext, {
+		system	= ad.location:GetStarSystem().name,
+		cash	= Format.Money(ad.reward,false),
+	})
+
+	local ref = station:AddAdvert({
+		title = flavours[ad.flavour].adtitle,
+		description = desc,
+		icon        = ad.urgency >=  0.8 and "taxi_urgent" or "taxi",
+		due         = ad.due,
+		reward      = ad.reward,
+		location    = ad.location,
+		onChat      = onChat,
+		onDelete    = onDelete,
+		isEnabled   = isEnabled})
+	ads[ref] = ad
+end
+
 local nearbysystems
 local makeAdvert = function (station)
 	local reward, due, location
@@ -260,7 +275,7 @@ local makeAdvert = function (station)
 	location = nearbysystems[Engine.rand:Integer(1,#nearbysystems)]
 	local dist = location:DistanceTo(Game.system)
 	reward = ((dist / max_taxi_dist) * typical_reward * (group / 2) * (1+risk) * (1+3*urgency) * Engine.rand:Number(0.8,1.2))
-	reward = math.ceil(reward)
+	reward = utils.round(reward, 50)
 	due = Game.time + ((dist / max_taxi_dist) * typical_travel_time * (1.5-urgency) * Engine.rand:Number(0.9,1.1))
 
 	local ad = {
@@ -268,8 +283,8 @@ local makeAdvert = function (station)
 		flavour		= flavour,
 		client		= client,
 		location	= location.path,
-		dist            = dist,
-		due		= due,
+		dist        = dist,
+		due		    = due,
 		group		= group,
 		risk		= risk,
 		urgency		= urgency,
@@ -277,18 +292,7 @@ local makeAdvert = function (station)
 		faceseed	= Engine.rand:Integer(),
 	}
 
-	ad.desc = string.interp(flavours[flavour].adtext, {
-		system	= location.name,
-		cash	= Format.Money(ad.reward,false),
-	})
-
-	local ref = station:AddAdvert({
-		description = ad.desc,
-		icon        = ad.urgency >=  0.8 and "taxi_urgent" or "taxi",
-		onChat      = onChat,
-		onDelete    = onDelete,
-		isEnabled   = isEnabled})
-	ads[ref] = ad
+	placeAdvert(station, ad)
 end
 
 local onCreateBB = function (station)
@@ -451,13 +455,7 @@ local onGameStart = function ()
 	if not loaded_data or not loaded_data.ads then return end
 
 	for k,ad in pairs(loaded_data.ads) do
-		local ref = ad.station:AddAdvert({
-			description = ad.desc,
-			icon        = ad.urgency >=  0.8 and "taxi_urgent" or "taxi",
-			onChat      = onChat,
-			onDelete    = onDelete,
-			isEnabled   = isEnabled})
-		ads[ref] = ad
+		placeAdvert(ad.station, ad)
 	end
 
 	missions = loaded_data.missions
@@ -470,92 +468,35 @@ local onGameEnd = function ()
 	nearbysystems = nil
 end
 
-local onClick = function (mission)
+local buildMissionDescription = function(mission)
+	local ui = require 'pigui'
+
+	local desc = {}
 	local dist = Game.system and string.format("%.2f", Game.system:DistanceTo(mission.location)) or "???"
-	return ui:Grid(2,1)
-		:SetColumn(0,{ui:VBox(10):PackEnd({ui:MultiLineText((flavours[mission.flavour].introtext):interp({
-														name   = mission.client.name,
-														system = mission.location:GetStarSystem().name,
-														sectorx = mission.location.sectorX,
-														sectory = mission.location.sectorY,
-														sectorz = mission.location.sectorZ,
-														cash   = Format.Money(mission.reward,false),
-														dist  = dist})
-										),
-										ui:Margin(10),
-										ui:Grid(2,1)
-											:SetColumn(0, {
-												ui:VBox():PackEnd({
-													ui:Label(l.FROM)
-												})
-											})
-											:SetColumn(1, {
-												ui:VBox():PackEnd({
-													ui:MultiLineText(mission.start:GetStarSystem().name.." ("..mission.start.sectorX..","..mission.start.sectorY..","..mission.start.sectorZ..")")
-												})
-											}),
-										ui:Grid(2,1)
-											:SetColumn(0, {
-												ui:VBox():PackEnd({
-													ui:Label(l.TO)
-												})
-											})
-											:SetColumn(1, {
-												ui:VBox():PackEnd({
-													ui:MultiLineText(mission.location:GetStarSystem().name.." ("..mission.location.sectorX..","..mission.location.sectorY..","..mission.location.sectorZ..")")
-												})
-											}),
-										ui:Grid(2,1)
-											:SetColumn(0, {
-												ui:VBox():PackEnd({
-													ui:Label(l.GROUP_DETAILS)
-												})
-											})
-											:SetColumn(1, {
-												ui:VBox():PackEnd({
-													ui:MultiLineText(string.interp(flavours[mission.flavour].howmany, {group = mission.group}))
-												})
-											}),
-										ui:Grid(2,1)
-											:SetColumn(0, {
-												ui:VBox():PackEnd({
-													ui:Label(l.DEADLINE)
-												})
-											})
-											:SetColumn(1, {
-												ui:VBox():PackEnd({
-													ui:Label(Format.Date(mission.due))
-												})
-											}),
-										ui:Grid(2,1)
-											:SetColumn(0, {
-												ui:VBox():PackEnd({
-													ui:Label(l.DANGER)
-												})
-											})
-											:SetColumn(1, {
-												ui:VBox():PackEnd({
-													ui:MultiLineText(flavours[mission.flavour].danger)
-												})
-											}),
-										ui:Margin(5),
-										ui:Grid(2,1)
-											:SetColumn(0, {
-												ui:VBox():PackEnd({
-													ui:Label(l.DISTANCE)
-												})
-											})
-											:SetColumn(1, {
-												ui:VBox():PackEnd({
-													ui:Label(dist.." "..l.LY)
-												})
-											}),
-										ui:Margin(5),
-										NavButton.New(l.SET_AS_TARGET, mission.location),
-		})})
-		:SetColumn(1, {
-			ui:VBox(10):PackEnd(InfoFace.New(mission.client))
-		})
+
+	desc.description = flavours[mission.flavour].introtext:interp({
+		name   = mission.client.name,
+		system = mission.location:GetStarSystem().name,
+		sectorx = mission.location.sectorX,
+		sectory = mission.location.sectorY,
+		sectorz = mission.location.sectorZ,
+		cash   = Format.Money(mission.reward,false),
+		dist  = dist
+	})
+
+	desc.client = mission.client
+	desc.location = mission.location
+
+	desc.details = {
+		{ l.FROM, ui.Format.SystemPath(mission.start) },
+		{ l.TO, ui.Format.SystemPath(mission.location) },
+		{ l.GROUP_DETAILS, string.interp(flavours[mission.flavour].howmany, {group = mission.group}) },
+		{ l.DEADLINE, ui.Format.Date(mission.due) },
+		{ l.DANGER, flavours[mission.flavour].danger },
+		{ l.DISTANCE, dist.." "..lc.UNIT_LY }
+	}
+
+	return desc
 end
 
 local serialize = function ()
@@ -576,6 +517,6 @@ Event.Register("onGameStart", onGameStart)
 Event.Register("onGameEnd", onGameEnd)
 Event.Register("onReputationChanged", onReputationChanged)
 
-Mission.RegisterType('Taxi',l.TAXI,onClick)
+Mission.RegisterType('Taxi',l.TAXI, buildMissionDescription)
 
 Serializer:Register("Taxi", serialize, unserialize)

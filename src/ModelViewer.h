@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef MODELVIEWER_H
@@ -15,11 +15,9 @@
 #include "lua/LuaManager.h"
 #include "pigui/PiGui.h"
 #include "scenegraph/SceneGraph.h"
-#include "ui/Context.h"
 
 #include <memory>
 
-class Input;
 class ModelViewer;
 
 class ModelViewerApp : public GuiApplication {
@@ -42,8 +40,7 @@ protected:
 
 private:
 	std::string m_modelName;
-	std::unique_ptr<Input> m_input;
-	std::shared_ptr<ModelViewer> m_modelViewer;
+	RefCountedPtr<ModelViewer> m_modelViewer;
 };
 
 class ModelViewer : public Application::Lifecycle {
@@ -82,14 +79,10 @@ private:
 	void UpdateLights();
 
 	void ReloadModel();
-	void SetAnimation(SceneGraph::Animation *anim);
 	void SetDecals(const std::string &file);
 
 	void OnModelChanged();
 
-	void ToggleCollMesh();
-	void ToggleShowShields();
-	void ToggleGrid();
 	void ToggleGuns();
 	void HitIt();
 
@@ -106,6 +99,9 @@ private:
 
 	void DrawModelSelector();
 	void DrawModelOptions();
+	void DrawModelTags();
+	void DrawTagNames();
+	void DrawModelHierarchy();
 	void DrawShipControls();
 	void DrawLog();
 	void DrawPiGui();
@@ -118,8 +114,10 @@ private:
 		bool showDockingLocators;
 		bool showCollMesh;
 		bool showAabb;
+		bool showGeomBBox;
 		bool showShields;
 		bool showGrid;
+		bool showVerticalGrids;
 		bool showLandingPad;
 		bool showUI;
 		bool wireframe;
@@ -127,25 +125,30 @@ private:
 		float gridInterval;
 		uint32_t lightPreset;
 		bool orthoView;
+		bool metricsWindow;
 
 		Options();
 	};
 
 private:
-	Input *m_input;
+	Input::Manager *m_input;
 	PiGui::Instance *m_pigui;
 
-	KeyBindings::AxisBinding *m_moveForward;
-	KeyBindings::AxisBinding *m_moveLeft;
-	KeyBindings::AxisBinding *m_moveUp;
-	KeyBindings::AxisBinding *m_zoomAxis;
+	struct Inputs : Input::InputFrame {
+		using InputFrame::InputFrame;
 
-	KeyBindings::AxisBinding *m_rotateViewLeft;
-	KeyBindings::AxisBinding *m_rotateViewUp;
+		Axis *moveForward;
+		Axis *moveLeft;
+		Axis *moveUp;
+		Axis *zoomAxis;
 
-	KeyBindings::ActionBinding *m_viewTop;
-	KeyBindings::ActionBinding *m_viewLeft;
-	KeyBindings::ActionBinding *m_viewFront;
+		Axis *rotateViewLeft;
+		Axis *rotateViewUp;
+
+		Action *viewTop;
+		Action *viewLeft;
+		Action *viewFront;
+	} m_bindings;
 
 	vector2f m_windowSize;
 	vector2f m_logWindowSize;
@@ -165,6 +168,8 @@ private:
 
 	std::unique_ptr<SceneGraph::Model> m_model;
 	bool m_modelIsShip = false;
+
+	SceneGraph::MatrixTransform *m_selectedTag = nullptr;
 
 	std::vector<SceneGraph::Animation *> m_animations;
 	SceneGraph::Animation *m_currentAnimation = nullptr;
@@ -188,6 +193,7 @@ private:
 	float m_shieldHitPan;
 	Graphics::Renderer *m_renderer;
 	Graphics::Texture *m_decalTexture;
+	matrix4x4f m_modelViewMat;
 	vector3f m_viewPos;
 	matrix3x3f m_viewRot;
 	float m_rotX, m_rotY, m_zoom;
@@ -197,12 +203,12 @@ private:
 	Options m_options;
 	float m_landingMinOffset;
 
-	Graphics::RenderState *m_bgState;
-	RefCountedPtr<Graphics::VertexBuffer> m_bgBuffer;
+	std::unique_ptr<Graphics::Material> m_bgMaterial;
+	std::unique_ptr<Graphics::MeshObject> m_bgMesh;
 
 	sigc::signal<void> onModelChanged;
 
-	Graphics::Drawables::Lines m_gridLines;
+	std::unique_ptr<Graphics::Drawables::GridLines> m_gridLines;
 };
 
 #endif

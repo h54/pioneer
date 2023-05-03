@@ -9,7 +9,7 @@
   },
   "ADD_JUMP": {
     "description": "UI-button: Add hyper jump to list of planned jumps",
-    "message": "Add Jump"
+    "message": "Přidat skok"
   },
   "AFTER_TRADE_IN": {
     "description": "",
@@ -35,9 +35,17 @@
     "description": "",
     "message": "Vyskytla se chyba"
   },
+  "ARRIVAL_DATE": {
+    "description": "Time of arrival, used in flight log",
+    "message": "Den příjezdu"
+  },
   "ATMOSPHERIC_SHIELDING": {
     "description": "Used in ShipInfo view, followed by a yes/no depending on if the ship can carry atmospheric shields",
     "message": "Atmosférický štít"
+  },
+  "ATMO_PRESS_LIMIT": {
+    "description": "Base external pressure limit of a ship (without atmo shield)",
+    "message": "Atmo. pressure limit"
   },
   "ATTEMPT_TO_REPAIR_HULL": {
     "description": "",
@@ -45,11 +53,11 @@
   },
   "AUTO_ROUTE": {
     "description": "Automatically find shortest jump route (measured in time) in star map",
-    "message": "Auto Route"
+    "message": "Automatická trasa"
   },
   "AVAILABLE_FOR_PURCHASE": {
-    "description": "",
-    "message": "Skladem"
+    "description": "Market header when buying items",
+    "message": "Available For Purchase"
   },
   "AVERAGE": {
     "description": "",
@@ -65,7 +73,7 @@
   },
   "BUY": {
     "description": "Commodities and equipment prices",
-    "message": "[+]"
+    "message": "Koupit"
   },
   "BUY_SHIP": {
     "description": "",
@@ -103,6 +111,10 @@
     "description": "",
     "message": "Náklad"
   },
+  "CARGO_CAPACITY": {
+    "description": "Label to show a ship's total cargo space.",
+    "message": "Cargo Capacity"
+  },
   "CARGO_SPACE": {
     "description": "",
     "message": "Nákladový prostor"
@@ -139,6 +151,14 @@
     "description": "Key binding option",
     "message": "Změnit kl."
   },
+  "CHANGE_COLOR": {
+    "description": "Paintshop button",
+    "message": "Change Color"
+  },
+  "CHANGE_PATTERN": {
+    "description": "Paintshop button",
+    "message": "Change Pattern"
+  },
   "CHIEF_MECHANIC": {
     "description": "",
     "message": "Hlavní mechanik"
@@ -161,7 +181,7 @@
   },
   "CLEAR_ROUTE": {
     "description": "Clear a planned route of hyperjumps",
-    "message": "Clear Route"
+    "message": "Vymazat trasu"
   },
   "CLIENT": {
     "description": "",
@@ -170,6 +190,10 @@
   "CLOSE": {
     "description": "",
     "message": "Close"
+  },
+  "COLOR": {
+    "description": "",
+    "message": "Color"
   },
   "COMBAT": {
     "description": "Headline for kills and combat rating",
@@ -183,9 +207,9 @@
     "description": "",
     "message": "Obchod s komoditami"
   },
-  "COMPACT_RADAR": {
-    "description": "Game settings option",
-    "message": "Compact radar"
+  "COMMODITY_TRADE_ANALYSIS": {
+    "description": "",
+    "message": "Commodity trade analysis of:"
   },
   "COMPETENT": {
     "description": "Combat rating",
@@ -201,11 +225,11 @@
   },
   "CONFIRM_PURCHASE": {
     "description": "",
-    "message": "Confirm purchase"
+    "message": "Potvrdit nákup"
   },
   "CONFIRM_SALE": {
     "description": "",
-    "message": "Confirm sale"
+    "message": "Potvrdit prodej"
   },
   "CONSTABLE": {
     "description": "",
@@ -214,6 +238,10 @@
   "CONTINUE_GAME": {
     "description": "",
     "message": "Pokračovat ve hře"
+  },
+  "CONTRACT_FRAUD": {
+    "description": "Crime committed by intentionally breaking a contract",
+    "message": "Contract fraud"
   },
   "CONTROLS": {
     "description": "",
@@ -243,13 +271,17 @@
     "description": "",
     "message": "Seznam posádky"
   },
+  "CRIMINAL": {
+    "description": "Legal status of player",
+    "message": "Criminal"
+  },
   "CRIMINAL_RECORD": {
     "description": "Past crimes / crime history of character",
     "message": "Trestní rejstřík"
   },
   "CURRENT_FUEL": {
     "description": "For hyperjump planner",
-    "message": "Current Fuel:"
+    "message": "Natankováno:"
   },
   "CURRENT_SYSTEM": {
     "description": "For hyperjump planner",
@@ -258,6 +290,10 @@
   "DANGEROUS": {
     "description": "Player combat rating",
     "message": "Nebezpečný"
+  },
+  "DATE": {
+    "description": "Date of an event, used in flight log",
+    "message": "Datum"
   },
   "DEADLY": {
     "description": "Player combat rating",
@@ -283,9 +319,13 @@
     "description": "Delta-v capacity of a ship with cargo bay fully loaded with propellant",
     "message": "Delta-v (max)"
   },
-  "DESCENT_TO_GROUND_SPEED": {
-    "description": "",
-    "message": "Přistávací rychlost:"
+  "DEMAND": {
+    "description": "Column label for commodity demand at a market.",
+    "message": "Demand"
+  },
+  "DEPARTURE_DATE": {
+    "description": "Time of departure, used in flight log",
+    "message": "Datum odletu"
   },
   "DESTROY_ENEMY_SHIP": {
     "description": "",
@@ -313,7 +353,7 @@
   },
   "DISPLAY_HUD_TRAILS_DESC": {
     "description": "tooltip description in settings menu",
-    "message": "Guides the eye by showing the trajectory of ships on the HUD"
+    "message": "Ukazuje trajektorii lodí na HUD"
   },
   "DISPLAY_NAV_TUNNELS": {
     "description": "Settings option: hyperspace tunnel effect",
@@ -321,7 +361,7 @@
   },
   "DISPLAY_NAV_TUNNELS_DESC": {
     "description": "tooltip description in settings menu",
-    "message": "Shows a virtual tunnel to current selected target on the HUD"
+    "message": "Zobrazuje virtuální tunel k aktuálně vybranému cíli na HUD"
   },
   "DISPLAY_SPEED_LINES": {
     "description": "Settings option: effect when travelling in space",
@@ -333,7 +373,7 @@
   },
   "DOCKED_AT": {
     "description": "",
-    "message": "Docked at"
+    "message": "Zadokován na"
   },
   "DOCK_AT_CURRENT_TARGET": {
     "description": "",
@@ -358,6 +398,10 @@
   "ECONOMY_TRADE": {
     "description": "",
     "message": "Ekonomika & obchod"
+  },
+  "EDIT": {
+    "description": "Tooltip, to edit a flight log entry",
+    "message": "Edit"
   },
   "EFFECTS": {
     "description": "",
@@ -397,11 +441,15 @@
   },
   "END_GAME": {
     "description": "",
-    "message": "End Game"
+    "message": "Konec hry"
   },
   "ENGINEERING": {
     "description": "Engineering skills of crew",
     "message": "Údržba:"
+  },
+  "ENTRY": {
+    "description": "A note/entry/record into the flight log",
+    "message": "Entry"
   },
   "EQUIPMENT": {
     "description": "",
@@ -421,7 +469,7 @@
   },
   "ERROR_LANDING_GEAR_DOWN": {
     "description": "",
-    "message": "Can not initiate hyperjump; landing gear is not retracted!"
+    "message": "Nelze spustit hyperjump; podvozek není zasunutý!"
   },
   "ESCAPE_SPEED": {
     "description": "",
@@ -438,6 +486,10 @@
   "EXPERT": {
     "description": "For player reputation",
     "message": "Expert"
+  },
+  "FACTIONS": {
+    "description": "Button to toggle the display of factions on the sector map",
+    "message": "Factions"
   },
   "FAILED": {
     "description": "When failed mission",
@@ -493,11 +545,51 @@
   },
   "FINAL_TARGET": {
     "description": "Hyperjump planner, referring to star system target",
-    "message": "Final Target:"
+    "message": "Cílová destinace:"
+  },
+  "FINANCE": {
+    "description": "Financial statement of player, e.g. cash",
+    "message": "Finance"
+  },
+  "FLIGHTLOG_DOCKING": {
+    "description": "Used in Flight Log, to indicate player's position. 'primary_info' is a station name",
+    "message": "Dokování na {primary_info}"
+  },
+  "FLIGHTLOG_FLYING": {
+    "description": "Used in Flight Log, to indicate player's position. 'primary_info' is the name of a space body",
+    "message": "Flying in space, relative {primary_info}"
+  },
+  "FLIGHTLOG_HYPERSPACE": {
+    "description": "Used in Flight Log, to indicate player's position. 'primary_info' is the star system targeted for hyperspace jump.",
+    "message": "In Hyperspace, enroute to {primary_info}"
+  },
+  "FLIGHTLOG_JUMPING": {
+    "description": "Used in Flight Log, to indicate player's position. 'primary_info' is the star system targeted for hyperspace jump.",
+    "message": "Hyperskok k {primary_info}"
+  },
+  "FLIGHTLOG_LANDED": {
+    "description": "Used in Flight Log, to indicate player's position, 'primary_info' is the name of a space body, typically a planet, the other two variables are latitude and longitude as floating point number, e.g. 'Landed on Trantor, position (-43.23, 67.89)'",
+    "message": "Landed on {primary_info}, position ({secondary_info}, {tertiary_info})"
+  },
+  "FLIGHTLOG_STARPORT_ORBITAL": {
+    "description": "Used in Flight Log, to indicate player's position. 'primary_info' is a station name, 'secondary_info' is a space body (planet, moon/satelite, star) name",
+    "message": "Docked at {primary_info}, in orbit around {secondary_info}"
+  },
+  "FLIGHTLOG_STARPORT_SURFACE": {
+    "description": "Used in Flight Log, to indicate player's position. 'primary_info' is a station name, 'secondary_info' is a space body (planet, moon/satelite, star) name",
+    "message": "Docked at {primary_info}, on {secondary_info}"
+  },
+  "FLIGHTLOG_UNDOCKING": {
+    "description": "Used in Flight Log, to indicate player's position. 'primary_info' is a station name",
+    "message": "Undocking at {primary_info}"
+  },
+  "FLIGHT_LOG": {
+    "description": "Title for flight log screen, in info view",
+    "message": "Letový deník"
   },
   "FLIGHT_STATE": {
     "description": "",
-    "message": "Flight State"
+    "message": "Stav letu"
   },
   "FLYING": {
     "description": "",
@@ -514,10 +606,6 @@
   "FORWARD_ACCEL_FULL": {
     "description": "",
     "message": "Zrychlení vpřed (plná)"
-  },
-  "FRACTAL_DETAIL": {
-    "description": "",
-    "message": "Detaily fraktálů"
   },
   "FREE": {
     "description": "Used in Ship Information view as in Capacity: 10t (5t free)",
@@ -539,6 +627,10 @@
     "description": "",
     "message": "Hmotnost paliva"
   },
+  "FUGITIVE": {
+    "description": "Legal status of player",
+    "message": "Fugitive"
+  },
   "FULL_SCREEN": {
     "description": "",
     "message": "Celá obrazovka"
@@ -558,6 +650,10 @@
   "GOOD_RIDDANCE_TO_YOU_TOO": {
     "description": "",
     "message": "Spánembohem i tobě."
+  },
+  "GO_BACK": {
+    "description": "",
+    "message": "Zpět"
   },
   "GPU_JOBS": {
     "description": "",
@@ -609,11 +705,11 @@
   },
   "HUD_3D_RADAR": {
     "description": "Popup text: the name of the planar projection radar (traditional frontier-style)",
-    "message": "3D planar projection"
+    "message": "3D projekce"
   },
   "HUD_ATMOSPHERIC_PRESSURE": {
     "description": "Tooltip: Atmospheric Pressure.",
-    "message": "Atmospheric Pressure"
+    "message": "Atmosférický tlak"
   },
   "HUD_BACKWARD_GUN_TEMPERATURE": {
     "description": "Tooltip: Backward Gun Temperature.",
@@ -621,23 +717,47 @@
   },
   "HUD_BRAKE_DISTANCE_MAIN_THRUSTERS": {
     "description": "Tooltip: The braking distance using the main thrusters.",
-    "message": "The braking distance using the main thrusters"
+    "message": "Brzdná dráha pomocí hlavních trysek"
   },
   "HUD_BUTTON_AUTOPILOT_DOCKING": {
     "description": "Tooltip: Autopilot docking",
-    "message": "Autopilot docking"
+    "message": "Dokovaní autopilotem"
   },
   "HUD_BUTTON_AUTOPILOT_ENTERING_ORBIT": {
     "description": "Tooltip: Autopilot entering orbit",
-    "message": "Autopilot entering orbit"
+    "message": "Autopilotem na oběžnou dráhu"
   },
   "HUD_BUTTON_AUTOPILOT_FLYING_TO_TARGET": {
     "description": "Tooltip: Autopilot flying to target",
-    "message": "Autopilot flying to target"
+    "message": "Přiblížení k cíly autopilotem"
   },
   "HUD_BUTTON_BLASTOFF": {
     "description": "Tooltip: Blastoff",
-    "message": "Blastoff"
+    "message": "Odpálení rakety"
+  },
+  "HUD_BUTTON_CRUISE_FORWARD": {
+    "description": "Tooltip for button",
+    "message": "Forward cruise mode"
+  },
+  "HUD_BUTTON_CRUISE_UP": {
+    "description": "Tooltip for button",
+    "message": "Up cruise mode"
+  },
+  "HUD_BUTTON_DISABLE_AUTOPILOT": {
+    "description": "Tooltip for button",
+    "message": "Disable autopilot"
+  },
+  "HUD_BUTTON_DISABLE_CRUISE": {
+    "description": "Tooltip for button",
+    "message": "Disable cruise mode"
+  },
+  "HUD_BUTTON_DISABLE_FIXHEADING": {
+    "description": "Tooltip for button",
+    "message": "Disable fixheading mode"
+  },
+  "HUD_BUTTON_DISABLE_FOLLOW_MODE": {
+    "description": "Tooltip for button",
+    "message": "Disable follow mode"
   },
   "HUD_BUTTON_EQUIPMENT": {
     "description": "Tooltip: Equipment",
@@ -681,11 +801,11 @@
   },
   "HUD_BUTTON_INITIATE_HYPERJUMP": {
     "description": "Tooltip: Initiate legal hyperjump",
-    "message": "Initiate hyperjump"
+    "message": "Zahájit hyperskok"
   },
   "HUD_BUTTON_INITIATE_ILLEGAL_HYPERJUMP": {
     "description": "Tooltip: Initiate illegal hyperjump",
-    "message": "Initiate illegal hyperjump"
+    "message": "Zahájit ilegální hyperskok"
   },
   "HUD_BUTTON_INTERNAL_VIEW": {
     "description": "Tooltip: Internal camera view",
@@ -697,15 +817,15 @@
   },
   "HUD_BUTTON_LANDING_GEAR_IS_DOWN": {
     "description": "Tooltip: Landing gear is down",
-    "message": "Landing gear is down"
+    "message": "Podvozek je vysunutý"
   },
   "HUD_BUTTON_LANDING_GEAR_IS_MOVING": {
     "description": "Tooltip: Landing gear is moving",
-    "message": "Landing gear is moving"
+    "message": "Podvozek je v pohybu"
   },
   "HUD_BUTTON_LANDING_GEAR_IS_UP": {
     "description": "Tooltip: Landing gear is up",
-    "message": "Landing gear is up"
+    "message": "Podvozek je zasunutý"
   },
   "HUD_BUTTON_MANUAL_CONTROL": {
     "description": "Tooltip: Manual control",
@@ -713,27 +833,23 @@
   },
   "HUD_BUTTON_ROTATION_DAMPING_IS_OFF": {
     "description": "Tooltip: Rotation damping is off",
-    "message": "Rotation damping is off"
+    "message": "Tlumení otáčení je vypnuto"
   },
   "HUD_BUTTON_ROTATION_DAMPING_IS_ON": {
     "description": "Tooltip: Rotation damping is on",
-    "message": "Rotation damping is on"
-  },
-  "HUD_BUTTON_SCANNER": {
-    "description": "Tooltip: Scanner",
-    "message": "Radar"
+    "message": "Tlumení otáčení je zapnuto"
   },
   "HUD_BUTTON_SET_SPEED": {
     "description": "Tooltip: set speed",
-    "message": "Set speed"
+    "message": "Nastavit rychlost"
   },
   "HUD_BUTTON_SHOW_COMMS": {
     "description": "Tooltip: Show comms",
-    "message": "Show comms"
+    "message": "Zobrazit komunikace"
   },
   "HUD_BUTTON_SHOW_PERSONAL_INFO": {
     "description": "Tooltip: Show personal info",
-    "message": "Show personal info"
+    "message": "Zobrazit osobní údaje"
   },
   "HUD_BUTTON_SIDEREAL_VIEW": {
     "description": "Tooltip: Sidereal camera view",
@@ -741,19 +857,19 @@
   },
   "HUD_BUTTON_SWITCH_TO_GALAXY_MAP": {
     "description": "Tooltip: Switch to galaxy map",
-    "message": "Switch to galaxy map"
+    "message": "Zobrazit mapu galaxie"
   },
   "HUD_BUTTON_SWITCH_TO_SECTOR_MAP": {
     "description": "Tooltip: Switch to sector map",
-    "message": "Switch to sector map"
+    "message": "Zobrazit mapu sektoru"
   },
   "HUD_BUTTON_SWITCH_TO_SYSTEM_MAP": {
     "description": "Tooltip: Switch to system map",
-    "message": "Switch to system map"
+    "message": "Zobrazit mapu systému"
   },
   "HUD_BUTTON_SWITCH_TO_SYSTEM_OVERVIEW": {
     "description": "Tooltip: Switch to system overview",
-    "message": "Switch to system overview"
+    "message": "Přepnout na přehled systému"
   },
   "HUD_BUTTON_SWITCH_TO_WORLD_VIEW": {
     "description": "Tooltip: Switch to world view",
@@ -761,11 +877,15 @@
   },
   "HUD_BUTTON_UNDOCK": {
     "description": "Tooltip: Undock",
-    "message": "Undock"
+    "message": "Oddokovat"
   },
   "HUD_CARGO_MASS": {
     "description": "Cargo Mass",
-    "message": "Cargo Mass"
+    "message": "Hmotnost nákladu"
+  },
+  "HUD_CRUISE_SPEED": {
+    "description": "Tooltip for cruise speed indicator",
+    "message": "Cruise speed"
   },
   "HUD_CURRENT_COMBAT_TARGET": {
     "description": "Tooltip: The current combat target.",
@@ -819,21 +939,49 @@
     "description": "Tooltip: The duration until the middle of the maneuver burn.",
     "message": "The duration until the middle of the maneuver burn"
   },
+  "HUD_FOLLOW_ORIENTATION": {
+    "description": "Tooltip for follow mode 'orientation' button",
+    "message": "{targetname}: Follow orientation"
+  },
+  "HUD_FOLLOW_ORIENTATION_NOT_AVAILABLE": {
+    "description": "Tooltip for follow mode 'orientation' button, when it's not available for the current object.",
+    "message": "{targetname}: Follow orientation is not available."
+  },
+  "HUD_FOLLOW_ORIENTATION_NOT_AVAILABLE_TOO_FAR": {
+    "description": "Tooltip for follow mode 'orientation' button, when it's not available for the current object, because it's too far.",
+    "message": "{targetname}: Follow orientation is not available - too far."
+  },
+  "HUD_FOLLOW_POSITION": {
+    "description": "Tooltip for follow mode 'position' button",
+    "message": "{targetname}: Follow position"
+  },
+  "HUD_FOLLOW_POSITION_NOT_AVAILABLE": {
+    "description": "Tooltip for follow mode 'position' button, when it's not available for the current object.",
+    "message": "{targetname}: Follow position is not available."
+  },
+  "HUD_FOLLOW_POSITION_NOT_AVAILABLE_TOO_FAR": {
+    "description": "Tooltip for follow mode 'position' button, when it's not available for the current object, because it's too far.",
+    "message": "{targetname}: Follow position is not available - too far."
+  },
+  "HUD_FOLLOW_TARGET": {
+    "description": "Tooltip for followed target's name in reticule",
+    "message": "Follow target"
+  },
   "HUD_FORWARD_GUN_TEMPERATURE": {
     "description": "Tooltip: Forward Gun Temperature.",
     "message": "Forward Gun Temperature"
   },
   "HUD_HULL_STRENGTH": {
     "description": "Tooltip: Hull Strength.",
-    "message": "Hull Strength"
+    "message": "Odolnost trupu"
   },
   "HUD_HULL_TEMPERATURE": {
     "description": "Tooltip: Hull Temperature.",
-    "message": "Hull Temperature"
+    "message": "Teplota trupu"
   },
   "HUD_HYPERSPACING_TO_N_IN_N_SECONDS": {
     "description": "",
-    "message": "Hyperspacing to {destination} in {countdown} seconds"
+    "message": "Hyperskok do {destination} za {countdown} sekund"
   },
   "HUD_INDICATOR_AWAY_FROM_FRAME": {
     "description": "Indicator: Away from the current frame.",
@@ -873,7 +1021,7 @@
   },
   "HUD_JUMP_COMPLETE": {
     "description": "",
-    "message": "Jump complete: {percent}%"
+    "message": "Průběh skoku: {percent}%"
   },
   "HUD_MASS": {
     "description": "Mass",
@@ -885,11 +1033,11 @@
   },
   "HUD_REQUEST_TIME_ACCEL": {
     "description": "Tooltip: Request time acceleration {time}",
-    "message": "Request time acceleration: {time}"
+    "message": "Zrychlit čas: {time}"
   },
   "HUD_SHIELD_STRENGTH": {
     "description": "Tooltip: Shield Strength.",
-    "message": "Shield Strength"
+    "message": "Síla štítu"
   },
   "HUD_SHOW_COMBAT_TARGET": {
     "description": "Tooltip: Show the current combat target.",
@@ -903,13 +1051,17 @@
     "description": "Tooltip: Show current navigational target.",
     "message": "Show the current navigational target"
   },
+  "HUD_SPEED_LIMITER_ACTIVE": {
+    "description": "Tooltip for the icon in the reticule that appears if the speed limiter is active",
+    "message": "Speed limiter is active"
+  },
   "HUD_SPEED_OF_APPROACH_TO_FRAME": {
     "description": "Tooltip: The speed of approach towards the frame of reference.",
     "message": "The speed of approach towards the frame of reference"
   },
   "HUD_SPEED_OF_APPROACH_TO_TARGET": {
     "description": "Tooltip: The speed of approach relative to target.",
-    "message": "The speed of approach relative to target"
+    "message": "Rychlost přiblížení k cíli"
   },
   "HUD_SPEED_RELATIVE_TO_TARGET": {
     "description": "Tooltip: The speed relative to the target.",
@@ -918,6 +1070,18 @@
   "HUD_THRUST_INDICATOR": {
     "description": "Tooltip: describe what the thrust/velocity indicator shows",
     "message": "Show current velocity for each direction (thin lines) and thrust (thick background)"
+  },
+  "HUD_WARNING_DESCENT_RATE": {
+    "description": "Shown on HUD as a warning flasher",
+    "message": "DESCENT RATE"
+  },
+  "HUD_WARNING_IMPACT": {
+    "description": "Alert tooltip",
+    "message": "Impact warning"
+  },
+  "HUD_WARNING_IMPACT_IMMINENT": {
+    "description": "Alert tooltip",
+    "message": "Impact imminent"
   },
   "HULL_DOES_NOT_REQUIRE_REPAIR": {
     "description": "",
@@ -945,15 +1109,19 @@
   },
   "HYPERJUMP_ROUTE": {
     "description": "",
-    "message": "HyperJump Route"
+    "message": "Trasa Hyperskoku"
   },
   "HYPERSPACE_RANGE": {
     "description": "",
     "message": "Hyperprostorový dosah"
   },
+  "ILLEGAL_IN_SYSTEM": {
+    "description": "An illegal action or commodity",
+    "message": "Illegal in System"
+  },
   "ILLEGAL_JUMP": {
     "description": "A finable crime",
-    "message": "Reckless hyperjump registered"
+    "message": "Bezohledný hyperskok zaregistrován"
   },
   "IM_TIRED_OF_WORKING_FOR_NOTHING_DONT_YOU_KNOW_WHAT_A_CONTRACT_IS": {
     "description": "",
@@ -969,7 +1137,7 @@
   },
   "INCREASE": {
     "description": "Increase something.",
-    "message": "Increase"
+    "message": "Zvýšit"
   },
   "INEXPERIENCED": {
     "description": "For player reputation",
@@ -981,11 +1149,15 @@
   },
   "INSUFFICIENT_FUEL": {
     "description": "Ship jump status",
-    "message": "Insufficient fuel"
+    "message": "Nedostatek paliva"
   },
   "INSUFFICIENT_FUNDS": {
     "description": "",
-    "message": "Insufficient funds."
+    "message": "Nedostatečné finanční prostředky."
+  },
+  "INTERSTELLAR_TRADE_AVG": {
+    "description": "Label displaying commodity flow at a per-system level",
+    "message": "Interstellar Trade:"
   },
   "INVERT_MOUSE_Y": {
     "description": "",
@@ -999,6 +1171,10 @@
     "description": "",
     "message": "Skladem"
   },
+  "IN_SYSTEM": {
+    "description": "Used in flight log, show which star system we are/were in",
+    "message": "In system"
+  },
   "ITEM_IS_OUT_OF_STOCK": {
     "description": "",
     "message": "Tato položka není skladem."
@@ -1010,6 +1186,10 @@
   "JETTISON": {
     "description": "",
     "message": "Odhodit"
+  },
+  "JETTISON_MODE": {
+    "description": "",
+    "message": "Jettison Mode"
   },
   "JUMPING": {
     "description": "Flight State",
@@ -1038,6 +1218,18 @@
   "LAUNCH_PERMISSION_DENIED_FINED": {
     "description": "",
     "message": "Povolení ke startu zamítnuto: máte nezaplacené pokuty."
+  },
+  "LAUNCH_PERMISSION_GRANTED": {
+    "description": "",
+    "message": "Launch permission granted."
+  },
+  "LAUNCH_PERMISSION_GRANTED_DEPART_QUICK": {
+    "description": "",
+    "message": "Permission granted. Please do not clutter the landing area and depart quickly."
+  },
+  "LAUNCH_PERMISSION_GRANTED_WATCH_TRAFFIC": {
+    "description": "",
+    "message": "Permission granted. Watch for traffic on your departure."
   },
   "LEGAL_STATUS": {
     "description": "",
@@ -1091,6 +1283,22 @@
     "description": "",
     "message": "Pozice"
   },
+  "LOG_CUSTOM": {
+    "description": "Label tab for showing custom logged events",
+    "message": "Custom Log"
+  },
+  "LOG_NEW": {
+    "description": "Indicate to make an entry into flight log system",
+    "message": "New Entry"
+  },
+  "LOG_STATION": {
+    "description": "Label tab for showing logged station events",
+    "message": "Station Log"
+  },
+  "LOG_SYSTEM": {
+    "description": "Label tab for showing logged system events",
+    "message": "System Log"
+  },
   "LOW": {
     "description": "",
     "message": "Nízké"
@@ -1099,13 +1307,13 @@
     "description": "Light year",
     "message": "ly"
   },
-  "MAJOR_EXPORTS_ITEM": {
-    "description": "",
-    "message": "Major exports"
+  "MAJOR_EXPORT": {
+    "description": "For displaying commodity information",
+    "message": "Major Export"
   },
-  "MAJOR_IMPORTS_ITEM": {
-    "description": "",
-    "message": "Major imports"
+  "MAJOR_IMPORT": {
+    "description": "For displaying commodity information",
+    "message": "Major Import"
   },
   "MAKE_NEW_FACE": {
     "description": "",
@@ -1117,11 +1325,11 @@
   },
   "MARKET_BUYLINE": {
     "description": "",
-    "message": "Buy {amount} units for {price}"
+    "message": "Koupit {amount} jednotek za {price}"
   },
   "MARKET_SELLINE": {
     "description": "",
-    "message": "Sell {amount} units for {price}"
+    "message": "Prodat {amount} jednotek za {price}"
   },
   "MASS": {
     "description": "",
@@ -1179,17 +1387,21 @@
     "description": "",
     "message": "Vojenské"
   },
+  "MINIMAL_TRADE": {
+    "description": "Indicates a system does not have a significant amount of trade in a commodity.",
+    "message": "Minimal Trade"
+  },
   "MINIMUM_CREW": {
     "description": "",
     "message": "Minimální posádka"
   },
-  "MINOR_EXPORTS_ITEM": {
-    "description": "",
-    "message": "Minor exports"
+  "MINOR_EXPORT": {
+    "description": "For displaying commodity information",
+    "message": "Minor Export"
   },
-  "MINOR_IMPORTS_ITEM": {
-    "description": "",
-    "message": "Minor imports"
+  "MINOR_IMPORT": {
+    "description": "For displaying commodity information",
+    "message": "Drobný dovoz"
   },
   "MISSILE_MOUNTS": {
     "description": "",
@@ -1259,6 +1471,10 @@
     "description": "",
     "message": "Vyjenávat"
   },
+  "NEW_PAINTJOB_APPLIED": {
+    "description": "Paintshop popup",
+    "message": "The new paintjob has been applied to your ship."
+  },
   "NEXT_FACE_FEATURE": {
     "description": "Face feature switch button for FaceGenerator in the PersonalInfo view",
     "message": "Další"
@@ -1281,7 +1497,7 @@
   },
   "NONE_FOR_SALE_IN_THIS_STATION": {
     "description": "",
-    "message": "None for sale in this station."
+    "message": "Žádné jednotky k prodeji v této stanici."
   },
   "NORMA_ARM": {
     "description": "Arm of the Milky Way galaxy",
@@ -1299,6 +1515,14 @@
     "description": "",
     "message": "{equipment} nelze na tuto loď přidat"
   },
+  "NO_AVAILABLE_DATA": {
+    "description": "Message displaying no stored data available",
+    "message": "No data available"
+  },
+  "NO_CARGO": {
+    "description": "Message displayed when the player has no cargo in their hold.",
+    "message": "NO CARGO"
+  },
   "NO_DRIVE": {
     "description": "Ship jump status",
     "message": "No drive"
@@ -1310,6 +1534,10 @@
   "NO_MISSIONS": {
     "description": "",
     "message": "Žádné mise."
+  },
+  "NO_VALID_ROUTE": {
+    "description": "Message in the sector map, issued by the autoroute function.",
+    "message": "Neplatná cesta k vybranému systému."
   },
   "N_LIGHT_YEARS_N_MAX": {
     "description": "",
@@ -1327,9 +1555,17 @@
     "description": "",
     "message": "{quantity} volných pasažérských kabin"
   },
+  "OCCUPIED_PASSENGER_CABINS": {
+    "description": "",
+    "message": "Occupied Passenger Cabins"
+  },
   "OFF": {
     "description": "",
     "message": "Vypnuto"
+  },
+  "OFFENDER": {
+    "description": "Legal status of player",
+    "message": "Offender"
   },
   "OK": {
     "description": "",
@@ -1347,17 +1583,21 @@
     "description": "",
     "message": "Orbita"
   },
-  "ORBITAL_ANALYSIS": {
-    "description": "",
-    "message": "Orbitální analýza"
+  "ORBIT_APOAPSIS": {
+    "description": "Label for the point of an orbit furthest from the orbited body",
+    "message": "Apoapsis"
   },
-  "ORBITAL_ANALYSIS_NOTES": {
-    "description": "",
-    "message": "Úhlová orbitální rychlost je vztažena k tangenciální rychlosti. Loď by se měla pohybovat v úhlu 90° k ose lodi/{name}.\n\nRychlost sestupu je absolutní minimum a je taktéž tangenciální. Menší rychlost nebo menší úhel bude mít za následek trajektorii, která se protíná s povrchem {name}.\n\nÚniková rychlost může být teoreticky libovolná ve všech směrech, dokud se trajektorie lodi nenáchází na kolizním kurzu s {name}.\n\t\t"
+  "ORBIT_PERIAPSIS": {
+    "description": "Label for the point of an orbit nearest to the orbited body",
+    "message": "Periapsis"
   },
   "OUTER_ARM": {
     "description": "Arm of the Milky Way galaxy",
     "message": "rameno Labuť"
+  },
+  "OUTLAW": {
+    "description": "Legal status of player",
+    "message": "Outlaw"
   },
   "OUTSTANDING_FINES": {
     "description": "Unpaid fines for crimes committed",
@@ -1365,7 +1605,7 @@
   },
   "OUT_OF_RANGE": {
     "description": "Ship jump status",
-    "message": "Out of range"
+    "message": "Mimo dosah"
   },
   "OVERVIEW_NAME_FILTER": {
     "description": "Filter overview window entries by name",
@@ -1374,6 +1614,42 @@
   "OWED": {
     "description": "Player owing money to crew members",
     "message": "Dluh"
+  },
+  "PAINTSHOP": {
+    "description": "Station tab title",
+    "message": "Paintshop"
+  },
+  "PAINTSHOP_NOT_AVAILABLE": {
+    "description": "",
+    "message": "Paintshop is not available in this spaceport."
+  },
+  "PAINTSHOP_WELCOME_0": {
+    "description": "Welcome message to the paintshop.",
+    "message": "Welcome! We will paint your ship pretty!"
+  },
+  "PAINTSHOP_WELCOME_1": {
+    "description": "Welcome message to the paintshop.",
+    "message": "Hi there! Looking for a change in aesthetics?"
+  },
+  "PAINTSHOP_WELCOME_2": {
+    "description": "Welcome message to the paintshop.",
+    "message": "We can't make your ship fly fast, but we can make it fly in style!"
+  },
+  "PAINTSHOP_WELCOME_3": {
+    "description": "Welcome message to the paintshop.",
+    "message": "Welcome, traveller. Please take your time and let out your creativity."
+  },
+  "PAINTSHOP_WELCOME_4": {
+    "description": "Welcome message to the paintshop.",
+    "message": "Looking the best in the galaxy has never been easier!"
+  },
+  "PASSENGER_CABIN_CAPACITY": {
+    "description": "Entry for ship info",
+    "message": "Passenger cabin capacity"
+  },
+  "PATTERN": {
+    "description": "Ship painting pattern.",
+    "message": "Pattern"
   },
   "PAY": {
     "description": "Pay for a transaction of services, e.g. for paying fines, (or repairs)",
@@ -1415,6 +1691,14 @@
     "description": "",
     "message": "Textury planet"
   },
+  "PLEASE_DESIGN_NEW_PAINTJOB": {
+    "description": "",
+    "message": "Please design your new paintjob:"
+  },
+  "PLEASE_REPORT_THIS_ERROR": {
+    "description": "Informational text mentioning the error and asking the player to report it.",
+    "message": "Oops, something went wrong here! Please report the steps to reproduce this error, the output log, and your save file to the Pioneer issue tracker on Github.\nYou can find your output log at: {path}/output.txt"
+  },
   "POLICE": {
     "description": "",
     "message": "Policie"
@@ -1443,9 +1727,17 @@
     "description": "For player reputation",
     "message": "Profesionál"
   },
+  "PROFITABLE_TRADE": {
+    "description": "Indicates a profitable trade route.",
+    "message": "Profitable Trade"
+  },
   "PUMP_DOWN": {
     "description": "Drain the fuel tank",
     "message": "Pump down"
+  },
+  "PURCHASE_PAINTJOB": {
+    "description": "Paintshop button",
+    "message": "Purchase Paintjob"
   },
   "QUALIFICATION_SCORES": {
     "description": "",
@@ -1481,27 +1773,35 @@
   },
   "REFUEL_FULL": {
     "description": "",
-    "message": "Natankovat palivo"
+    "message": "Plnou nádrž"
   },
   "REGISTRATION_NUMBER": {
     "description": "",
-    "message": "Registration number"
+    "message": "Registrační číslo"
   },
   "RELIABLE": {
     "description": "For player reputation",
     "message": "Spolehlivý"
   },
+  "REMOVE": {
+    "description": "Remove, e.g. deleting a log entry",
+    "message": "Prodat"
+  },
   "REMOVE_JUMP": {
     "description": "UI-button: remove hyper jump from list of planned jumps",
-    "message": "Remove Jump"
+    "message": "Odebrat skok"
   },
   "REMOVE_WHEN_COMPLETED": {
     "description": "For UI hyperjump planner, referring to jump target system",
-    "message": "Remove jump when completed"
+    "message": "Po dokončení odstranit skok"
   },
   "REPAIR_X_HULL_DAMAGE_FOR_X": {
     "description": "",
     "message": "Opravit {damage}% poškození trupu za {price}"
+  },
+  "REPLACE_EQUIPMENT_WITH": {
+    "description": "Market header when replacing equipped items",
+    "message": "Replace Equipment With"
   },
   "REPUTATION": {
     "description": "",
@@ -1509,15 +1809,23 @@
   },
   "REQUEST_LAUNCH": {
     "description": "",
-    "message": "Požádat o povolení k odletu"
+    "message": "Vyžádat povolení k letu"
   },
   "REQUIRED_FUEL": {
     "description": "Fuel usage for traveling to star system",
-    "message": "Required Fuel:"
+    "message": "Požadované palivo:"
   },
   "RESET": {
     "description": "",
     "message": "Reset"
+  },
+  "RESET_ORIENTATION_AND_ZOOM": {
+    "description": "",
+    "message": "Reset orientace a zoomu"
+  },
+  "RESET_PREVIEW": {
+    "description": "Paintshop button",
+    "message": "Reset Preview"
   },
   "RETURN_TO_GAME": {
     "description": "",
@@ -1540,16 +1848,16 @@
     "message": "Odměna"
   },
   "ROTATE_VIEW": {
-    "description": "",
-    "message": "Rotate view"
+    "description": "Indicates that the button must be kept pressed down, to rotate camera view with mouse",
+    "message": "Hold down to Rotate view"
   },
   "ROUTE_INFO": {
     "description": "For hyperjump planner",
-    "message": "Route Info"
+    "message": "Informace o trase"
   },
   "ROUTE_JUMPS": {
     "description": "For hyperjump planner",
-    "message": "Route Jumps"
+    "message": "Cestovní skoky"
   },
   "SAFETY_LOCKOUT": {
     "description": "Ship jump status",
@@ -1589,7 +1897,11 @@
   },
   "SELL": {
     "description": "Commodities and equipment prices",
-    "message": "[-]"
+    "message": "Prodat"
+  },
+  "SELL_EQUIPPED": {
+    "description": "Button text to sell selected ship equipment",
+    "message": "Sell Equipped"
   },
   "SENSORS": {
     "description": "",
@@ -1601,11 +1913,27 @@
   },
   "SETTINGS": {
     "description": "UI option",
-    "message": "Settings"
+    "message": "Nastavení"
   },
   "SET_AS_TARGET": {
     "description": "",
     "message": "Set destination as navigation target."
+  },
+  "SET_RETURN_ROUTE": {
+    "description": "",
+    "message": "Nastavit zpáteční trasu"
+  },
+  "SET_TO_45PERCENT_OF_DELTAV": {
+    "description": "For the speed limiter button",
+    "message": "Set to 45% of remaining delta-v"
+  },
+  "SET_TO_CURRENT_VELOCITY": {
+    "description": "For the speed limiter button",
+    "message": "Set to current velocity"
+  },
+  "SET_TO_ZERO": {
+    "description": "For the speed limiter button",
+    "message": "Set to zero"
   },
   "SHIP": {
     "description": "",
@@ -1636,20 +1964,16 @@
     "message": "Obchod s loděmi"
   },
   "SHIP_REPAIRS": {
-    "description": "",
-    "message": "Opravna lodí"
+    "description": "Station tab name",
+    "message": "Ship Repairs & Paintshop"
   },
   "SHIP_TYPE": {
     "description": "",
-    "message": "Ship Type"
-  },
-  "SHIP_VIEWING_WAS_SOLD": {
-    "description": "",
-    "message": "Loď, kterou si prohlížíte, byla prodána"
+    "message": "Typ lodi"
   },
   "SIMULATING_UNIVERSE_EVOLUTION_N_BYEARS": {
     "description": "",
-    "message": "Simulating evolution of the universe: {age} billion years ;-)"
+    "message": "Simulace vývoje vesmíru: {age} miliard let ;-)"
   },
   "SOUND": {
     "description": "",
@@ -1663,21 +1987,13 @@
     "description": "",
     "message": "This is a difficult start from the System Administration Resting prison station."
   },
-  "START_AT_EARTH": {
-    "description": "",
-    "message": "Start: Earth"
-  },
-  "START_AT_EARTH_DESC": {
-    "description": "",
-    "message": "This is an easy start from London on Earth in the Sol system."
-  },
   "START_AT_MARS": {
     "description": "",
-    "message": "Start on Mars"
+    "message": "Start na Marsu"
   },
   "START_AT_MARS_DESC": {
     "description": "",
-    "message": "This is an easy start from Cydonia on Mars in the Sol system."
+    "message": "Toto je snadný start z Cydonie na Marsu v systému Sol."
   },
   "START_AT_NEW_HOPE": {
     "description": "New Hope is an in game location",
@@ -1685,15 +2001,43 @@
   },
   "START_AT_NEW_HOPE_DESC": {
     "description": "",
-    "message": "This is a moderate start from Itzalean on New Hope in the Epsilon Eridani system."
+    "message": "Toto je mírný začátek v Itzaleana na New Hope v systému Epsilon Eridani."
+  },
+  "START_LOG_ENTRY_1": {
+    "description": "First custom log message when starting a new game, giving backstory to the character. Importantly we here hint at what actions the player is best to take: buy fuel, get reputation, ask for take off clearance.",
+    "message": "Unfortunately, uncle never showed me how to operate this old barge when he was alive, but I think I'm making an entry in the ship's log now. It's strange, I can still feel him, as if he's in the very walls of this ship. Maybe he can be my co-pilot, and together we will manifest our destiny in the great void. But first, I just need to buy some hydrogen for the jump drive, plot a course to lucrative trading opportunities, and pray to the heavens that traffic control will allow an inexperienced pilot like me to take off, then we'll see what this baby can do. Time to make a reputation for myself!"
+  },
+  "START_LOG_ENTRY_2": {
+    "description": "First custom log message when starting a new game, giving backstory to the character, here going for a Blade Runner feeling",
+    "message": "My boots are still wet from the heavy rainfall last night, back home. The pavement got so wet it - seemingly, in an act of revenge - drenched the night sky with the reflected glow from the neon signs that looked down on the wet street. But I made it, through the rain, to my connecting flight to the starport where my new ship was waiting for me. The starport security officer gave me a funny look when I told him I'm here to pick up a ship. I guess I didn't look like the typical spacer, having sold everything I had to invest in this rusty old bucket, as I was standing in front of him, wet boots and all. But I truly feel, that from now on, my future will be written in the stars. Now, I just need to find the start-key."
+  },
+  "START_LOG_ENTRY_3": {
+    "description": "First custom log message when starting a new game, giving backstory to the character. Here explaining why there's no hyperdrive in the ship, and what to do about it.",
+    "message": "After a long bureaucratic process, I finally got my ship back from the impound, but they had stripped her down to the bare metal, to pay 'the debt' they claimed I had. Not only did they take my favourite coffee brewer, but those bastards also ripped out the hyper drive, so I'm stuck for now in this system, unless I sell whatever is left in the ship, to finance a new drive. But as they say: when life gives you lemons - make lemonade; so even if I'm back at square one, I will think of this as an opportunity instead of as a setback, a second chance. Without coffee. By letting go of what I am, I will become what I might be. The world will turn aside, and let me pass, as it does for those who know where they are going, and I am heading to the stars."
   },
   "STAR_FIELD_DENSITY": {
     "description": "",
     "message": "Density of Star field"
   },
+  "STAR_FIELD_STAR_SIZE_FACTOR": {
+    "description": "",
+    "message": "Size of stars in star field"
+  },
+  "STATION": {
+    "description": "Flight log info, will refer to a station by name",
+    "message": "Stanice"
+  },
   "STATION_DOCKS": {
     "description": "Information shown in the station lobby, for total number of docking pads",
-    "message": "Our total capacity is {total_docking_pads} docking pads."
+    "message": "Naše celková kapacita je {total_docking_pads} dokovacích podložek."
+  },
+  "STATION_LOCAL_GRAVITY": {
+    "description": "",
+    "message": "Místní gravitace je zde %.2f g."
+  },
+  "STATION_LOCAL_GRAVITY_PRESSURE": {
+    "description": "",
+    "message": "Místní gravitace je zde %.2f g, a atmosférický tlak %.2f atm."
   },
   "STATION_MANAGER": {
     "description": "",
@@ -1705,7 +2049,7 @@
   },
   "STATION_TECH_TOO_LOW": {
     "description": "",
-    "message": "Station tech level too low to sell this item"
+    "message": "Technologická úroveň stanice je příliš nízká, aby bylo možné tuto položku prodat"
   },
   "STATUS": {
     "description": "",
@@ -1713,11 +2057,15 @@
   },
   "TECH_CERTIFIED": {
     "description": "Lobby screen shows the tech level (an integer number) of the station",
-    "message": "This station holds a level {tech_level} technology certificate."
+    "message": "Tato stanice je držitelem technologického certifikátu úrovně {tech_level}."
   },
   "TECH_CERTIFIED_MILITARY": {
     "description": "Lobby screen shows the tech level of the station",
     "message": "This installation holds a military technology clearance."
+  },
+  "TECH_LEVEL": {
+    "description": "System view label for technology level",
+    "message": "Tech level"
   },
   "TEXTURE_COMPRESSION": {
     "description": "",
@@ -1742,6 +2090,14 @@
   "THREE_KPC_ARM": {
     "description": "Arm of the Milky Way galaxy",
     "message": "3kpc arm"
+  },
+  "TOGGLE_CARGO_WINDOW": {
+    "description": "Label for a button toggling the cargo display window.",
+    "message": "Toggle Cargo Window"
+  },
+  "TOGGLE_FULL_COMMS_WINDOW": {
+    "description": "on world view / main screen",
+    "message": "Toggle full comms window"
   },
   "TOGGLE_MALE_FEMALE": {
     "description": "player gender",
@@ -1777,23 +2133,39 @@
   },
   "TOTAL_DISTANCE": {
     "description": "Total distance of a (possibly series) of hyper jump(s)",
-    "message": "Total Distance:"
+    "message": "Celková vzdálenost:"
   },
   "TOTAL_DURATION": {
     "description": "Total duration of a (possibly series) of hyper jump(s)",
-    "message": "Total Duration:"
+    "message": "Délka cesty:"
   },
   "TOTAL_MASS": {
     "description": "",
     "message": "Celková hmotnost"
   },
+  "TRADING_AT": {
+    "description": "Indicates the current system for inspecting commodities.",
+    "message": "At {system}:"
+  },
+  "TRADING_FROM": {
+    "description": "Indicates the source system of a commodity trade.",
+    "message": "Z {system}:"
+  },
   "TRADING_ILLEGAL_GOODS": {
     "description": "",
     "message": "Obchod s nelegálním zbožím"
   },
+  "TRADING_TO": {
+    "description": "Indicates the destination system of a commodity trade.",
+    "message": "Do {system}:"
+  },
   "TRUSTWORTHY": {
     "description": "For player reputation",
     "message": "Věrný"
+  },
+  "TURN_OFF": {
+    "description": "",
+    "message": "Turn off"
   },
   "TYPE": {
     "description": "",
@@ -1802,6 +2174,14 @@
   "UNLAWFUL_WEAPONS_DISCHARGE": {
     "description": "",
     "message": "Nezákonnou střelbu"
+  },
+  "UNOCCUPIED_PASSENGER_CABINS": {
+    "description": "",
+    "message": "Unoccupied Passenger Cabins"
+  },
+  "UNPROFITABLE_TRADE": {
+    "description": "Indicates an unprofitable trade route.",
+    "message": "Neziskový obchod"
   },
   "UNRELIABLE": {
     "description": "",
@@ -1842,6 +2222,14 @@
   "VIDEO_RESOLUTION_DESC": {
     "description": "Tooltip for video mode/resultion setting",
     "message": "Higher resolutions display more information at a smaller size and can decrease performance."
+  },
+  "VISIT_PAINTSHOP": {
+    "description": "Ship Repair tab button.",
+    "message": "Visit Paintshop"
+  },
+  "VISIT_REPAIR_SERVICES": {
+    "description": "Ship Repair tab button.",
+    "message": "Visit Repair Services"
   },
   "VSYNC": {
     "description": "For the checkbox in settings window",

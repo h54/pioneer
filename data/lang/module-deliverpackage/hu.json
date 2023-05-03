@@ -57,7 +57,11 @@
   },
   "FLAVOUR_0_ADTEXT": {
     "description": "",
-    "message": "ÚTBAN VAGY a(z) {system} rendszerbe? Egy kis csomag elviteléért pénzt fizetek."
+    "message": "{system} rendszerbe tart? Fizetek egy kis csomag leszállításáért."
+  },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "CSILLAGKÖZI KISZÁLLÍTÁS"
   },
   "FLAVOUR_0_FAILUREMSG": {
     "description": "",
@@ -77,7 +81,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "KERESEK. Egy olyan személyt, aki elvinne egy csomagot a(z) {system} rendszerbe."
+    "message": "Keres: csomagszállítót {system} rendszerbe."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "FUTÁRT KERESEK"
   },
   "FLAVOUR_1_FAILUREMSG": {
     "description": "",
@@ -97,7 +105,11 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "SÜRGŐS. Egy gyors hajóval kellene csomagot szállítani a(z) {system} rendszerbe."
+    "message": "Sürgős! Gyors hajót keresek egy csomag {system} rendszerbe juttatására."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "SÜRGŐS KÉZBESÍTÉS"
   },
   "FLAVOUR_2_FAILUREMSG": {
     "description": "",
@@ -117,7 +129,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "SZÁLLÍTÁS. Dokumentumok szállítása {system} rendszerbe. A tapasztalt pilóta fizetsége {cash} kredit."
+    "message": "Érzékeny dokumentumok kézbesítése {system} rendszerbe. {cash} fizettség gyakorlott pilóta számára."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "DOKUMENTUM KÉZBESÍTÉS"
   },
   "FLAVOUR_3_FAILUREMSG": {
     "description": "",
@@ -137,7 +153,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "POSTAI SZOLGÁLTATÁS. Szükségünk van egy gyors kézbesítésre a(z) {system} rendszerbe."
+    "message": "Csillagközi Postaszolgálat hajót keres {system} rendszerbe kiszállításra."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "POSTASZOLGÁLAT"
   },
   "FLAVOUR_4_FAILUREMSG": {
     "description": "",
@@ -157,7 +177,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "KÖLTÖZTETÉS. Tárgyak, alkatrészek szállítása a(z) {starport} űrkikötőbe."
+    "message": "Holmi szállítása raktárból {starport} kikötőjébe."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "KÖLTÖZÉS"
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
@@ -177,7 +201,11 @@
   },
   "FLAVOUR_6_ADTEXT": {
     "description": "",
-    "message": "RÖVID TÁVOLSÁGRA FUTÁR. Egy kis csomag szállítását kérném {starport} kikötőjébe."
+    "message": "Rendszer-beli futárszolgáltatót keresünk kis csomag {starport} állomásra kézbesítésre."
+  },
+  "FLAVOUR_6_ADTITLE": {
+    "description": "",
+    "message": "HELYI FUTÁR"
   },
   "FLAVOUR_6_FAILUREMSG": {
     "description": "",
@@ -197,7 +225,11 @@
   },
   "FLAVOUR_7_ADTEXT": {
     "description": "",
-    "message": "BOLYGÓKÖZI SZÁLLÍTÁS. Némi rakomány szállítása {starport} kikötőjébe."
+    "message": "Szabványos bolygóközi szállítási megbízás. Helyi rakomány szállítása {starport} kikötőjébe."
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "BOLYGÓKÖZI SZÁLLÍTÁS"
   },
   "FLAVOUR_7_FAILUREMSG": {
     "description": "",
@@ -217,7 +249,11 @@
   },
   "FLAVOUR_8_ADTEXT": {
     "description": "",
-    "message": "KÖZELI CÉLÁLLOMÁS. Gyors kiszállítás szükséges a(z) {starport} közeli űrkikötőbe."
+    "message": "Sürgős személyes kézbesítési megbízás. Egy tétel gyors kiszállítása {starport} kikötőjébe."
+  },
+  "FLAVOUR_8_ADTITLE": {
+    "description": "",
+    "message": "HELYI KÉZBESÍTÉS"
   },
   "FLAVOUR_8_FAILUREMSG": {
     "description": "",
@@ -237,7 +273,11 @@
   },
   "FLAVOUR_9_ADTEXT": {
     "description": "",
-    "message": "CSOMAGSZÁLLÍTÁS. Sürgős, romlandó áru szállítása {starport} kikötőjébe."
+    "message": "Sürgős romlandó árú kiszállítása {starport} kikötőjébe."
+  },
+  "FLAVOUR_9_ADTITLE": {
+    "description": "",
+    "message": "CSOMAG SZÁLLÍTÁS"
   },
   "FLAVOUR_9_FAILUREMSG": {
     "description": "",
@@ -270,10 +310,6 @@
   "I_HIGHLY_DOUBT_IT": {
     "description": "",
     "message": "Azt erősen kétlem."
-  },
-  "LY": {
-    "description": "",
-    "message": "fé"
   },
   "NOT_ANY_MORE_THAN_USUAL": {
     "description": "",

@@ -35,9 +35,17 @@
     "description": "",
     "message": "Bir hata oluştu"
   },
+  "ARRIVAL_DATE": {
+    "description": "Time of arrival, used in flight log",
+    "message": "Varış tarihi"
+  },
   "ATMOSPHERIC_SHIELDING": {
     "description": "Used in ShipInfo view, followed by a yes/no depending on if the ship can carry atmospheric shields",
     "message": "Atmosfer kalkanı"
+  },
+  "ATMO_PRESS_LIMIT": {
+    "description": "Base external pressure limit of a ship (without atmo shield)",
+    "message": "Atmo. basınç limiti"
   },
   "ATTEMPT_TO_REPAIR_HULL": {
     "description": "",
@@ -48,8 +56,8 @@
     "message": "Otomatik Rota"
   },
   "AVAILABLE_FOR_PURCHASE": {
-    "description": "",
-    "message": "Satın alınabilir"
+    "description": "Market header when buying items",
+    "message": "Satın Alınabilir"
   },
   "AVERAGE": {
     "description": "",
@@ -103,6 +111,10 @@
     "description": "",
     "message": "Kargo"
   },
+  "CARGO_CAPACITY": {
+    "description": "Label to show a ship's total cargo space.",
+    "message": "Kargo Kapasitesi"
+  },
   "CARGO_SPACE": {
     "description": "",
     "message": "Kargo alanı"
@@ -139,6 +151,14 @@
     "description": "Key binding option",
     "message": "Atamayı Değiştir"
   },
+  "CHANGE_COLOR": {
+    "description": "Paintshop button",
+    "message": "Renk Değiştir"
+  },
+  "CHANGE_PATTERN": {
+    "description": "Paintshop button",
+    "message": "Desen Değiştir"
+  },
   "CHIEF_MECHANIC": {
     "description": "",
     "message": "Şef Tamirci"
@@ -171,6 +191,10 @@
     "description": "",
     "message": "Kapat"
   },
+  "COLOR": {
+    "description": "",
+    "message": "Renk"
+  },
   "COMBAT": {
     "description": "Headline for kills and combat rating",
     "message": "Savaş"
@@ -183,9 +207,9 @@
     "description": "",
     "message": "Ticari Mal Pazarı"
   },
-  "COMPACT_RADAR": {
-    "description": "Game settings option",
-    "message": "Sıkıştırılmış radar"
+  "COMMODITY_TRADE_ANALYSIS": {
+    "description": "",
+    "message": "Malın ticari analizi:"
   },
   "COMPETENT": {
     "description": "Combat rating",
@@ -215,6 +239,10 @@
     "description": "",
     "message": "Oyuna devam et"
   },
+  "CONTRACT_FRAUD": {
+    "description": "Crime committed by intentionally breaking a contract",
+    "message": "Sözleşme dolandırıcılığı"
+  },
   "CONTROLS": {
     "description": "",
     "message": "Kontroller"
@@ -243,6 +271,10 @@
     "description": "",
     "message": "Mürettebat Listesi"
   },
+  "CRIMINAL": {
+    "description": "Legal status of player",
+    "message": "Suçlu"
+  },
   "CRIMINAL_RECORD": {
     "description": "Past crimes / crime history of character",
     "message": "Suç kaydı"
@@ -258,6 +290,10 @@
   "DANGEROUS": {
     "description": "Player combat rating",
     "message": "Tehlikeli"
+  },
+  "DATE": {
+    "description": "Date of an event, used in flight log",
+    "message": "Tarih"
   },
   "DEADLY": {
     "description": "Player combat rating",
@@ -283,9 +319,13 @@
     "description": "Delta-v capacity of a ship with cargo bay fully loaded with propellant",
     "message": "Delta-v (en çok)"
   },
-  "DESCENT_TO_GROUND_SPEED": {
-    "description": "",
-    "message": "Yere-alçalma hızı"
+  "DEMAND": {
+    "description": "Column label for commodity demand at a market.",
+    "message": "Talep"
+  },
+  "DEPARTURE_DATE": {
+    "description": "Time of departure, used in flight log",
+    "message": "Ayrılış tarihi"
   },
   "DESTROY_ENEMY_SHIP": {
     "description": "",
@@ -359,6 +399,10 @@
     "description": "",
     "message": "Ekonomi ve Ticaret"
   },
+  "EDIT": {
+    "description": "Tooltip, to edit a flight log entry",
+    "message": "Düzenle"
+  },
   "EFFECTS": {
     "description": "",
     "message": "Efektler:"
@@ -403,6 +447,10 @@
     "description": "Engineering skills of crew",
     "message": "Mühendislik:"
   },
+  "ENTRY": {
+    "description": "A note/entry/record into the flight log",
+    "message": "Girdi"
+  },
   "EQUIPMENT": {
     "description": "",
     "message": "Ekipman"
@@ -438,6 +486,10 @@
   "EXPERT": {
     "description": "For player reputation",
     "message": "Uzman"
+  },
+  "FACTIONS": {
+    "description": "Button to toggle the display of factions on the sector map",
+    "message": "Devletler"
   },
   "FAILED": {
     "description": "When failed mission",
@@ -495,6 +547,46 @@
     "description": "Hyperjump planner, referring to star system target",
     "message": "Son Hedef:"
   },
+  "FINANCE": {
+    "description": "Financial statement of player, e.g. cash",
+    "message": "Finans"
+  },
+  "FLIGHTLOG_DOCKING": {
+    "description": "Used in Flight Log, to indicate player's position. 'primary_info' is a station name",
+    "message": "{primary_info} ile kenetlenirken"
+  },
+  "FLIGHTLOG_FLYING": {
+    "description": "Used in Flight Log, to indicate player's position. 'primary_info' is the name of a space body",
+    "message": "Uzay uçuşunda, {primary_info}'a göre"
+  },
+  "FLIGHTLOG_HYPERSPACE": {
+    "description": "Used in Flight Log, to indicate player's position. 'primary_info' is the star system targeted for hyperspace jump.",
+    "message": "Hiperuzayda, {primary_info} yönünde yolculukta"
+  },
+  "FLIGHTLOG_JUMPING": {
+    "description": "Used in Flight Log, to indicate player's position. 'primary_info' is the star system targeted for hyperspace jump.",
+    "message": "{primary_info} doğrultusunda hipersıçrama yaparken"
+  },
+  "FLIGHTLOG_LANDED": {
+    "description": "Used in Flight Log, to indicate player's position, 'primary_info' is the name of a space body, typically a planet, the other two variables are latitude and longitude as floating point number, e.g. 'Landed on Trantor, position (-43.23, 67.89)'",
+    "message": "{primary_info}, pozisyon ({secondary_info}, {tertiary_info}) inildi."
+  },
+  "FLIGHTLOG_STARPORT_ORBITAL": {
+    "description": "Used in Flight Log, to indicate player's position. 'primary_info' is a station name, 'secondary_info' is a space body (planet, moon/satelite, star) name",
+    "message": "{secondary_info} yörüngesindeki {primary_info} ile kenetli."
+  },
+  "FLIGHTLOG_STARPORT_SURFACE": {
+    "description": "Used in Flight Log, to indicate player's position. 'primary_info' is a station name, 'secondary_info' is a space body (planet, moon/satelite, star) name",
+    "message": "{secondary_info} üzerindeki {primary_info} istasyonuna inildi."
+  },
+  "FLIGHTLOG_UNDOCKING": {
+    "description": "Used in Flight Log, to indicate player's position. 'primary_info' is a station name",
+    "message": "{primary_info}'dan ayrılırken"
+  },
+  "FLIGHT_LOG": {
+    "description": "Title for flight log screen, in info view",
+    "message": "Uçuş Günlüğü"
+  },
   "FLIGHT_STATE": {
     "description": "",
     "message": "Uçuş Durumu"
@@ -514,10 +606,6 @@
   "FORWARD_ACCEL_FULL": {
     "description": "",
     "message": "İleri ivme (dolu)"
-  },
-  "FRACTAL_DETAIL": {
-    "description": "",
-    "message": "Fraktal detay"
   },
   "FREE": {
     "description": "Used in Ship Information view as in Capacity: 10t (5t free)",
@@ -539,6 +627,10 @@
     "description": "",
     "message": "Yakıt ağırlığı"
   },
+  "FUGITIVE": {
+    "description": "Legal status of player",
+    "message": "Firari"
+  },
   "FULL_SCREEN": {
     "description": "",
     "message": "Tam ekran"
@@ -558,6 +650,10 @@
   "GOOD_RIDDANCE_TO_YOU_TOO": {
     "description": "",
     "message": "Sana da iyi şanslar."
+  },
+  "GO_BACK": {
+    "description": "",
+    "message": "Geri"
   },
   "GPU_JOBS": {
     "description": "",
@@ -639,6 +735,30 @@
     "description": "Tooltip: Blastoff",
     "message": "Kalkış"
   },
+  "HUD_BUTTON_CRUISE_FORWARD": {
+    "description": "Tooltip for button",
+    "message": "İleri seyir modu"
+  },
+  "HUD_BUTTON_CRUISE_UP": {
+    "description": "Tooltip for button",
+    "message": "Yukarı seyir modu"
+  },
+  "HUD_BUTTON_DISABLE_AUTOPILOT": {
+    "description": "Tooltip for button",
+    "message": "Otopilotu devre dışı bırak"
+  },
+  "HUD_BUTTON_DISABLE_CRUISE": {
+    "description": "Tooltip for button",
+    "message": "Seyir modunu devre dışı bırak"
+  },
+  "HUD_BUTTON_DISABLE_FIXHEADING": {
+    "description": "Tooltip for button",
+    "message": "Sabit yönelim modunu devre dışı bırak"
+  },
+  "HUD_BUTTON_DISABLE_FOLLOW_MODE": {
+    "description": "Tooltip for button",
+    "message": "Takip modunu devre dışı bırak"
+  },
   "HUD_BUTTON_EQUIPMENT": {
     "description": "Tooltip: Equipment",
     "message": "Ekipman"
@@ -719,10 +839,6 @@
     "description": "Tooltip: Rotation damping is on",
     "message": "Dönüş durdurma açık"
   },
-  "HUD_BUTTON_SCANNER": {
-    "description": "Tooltip: Scanner",
-    "message": "Tarayıcı"
-  },
   "HUD_BUTTON_SET_SPEED": {
     "description": "Tooltip: set speed",
     "message": "Hızı ayarla"
@@ -766,6 +882,10 @@
   "HUD_CARGO_MASS": {
     "description": "Cargo Mass",
     "message": "Kargo Kütlesi"
+  },
+  "HUD_CRUISE_SPEED": {
+    "description": "Tooltip for cruise speed indicator",
+    "message": "Seyir hızı"
   },
   "HUD_CURRENT_COMBAT_TARGET": {
     "description": "Tooltip: The current combat target.",
@@ -818,6 +938,34 @@
   "HUD_DURATION_UNTIL_MANEUVER_BURN": {
     "description": "Tooltip: The duration until the middle of the maneuver burn.",
     "message": "Manevranın ortasına kadar geçecek süre"
+  },
+  "HUD_FOLLOW_ORIENTATION": {
+    "description": "Tooltip for follow mode 'orientation' button",
+    "message": "{targetname}: Yönelimi takip et"
+  },
+  "HUD_FOLLOW_ORIENTATION_NOT_AVAILABLE": {
+    "description": "Tooltip for follow mode 'orientation' button, when it's not available for the current object.",
+    "message": "{targetname}: Yönelim takibi mümkün değil."
+  },
+  "HUD_FOLLOW_ORIENTATION_NOT_AVAILABLE_TOO_FAR": {
+    "description": "Tooltip for follow mode 'orientation' button, when it's not available for the current object, because it's too far.",
+    "message": "{targetname}: Yönelim takibi mümkün değil - çok uzak."
+  },
+  "HUD_FOLLOW_POSITION": {
+    "description": "Tooltip for follow mode 'position' button",
+    "message": "{targetname}: Konumu takip et"
+  },
+  "HUD_FOLLOW_POSITION_NOT_AVAILABLE": {
+    "description": "Tooltip for follow mode 'position' button, when it's not available for the current object.",
+    "message": "{targetname}: Konum takibi mümkün değil."
+  },
+  "HUD_FOLLOW_POSITION_NOT_AVAILABLE_TOO_FAR": {
+    "description": "Tooltip for follow mode 'position' button, when it's not available for the current object, because it's too far.",
+    "message": "{targetname}: Konum takibi mümkün değil - çok uzak."
+  },
+  "HUD_FOLLOW_TARGET": {
+    "description": "Tooltip for followed target's name in reticule",
+    "message": "Hedefi takip et"
   },
   "HUD_FORWARD_GUN_TEMPERATURE": {
     "description": "Tooltip: Forward Gun Temperature.",
@@ -903,6 +1051,10 @@
     "description": "Tooltip: Show current navigational target.",
     "message": "Şu anki navigasyon hedefini göster"
   },
+  "HUD_SPEED_LIMITER_ACTIVE": {
+    "description": "Tooltip for the icon in the reticule that appears if the speed limiter is active",
+    "message": "Hız sınırlayıcı aktif"
+  },
   "HUD_SPEED_OF_APPROACH_TO_FRAME": {
     "description": "Tooltip: The speed of approach towards the frame of reference.",
     "message": "Referans karesine yaklaşım hızı"
@@ -918,6 +1070,18 @@
   "HUD_THRUST_INDICATOR": {
     "description": "Tooltip: describe what the thrust/velocity indicator shows",
     "message": "Bütün yönler için anık hızı (ince çizgiler) ve itiş gücünü (kalın arkaplan) göster."
+  },
+  "HUD_WARNING_DESCENT_RATE": {
+    "description": "Shown on HUD as a warning flasher",
+    "message": "ALÇALMA HIZI"
+  },
+  "HUD_WARNING_IMPACT": {
+    "description": "Alert tooltip",
+    "message": "Çarpışma uyarısı"
+  },
+  "HUD_WARNING_IMPACT_IMMINENT": {
+    "description": "Alert tooltip",
+    "message": "Yüksek çarpışma riski"
   },
   "HULL_DOES_NOT_REQUIRE_REPAIR": {
     "description": "",
@@ -950,6 +1114,10 @@
   "HYPERSPACE_RANGE": {
     "description": "",
     "message": "Üstuzay menzili"
+  },
+  "ILLEGAL_IN_SYSTEM": {
+    "description": "An illegal action or commodity",
+    "message": "Sistemde Yasadışı"
   },
   "ILLEGAL_JUMP": {
     "description": "A finable crime",
@@ -987,6 +1155,10 @@
     "description": "",
     "message": "Yeteriz para."
   },
+  "INTERSTELLAR_TRADE_AVG": {
+    "description": "Label displaying commodity flow at a per-system level",
+    "message": "Yıldızlararası Ticaret"
+  },
   "INVERT_MOUSE_Y": {
     "description": "",
     "message": "Ters Fare Y"
@@ -999,6 +1171,10 @@
     "description": "",
     "message": "Stok"
   },
+  "IN_SYSTEM": {
+    "description": "Used in flight log, show which star system we are/were in",
+    "message": "Sistem:"
+  },
   "ITEM_IS_OUT_OF_STOCK": {
     "description": "",
     "message": "Bu ürün stokta yok."
@@ -1010,6 +1186,10 @@
   "JETTISON": {
     "description": "",
     "message": "Fırlat"
+  },
+  "JETTISON_MODE": {
+    "description": "",
+    "message": "Yük Atma Modu"
   },
   "JUMPING": {
     "description": "Flight State",
@@ -1038,6 +1218,18 @@
   "LAUNCH_PERMISSION_DENIED_FINED": {
     "description": "",
     "message": "Kalkış izni reddedildi: ödenmemiş borcunuz var."
+  },
+  "LAUNCH_PERMISSION_GRANTED": {
+    "description": "",
+    "message": "Kalkış izni verildi."
+  },
+  "LAUNCH_PERMISSION_GRANTED_DEPART_QUICK": {
+    "description": "",
+    "message": "İzin verildi. Lütfen iniş alanında yoğunluk oluşturmayın ve hızlıca ayrılın."
+  },
+  "LAUNCH_PERMISSION_GRANTED_WATCH_TRAFFIC": {
+    "description": "",
+    "message": "İzin verildi. Lütfen ayrılırken trafiğe dikkat edin."
   },
   "LEGAL_STATUS": {
     "description": "",
@@ -1091,6 +1283,22 @@
     "description": "",
     "message": "Konum"
   },
+  "LOG_CUSTOM": {
+    "description": "Label tab for showing custom logged events",
+    "message": "Özel Günlük"
+  },
+  "LOG_NEW": {
+    "description": "Indicate to make an entry into flight log system",
+    "message": "Yeni Girdi"
+  },
+  "LOG_STATION": {
+    "description": "Label tab for showing logged station events",
+    "message": "İstasyon Günlüğü"
+  },
+  "LOG_SYSTEM": {
+    "description": "Label tab for showing logged system events",
+    "message": "Sistem Günlüğü"
+  },
   "LOW": {
     "description": "",
     "message": "Düşük"
@@ -1099,13 +1307,13 @@
     "description": "Light year",
     "message": "ıy"
   },
-  "MAJOR_EXPORTS_ITEM": {
-    "description": "",
-    "message": "Ana ihracatlar"
+  "MAJOR_EXPORT": {
+    "description": "For displaying commodity information",
+    "message": "Ana İhracat"
   },
-  "MAJOR_IMPORTS_ITEM": {
-    "description": "",
-    "message": "Ana ithalatlar"
+  "MAJOR_IMPORT": {
+    "description": "For displaying commodity information",
+    "message": "Ana İthalat"
   },
   "MAKE_NEW_FACE": {
     "description": "",
@@ -1179,17 +1387,21 @@
     "description": "",
     "message": "Askeri"
   },
+  "MINIMAL_TRADE": {
+    "description": "Indicates a system does not have a significant amount of trade in a commodity.",
+    "message": "Minimal Ticaret"
+  },
   "MINIMUM_CREW": {
     "description": "",
     "message": "En az mürettebat"
   },
-  "MINOR_EXPORTS_ITEM": {
-    "description": "",
-    "message": "Yan ihracatlar"
+  "MINOR_EXPORT": {
+    "description": "For displaying commodity information",
+    "message": "İkincil İhracat"
   },
-  "MINOR_IMPORTS_ITEM": {
-    "description": "",
-    "message": "Yan ithalatlar"
+  "MINOR_IMPORT": {
+    "description": "For displaying commodity information",
+    "message": "İkincil İthalat"
   },
   "MISSILE_MOUNTS": {
     "description": "",
@@ -1259,6 +1471,10 @@
     "description": "",
     "message": "Uzlaş"
   },
+  "NEW_PAINTJOB_APPLIED": {
+    "description": "Paintshop popup",
+    "message": "Yeni boya tasarımı geminize uygulandı."
+  },
   "NEXT_FACE_FEATURE": {
     "description": "Face feature switch button for FaceGenerator in the PersonalInfo view",
     "message": "Sonraki"
@@ -1299,6 +1515,14 @@
     "description": "",
     "message": "{equipment} bu gemi modelini tarafından desteklenmiyor"
   },
+  "NO_AVAILABLE_DATA": {
+    "description": "Message displaying no stored data available",
+    "message": "Veri mevcut değil"
+  },
+  "NO_CARGO": {
+    "description": "Message displayed when the player has no cargo in their hold.",
+    "message": "KARGO YOK"
+  },
   "NO_DRIVE": {
     "description": "Ship jump status",
     "message": "Sürücü yok"
@@ -1310,6 +1534,10 @@
   "NO_MISSIONS": {
     "description": "",
     "message": "Görev yok."
+  },
+  "NO_VALID_ROUTE": {
+    "description": "Message in the sector map, issued by the autoroute function.",
+    "message": "Seçili sisteme geçerli bir rota yok."
   },
   "N_LIGHT_YEARS_N_MAX": {
     "description": "",
@@ -1327,9 +1555,17 @@
     "description": "",
     "message": "{quantity} Dolu Yolcu Kabini"
   },
+  "OCCUPIED_PASSENGER_CABINS": {
+    "description": "",
+    "message": "Dolu Yolcu Kabinleri"
+  },
   "OFF": {
     "description": "",
     "message": "Kapalı"
+  },
+  "OFFENDER": {
+    "description": "Legal status of player",
+    "message": "Sabıkalı"
   },
   "OK": {
     "description": "",
@@ -1347,17 +1583,21 @@
     "description": "",
     "message": "Yörünge"
   },
-  "ORBITAL_ANALYSIS": {
-    "description": "",
-    "message": "Yörünge Analizi"
+  "ORBIT_APOAPSIS": {
+    "description": "Label for the point of an orbit furthest from the orbited body",
+    "message": "Yeröte"
   },
-  "ORBITAL_ANALYSIS_NOTES": {
-    "description": "",
-    "message": "Dairesel yörünge hızı teğet hız için verilmiştir. Gemi {name} eksenine 90° yönünde hareket ediyor olmalıdır.\n\nAlçalma hızı mutlak en az ve yine teğettir. Daha düşük bir hız veya açı {name} yüzeyiyle kesişen bir rotaya neden olacaktır.\n\nKaçış hızı , gemi {name} ile yol üstünde çarpışmadığı sürece, teorik olarak her hangi bir yönde işleyecektir.\n "
+  "ORBIT_PERIAPSIS": {
+    "description": "Label for the point of an orbit nearest to the orbited body",
+    "message": "Yerberi"
   },
   "OUTER_ARM": {
     "description": "Arm of the Milky Way galaxy",
     "message": "Dış kol"
+  },
+  "OUTLAW": {
+    "description": "Legal status of player",
+    "message": "Kanun Kaçağı"
   },
   "OUTSTANDING_FINES": {
     "description": "Unpaid fines for crimes committed",
@@ -1374,6 +1614,42 @@
   "OWED": {
     "description": "Player owing money to crew members",
     "message": "Borç"
+  },
+  "PAINTSHOP": {
+    "description": "Station tab title",
+    "message": "Boya Atölyesi"
+  },
+  "PAINTSHOP_NOT_AVAILABLE": {
+    "description": "",
+    "message": "Bu uzay limanında bir boya atölyesi mevcut değil."
+  },
+  "PAINTSHOP_WELCOME_0": {
+    "description": "Welcome message to the paintshop.",
+    "message": "Hoşgeldiniz! Geminize zarafet katacağız!"
+  },
+  "PAINTSHOP_WELCOME_1": {
+    "description": "Welcome message to the paintshop.",
+    "message": "Selam! Estetik bir değişiklik mi arıyorsunuz?"
+  },
+  "PAINTSHOP_WELCOME_2": {
+    "description": "Welcome message to the paintshop.",
+    "message": "Geminizin daha hızlı uçmasını sağlayamayız, ama klas bir şekilde uçmasını sağlayabiliriz."
+  },
+  "PAINTSHOP_WELCOME_3": {
+    "description": "Welcome message to the paintshop.",
+    "message": "Hoşgeldin, gezgin. Lütfen acele etme ve yaratıcılığını ortaya koy."
+  },
+  "PAINTSHOP_WELCOME_4": {
+    "description": "Welcome message to the paintshop.",
+    "message": "Galakside en güzel görünmek hiç daha kolay olmamıştı!"
+  },
+  "PASSENGER_CABIN_CAPACITY": {
+    "description": "Entry for ship info",
+    "message": "Yolcu kabini kapasitesi"
+  },
+  "PATTERN": {
+    "description": "Ship painting pattern.",
+    "message": "Desen"
   },
   "PAY": {
     "description": "Pay for a transaction of services, e.g. for paying fines, (or repairs)",
@@ -1415,6 +1691,14 @@
     "description": "",
     "message": "Gezegen dokuları"
   },
+  "PLEASE_DESIGN_NEW_PAINTJOB": {
+    "description": "",
+    "message": "Lütfen yeni boya kaplamasını tasarlayın:"
+  },
+  "PLEASE_REPORT_THIS_ERROR": {
+    "description": "Informational text mentioning the error and asking the player to report it.",
+    "message": "Hay aksi, bireşyler ters gitti! Lütfen bu hatayı alırken izlenilen adımları, çıktı günlüğünü ve kayıt dosyanızı Github'daki Pioneer sorun takipçisine rapor edin.\nÇıktı günlüğünü şurada bulabilirsiniz: {path}/output.txt"
+  },
   "POLICE": {
     "description": "",
     "message": "Polis"
@@ -1443,9 +1727,17 @@
     "description": "For player reputation",
     "message": "Profesyonel"
   },
+  "PROFITABLE_TRADE": {
+    "description": "Indicates a profitable trade route.",
+    "message": "Kazançlı Ticaret"
+  },
   "PUMP_DOWN": {
     "description": "Drain the fuel tank",
     "message": "Geri pompala"
+  },
+  "PURCHASE_PAINTJOB": {
+    "description": "Paintshop button",
+    "message": "Tasarımı Satın Al"
   },
   "QUALIFICATION_SCORES": {
     "description": "",
@@ -1491,6 +1783,10 @@
     "description": "For player reputation",
     "message": "Güvenilir"
   },
+  "REMOVE": {
+    "description": "Remove, e.g. deleting a log entry",
+    "message": "Kaldır"
+  },
   "REMOVE_JUMP": {
     "description": "UI-button: remove hyper jump from list of planned jumps",
     "message": "Sıçramayı Kaldır"
@@ -1502,6 +1798,10 @@
   "REPAIR_X_HULL_DAMAGE_FOR_X": {
     "description": "",
     "message": "%{damage} gövde hasarını {price} için tamir et"
+  },
+  "REPLACE_EQUIPMENT_WITH": {
+    "description": "Market header when replacing equipped items",
+    "message": "Ekipmanı Şununla Değiştir"
   },
   "REPUTATION": {
     "description": "",
@@ -1518,6 +1818,14 @@
   "RESET": {
     "description": "",
     "message": "Yeniden başlat"
+  },
+  "RESET_ORIENTATION_AND_ZOOM": {
+    "description": "",
+    "message": "Yönelim ve Yakınlaştırmayı Sıfırla"
+  },
+  "RESET_PREVIEW": {
+    "description": "Paintshop button",
+    "message": "Önizlemeyi Sıfırla"
   },
   "RETURN_TO_GAME": {
     "description": "",
@@ -1540,8 +1848,8 @@
     "message": "Ödül"
   },
   "ROTATE_VIEW": {
-    "description": "",
-    "message": "Görünümü döndür"
+    "description": "Indicates that the button must be kept pressed down, to rotate camera view with mouse",
+    "message": "Görünümü döndürmek için basılı tutun"
   },
   "ROUTE_INFO": {
     "description": "For hyperjump planner",
@@ -1591,6 +1899,10 @@
     "description": "Commodities and equipment prices",
     "message": "Sat"
   },
+  "SELL_EQUIPPED": {
+    "description": "Button text to sell selected ship equipment",
+    "message": "Ekipmanı Sat"
+  },
   "SENSORS": {
     "description": "",
     "message": "Algılayıcılar:"
@@ -1606,6 +1918,22 @@
   "SET_AS_TARGET": {
     "description": "",
     "message": "Varış noktasını navigasyon hedefi olarak seç."
+  },
+  "SET_RETURN_ROUTE": {
+    "description": "",
+    "message": "Dönüş yolunu seç"
+  },
+  "SET_TO_45PERCENT_OF_DELTAV": {
+    "description": "For the speed limiter button",
+    "message": "Kalan delta-v'nin %45'ine ayarla"
+  },
+  "SET_TO_CURRENT_VELOCITY": {
+    "description": "For the speed limiter button",
+    "message": "Şu anki hıza ayarla"
+  },
+  "SET_TO_ZERO": {
+    "description": "For the speed limiter button",
+    "message": "Sıfıra ayarla"
   },
   "SHIP": {
     "description": "",
@@ -1636,16 +1964,12 @@
     "message": "Gemi Pazarı"
   },
   "SHIP_REPAIRS": {
-    "description": "",
-    "message": "Gemi Tamiri"
+    "description": "Station tab name",
+    "message": "Gemi Tamiri & Boya Atölyesi"
   },
   "SHIP_TYPE": {
     "description": "",
     "message": "Gemi Tipi"
-  },
-  "SHIP_VIEWING_WAS_SOLD": {
-    "description": "",
-    "message": "Bakmakta oldunuz gemi satıldı."
   },
   "SIMULATING_UNIVERSE_EVOLUTION_N_BYEARS": {
     "description": "",
@@ -1663,14 +1987,6 @@
     "description": "",
     "message": "Bu, System Administration Resting hapishane istasyonundan yapılan zor başlangıç."
   },
-  "START_AT_EARTH": {
-    "description": "",
-    "message": "Dünya'da Başla"
-  },
-  "START_AT_EARTH_DESC": {
-    "description": "",
-    "message": "Bu, Sol sistemindeki Dünya'da bulunan Londra'dan yapılan kolay başlangıç."
-  },
   "START_AT_MARS": {
     "description": "",
     "message": "Mars'ta Başla"
@@ -1687,13 +2003,41 @@
     "description": "",
     "message": "Bu, Epsilon Eridani sistemindeki New Hope'ta bulunan Itzaelan'dan yapılan orta zorluktaki başlangıç."
   },
+  "START_LOG_ENTRY_1": {
+    "description": "First custom log message when starting a new game, giving backstory to the character. Importantly we here hint at what actions the player is best to take: buy fuel, get reputation, ask for take off clearance.",
+    "message": "Ne yazık ki amcam hayattayken bana bu yaşlı teknenin nasıl kullanılacağını öğretmedi, ama sanıyorum ki şu an geminin günlüğüne giriş yapıyorum. Çok tuhaf, onu hâlâ hissedebiliyorum, sanki bu geminin duvarlarındaymış gibi. Belki benim yardımcı pilotum olur ve devasa boşlukta kaderimizi buluruz. Ama ilk olarak sıçrama sürücüsü için hidrojen almam, ticaret fırsatlarına bir rota çizmem ve trafik kontrolün benim gibi tecrübesiz bir pilota kalış izni vermesi için dua etmem lazım; sonra bu bebeğin neler yapabildiğini görürüz. Kendime isim yapma zamanı!"
+  },
+  "START_LOG_ENTRY_2": {
+    "description": "First custom log message when starting a new game, giving backstory to the character, here going for a Blade Runner feeling",
+    "message": "Botlarım geçen gece eve giderken başlayan sağanak yağmurdan dolayı hala ıslak. Kaldırım öyle ıslanmış ki - sanki intikam almak istercesine - sokağın üstünde parlayan neon ışıkları yansıtarak gece göğünü ışığa boğmuş. Ancak yine de, yağmura rağmen, beni yeni gemimin beklediği yıldız limanına götürecek aktarma uçuşunu yakaladım. Gemime gitmek istediğimi söylediğimde istasyondaki güvenlik görevlisi bana ters bir bakış attı. Sanırım her şeyimi bu paslı teneke için harcadığımdan tipik bir uzay pilotuna benzemiyordum, böyle ıslak botlarla falan. Ancak hissedebiliyorum ki, şu andan itibaren geleceğim yıldızlarda yazılacak. Yapmam gereken tek şey başlatma tuşunu bulmak."
+  },
+  "START_LOG_ENTRY_3": {
+    "description": "First custom log message when starting a new game, giving backstory to the character. Here explaining why there's no hyperdrive in the ship, and what to do about it.",
+    "message": "Uzun bir bürokratik süreçten sonra gemimi nihayet hacizden kurtardım, ama sözde borcumu ödemek için iskeletine kadar her şeyi sökmüşler. En sevdiğim kahve makinem bir yana, bu adiler hipersürücüyü de götürmüşler, o yüzden şimdilik bu sistemde sıkışıp kaldım. Eh, belki gemide kalan son şeyleri satıp bir hipersürücü alabilirim... Ama ne derler bilirsiniz; krizi fırsata çevirmeli; şu an en başa dönmüş de olsam, bu gerilemeyi yeni bir başlangıç olarak göreceğim. Kahvesiz bir başlangıç. Kim olduğumu geride bırakıp kim olacağıma odaklanacağım. Dünya önümden çekilip yolumu açacak, yolunu bilen herkese yaptığı gibi - ve ben yıldızlara gidiyorum."
+  },
   "STAR_FIELD_DENSITY": {
     "description": "",
     "message": "Yıldız Yoğunluğu"
   },
+  "STAR_FIELD_STAR_SIZE_FACTOR": {
+    "description": "",
+    "message": "Arkaplan yıldızlarının boyutu"
+  },
+  "STATION": {
+    "description": "Flight log info, will refer to a station by name",
+    "message": "İstasyon"
+  },
   "STATION_DOCKS": {
     "description": "Information shown in the station lobby, for total number of docking pads",
     "message": "Toplam kapasitemiz {total_docking_pads} kenetlenme platformudur."
+  },
+  "STATION_LOCAL_GRAVITY": {
+    "description": "",
+    "message": "Burada yerel kütleçekimi %.2f g."
+  },
+  "STATION_LOCAL_GRAVITY_PRESSURE": {
+    "description": "",
+    "message": "Burada yerel kütleçekimi %.2f g, atmosfer basıncı %.2f atm."
   },
   "STATION_MANAGER": {
     "description": "",
@@ -1719,6 +2063,10 @@
     "description": "Lobby screen shows the tech level of the station",
     "message": "Bu yerleşimde askeri teknoloji belgesi var."
   },
+  "TECH_LEVEL": {
+    "description": "System view label for technology level",
+    "message": "Teknoloji seviyesi"
+  },
   "TEXTURE_COMPRESSION": {
     "description": "",
     "message": "Bu, muhtemelen sizin de isteyeceğiniz gibi, dokuları oyun başlangıcında sıkıştırarak grafik kartına daha fazla bellek ayırır."
@@ -1742,6 +2090,14 @@
   "THREE_KPC_ARM": {
     "description": "Arm of the Milky Way galaxy",
     "message": "3kpc kolu"
+  },
+  "TOGGLE_CARGO_WINDOW": {
+    "description": "Label for a button toggling the cargo display window.",
+    "message": "Kargo Penceresi"
+  },
+  "TOGGLE_FULL_COMMS_WINDOW": {
+    "description": "on world view / main screen",
+    "message": "Tam iletişim penceresini aç/kapat"
   },
   "TOGGLE_MALE_FEMALE": {
     "description": "player gender",
@@ -1787,13 +2143,29 @@
     "description": "",
     "message": "Toplam kütle"
   },
+  "TRADING_AT": {
+    "description": "Indicates the current system for inspecting commodities.",
+    "message": "{system} sisteminde:"
+  },
+  "TRADING_FROM": {
+    "description": "Indicates the source system of a commodity trade.",
+    "message": "Alış: {system}:"
+  },
   "TRADING_ILLEGAL_GOODS": {
     "description": "",
     "message": "Kanun dışı mal ticareti"
   },
+  "TRADING_TO": {
+    "description": "Indicates the destination system of a commodity trade.",
+    "message": "Satış: {system}:"
+  },
   "TRUSTWORTHY": {
     "description": "For player reputation",
     "message": "İtimat edilir"
+  },
+  "TURN_OFF": {
+    "description": "",
+    "message": "Kapat"
   },
   "TYPE": {
     "description": "",
@@ -1802,6 +2174,14 @@
   "UNLAWFUL_WEAPONS_DISCHARGE": {
     "description": "",
     "message": "Kanun dışı silah kullanımı"
+  },
+  "UNOCCUPIED_PASSENGER_CABINS": {
+    "description": "",
+    "message": "Boş Yolcu Kabinleri"
+  },
+  "UNPROFITABLE_TRADE": {
+    "description": "Indicates an unprofitable trade route.",
+    "message": "Kazançsız Ticaret"
   },
   "UNRELIABLE": {
     "description": "",
@@ -1842,6 +2222,14 @@
   "VIDEO_RESOLUTION_DESC": {
     "description": "Tooltip for video mode/resultion setting",
     "message": "Yüksek çözünürlük, ekrana daha fazla ve daha küçük bilgiler gönderir, performansı düşürebilir."
+  },
+  "VISIT_PAINTSHOP": {
+    "description": "Ship Repair tab button.",
+    "message": "Boya Atölyesini Ziyaret Et"
+  },
+  "VISIT_REPAIR_SERVICES": {
+    "description": "Ship Repair tab button.",
+    "message": "Tamir Hizmetlerini Ziyaret Et"
   },
   "VSYNC": {
     "description": "For the checkbox in settings window",

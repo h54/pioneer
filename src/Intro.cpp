@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Intro.h"
@@ -6,6 +6,7 @@
 #include "Lang.h"
 #include "Pi.h"
 #include "galaxy/Galaxy.h"
+#include "galaxy/GalaxyGenerator.h"
 #include "graphics/Graphics.h"
 #include "graphics/Renderer.h"
 #include "graphics/TextureBuilder.h"
@@ -13,11 +14,20 @@
 #include "scenegraph/SceneGraph.h"
 #include <algorithm>
 
-struct PiRngWrapper {
-	unsigned int operator()(unsigned int n)
+class PiRngWrapper {
+public:
+	PiRngWrapper(size_t maxValue) :
+		maxVal(maxValue) {}
+	typedef unsigned int result_type;
+	static constexpr unsigned int min() { return 0; }
+	static constexpr unsigned int max() { return std::numeric_limits<uint32_t>::max(); }
+	unsigned int operator()()
 	{
-		return Pi::rng.Int32(n);
+		return Pi::rng.Int32(maxVal);
 	}
+
+private:
+	const int32_t maxVal;
 };
 
 Intro::Intro(Graphics::Renderer *r, int width, int height) :
@@ -25,7 +35,7 @@ Intro::Intro(Graphics::Renderer *r, int width, int height) :
 {
 	using Graphics::Light;
 
-	m_background.reset(new Background::Container(r, Pi::rng, nullptr, RefCountedPtr<Galaxy>()));
+	RefreshBackground(r);
 	m_ambientColor = Color::BLANK;
 
 	const Color one = Color::WHITE;
@@ -56,13 +66,11 @@ Intro::Intro(Graphics::Renderer *r, int width, int height) :
 		const Uint32 numMats = model->GetNumMaterials();
 		for (Uint32 m = 0; m < numMats; m++) {
 			RefCountedPtr<Graphics::Material> mat = model->GetMaterialByIndex(m);
-			mat->specialParameter0 = nullptr;
 		}
 		m_models.push_back(model);
 	}
 
-	PiRngWrapper rng;
-	std::random_shuffle(m_models.begin(), m_models.end(), rng);
+	std::shuffle(m_models.begin(), m_models.end(), PiRngWrapper(m_models.size()));
 
 	m_modelIndex = 0;
 
@@ -82,6 +90,13 @@ Intro::~Intro()
 {
 	for (std::vector<SceneGraph::Model *>::iterator i = m_models.begin(); i != m_models.end(); ++i)
 		delete (*i);
+}
+
+void Intro::RefreshBackground(Graphics::Renderer *r)
+{
+	const SystemPath s(0, 0, 0);
+	RefCountedPtr<Galaxy> galaxy(GalaxyGenerator::Create());
+	m_background.reset(new Background::Container(r, Pi::rng, nullptr, galaxy, &s));
 }
 
 void Intro::Reset()
@@ -143,7 +158,7 @@ void Intro::Draw(float deltaTime)
 	m_renderer->ClearDepthBuffer();
 	m_background->Draw(brot);
 
-	m_renderer->SetViewport(m_spinnerLeft, 0, m_spinnerWidth, Graphics::GetScreenHeight());
+	m_renderer->SetViewport({ m_spinnerLeft, 0, m_spinnerWidth, Graphics::GetScreenHeight() });
 	m_renderer->SetPerspectiveProjection(75, m_spinnerRatio, 1.f, 10000.f);
 
 	matrix4x4f trans =

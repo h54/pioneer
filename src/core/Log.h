@@ -1,12 +1,12 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #pragma once
 
 #include "DateTime.h"
-#include "nonstd/string_view.hpp"
 #include <fmt/format.h>
 #include <sigc++/signal.h>
+#include <string_view>
 
 namespace Log {
 	enum class Severity : int8_t {
@@ -24,7 +24,7 @@ namespace Log {
 		// Handle formatting, indentation, etc.
 		// Prefer the Verbose, Info, Warning, etc. functions instead of directly using this one
 		void LogLevel(Severity sv, std::string &message);
-		void LogLevel(Severity sv, nonstd::string_view message);
+		void LogLevel(Severity sv, std::string_view message);
 		void LogLevel(Severity sv, const char *message);
 
 		bool SetLogFile(std::string filename);
@@ -33,8 +33,11 @@ namespace Log {
 		Severity GetSeverity() { return m_maxSeverity; }
 		void SetSeverity(Severity sv) { m_maxSeverity = sv; }
 
-		Severity GetFileSeverity() { return m_maxSeverity; }
+		Severity GetFileSeverity() { return m_maxFileSeverity; }
 		void SetFileSeverity(Severity sv) { m_maxFileSeverity = sv; }
+
+		Severity GetMsgSeverity() { return m_maxMsgSeverity; }
+		void SetMsgSeverity(Severity sv) { m_maxMsgSeverity = sv; }
 
 		void IncreaseIndent() { current_indent += 1; }
 		void DecreaseIndent()
@@ -42,14 +45,15 @@ namespace Log {
 			if (current_indent) current_indent -= 1;
 		}
 
-		sigc::signal<void, Time::DateTime, Severity, nonstd::string_view> printCallback;
+		sigc::signal<void, Time::DateTime, Severity, std::string_view> printCallback;
 
 	private:
-		void WriteLog(Time::DateTime t, Severity sv, nonstd::string_view msg);
+		void WriteLog(Time::DateTime t, Severity sv, std::string_view msg);
 
 		FILE *file;
 		Severity m_maxSeverity = Severity::Info;
-		Severity m_maxFileSeverity = Severity::Verbose;
+		Severity m_maxFileSeverity = Severity::Debug;
+		Severity m_maxMsgSeverity = Severity::Error;
 		uint8_t current_indent;
 		std::string m_logName;
 	};

@@ -25,7 +25,7 @@
   },
   "CORPORATIONS_4": {
     "description": "",
-    "message": "Aquarians Skeppbyggare"
+    "message": "Aquarians Skeppsbyggare"
   },
   "CORPORATIONS_5": {
     "description": "",
@@ -37,7 +37,7 @@
   },
   "CORPORATIONS_7": {
     "description": "",
-    "message": "Marettrymd"
+    "message": "Marett Space"
   },
   "CORPORATIONS_8": {
     "description": "",
@@ -101,7 +101,11 @@
   },
   "FLAVOUR_0_ADTEXT": {
     "description": "",
-    "message": "ÖNSKAS: Transport för en liten grupp till {system} systemet. Betalar {cash}."
+    "message": "Önskas: Passage för en liten grupp till {system}-systemet. Betalar {cash}."
+  },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "ÖVERFART ÖNSKAS"
   },
   "FLAVOUR_0_DANGER": {
     "description": "",
@@ -133,7 +137,11 @@
   },
   "FLAVOUR_10_ADTEXT": {
     "description": "",
-    "message": "SKEPP ÖNSKAS: Transport på ett snabbt skepp till {system} systemet."
+    "message": "VIP behöver omedelbar överfart till {system} systemet. Önskar ett snabbt skepp och inga frågor ställda."
+  },
+  "FLAVOUR_10_ADTITLE": {
+    "description": "",
+    "message": "SKEPP OCH DISKRETION ÖNSKAS"
   },
   "FLAVOUR_10_DANGER": {
     "description": "",
@@ -149,7 +157,7 @@
   },
   "FLAVOUR_10_INTROTEXT": {
     "description": "",
-    "message": "Mitt namn är {name}- Jag vill ha en snabb transport till {system} ({sectorx}, {sectory}, {sectorz}) systemet, ett avstånd på {dist} ly. Betalar {cash}."
+    "message": "Mitt namn är {name}. Jag vill ha en snabb transport till {system} ({sectorx}, {sectory}, {sectorz}) systemet, ett avstånd på {dist} ly. Jag betalar {cash}."
   },
   "FLAVOUR_10_SUCCESSMSG": {
     "description": "",
@@ -165,7 +173,11 @@
   },
   "FLAVOUR_11_ADTEXT": {
     "description": "",
-    "message": "SNABBT SKEPP: Transport på ett snabbt skepp till {system} systemet."
+    "message": "Företagsinspektör behöver överfart på ett snabbt skepp till {system} systemet."
+  },
+  "FLAVOUR_11_ADTITLE": {
+    "description": "",
+    "message": "SNABBT SKEPP ÖNSKAS"
   },
   "FLAVOUR_11_DANGER": {
     "description": "",
@@ -181,7 +193,7 @@
   },
   "FLAVOUR_11_INTROTEXT": {
     "description": "",
-    "message": "Mitt namn är {name}. Jag behöver en snabb transport till {system} ({sectorx}. {sectory}, sectorz}) systemet, ett avstånd på {dist} ly. Kommer att betala {cash}."
+    "message": "Mitt namn är {name}. Jag behöver en snabb transport till {system} ({sectorx}, {sectory}, {sectorz}) systemet, ett avstånd på {dist} ly. Kommer att betala {cash}."
   },
   "FLAVOUR_11_SUCCESSMSG": {
     "description": "",
@@ -197,7 +209,11 @@
   },
   "FLAVOUR_12_ADTEXT": {
     "description": "",
-    "message": "SKEPP BEHÖVS: Transport till {system} systemet."
+    "message": "Brådskande transport önskas för medborgare på flykt. Överfart till {system}-systemet behövs."
+  },
+  "FLAVOUR_12_ADTITLE": {
+    "description": "",
+    "message": "SKEPP ÖNSKAS"
   },
   "FLAVOUR_12_DANGER": {
     "description": "",
@@ -213,7 +229,7 @@
   },
   "FLAVOUR_12_INTROTEXT": {
     "description": "",
-    "message": "Mitt namn är {name}. Jag behöver en transport till {system} ({sectorx}, {sectory}, {sectorz}) systemet, ett avstånd på {dist}ly. Betalar {cash}."
+    "message": "Mitt namn är {name}. Jag behöver en transport till {system} ({sectorx}, {sectory}, {sectorz}) systemet, ett avstånd på {dist} ly. Betalar {cash}."
   },
   "FLAVOUR_12_SUCCESSMSG": {
     "description": "",
@@ -229,7 +245,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "EFTERSÖKS: Transport av en liten grupp till {system} systemet. Betalar {cash}."
+    "message": "Önskas: Passage för en liten grupp till {system}-systemet. Betalar {cash}."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "ÖVERFART ÖNSKAS"
   },
   "FLAVOUR_1_DANGER": {
     "description": "",
@@ -261,7 +281,11 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "ÖNSKAS: Transport av en liten grupp till {system} systemet. Betalar {cash}."
+    "message": "Önskas: Passage för en liten grupp till {system}-systemet. Betalar {cash}."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "ÖVERFART FÖR LITEN GRUPP"
   },
   "FLAVOUR_2_DANGER": {
     "description": "",
@@ -293,7 +317,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "SKEPP BEHÖVS: Transport till {system} systemet. Kommer att betala {cash}."
+    "message": "Skepp önskas för högrisktransport till {system} systemet. Betalar {cash}."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "SKEPP ÖNSKAS"
   },
   "FLAVOUR_3_DANGER": {
     "description": "",
@@ -325,7 +353,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "SKEPP ÖNSKAS: Transport till {system} systemet. Betalar {cash}."
+    "message": "Skepp önskas för resa i business-class till {system} systemet. Betalar {cash}."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "AFFÄRSRESA"
   },
   "FLAVOUR_4_DANGER": {
     "description": "",
@@ -341,7 +373,7 @@
   },
   "FLAVOUR_4_INTROTEXT": {
     "description": "",
-    "message": "Hej, jag är {name} och jag behöver transport till {system} ({sectorx}, {sectory}, {sectorz}) systemet, ett avstpnd på {dist} ly. Jag betalar {cash}."
+    "message": "Mitt namn är {name} och jag behöver transport till {system} ({sectorx}, {sectory}, {sectorz}) systemet, ett avstånd på {dist} ly. Jag är villig att betala {cash}."
   },
   "FLAVOUR_4_SUCCESSMSG": {
     "description": "",
@@ -349,7 +381,7 @@
   },
   "FLAVOUR_4_WHEREAREWE": {
     "description": "",
-    "message": "Var är vi? Jag har väntat länge nog - ta mig till den närmaste station NU!"
+    "message": "Var är vi? Jag har väntat länge nog - ta mig till närmaste station NU!"
   },
   "FLAVOUR_4_WHYSOMUCH": {
     "description": "",
@@ -357,7 +389,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "EFTERSÖKS: Transport till {system} systemet. Betalar {cash}."
+    "message": "Kräver överfart av anonym kund till {system}-systemet. Då kunden är VIP önskas fullständig diskretion. Betalar {cash}."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "KONFIDENTIELL RESA"
   },
   "FLAVOUR_5_DANGER": {
     "description": "",
@@ -389,7 +425,11 @@
   },
   "FLAVOUR_6_ADTEXT": {
     "description": "",
-    "message": "SKEPP ÖNSKAS: Transport till {system} systemet. Betalar {cash}."
+    "message": "Reporter behöver komma i närhet av en nyhet som utspelar sig i {system} systemet. Betalar {cash}."
+  },
+  "FLAVOUR_6_ADTITLE": {
+    "description": "",
+    "message": "SKEPP ÖNSKAS"
   },
   "FLAVOUR_6_DANGER": {
     "description": "",
@@ -421,7 +461,11 @@
   },
   "FLAVOUR_7_ADTEXT": {
     "description": "",
-    "message": "SKEPP ÖNSKAS: Säker transport till {system} systemet. Betalar {cash}."
+    "message": "Fartyg sökes för skyddad överfart till {system}-systemet. Säker transport krävs. Betalar {cash}."
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "SÄKER ÖVERFART ÖNSKAS"
   },
   "FLAVOUR_7_DANGER": {
     "description": "",
@@ -453,7 +497,11 @@
   },
   "FLAVOUR_8_ADTEXT": {
     "description": "",
-    "message": "SKEPP ÖNSKAS: Transport på ett snabbt skepp till {system} systemet."
+    "message": "Brådskande persontransport till {system}-systemet önskas. Tilläggsavgifter ingår i betalningen."
+  },
+  "FLAVOUR_8_ADTITLE": {
+    "description": "",
+    "message": "SNABB PERSONTRANSPORT"
   },
   "FLAVOUR_8_DANGER": {
     "description": "",
@@ -469,7 +517,7 @@
   },
   "FLAVOUR_8_INTROTEXT": {
     "description": "",
-    "message": "Mitt namn är {name}. Jag behöver snabb transport till {system} ({sectorx}. {sectory}, sectorz}) systemet, ett avstånd på {dist} ly. Betlar {cash}."
+    "message": "Mitt namn är {name}. Jag behöver snabb transport till {system} ({sectorx}, {sectory}, {sectorz}) systemet, ett avstånd på {dist} ly. Jag är villig att betala {cash}."
   },
   "FLAVOUR_8_SUCCESSMSG": {
     "description": "",
@@ -485,7 +533,11 @@
   },
   "FLAVOUR_9_ADTEXT": {
     "description": "",
-    "message": "SKEPP ÖNSKAS: Transport på ett snabbt skepp till {system} systemet."
+    "message": "Brådskande transport för hederlig medborgare. Behöver snabb överfart till {system}-systemet."
+  },
+  "FLAVOUR_9_ADTITLE": {
+    "description": "",
+    "message": "LEGITIM ÖVERFART"
   },
   "FLAVOUR_9_DANGER": {
     "description": "",
@@ -501,7 +553,7 @@
   },
   "FLAVOUR_9_INTROTEXT": {
     "description": "",
-    "message": "Mitt namn är {name}. Jag behöver snabb transport till {system} ({sectorx}. {sectory}, sectorz}) systemet, ett avstånd på {dist} ly. Betlar {cash}."
+    "message": "Mitt namn är {name}. Jag behöver snabb transport till {system} ({sectorx}, {sectory}, {sectorz}) systemet, ett avstånd på {dist} ly. Betalar {cash}."
   },
   "FLAVOUR_9_SUCCESSMSG": {
     "description": "",
@@ -533,15 +585,11 @@
   },
   "HOW_SOON_YOU_MUST_BE_THERE": {
     "description": "",
-    "message": "Hur snart måste du vara där?"
+    "message": "Hur snart måste ni vara där?"
   },
   "I_MUST_BE_THERE_BEFORE": {
     "description": "",
-    "message": "Jag måste vara där innan"
-  },
-  "LY": {
-    "description": "",
-    "message": "ly"
+    "message": "\"Jag måste vara där innan \""
   },
   "OK_AGREED": {
     "description": "",
@@ -577,7 +625,7 @@
   },
   "WE_WANT_TO_BE_THERE_BEFORE": {
     "description": "",
-    "message": "Vi vill vara där innan"
+    "message": "\"Vi vill vara där innan \""
   },
   "WHY_SO_MUCH_MONEY": {
     "description": "",

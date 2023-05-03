@@ -1,11 +1,11 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _SCENEGRAPH_MODEL_H
 #define _SCENEGRAPH_MODEL_H
 /*
  * A new model system with a scene graph based approach.
- * Also see: http://pioneerwiki.com/wiki/New_Model_System
+ * Also see: https://wiki.pioneerspacesim.net/wiki/Model_system
  * Open Asset Import Library (assimp) is used as the mesh loader.
  *
  * Similar systems:
@@ -69,12 +69,6 @@
 #include "graphics/Material.h"
 #include <stdexcept>
 
-namespace Graphics {
-	class Renderer;
-	class RenderState;
-	class VertexBuffer;
-} // namespace Graphics
-
 namespace SceneGraph {
 	class Animation;
 	class BaseLoader;
@@ -107,7 +101,7 @@ namespace SceneGraph {
 		float GetDrawClipRadius() const { return m_boundingRadius; }
 		void SetDrawClipRadius(float clipRadius) { m_boundingRadius = clipRadius; }
 
-		void Render(const matrix4x4f &trans, const RenderData *rd = 0); //ModelNode can override RD
+		void Render(const matrix4x4f &trans, const RenderData *rd = 0);				 //ModelNode can override RD
 		void Render(const std::vector<matrix4x4f> &trans, const RenderData *rd = 0); //ModelNode can override RD
 
 		RefCountedPtr<CollMesh> CreateCollisionMesh();
@@ -142,8 +136,18 @@ namespace SceneGraph {
 		bool SupportsDecals();
 		bool SupportsPatterns();
 
-		Animation *FindAnimation(const std::string &) const; //0 if not found
+		// update all animations once to ensure all transforms are correctly positioned
+		void InitAnimations();
+		// Get an animation matching the given name or return nullptr.
+		Animation *FindAnimation(const std::string &) const;
+		// Get the index of an animation in this container. If there is no such animation, returns UINT32_MAX.
+		uint32_t FindAnimationIndex(Animation *) const;
+		// Return a reference to all animations defined on this model.
 		const std::vector<Animation *> GetAnimations() const { return m_animations; }
+		// Mark an animation as actively updating. A maximum of 64 active animations are supported.
+		void SetAnimationActive(uint32_t index, bool active);
+		bool GetAnimationActive(uint32_t index) const;
+		// Update all active animations.
 		void UpdateAnimations();
 
 		Graphics::Renderer *GetRenderer() const { return m_renderer; }
@@ -167,7 +171,8 @@ namespace SceneGraph {
 			DEBUG_COLLMESH = 0x2,
 			DEBUG_WIREFRAME = 0x4,
 			DEBUG_TAGS = 0x8,
-			DEBUG_DOCKING = 0x10
+			DEBUG_DOCKING = 0x10,
+			DEBUG_GEOMBBOX = 0x20
 		};
 		void SetDebugFlags(Uint32 flags);
 
@@ -185,7 +190,8 @@ namespace SceneGraph {
 		Graphics::Renderer *m_renderer;
 		std::string m_name;
 		std::vector<Animation *> m_animations;
-		TagContainer m_tags; //named attachment points
+		uint64_t m_activeAnimations; // bitmask of actively ticking animations
+		TagContainer m_tags;		 //named attachment points
 		RenderData m_renderData;
 
 		//per-instance flavour data
@@ -193,20 +199,10 @@ namespace SceneGraph {
 		Graphics::Texture *m_curPattern;
 		Graphics::Texture *m_curDecals[MAX_DECAL_MATERIALS];
 
-		// debug support
-		void CreateAabbVB();
-		void DrawAabb();
-		void DrawCollisionMesh();
-		void DrawAxisIndicators(std::vector<Graphics::Drawables::Line3D> &lines);
-		void AddAxisIndicators(const std::vector<MatrixTransform *> &mts, std::vector<Graphics::Drawables::Line3D> &lines);
-
 		Uint32 m_debugFlags;
-		std::vector<Graphics::Drawables::Line3D> m_tagPoints;
-		std::vector<Graphics::Drawables::Line3D> m_dockingPoints;
-		RefCountedPtr<Graphics::VertexBuffer> m_collisionMeshVB;
-		RefCountedPtr<Graphics::VertexBuffer> m_aabbVB;
-		RefCountedPtr<Graphics::Material> m_aabbMat;
-		Graphics::RenderState *m_state;
+
+		std::unique_ptr<Graphics::MeshObject> m_debugMesh;
+		std::unique_ptr<Graphics::Material> m_debugLineMat;
 	};
 
 } // namespace SceneGraph

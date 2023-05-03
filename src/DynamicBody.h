@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _DYNAMICBODY_H
@@ -26,17 +26,16 @@ public:
 	virtual vector3d GetVelocity() const override;
 	virtual void SetVelocity(const vector3d &v) override;
 	virtual void SetFrame(FrameId fId) override;
-	vector3d GetAngVelocity() const;
-	void SetAngVelocity(const vector3d &v);
-	virtual bool OnCollision(Object *o, Uint32 flags, double relVel) override;
+	vector3d GetAngVelocity() const override;
+	void SetAngVelocity(const vector3d &v) override;
+	virtual bool OnCollision(Body *o, Uint32 flags, double relVel) override;
 	vector3d GetAngularMomentum() const;
 	double GetAngularInertia() const { return m_angInertia; }
 	void SetMassDistributionFromModel();
-	void SetMoving(bool isMoving) { m_isMoving = isMoving; }
+	void SetMoving(bool isMoving);
 	bool IsMoving() const { return m_isMoving; }
 	virtual double GetMass() const override { return m_mass; } // XXX don't override this
 	virtual void TimeStepUpdate(const float timeStep) override;
-	virtual vector3d CalcAtmosphericForce() const;
 	double CalcAtmosphericDrag(double velSqr, double area, double coeff) const;
 	void CalcExternalForce();
 
@@ -68,6 +67,7 @@ public:
 		AIERROR_NONE = 0,
 		AIERROR_GRAV_TOO_HIGH,
 		AIERROR_REFUSED_PERM,
+		AIERROR_PRESS_TOO_HIGH,
 		AIERROR_ORBIT_IMPOSSIBLE
 	};
 	AIError AIMessage(AIError msg = AIERROR_NONE)
@@ -77,22 +77,14 @@ public:
 		return tmp;
 	}
 
-	enum Feature {
-		PROPULSION = 0,
-		FIXED_GUNS = 1,
-		MAX_FEATURE = 2,
-	};
-
-	bool Have(Feature f) const { return m_features[f]; };
 	void SetDecelerating(bool decel) { m_decelerating = decel; }
-	const Propulsion *GetPropulsion() const;
-	Propulsion *GetPropulsion();
-	const FixedGuns *GetFixedGuns() const;
-	FixedGuns *GetFixedGuns();
-	void AddFeature(Feature f);
 
 protected:
 	virtual void SaveToJson(Json &jsonObj, Space *space) override;
+
+	void GetCurrentAtmosphericState(double &pressure, double &density) const;
+
+	virtual vector3d CalcAtmosphericForce() const;
 
 	static const double DEFAULT_DRAG_COEFF;
 
@@ -120,11 +112,6 @@ private:
 	// for time accel reduction fudge
 	vector3d m_lastForce;
 	vector3d m_lastTorque;
-
-	bool m_features[MAX_FEATURE];
-
-	RefCountedPtr<Propulsion> m_propulsion;
-	RefCountedPtr<FixedGuns> m_fixedGuns;
 };
 
 #endif /* _DYNAMICBODY_H */

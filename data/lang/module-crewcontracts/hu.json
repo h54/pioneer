@@ -19,6 +19,14 @@
     "description": "",
     "message": "Legénységi pozíciót keres"
   },
+  "CREW_FOR_HIRE_DESC": {
+    "description": "",
+    "message": "Munkát kereső űrhajósok ebben a kikötőben."
+  },
+  "CREW_FOR_HIRE_TITLE": {
+    "description": "",
+    "message": "LEGÉNYSÉG ÜGYNÖKSÉG"
+  },
   "GO_BACK": {
     "description": "",
     "message": "Vissza"

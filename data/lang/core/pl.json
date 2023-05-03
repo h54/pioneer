@@ -31,13 +31,21 @@
     "description": "",
     "message": "Świeże mięso"
   },
+  "AN_AR_ATMOSPHERE": {
+    "description": "",
+    "message": "atmosfera argonowa"
+  },
+  "AN_O2_ATMOSPHERE": {
+    "description": "",
+    "message": "atmosfera tlenowa"
+  },
   "APOAPSIS_DISTANCE": {
     "description": "",
     "message": "Apocentrum"
   },
   "AR_ATMOSPHERE": {
     "description": "",
-    "message": "\" atmosfera oparta na argonie\""
+    "message": "atmosfera argonowa"
   },
   "ASTEROID": {
     "description": "",
@@ -79,9 +87,37 @@
     "description": "",
     "message": "Nachylenie osi"
   },
+  "A_CH4_ATMOSPHERE": {
+    "description": "",
+    "message": "atmosfera metanowa"
+  },
+  "A_CO2_ATMOSPHERE": {
+    "description": "",
+    "message": "atmosfera dwutlenku węgla"
+  },
+  "A_CO_ATMOSPHERE": {
+    "description": "",
+    "message": "atmosfera tlenku węgla"
+  },
   "A_FEW_THOUSAND": {
     "description": "regarding population",
     "message": "Tylko kilka tysięcy"
+  },
+  "A_HE_ATMOSPHERE": {
+    "description": "",
+    "message": "atmosfera helowa"
+  },
+  "A_H_ATMOSPHERE": {
+    "description": "",
+    "message": "atmosfera wodorowa"
+  },
+  "A_N_ATMOSPHERE": {
+    "description": "",
+    "message": "atmosfera azotowa"
+  },
+  "A_S_ATMOSPHERE": {
+    "description": "",
+    "message": "atmosfera siarkowa"
   },
   "BATTLE_WEAPONS": {
     "description": "",
@@ -102,10 +138,6 @@
   "BROWN_DWARF": {
     "description": "",
     "message": "Brązowy karzeł"
-  },
-  "BUTTON": {
-    "description": "",
-    "message": "\" przycisk \""
   },
   "CAMERA_BOTTOM_VIEW": {
     "description": "",
@@ -169,31 +201,15 @@
   },
   "CENTER": {
     "description": "",
-    "message": "Center"
+    "message": "Środek"
   },
   "CH4_ATMOSPHERE": {
     "description": "",
-    "message": "\" atmosfera oparta na metanie\""
-  },
-  "CLEARANCE_ALREADY_GRANTED_BAY_N": {
-    "description": "",
-    "message": "Już udzielono zgodę na lądowanie. Kontynuuj do doku %bay."
-  },
-  "CLEARANCE_DENIED_NO_BAYS": {
-    "description": "",
-    "message": "Brak zgody. Brak wolnych miejsc w dokach."
-  },
-  "CLEARANCE_DENIED_TOO_FAR": {
-    "description": "Shown if player requests docking too far away from station",
-    "message": "Odmowa przyjęcia. Twój statek jest za daleko na weryfikację ID."
-  },
-  "CLEARANCE_GRANTED_BAY_N": {
-    "description": "",
-    "message": "Pozwolenie na lądowanie. Kontynuuj do doku %bay."
+    "message": "atmosfera metanowa"
   },
   "CO2_ATMOSPHERE": {
     "description": "",
-    "message": "\" atmosfera oparta na dwutlenku węgla\""
+    "message": "atmosfera dwutlenku węgla"
   },
   "COMMA_HIGHLY_VOLCANIC": {
     "description": "",
@@ -212,7 +228,7 @@
     "message": "Analiza handlu towarem w systemie #fff%system#fff"
   },
   "COMMS": {
-    "description": "",
+    "description": "Title of communications log window, on world view",
     "message": "Komunikacja"
   },
   "COMMUNIST": {
@@ -289,7 +305,7 @@
   },
   "CO_ATMOSPHERE": {
     "description": "",
-    "message": "\" atmosfera oparta na tlenku węgla\""
+    "message": "atmosfera tlenku węgla"
   },
   "CTRL": {
     "description": "Ctrl key on keyboard",
@@ -327,10 +343,6 @@
     "description": "",
     "message": "Punkt docelowy"
   },
-  "DIRECTION": {
-    "description": "Direction",
-    "message": "\" Dir \""
-  },
   "DISTANCE_LY": {
     "description": "",
     "message": "Dystans: %distance{f.2} lś"
@@ -342,10 +354,6 @@
   "DOCKING": {
     "description": "",
     "message": "Dokowanie"
-  },
-  "DOCKING_CLEARANCE_EXPIRED": {
-    "description": "",
-    "message": "Pozwolenie na lądowanie wygasło. jeśli chcesz dokować musisz ponowić prośbę."
   },
   "DOWNGRADING_ALERT_STATUS": {
     "description": "",
@@ -363,9 +371,21 @@
     "description": "",
     "message": "Pokazuj pionowe linie"
   },
-  "EARTH": {
+  "DWARF_PLANET_CONTAINING_LIQUID_WATER": {
     "description": "",
-    "message": "Ziemi"
+    "message": "Planeta karłowata z ciekłą wodą"
+  },
+  "DWARF_PLANET_CONTAINING_SOME_LIQUIDS": {
+    "description": "",
+    "message": "Planeta karłowata posiadająca nieco cieczy,"
+  },
+  "DWARF_PLANET_MOSTLY_COVERED_IN_ICE": {
+    "description": "",
+    "message": "Planeta karłowata, w większości pokryta lodem"
+  },
+  "DWARF_PLANET_TERRESTRIAL": {
+    "description": "",
+    "message": "Planeta karłowata"
   },
   "EARTH_FEDERATION_COLONIAL_RULE": {
     "description": "",
@@ -485,7 +505,7 @@
   },
   "GRID_DISPLAY_MODE_TOGGLE": {
     "description": "Switch show no grid",
-    "message": "Switch between grid display modes."
+    "message": "Przełącz pomiędzy trybami wyświetlania siatki."
   },
   "HAND_WEAPONS": {
     "description": "",
@@ -494,10 +514,6 @@
   "HARD_CAPITALIST": {
     "description": "",
     "message": "Całkowity Kapitalizm - bez opieki społecznej"
-  },
-  "HAT": {
-    "description": "Hat switch: Is the top button on a joystick",
-    "message": "\" Hat\""
   },
   "HEADING_LOCK_ANTINORMAL": {
     "description": "Autopilot direction (perpendicular, down), relative to plane of orbit",
@@ -533,7 +549,7 @@
   },
   "HE_ATMOSPHERE": {
     "description": "",
-    "message": "\" atmosfera oparta na helu\""
+    "message": "atmosfera helowa"
   },
   "HIGHLY_VOLCANIC": {
     "description": "",
@@ -597,7 +613,15 @@
   },
   "H_ATMOSPHERE": {
     "description": "",
-    "message": "\" atmosfera oparta na wodorze\""
+    "message": "atmosfera wodorowa"
+  },
+  "ICE_DWARF_PLANET": {
+    "description": "",
+    "message": "Lodowa planeta karłowata"
+  },
+  "ICE_MOON": {
+    "description": "",
+    "message": "\" księżyc lodowy\""
   },
   "ICE_WORLD": {
     "description": "",
@@ -650,10 +674,6 @@
   "JOYSTICK_INPUT": {
     "description": "",
     "message": "Ustawienia joysticka"
-  },
-  "JOY_AXIS": {
-    "description": "Regarding joystick",
-    "message": "%joyname oś %{sign}%axis"
   },
   "L4L5_DISPLAY_MODE_TOGGLE": {
     "description": "Either show L4/L5 points or don't",
@@ -751,76 +771,12 @@
     "description": "",
     "message": "Tryb sterowania ręcznego"
   },
-  "MAP_LOCK_HYPERSPACE_TARGET": {
-    "description": "",
-    "message": "Zablokuj cel nadprzestrzenny"
-  },
-  "MAP_TOGGLE_INFO_PANEL": {
-    "description": "",
-    "message": "Widok panelu informacyjnego"
-  },
-  "MAP_TOGGLE_SELECTION_FOLLOW_VIEW": {
-    "description": "",
-    "message": "Centrowanie na wskazywany system"
-  },
-  "MAP_VIEW_ROTATE_DOWN": {
-    "description": "",
-    "message": "Obrót widoku w dół"
-  },
-  "MAP_VIEW_ROTATE_LEFT": {
-    "description": "",
-    "message": "Obrót widoku w lewo"
-  },
-  "MAP_VIEW_ROTATE_RIGHT": {
-    "description": "",
-    "message": "Obrót widoku w prawo"
-  },
-  "MAP_VIEW_ROTATE_UP": {
-    "description": "",
-    "message": "Obrót widoku w górę"
-  },
-  "MAP_VIEW_SHIFT_BACKWARD": {
-    "description": "",
-    "message": "Przesunięcie widoku w tył"
-  },
-  "MAP_VIEW_SHIFT_DOWN": {
-    "description": "",
-    "message": "Przesunięcie widoku w dół"
-  },
-  "MAP_VIEW_SHIFT_FORWARD": {
-    "description": "",
-    "message": "Przesunięcie widoku w przód"
-  },
-  "MAP_VIEW_SHIFT_LEFT": {
-    "description": "",
-    "message": "Przesunięcie widoku w lewo"
-  },
-  "MAP_VIEW_SHIFT_RIGHT": {
-    "description": "",
-    "message": "Przesunięcie widoku w prawo"
-  },
-  "MAP_VIEW_SHIFT_UP": {
-    "description": "",
-    "message": "Przesunięcie widoku w górę"
-  },
-  "MAP_WARP_TO_CURRENT_SYSTEM": {
-    "description": "",
-    "message": "Warp do aktualnego systemu"
-  },
-  "MAP_WARP_TO_HYPERSPACE_TARGET": {
-    "description": "",
-    "message": "Warp do celu nadprzestrzennego"
-  },
-  "MAP_WARP_TO_SELECTED_SYSTEM": {
-    "description": "",
-    "message": "Warp do wskazanego systemu"
-  },
   "MASS": {
     "description": "",
     "message": "Masa"
   },
   "MASSIVE": {
-    "description": "",
+    "description": "Adjective used to describe the size of an object.",
     "message": "Masywna"
   },
   "MASS_N_TONNES": {
@@ -830,6 +786,10 @@
   "MEDICINES": {
     "description": "",
     "message": "Lekarstwa"
+  },
+  "MEDIUM": {
+    "description": "Adjective used to describe the size of an object.",
+    "message": "Średnia"
   },
   "MEDIUM_GAS_GIANT": {
     "description": "",
@@ -893,7 +853,7 @@
   },
   "MISSILE_DETECTED": {
     "description": "",
-    "message": "Missile launch detected."
+    "message": "Wykryto odpalenie rakiety."
   },
   "MIXED_ECONOMY": {
     "description": "",
@@ -947,6 +907,14 @@
     "description": "",
     "message": "Wrz"
   },
+  "MOON_CONTAINING_LIQUID_WATER": {
+    "description": "",
+    "message": "\" księżyc z ciekłą wodą\""
+  },
+  "MOON_WITH_SOME_ICE": {
+    "description": "",
+    "message": "\" księżyc z występowaniem lodu\""
+  },
   "NAME_OBJECT": {
     "description": "For an item or object",
     "message": "Nazwa"
@@ -970,6 +938,10 @@
   "NERVE_GAS": {
     "description": "",
     "message": "Gaz paraliżujący"
+  },
+  "NONE": {
+    "description": "To indicate the absence of something",
+    "message": "<None>"
   },
   "NOT_FOUND": {
     "description": "searching star system in sector view",
@@ -1049,7 +1021,7 @@
   },
   "N_ATMOSPHERE": {
     "description": "",
-    "message": "\" atmosfera oparta na azocie\""
+    "message": "atmosfera azotowa"
   },
   "N_CELSIUS": {
     "description": "",
@@ -1065,15 +1037,23 @@
   },
   "N_EARTH_DAYS": {
     "description": "",
-    "message": "%days{f.1} ziemskich dni"
+    "message": "%days{f.1} dni ziemskich"
   },
-  "N_WHATEVER_MASSES": {
+  "N_EARTH_MASSES": {
     "description": "",
-    "message": "%mass{f.3} masy %units"
+    "message": "%mass{f.3} mas Ziemi"
   },
-  "N_WHATEVER_RADII": {
+  "N_EARTH_RADII": {
+    "description": "Used in system info view. E.g.: \"0.17 Earth radii (118235 km)\"",
+    "message": "%radius{f.3} promieni Ziemi (%radkm{f.0} km)"
+  },
+  "N_SOLAR_MASSES": {
+    "description": "",
+    "message": "%mass{f.3} mas Słońca"
+  },
+  "N_SOLAR_RADII": {
     "description": "Used in system info view. E.g. for Barnard's star: \"0.17 Solar radii (118235 km)\"",
-    "message": "%radius{f.3} promienia %units (%radkm{f.0} km)"
+    "message": "%radius{f.3} promieni Słońca (%radkm{f.0} km)"
   },
   "N_YEARS": {
     "description": "",
@@ -1081,7 +1061,15 @@
   },
   "O2_ATMOSPHERE": {
     "description": "",
-    "message": "\" atmosfera oparta na tlenie\""
+    "message": "atmosfera tlenowa"
+  },
+  "OBJECT_INFO": {
+    "description": "Originally for use as a window title and a button tooltip in the system map",
+    "message": "Informacje o obiekcie"
+  },
+  "OCEANICMOON": {
+    "description": "",
+    "message": "\" księżyc oceaniczny\""
   },
   "OCEANICWORLD": {
     "description": "",
@@ -1097,7 +1085,7 @@
   },
   "ORBIT_PLANNER": {
     "description": "",
-    "message": "Orbit planner"
+    "message": "Planista orbity"
   },
   "OUTDOOR_AGRICULTURAL_WORLD": {
     "description": "",
@@ -1221,19 +1209,23 @@
   },
   "REQUEST_DOCKING_CLEARANCE": {
     "description": "",
-    "message": "Rządanie oddokowania od {target}"
+    "message": "Żądanie pozwolenia oddokowania od {target}"
   },
   "RESET": {
     "description": "",
     "message": "Reset"
   },
-  "RESET_ORIENTATION_AND_ZOOM": {
-    "description": "",
-    "message": "Reset orientacji i zbliżenia"
-  },
   "ROBOTS": {
     "description": "",
     "message": "Roboty"
+  },
+  "ROCKY_MOON": {
+    "description": "",
+    "message": "\" księżyc skalisty\""
+  },
+  "ROCKY_MOON_CONTAINING_SOME_LIQUIDS": {
+    "description": "",
+    "message": "\" skalisty księżyc z obecnością płynów,\""
   },
   "ROCKY_PLANET": {
     "description": "",
@@ -1333,7 +1325,7 @@
   },
   "SET_AS_COMBAT_TARGET": {
     "description": "",
-    "message": "Set as combat target"
+    "message": "Ustaw jako cel bojowy"
   },
   "SET_AS_TARGET": {
     "description": "",
@@ -1350,6 +1342,10 @@
   "SET_LOW_THRUST_POWER_LEVEL_TO_X_PERCENT": {
     "description": "",
     "message": "Siła ciągu w trybie precyzyjnym %power%%"
+  },
+  "SET_MAXIMUM_SPEED_LIMIT": {
+    "description": "Speed limiter tooltip.",
+    "message": "Ustaw maksymalny limit prędkości"
   },
   "SET_NAVTARGET_TO": {
     "description": "",
@@ -1416,7 +1412,7 @@
     "message": "Niewolnicy"
   },
   "SMALL": {
-    "description": "",
+    "description": "Adjective used to describe the size of an object.",
     "message": "Mała"
   },
   "SMALL_GAS_GIANT": {
@@ -1434,10 +1430,6 @@
   "SOCIAL_DEMOCRACY": {
     "description": "",
     "message": "Socjaldemokracja"
-  },
-  "SOLAR": {
-    "description": "",
-    "message": "Słońca"
   },
   "SOME_ESTABLISHED_MINING": {
     "description": "",
@@ -1633,7 +1625,7 @@
   },
   "S_ATMOSPHERE": {
     "description": "",
-    "message": "\" atmosfera przepełniona siarką\""
+    "message": "atmosfera siarkowa"
   },
   "TAKEOFF": {
     "description": "",
@@ -1645,7 +1637,7 @@
   },
   "TENUOUS": {
     "description": "atmosphere thickness",
-    "message": "śladowa"
+    "message": "\"śladowa \""
   },
   "TEXTILES": {
     "description": "",
@@ -1653,11 +1645,11 @@
   },
   "THICK": {
     "description": "",
-    "message": "gęsta"
+    "message": "\"gęsta \""
   },
   "THIN": {
     "description": "",
-    "message": "rozrzedzona"
+    "message": "\"rzadka \""
   },
   "THRIVING_OUTDOOR_WORLD": {
     "description": "",
@@ -1692,8 +1684,8 @@
     "message": "\"czas: \""
   },
   "TINY": {
-    "description": "",
-    "message": "Średnia"
+    "description": "Adjective used to describe the size of an object.",
+    "message": "Mały"
   },
   "TOGGLE_EQUIPMENT_VIEW": {
     "description": "Tooltip for the Equipment View button",
@@ -1702,10 +1694,6 @@
   "TOGGLE_HUD_MODE": {
     "description": "",
     "message": "Zmiana trybu HUD"
-  },
-  "TOGGLE_LUA_CONSOLE": {
-    "description": "",
-    "message": "Aktywacja konsoli"
   },
   "TOGGLE_RADAR_MODE": {
     "description": "",
@@ -1755,9 +1743,21 @@
     "description": "Duration unit: one 24-hour day",
     "message": "d"
   },
+  "UNIT_EARTH_GRAVITY": {
+    "description": "Acceleration unit: one earth gravity (g)",
+    "message": "g"
+  },
+  "UNIT_GIGATONNES": {
+    "description": "Mass unit: one gigatonne",
+    "message": "Gt"
+  },
   "UNIT_HOURS": {
     "description": "Duration unit: one 60-minute hour",
     "message": "h"
+  },
+  "UNIT_KILOGRAMS": {
+    "description": "Mass unit: one kilogram",
+    "message": "kg"
   },
   "UNIT_KILOMETERS": {
     "description": "Distance unit: one kilometer",
@@ -1767,9 +1767,17 @@
     "description": "Speed unit: one kilometer per second",
     "message": "km/s"
   },
+  "UNIT_KILOTONNES": {
+    "description": "Mass unit: one kilotonne",
+    "message": "kt"
+  },
   "UNIT_LY": {
     "description": "Distance unit: a light year",
     "message": "lś"
+  },
+  "UNIT_MEGATONNES": {
+    "description": "Mass unit: one megatonne",
+    "message": "Mt"
   },
   "UNIT_METERS": {
     "description": "Distance unit: one meter",
@@ -1791,9 +1799,21 @@
     "description": "Duration unit: one 60-second minute",
     "message": "m"
   },
+  "UNIT_PETATONNES": {
+    "description": "Mass unit: one petatonne",
+    "message": "Pt"
+  },
+  "UNIT_PRESSURE_ATMOSPHERES": {
+    "description": "Pressure unit: one earth atmosphere (atm)",
+    "message": "atm"
+  },
   "UNIT_SECONDS": {
     "description": "Duration unit: one second",
     "message": "s"
+  },
+  "UNIT_TERATONNES": {
+    "description": "Mass unit: one teratonne",
+    "message": "Tt"
   },
   "UNIT_TONNES": {
     "description": "Mass unit: one tonne (t)",
@@ -1821,7 +1841,7 @@
   },
   "VERY_DENSE": {
     "description": "",
-    "message": "bardzo gęsta"
+    "message": "\"bardzo gęsta \""
   },
   "VERY_LARGE_GAS_GIANT": {
     "description": "",
@@ -1859,21 +1879,13 @@
     "description": "",
     "message": "Biały karzeł"
   },
-  "WITH_A": {
+  "WITH": {
     "description": "",
-    "message": "\", \""
+    "message": "\" z \""
   },
   "WITH_NO_SIGNIFICANT_ATMOSPHERE": {
     "description": "",
     "message": "\" bez znaczącej atmosfery\""
-  },
-  "X": {
-    "description": "keybinding: x axis",
-    "message": "X"
-  },
-  "Y": {
-    "description": "keybinding: y axis",
-    "message": "Y"
   },
   "YAW": {
     "description": "",
@@ -1890,10 +1902,6 @@
   "YOUNG_FARMING_COLONY": {
     "description": "",
     "message": "Młoda kolonia rolnicza."
-  },
-  "Z": {
-    "description": "keybinding: z axis",
-    "message": "Z"
   },
   "ZOOM_IN": {
     "description": "",

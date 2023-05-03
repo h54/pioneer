@@ -1,4 +1,4 @@
--- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Engine = require 'Engine'
@@ -22,6 +22,7 @@ local MIN_RADAR_SIZE = 1000
 
 local shouldDisplay2DRadar
 local current_radar_size = 10000
+local blobSize = 6.0
 
 local function getColorFor(item)
 	local body = item.body
@@ -94,23 +95,90 @@ local function display2DRadar(cntr, size)
 	if #tooltip > 0 then
 		ui.setTooltip(table.concat(tooltip, "\n"))
 	end
-	local d, d_u = ui.Format.Distance(current_radar_size)
-	local distance = d .. ' ' .. d_u
+	local distance = ui.Format.Distance(current_radar_size)
 	local textcenter = cntr + Vector2((halfsize + twothirdsize) * 0.5, size)
 	local textsize = ui.addStyledText(textcenter, ui.anchor.left, ui.anchor.bottom, distance, colors.frame, pionillium.small, lui.HUD_RADAR_DISTANCE, colors.lightBlackBackground)
+end
+
+local function drawTarget(target, scale, center, color)
+	local pos = target.rel_position
+	local basePos = Vector2(pos.x * scale.x + center.x, pos.z * scale.y + center.y)
+	local blobPos = Vector2(basePos.x, basePos.y - pos.y * scale.y);
+	local blobHalfSize = Vector2(blobSize / 2)
+
+	ui.addLine(basePos, blobPos, color:shade(0.1), 2)
+	ui.addRectFilled(blobPos - blobHalfSize, blobPos + blobHalfSize, color, 0, 0)
+end
+
+local radar = require 'PiGui.Modules.RadarWidget'()
+local currentZoomDist = MIN_RADAR_SIZE
+radar.minZoom = MIN_RADAR_SIZE
+radar.maxZoom = MAX_RADAR_SIZE
+
+local function display3DRadar(center, size)
+	local targets = ui.getTargetsNearby(MAX_RADAR_SIZE)
+
+	local combatTarget = player:GetCombatTarget()
+	local navTarget = player:GetNavTarget()
+	local maxBodyDist = 0.0
+	local maxShipDist = 0.0
+
+	radar.size = size
+	radar.zoom = currentZoomDist
+	local radius = radar.radius
+	local scale = radar.radius / currentZoomDist
+	ui.setCursorPos(center - size / 2.0)
+
+	-- draw targets below the plane
+	for k, v in pairs(targets) do
+		-- collect some values for zoom updates later
+		maxBodyDist = math.max(maxBodyDist, v.distance)
+		-- only snap to ships if they're less than 50km away (arbitrary constant based on crime range)
+		if v.body:IsShip() and v.distance < 50000 then maxShipDist = math.max(maxShipDist, v.distance) end
+
+		if v.distance < currentZoomDist and v.rel_position.y < 0.0 then
+			local color = (v.body == navTarget and colors.navTarget) or (v.body == combatTarget and colors.combatTarget) or getColorFor(v)
+			drawTarget(v, scale, center, color)
+		end
+	end
+
+	-- draw the radar plane itself
+	radar:Draw()
+
+	-- draw targets above the plane
+	for k, v in pairs(targets) do
+		if v.distance < currentZoomDist and v.rel_position.y >= 0.0 then
+			local color = (v.body == navTarget and colors.navTarget) or (v.body == combatTarget and colors.combatTarget) or getColorFor(v)
+			drawTarget(v, scale, center, color)
+		end
+	end
+
+	-- handle automatic radar zoom based on player surroundings
+	local maxDist = maxBodyDist
+	if combatTarget then
+		maxDist = combatTarget:GetPositionRelTo(player):length() * 1.4
+	elseif maxShipDist > 0 then
+		maxDist = maxShipDist * 1.4
+	elseif navTarget then
+		local dist = navTarget:GetPositionRelTo(player):length()
+		maxDist = dist > MAX_RADAR_SIZE and maxBodyDist or dist * 1.4
+	end
+
+	currentZoomDist = math.clamp(currentZoomDist + (maxDist - currentZoomDist) * 0.03,
+		MIN_RADAR_SIZE, MAX_RADAR_SIZE)
 end
 
 local click_on_radar = false
 -- display either the 3D or the 2D radar, show a popup on right click to select
 local function displayRadar()
-	if ui.optionsWindow.isOpen then return end
+	if ui.optionsWindow.isOpen or Game.CurrentView() ~= "world" then return end
 	player = Game.player
-	local radar = player:GetEquip("radar")
+	local equipped_radar = player:GetEquip("radar")
 	-- only display if there actually *is* a radar installed
-	if #radar > 0 then
+	if #equipped_radar > 0 then
 
 		local size = ui.reticuleCircleRadius * 0.66
-		local cntr = Vector2(ui.screenWidth / 2, ui.screenHeight - size - 15)
+		local cntr = Vector2(ui.screenWidth / 2, ui.screenHeight - size - 4)
 
 		local mp = ui.getMousePos()
 		if (mp - cntr):length() > size then
@@ -131,47 +199,32 @@ local function displayRadar()
 			end
 		end
 		ui.popup("radarselector", function()
-							 if ui.selectable(lui.HUD_2D_RADAR, shouldDisplay2DRadar, {}) then
-								 Event.Queue('changeMFD', 'radar')
-							 end
-							 if ui.selectable(lui.HUD_3D_RADAR, not shouldDisplay2DRadar, {}) then
-								 Event.Queue('changeMFD', 'scanner')
-							 end
+			if ui.selectable(lui.HUD_2D_RADAR, shouldDisplay2DRadar, {}) then
+				Event.Queue('onChangeMFD', 'radar')
+			end
+			if ui.selectable(lui.HUD_3D_RADAR, not shouldDisplay2DRadar, {}) then
+				Event.Queue('onChangeMFD', 'scanner')
+			end
 		end)
 		if shouldDisplay2DRadar then
 			display2DRadar(cntr, size)
+		else
+			display3DRadar(cntr, Vector2(ui.reticuleCircleRadius * 1.8, size * 2))
 		end
 	end
 end
 
-Event.Register('changeMFD', function(selected)
-	Event.Queue('onChangeMFD', selected)
-end)
-
 Event.Register('onChangeMFD', function(selected)
-	if selected == "radar" then
-		shouldDisplay2DRadar = true;
-		Game.SetRadarVisible(false)
-	elseif selected == "scanner" then
-		Game.SetRadarVisible(true)
-		shouldDisplay2DRadar = false;
-	end
-end)
-
--- reset the radar at game start
-Event.Register("onGameStart", function()
-	if shouldDisplay2DRadar then
-		Game.SetRadarVisible(false)
-	else
-		Game.SetRadarVisible(true)
-	end
+	shouldDisplay2DRadar = selected == "radar";
 end)
 
 -- reset radar to default at game end
 Event.Register("onGameEnd", function() shouldDisplay2DRadar = false end)
 
 -- save/load preference
-require 'Serializer':Register("PiguiRadar", function () return shouldDisplay2DRadar end, function (data) shouldDisplay2DRadar = data end)
+require 'Serializer':Register("PiguiRadar",
+	function () return { shouldDisplay2DRadar = shouldDisplay2DRadar } end,
+	function (data) shouldDisplay2DRadar = data.shouldDisplay2DRadar end)
 
 ui.registerModule("game", displayRadar)
 

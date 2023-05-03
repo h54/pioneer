@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _HYPERSPACECLOUD_H
@@ -11,9 +11,8 @@ class Ship;
 
 namespace Graphics {
 	class Material;
+	class MeshObject;
 	class Renderer;
-	class VertexArray;
-	class RenderState;
 } // namespace Graphics
 
 class HyperspaceCloud : public Body {
@@ -39,7 +38,7 @@ protected:
 	virtual void SaveToJson(Json &jsonObj, Space *space) override;
 
 private:
-	void InitGraphics();
+	static void InitGraphics(Graphics::Renderer *renderer);
 
 	Ship *m_ship;
 	vector3d m_vel;
@@ -48,12 +47,9 @@ private:
 	bool m_isArrival;
 	bool m_isBeingKilled;
 
-	struct Graphic {
-		std::unique_ptr<Graphics::VertexArray> vertices;
-		std::unique_ptr<Graphics::Material> material;
-		Graphics::RenderState *renderState;
-	};
-	Graphic m_graphic;
+	static std::unique_ptr<Graphics::Material> s_cloudMat;
+	static std::unique_ptr<Graphics::MeshObject> s_cloudMeshArriving;
+	static std::unique_ptr<Graphics::MeshObject> s_cloudMeshLeaving;
 };
 
 #endif /* _HYPERSPACECLOUD_H */

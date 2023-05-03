@@ -1,5 +1,7 @@
 #!/bin/bash
 
+clang-format --version
+
 CLANG_FORMAT=$(which clang-format)
 
 # if PATCH_MODE is set to 0, then set it to the empty string so $PATCH_MODE continues to work
@@ -29,7 +31,7 @@ else
     GIT_DIFF_TOOL="git diff-index --cached"
 fi
 
-# Allow manually specifiying the files.
+# Allow manually specifying the files.
 FILES="$@"
 
 # Otherwise, get a list of all files changed between our RANGE_BASE and the current HEAD
@@ -38,7 +40,7 @@ if [[ -z $FILES ]]; then
 fi
 
 if [[ -z $PATCH_MODE ]]; then
-    echo -e "Checking files:"
+    echo -e "Checking staged files to be committed:"
     for file in $FILES; do
         echo -e "\t$file"
     done

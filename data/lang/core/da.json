@@ -31,13 +31,21 @@
     "description": "",
     "message": "Dyrekød"
   },
+  "AN_AR_ATMOSPHERE": {
+    "description": "",
+    "message": "an argon atmosphere"
+  },
+  "AN_O2_ATMOSPHERE": {
+    "description": "",
+    "message": "an oxygen atmosphere"
+  },
   "APOAPSIS_DISTANCE": {
     "description": "",
     "message": "Afstand til apoapse"
   },
   "AR_ATMOSPHERE": {
     "description": "",
-    "message": "\" Argonatmosfære\""
+    "message": "argon atmosphere"
   },
   "ASTEROID": {
     "description": "",
@@ -79,9 +87,37 @@
     "description": "",
     "message": "Aksehældning"
   },
+  "A_CH4_ATMOSPHERE": {
+    "description": "",
+    "message": "a methane atmosphere"
+  },
+  "A_CO2_ATMOSPHERE": {
+    "description": "",
+    "message": "a carbon dioxide atmosphere"
+  },
+  "A_CO_ATMOSPHERE": {
+    "description": "",
+    "message": "a carbon monoxide atmosphere"
+  },
   "A_FEW_THOUSAND": {
     "description": "regarding population",
     "message": "Kun nogle få tusinde"
+  },
+  "A_HE_ATMOSPHERE": {
+    "description": "",
+    "message": "a helium atmosphere"
+  },
+  "A_H_ATMOSPHERE": {
+    "description": "",
+    "message": "a hydrogen atmosphere"
+  },
+  "A_N_ATMOSPHERE": {
+    "description": "",
+    "message": "a nitrogen atmosphere"
+  },
+  "A_S_ATMOSPHERE": {
+    "description": "",
+    "message": "a sulfuric atmosphere"
   },
   "BATTLE_WEAPONS": {
     "description": "",
@@ -102,10 +138,6 @@
   "BROWN_DWARF": {
     "description": "",
     "message": "Brun dværg sub-stjerneobjekt"
-  },
-  "BUTTON": {
-    "description": "",
-    "message": "\" Knap \""
   },
   "CAMERA_BOTTOM_VIEW": {
     "description": "",
@@ -173,27 +205,11 @@
   },
   "CH4_ATMOSPHERE": {
     "description": "",
-    "message": "\" Methanatmosfære\""
-  },
-  "CLEARANCE_ALREADY_GRANTED_BAY_N": {
-    "description": "",
-    "message": "Tilkoblingstilladelse allerede tildelt. Fortsæt til tilkoblingssted %bay."
-  },
-  "CLEARANCE_DENIED_NO_BAYS": {
-    "description": "",
-    "message": "Tilkoblingstilladelse ikke givet. Der er ingen ledige tilkoblingssteder."
-  },
-  "CLEARANCE_DENIED_TOO_FAR": {
-    "description": "Shown if player requests docking too far away from station",
-    "message": "Clearance denied. Your ship is too far away for ID verification."
-  },
-  "CLEARANCE_GRANTED_BAY_N": {
-    "description": "",
-    "message": "Tilkoblingstilladelse tildelt. Fortsæt til tilkoblingssted %bay."
+    "message": "methane atmosphere"
   },
   "CO2_ATMOSPHERE": {
     "description": "",
-    "message": "\" Kuldioxidatmosfære\""
+    "message": "carbon dioxide atmosphere"
   },
   "COMMA_HIGHLY_VOLCANIC": {
     "description": "",
@@ -212,7 +228,7 @@
     "message": "Commodity trade analysis of #fff%system#fff"
   },
   "COMMS": {
-    "description": "",
+    "description": "Title of communications log window, on world view",
     "message": "Komm"
   },
   "COMMUNIST": {
@@ -289,7 +305,7 @@
   },
   "CO_ATMOSPHERE": {
     "description": "",
-    "message": "\" Karbonmonooxidatmosfære\""
+    "message": "carbon monoxide atmosphere"
   },
   "CTRL": {
     "description": "Ctrl key on keyboard",
@@ -327,10 +343,6 @@
     "description": "",
     "message": "Destinatio"
   },
-  "DIRECTION": {
-    "description": "Direction",
-    "message": "\" Retning \""
-  },
   "DISTANCE_LY": {
     "description": "",
     "message": "Afstand: %distance{f.2} ly"
@@ -342,10 +354,6 @@
   "DOCKING": {
     "description": "",
     "message": "Tilkobling"
-  },
-  "DOCKING_CLEARANCE_EXPIRED": {
-    "description": "",
-    "message": "Tilkoblingstilladelse er udløbet. Hvis du vil sammenkoble, skal du gentage din anmodning."
   },
   "DOWNGRADING_ALERT_STATUS": {
     "description": "",
@@ -363,9 +371,21 @@
     "description": "",
     "message": "Tegn vertikale linjer"
   },
-  "EARTH": {
+  "DWARF_PLANET_CONTAINING_LIQUID_WATER": {
     "description": "",
-    "message": "Jorden"
+    "message": "Dwarf planet containing liquid water"
+  },
+  "DWARF_PLANET_CONTAINING_SOME_LIQUIDS": {
+    "description": "",
+    "message": "Dwarf planet containing some liquids,"
+  },
+  "DWARF_PLANET_MOSTLY_COVERED_IN_ICE": {
+    "description": "",
+    "message": "Dwarf planet, mostly covered in ice"
+  },
+  "DWARF_PLANET_TERRESTRIAL": {
+    "description": "",
+    "message": "Dwarf planet"
   },
   "EARTH_FEDERATION_COLONIAL_RULE": {
     "description": "",
@@ -495,10 +515,6 @@
     "description": "",
     "message": "Ren kapitalisme - ingen offentlige velfærdsydelser"
   },
-  "HAT": {
-    "description": "Hat switch: Is the top button on a joystick",
-    "message": "\" Hat\""
-  },
   "HEADING_LOCK_ANTINORMAL": {
     "description": "Autopilot direction (perpendicular, down), relative to plane of orbit",
     "message": "Hold {target} anti-normal"
@@ -533,7 +549,7 @@
   },
   "HE_ATMOSPHERE": {
     "description": "",
-    "message": "\" Heliumatmosfære\""
+    "message": "helium atmosphere"
   },
   "HIGHLY_VOLCANIC": {
     "description": "",
@@ -597,7 +613,15 @@
   },
   "H_ATMOSPHERE": {
     "description": "",
-    "message": "\" Hydrogenatmosfære\""
+    "message": "hydrogen atmosphere"
+  },
+  "ICE_DWARF_PLANET": {
+    "description": "",
+    "message": "Icy dwarf planet"
+  },
+  "ICE_MOON": {
+    "description": "",
+    "message": "\" ice moon\""
   },
   "ICE_WORLD": {
     "description": "",
@@ -650,10 +674,6 @@
   "JOYSTICK_INPUT": {
     "description": "",
     "message": "Joystick input"
-  },
-  "JOY_AXIS": {
-    "description": "Regarding joystick",
-    "message": "%{sign}%joyname %axis Axis"
   },
   "L4L5_DISPLAY_MODE_TOGGLE": {
     "description": "Either show L4/L5 points or don't",
@@ -751,76 +771,12 @@
     "description": "",
     "message": "Manuel kontroltilstand"
   },
-  "MAP_LOCK_HYPERSPACE_TARGET": {
-    "description": "",
-    "message": "Lås hyperrum mål"
-  },
-  "MAP_TOGGLE_INFO_PANEL": {
-    "description": "",
-    "message": "Aktivér Info-panel"
-  },
-  "MAP_TOGGLE_SELECTION_FOLLOW_VIEW": {
-    "description": "",
-    "message": "Aktivér Følging af markéring"
-  },
-  "MAP_VIEW_ROTATE_DOWN": {
-    "description": "",
-    "message": "Rotér Synspunkt Ned"
-  },
-  "MAP_VIEW_ROTATE_LEFT": {
-    "description": "",
-    "message": "Rotér Synspunkt Venstre"
-  },
-  "MAP_VIEW_ROTATE_RIGHT": {
-    "description": "",
-    "message": "Rotér Synspunkt Højre"
-  },
-  "MAP_VIEW_ROTATE_UP": {
-    "description": "",
-    "message": "Rotér Synspunkt Op"
-  },
-  "MAP_VIEW_SHIFT_BACKWARD": {
-    "description": "",
-    "message": "Flyt Synspunkt Baglæns"
-  },
-  "MAP_VIEW_SHIFT_DOWN": {
-    "description": "",
-    "message": "Flyt Synspunkt Ned"
-  },
-  "MAP_VIEW_SHIFT_FORWARD": {
-    "description": "",
-    "message": "Flyt Synspunkt Fremad"
-  },
-  "MAP_VIEW_SHIFT_LEFT": {
-    "description": "",
-    "message": "Flyt Synspunkt Venstre"
-  },
-  "MAP_VIEW_SHIFT_RIGHT": {
-    "description": "",
-    "message": "Flyt Synspunkt Højre"
-  },
-  "MAP_VIEW_SHIFT_UP": {
-    "description": "",
-    "message": "Flyt Synspunkt Op"
-  },
-  "MAP_WARP_TO_CURRENT_SYSTEM": {
-    "description": "",
-    "message": "Hop til Nuværende System"
-  },
-  "MAP_WARP_TO_HYPERSPACE_TARGET": {
-    "description": "",
-    "message": "Hop til Hyperrum mål"
-  },
-  "MAP_WARP_TO_SELECTED_SYSTEM": {
-    "description": "",
-    "message": "Hop til det Valgte System"
-  },
   "MASS": {
     "description": "",
     "message": "Masse"
   },
   "MASSIVE": {
-    "description": "",
+    "description": "Adjective used to describe the size of an object.",
     "message": "Massiv"
   },
   "MASS_N_TONNES": {
@@ -830,6 +786,10 @@
   "MEDICINES": {
     "description": "",
     "message": "Medicin"
+  },
+  "MEDIUM": {
+    "description": "Adjective used to describe the size of an object.",
+    "message": "Mellem"
   },
   "MEDIUM_GAS_GIANT": {
     "description": "",
@@ -947,6 +907,14 @@
     "description": "",
     "message": "Sep"
   },
+  "MOON_CONTAINING_LIQUID_WATER": {
+    "description": "",
+    "message": "\" moon containing liquid water\""
+  },
+  "MOON_WITH_SOME_ICE": {
+    "description": "",
+    "message": "\" moon with some ice\""
+  },
   "NAME_OBJECT": {
     "description": "For an item or object",
     "message": "Navn"
@@ -970,6 +938,10 @@
   "NERVE_GAS": {
     "description": "",
     "message": "Nervegas"
+  },
+  "NONE": {
+    "description": "To indicate the absence of something",
+    "message": "<None>"
   },
   "NOT_FOUND": {
     "description": "searching star system in sector view",
@@ -1049,7 +1021,7 @@
   },
   "N_ATMOSPHERE": {
     "description": "",
-    "message": "\" Nitrogenatmosfære\""
+    "message": "nitrogen atmosphere"
   },
   "N_CELSIUS": {
     "description": "",
@@ -1065,15 +1037,23 @@
   },
   "N_EARTH_DAYS": {
     "description": "",
-    "message": "%days{f.1} Jord-dage"
+    "message": "%days{f.1} Earth days"
   },
-  "N_WHATEVER_MASSES": {
+  "N_EARTH_MASSES": {
     "description": "",
-    "message": "%mass{f.3} %units masser"
+    "message": "%mass{f.3} Earth masses"
   },
-  "N_WHATEVER_RADII": {
+  "N_EARTH_RADII": {
+    "description": "Used in system info view. E.g.: \"0.17 Earth radii (118235 km)\"",
+    "message": "%radius{f.3} Earth radii (%radkm{f.0} km)"
+  },
+  "N_SOLAR_MASSES": {
+    "description": "",
+    "message": "%mass{f.3} Solar masses"
+  },
+  "N_SOLAR_RADII": {
     "description": "Used in system info view. E.g. for Barnard's star: \"0.17 Solar radii (118235 km)\"",
-    "message": "%radius{f.3} %units radii (%radkm{f.0} km)"
+    "message": "%radius{f.3} Solar radii (%radkm{f.0} km)"
   },
   "N_YEARS": {
     "description": "",
@@ -1081,7 +1061,15 @@
   },
   "O2_ATMOSPHERE": {
     "description": "",
-    "message": "\" Oxygenatmosfære\""
+    "message": "oxygen atmosphere"
+  },
+  "OBJECT_INFO": {
+    "description": "Originally for use as a window title and a button tooltip in the system map",
+    "message": "Object info"
+  },
+  "OCEANICMOON": {
+    "description": "",
+    "message": "\" oceanic moon\""
   },
   "OCEANICWORLD": {
     "description": "",
@@ -1227,13 +1215,17 @@
     "description": "",
     "message": "Nulstil"
   },
-  "RESET_ORIENTATION_AND_ZOOM": {
-    "description": "",
-    "message": "Nulstil Synspunkt og Zoom"
-  },
   "ROBOTS": {
     "description": "",
     "message": "Robotter"
+  },
+  "ROCKY_MOON": {
+    "description": "",
+    "message": "\" rocky moon\""
+  },
+  "ROCKY_MOON_CONTAINING_SOME_LIQUIDS": {
+    "description": "",
+    "message": "\" rocky moon containing some liquids,\""
   },
   "ROCKY_PLANET": {
     "description": "",
@@ -1351,6 +1343,10 @@
     "description": "",
     "message": "Sæt lavreaktionskraftniveau til %power%%"
   },
+  "SET_MAXIMUM_SPEED_LIMIT": {
+    "description": "Speed limiter tooltip.",
+    "message": "Set maximum speed limit"
+  },
   "SET_NAVTARGET_TO": {
     "description": "",
     "message": "Set navigation target to: "
@@ -1416,7 +1412,7 @@
     "message": "Slaver"
   },
   "SMALL": {
-    "description": "",
+    "description": "Adjective used to describe the size of an object.",
     "message": "Lille"
   },
   "SMALL_GAS_GIANT": {
@@ -1434,10 +1430,6 @@
   "SOCIAL_DEMOCRACY": {
     "description": "",
     "message": "Socialdemokrati"
-  },
-  "SOLAR": {
-    "description": "",
-    "message": "Sol"
   },
   "SOME_ESTABLISHED_MINING": {
     "description": "",
@@ -1633,7 +1625,7 @@
   },
   "S_ATMOSPHERE": {
     "description": "",
-    "message": "\" Sulfuric atmosphere\""
+    "message": "sulfuric atmosphere"
   },
   "TAKEOFF": {
     "description": "",
@@ -1645,7 +1637,7 @@
   },
   "TENUOUS": {
     "description": "atmosphere thickness",
-    "message": "svag"
+    "message": "\"a tenuous \""
   },
   "TEXTILES": {
     "description": "",
@@ -1653,11 +1645,11 @@
   },
   "THICK": {
     "description": "",
-    "message": "tyk"
+    "message": "\"a thick \""
   },
   "THIN": {
     "description": "",
-    "message": "tynd"
+    "message": "\"a thin \""
   },
   "THRIVING_OUTDOOR_WORLD": {
     "description": "",
@@ -1692,7 +1684,7 @@
     "message": "Tidspunkt:"
   },
   "TINY": {
-    "description": "",
+    "description": "Adjective used to describe the size of an object.",
     "message": "Lille"
   },
   "TOGGLE_EQUIPMENT_VIEW": {
@@ -1702,10 +1694,6 @@
   "TOGGLE_HUD_MODE": {
     "description": "",
     "message": "Skift HUD-tilstand"
-  },
-  "TOGGLE_LUA_CONSOLE": {
-    "description": "",
-    "message": "Aktivér Lua-konsol"
   },
   "TOGGLE_RADAR_MODE": {
     "description": "",
@@ -1755,9 +1743,21 @@
     "description": "Duration unit: one 24-hour day",
     "message": "d"
   },
+  "UNIT_EARTH_GRAVITY": {
+    "description": "Acceleration unit: one earth gravity (g)",
+    "message": "g"
+  },
+  "UNIT_GIGATONNES": {
+    "description": "Mass unit: one gigatonne",
+    "message": "Gt"
+  },
   "UNIT_HOURS": {
     "description": "Duration unit: one 60-minute hour",
     "message": "h"
+  },
+  "UNIT_KILOGRAMS": {
+    "description": "Mass unit: one kilogram",
+    "message": "kg"
   },
   "UNIT_KILOMETERS": {
     "description": "Distance unit: one kilometer",
@@ -1767,9 +1767,17 @@
     "description": "Speed unit: one kilometer per second",
     "message": "km/s"
   },
+  "UNIT_KILOTONNES": {
+    "description": "Mass unit: one kilotonne",
+    "message": "kt"
+  },
   "UNIT_LY": {
     "description": "Distance unit: a light year",
     "message": "ly"
+  },
+  "UNIT_MEGATONNES": {
+    "description": "Mass unit: one megatonne",
+    "message": "Mt"
   },
   "UNIT_METERS": {
     "description": "Distance unit: one meter",
@@ -1791,9 +1799,21 @@
     "description": "Duration unit: one 60-second minute",
     "message": "m"
   },
+  "UNIT_PETATONNES": {
+    "description": "Mass unit: one petatonne",
+    "message": "Pt"
+  },
+  "UNIT_PRESSURE_ATMOSPHERES": {
+    "description": "Pressure unit: one earth atmosphere (atm)",
+    "message": "atm"
+  },
   "UNIT_SECONDS": {
     "description": "Duration unit: one second",
     "message": "s"
+  },
+  "UNIT_TERATONNES": {
+    "description": "Mass unit: one teratonne",
+    "message": "Tt"
   },
   "UNIT_TONNES": {
     "description": "Mass unit: one tonne (t)",
@@ -1821,7 +1841,7 @@
   },
   "VERY_DENSE": {
     "description": "",
-    "message": "meget tæt"
+    "message": "\"a very dense \""
   },
   "VERY_LARGE_GAS_GIANT": {
     "description": "",
@@ -1859,21 +1879,13 @@
     "description": "",
     "message": "Levn fra hvid dvægstjerne"
   },
-  "WITH_A": {
+  "WITH": {
     "description": "",
-    "message": "\" med \""
+    "message": "\" with \""
   },
   "WITH_NO_SIGNIFICANT_ATMOSPHERE": {
     "description": "",
     "message": "\" uden nogen betydningsfuld atmosfære\""
-  },
-  "X": {
-    "description": "keybinding: x axis",
-    "message": "X"
-  },
-  "Y": {
-    "description": "keybinding: y axis",
-    "message": "Y"
   },
   "YAW": {
     "description": "",
@@ -1890,10 +1902,6 @@
   "YOUNG_FARMING_COLONY": {
     "description": "",
     "message": "Ung landbrugskoloni."
-  },
-  "Z": {
-    "description": "keybinding: z axis",
-    "message": "Z"
   },
   "ZOOM_IN": {
     "description": "",

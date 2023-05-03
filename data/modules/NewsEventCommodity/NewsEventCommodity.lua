@@ -1,18 +1,10 @@
--- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 -- Create a news event on the BBS (to do: place it on
 -- StationView/Lobby.lua board?) with information which will indicate
 -- (indirectly) a change in demand of item.
 
--- useful for debuging
-local tableLength = function (T)
-	local count = 0
-	for _ in pairs(T) do
-		count = count + 1
-	end
-	return count
-end
 
 -- copy table by value, rather than the default: by reference.
 local copyTable = function(T)
@@ -30,93 +22,95 @@ local Game = require 'Game'
 local Event = require 'Event'
 local Format = require 'Format'
 local Serializer = require 'Serializer'
+local Commodities = require 'Commodities'
 local Equipment = require 'Equipment'
 
 local l = Lang.GetResource("module-newseventcommodity")
 
 local maxDist = 50          -- for spawning news (ly)
-local minTime = 15768000    -- no news the first 5 months of a new game (sec)
+local minTime = 15768000    -- no news the first 6 months of a new game (sec)
 
 -- to spawn a new event per hyperjump, provided no other news.
 local eventProbability = 1/20
 
 -- max index of flavoured variants
 local maxIndexOfIndNewspapers = 10
+local maxIndexOfAdTitles = 3
 local maxIndexOfTitles = 4
 local maxIndexOfGreetings = 5
 
 local flavours = {
-	{                                      -- flavour 0 in en.json
-		cargo = Equipment.cargo.medicines, -- which commodity is affected
-		demand = 4,                        -- change in price (and stock)
+	{                                           -- flavour 0 in en.json
+		cargo = Commodities.medicines.name, -- which commodity is affected
+		demand = 4,                             -- change in price (and stock)
 	}, {
-		cargo = Equipment.cargo.battle_weapons,       --1
+		cargo = Commodities.battle_weapons.name,       --1
 		demand = 4,
 	}, {
-		cargo = Equipment.cargo.grain,                --2
+		cargo = Commodities.grain.name,                --2
 		demand = 10,
 	}, {
-		cargo = Equipment.cargo.fruit_and_veg,        --3
+		cargo = Commodities.fruit_and_veg.name,        --3
 		demand = 6,
 	}, {
-		cargo = Equipment.cargo.narcotics,            --4
+		cargo = Commodities.narcotics.name,            --4
 		demand = -4,
 	}, {
-		cargo = Equipment.cargo.slaves,               --5
+		cargo = Commodities.slaves.name,               --5
 		demand = 7,
 	}, {
-		cargo = Equipment.cargo.liquor,               --6
+		cargo = Commodities.liquor.name,               --6
 		demand = 3,
 	}, {
-		cargo = Equipment.cargo.industrial_machinery, --7
+		cargo = Commodities.industrial_machinery.name, --7
 		demand = 6,
 	}, {
-		cargo = Equipment.cargo.mining_machinery,     --8
+		cargo = Commodities.mining_machinery.name,     --8
 		demand = 6,
 	}, {
-		cargo = Equipment.cargo.live_animals,         --9
+		cargo = Commodities.live_animals.name,         --9
 		demand = 3,
 	}, {
-		cargo = Equipment.cargo.air_processors,       --10
+		cargo = Commodities.air_processors.name,       --10
 		demand = 5,
 	}, {
-		cargo = Equipment.cargo.animal_meat,          --11
+		cargo = Commodities.animal_meat.name,          --11
 		demand = 3,
 	}, {
-		cargo = Equipment.cargo.computers,            --12
+		cargo = Commodities.computers.name,            --12
 		demand = 3,
 	}, {
-		cargo = Equipment.cargo.robots,               --13
+		cargo = Commodities.robots.name,               --13
 		demand = -4,
 	}, {
-		cargo = Equipment.cargo.plastics,             --14
+		cargo = Commodities.plastics.name,             --14
 		demand = 3,
 	}, {
-		cargo = Equipment.cargo.narcotics,            --15
+		cargo = Commodities.narcotics.name,            --15
 		demand = 4,
 	}, {
-		cargo = Equipment.cargo.farm_machinery,       --16
+		cargo = Commodities.farm_machinery.name,       --16
 		demand = 5,
 	}, {
-		cargo = Equipment.cargo.metal_ore,            --17
+		cargo = Commodities.metal_ore.name,            --17
 		demand = -10,
 	}, {
-		cargo = Equipment.cargo.consumer_goods,       --18
+		cargo = Commodities.consumer_goods.name,       --18
 		demand = 3,
 	}, {
-		cargo = Equipment.cargo.precious_metals,      --19
+		cargo = Commodities.precious_metals.name,      --19
 		demand = -3,
 	}, {
-		cargo = Equipment.cargo.fertilizer,           --20
+		cargo = Commodities.fertilizer.name,           --20
 		demand = -3,
 	}, {
-		cargo = Equipment.cargo.nerve_gas,            --21
+		cargo = Commodities.nerve_gas.name,            --21
 		demand = -4,
 	}, {
-		cargo = Equipment.cargo.hand_weapons,         --22
+		cargo = Commodities.hand_weapons.name,         --22
 		demand = 3,
 	}, {
-		cargo = Equipment.cargo.metal_alloys,         --23
+		cargo = Commodities.metal_alloys.name,         --23
 		demand = 3,
 	}
 }
@@ -210,9 +204,9 @@ local createNewsEvent = function (timeInHyper)
 			system = candidateSystems[index]
 
 			if system:IsCommodityLegal(cargo) then
-				--print("cargo,", cargo:GetName(), "is legal in:", system.name)
+				--print("cargo,", cargo, "is legal in:", system.name)
 			else
-				--print("cargo,", cargo:GetName(), "is legal in:", system.name)
+				--print("cargo,", cargo, "is legal in:", system.name)
 				system = nil
 			end
 			table.remove(candidateSystems, index)
@@ -241,9 +235,9 @@ local createNewsEvent = function (timeInHyper)
 	-- add headline from flavour, and more info to be displayed
 	newsEvent.description = string.interp(flavours[flavour].headline, {
 		system = system.name,
-		cargo = cargo:GetName(),
+		cargo = Commodities[cargo]:GetName(),
 		-- Turn string "23:09:27 3 Jan 3200" into "3 Jan 3200:"
-		date  = string.match(Format.Date(date), "%d+ %w+ %d+$")
+		date  = Format.DateOnly(date),
 	})
 	table.insert(news, newsEvent)
 
@@ -280,11 +274,13 @@ local checkAdvertsAdd = function(station)
 	for i,n in pairs(news) do
 		-- don't place ad if we're in the system of the event
 		if not currentSystem:IsSameSystem(n.syspath) then
-			local ref = station:AddAdvert(
-				{description = n.description,
-				 icon = "news",
-				 onChat = onChat,
-				 onDelete = onDelete})
+			local ref = station:AddAdvert({
+				title       = l["ADTITLE_"..Engine.rand:Integer(0,maxIndexOfAdTitles)],
+				description = n.description,
+				icon        = "news",
+				onChat      = onChat,
+				onDelete    = onDelete
+			})
 			ads[ref] = {n=n, station=station}
 		end
 	end
@@ -315,7 +311,7 @@ local onEnterSystem = function (player)
 
 	-- create a news event with low probability
 	if Engine.rand:Number(0,1) < eventProbability and
-		#news <= maxNumberNews and Game.time > minTime then
+		#news <= maxNumberNews and Game.GetStartTime() > minTime then
 		createNewsEvent(timeInHyperspace)
 	end
 
@@ -346,28 +342,30 @@ local onShipDocked = function (ship, station)
 		-- if this is the system of the news
 		if currentSystem:IsSameSystem(n.syspath) then
 			-- send a grateful greeting from the station if the player cargo is right
-			if ship:CountEquip(n.cargo, "cargo") > 0 and n.demand > 0 then
+			local cargo_item = Commodities[n.cargo]
+
+			if ship:GetComponent('CargoManager'):CountCommodity(cargo_item) > 0 and n.demand > 0 then
 				local greeting = string.interp(l["GRATEFUL_GREETING_"..Engine.rand:Integer(0,maxIndexOfGreetings)],
-					{cargo = n.cargo:GetName()})
+					{cargo = cargo_item:GetName()})
 				Comms.Message(greeting)
 			end
 
-			local price = station:GetEquipmentPrice(n.cargo)
-			local stock = station:GetEquipmentStock(n.cargo)
+			local price = station:GetCommodityPrice(cargo_item)
+			local stock = station:GetCommodityStock(cargo_item)
 
-			local newPrice, newStockChange
+			local newPrice, newStock
 			if n.demand > 0 then
 				newPrice = n.demand * price -- increase price
-				newStockChange = -1 * stock -- remove all stock
+				newStock = 0 -- remove all stock
 			elseif n.demand < 0 then
 				newPrice = math.ceil(price / (1 + math.abs(n.demand)))  -- dump price
-				newStockChange = math.ceil(math.abs(n.demand * stock))  -- spam stock
+				newStock = math.ceil(math.abs(n.demand * stock))  -- spam stock
 			else
 				error("demand should probably not be 0.")
 			end
-			-- print("cargo:", n.cargo:GetName(), "price:", newPrice, newStockChange)
-			station:SetEquipmentPrice(n.cargo, newPrice)
-			station:AddEquipmentStock(n.cargo, newStockChange)
+			-- print("--- NewsEvent: cargo:", cargo_item:GetName(), "price:", newPrice, "stock:", newStock)
+			station:SetCommodityPrice(cargo_item, newPrice)
+			station:SetCommodityStock(cargo_item, newStock)
 		end
 	end
 end
@@ -383,11 +381,13 @@ local onGameStart = function ()
 	if not loadedData or not loadedData.ads then return end
 
 	for k,ad in pairs(loadedData.ads) do
-		local ref = ad.station:AddAdvert(
-			{description = ad.n.description,
-			 icon = "news",
-			 onChat= onChat,
-			 onDelete = onDelete})
+		local ref = ad.station:AddAdvert({
+			title       = l["ADTITLE_" .. Engine.rand:Integer(maxIndexOfAdTitles)],
+			description = ad.n.description,
+			icon        = "news",
+			onChat      = onChat,
+			onDelete    = onDelete
+		})
 		ads[ref] = ad
 	end
 

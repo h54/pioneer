@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifdef ENABLE_SERVER_AGENT
@@ -18,7 +18,7 @@
  *
  * This page documents the API only. There are other things that need to be
  * done to enable and use this interface. See
- * http://pioneerwiki.com/wiki/ServerAgent for more information.
+ * https://wiki.pioneerspacesim.net/wiki/ServerAgent for more information.
  */
 
 struct CallbackPair {

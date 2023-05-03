@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "DeathView.h"
@@ -8,7 +8,6 @@
 #include "GameConfig.h"
 #include "Pi.h"
 #include "Player.h"
-#include "ShipCpanel.h"
 #include "graphics/Graphics.h"
 #include "graphics/Renderer.h"
 
@@ -16,11 +15,6 @@ DeathView::DeathView(Game *game) :
 	View(),
 	m_game(game)
 {
-	float size[2];
-	GetSizeRequested(size);
-
-	SetTransparency(true);
-
 	float znear;
 	float zfar;
 	Pi::renderer->GetNearFarRange(znear, zfar);
@@ -42,7 +36,6 @@ void DeathView::Init()
 
 void DeathView::OnSwitchTo()
 {
-	m_game->GetCpan()->HideAll();
 }
 
 void DeathView::Update()

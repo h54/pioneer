@@ -1,51 +1,127 @@
 {
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "DONATE!"
+  },
+  "FLAVOUR_0_DESC": {
+    "description": "",
+    "message": "The Church of The Celestial Flying Spaghetti Monster needs YOUR money to spread the word of god."
+  },
   "FLAVOUR_0_MESSAGE": {
     "description": "",
     "message": "Venligst vælg hvor meget du vil donere til Kirken for Det Flyvende Spaghettimonster."
   },
-  "FLAVOUR_0_TITLE": {
+  "FLAVOUR_1_ADTITLE": {
     "description": "",
-    "message": "DONÉR! Kirken for Det Flyvende Spaghettimonster har brug for DINE penge for at sprede guds budsskab."
+    "message": "DONATE"
+  },
+  "FLAVOUR_1_DESC": {
+    "description": "",
+    "message": "The Guardians of the Free Spirit humbly request your charity to support our monasteries."
   },
   "FLAVOUR_1_MESSAGE": {
     "description": "",
     "message": "Fred være med dig, broder. Venligst vælg en sum, du vil donere til Beskytterne af den Frie Ånd."
   },
-  "FLAVOUR_1_TITLE": {
+  "FLAVOUR_2_ADTITLE": {
     "description": "",
-    "message": "DONÉR: Beskytterne af den Frie Ånd beder ydmygt om din velgørenhed for at støtte vores klostre."
+    "message": "FEELING GENEROUS?"
+  },
+  "FLAVOUR_2_DESC": {
+    "description": "",
+    "message": "War Orphan's Support needs your help to keep up its essential work."
   },
   "FLAVOUR_2_MESSAGE": {
     "description": "",
     "message": "Vælg venligst hvor meget du vil donere til Forældreløse Af Krig og hjælp de lidende børn fra hele galaksen."
   },
-  "FLAVOUR_2_TITLE": {
+  "FLAVOUR_3_ADTITLE": {
     "description": "",
-    "message": "FØLER DU DIG GENERØS? Forældreløse Af Krig beder om din hjælp for at fortsætte det essentielle arbejde."
+    "message": "CONTRIBUTE"
+  },
+  "FLAVOUR_3_DESC": {
+    "description": "",
+    "message": "The Friends of the Galaxy 'Ban Military Drives' campaign needs your money."
   },
   "FLAVOUR_3_MESSAGE": {
     "description": "",
     "message": "Vælg venligst hvor meget du vil donere til GreenWatch og hjælp i kampen mod forurening af vores galakse."
   },
-  "FLAVOUR_3_TITLE": {
+  "FLAVOUR_4_ADTITLE": {
     "description": "",
-    "message": "BIDRAG. Venner til Galaksens 'Bandlys Militærdrev' kampagnen har brug for dine penge."
+    "message": "DONATE!"
+  },
+  "FLAVOUR_4_DESC": {
+    "description": "",
+    "message": "Save our species. Stop the carnage of newly settled worlds."
   },
   "FLAVOUR_4_MESSAGE": {
     "description": "",
     "message": "Vælg venligst hvor meget du vil donere."
   },
-  "FLAVOUR_4_TITLE": {
+  "FLAVOUR_5_ADTITLE": {
     "description": "",
-    "message": "DONÉR! Red vores arter! Stop blodbadet i nyligt bosatte verdener."
+    "message": "SUPPORT FREEDOM!"
+  },
+  "FLAVOUR_5_DESC": {
+    "description": "",
+    "message": "Stop the great injustice of proprietary software controlling your ship."
   },
   "FLAVOUR_5_MESSAGE": {
     "description": "",
     "message": "Befri dit skib! Vælg hvor meget du vil donere. God hacking."
   },
-  "FLAVOUR_5_TITLE": {
+  "FLAVOUR_6_ADTITLE": {
     "description": "",
-    "message": "STØT FRIHED! Stop uretfærdigheden i proprietær software, der styrer dit skib."
+    "message": "VETERANS DAY!"
+  },
+  "FLAVOUR_6_DESC": {
+    "description": "",
+    "message": "Support the veterans of the {MILITARY}."
+  },
+  "FLAVOUR_6_MESSAGE": {
+    "description": "",
+    "message": "The {MILITARY}. You can always count on them.\nCan they count on you?"
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "DO THEY HAVE YOUR SUPPORT?"
+  },
+  "FLAVOUR_7_DESC": {
+    "description": "",
+    "message": "Support the veterans of the {POLICE}."
+  },
+  "FLAVOUR_7_MESSAGE": {
+    "description": "",
+    "message": "Those brave men and women of the {POLICE} who have dedicated their lives to keeping {SYSTEM} safe need your support!"
+  },
+  "FLAVOUR_8_ADTITLE": {
+    "description": "",
+    "message": "SUPPORT OUR VETERANS!"
+  },
+  "FLAVOUR_8_DESC": {
+    "description": "",
+    "message": "Support the veterans of our armed forces."
+  },
+  "FLAVOUR_8_MESSAGE": {
+    "description": "",
+    "message": "The brave soldiers of the {MILITARY} place themselves in harm's way for you!"
+  },
+  "FLAVOUR_9_ADTITLE": {
+    "description": "",
+    "message": "END POVERTY!"
+  },
+  "FLAVOUR_9_DESC": {
+    "description": "",
+    "message": "Support the fight against poverty in the {FACTION}."
+  },
+  "FLAVOUR_9_MESSAGE": {
+    "description": "",
+    "message": "We empower families in the {FACTION} to create a better future for all."
+  },
+  "SALES_PITCH": {
+    "description": "",
+    "message": "Your reputation would benefit by donating {cash} to our cause, but any donation would help."
   },
   "THANK_YOU_ALL_DONATIONS_ARE_WELCOME": {
     "description": "",

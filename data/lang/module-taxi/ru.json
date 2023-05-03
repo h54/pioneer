@@ -103,6 +103,10 @@
     "description": "",
     "message": "ИЩЕМ ТРАНСПОРТ: для перелета небольшой группы в систему {system} за {cash}."
   },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "ТРЕБУЕТСЯ ПРОХОД"
+  },
   "FLAVOUR_0_DANGER": {
     "description": "",
     "message": "Нет."
@@ -133,7 +137,11 @@
   },
   "FLAVOUR_10_ADTEXT": {
     "description": "",
-    "message": "ИЩУ КОРАБЛЬ: для скоростного перелёта в систему {system}! Заплачу {cash}."
+    "message": "VIP ищет быстрый корабль, который может доставить его в систему {system}. Вопросов не задавать."
+  },
+  "FLAVOUR_10_ADTITLE": {
+    "description": "",
+    "message": "ТРЕБУЕТСЯ НЕЗАМЕТНЫЙ КОРАБЛЬ"
   },
   "FLAVOUR_10_DANGER": {
     "description": "",
@@ -165,7 +173,11 @@
   },
   "FLAVOUR_11_ADTEXT": {
     "description": "",
-    "message": "ИЩУ КОРАБЛЬ: для срочного перелёта в систему {system}. Моё предложение - {cash}."
+    "message": "Корпоративному инспектору необходим проход на быстром корабле в систему {system}."
+  },
+  "FLAVOUR_11_ADTITLE": {
+    "description": "",
+    "message": "НУЖЕН БЫСТРЫЙ КОРАБЛЬ"
   },
   "FLAVOUR_11_DANGER": {
     "description": "",
@@ -197,7 +209,11 @@
   },
   "FLAVOUR_12_ADTEXT": {
     "description": "",
-    "message": "ИЩУ КОРАБЛЬ: цель - перелет в систему {system}. Цена сделки {cash}."
+    "message": "Срочно требуется транспорт для убегающего гражданина. Требуется переход в систему {system}."
+  },
+  "FLAVOUR_12_ADTITLE": {
+    "description": "",
+    "message": "ТРЕБУЕТСЯ КОРАБЛЬ"
   },
   "FLAVOUR_12_DANGER": {
     "description": "",
@@ -229,7 +245,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "ИЩЕМ ТРАНСПОРТ: перелет небольшой группы в систему {system} за {cash}."
+    "message": "ИЩЕМ ТРАНСПОРТ: для перелета небольшой группы в систему {system} за {cash}."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "ТРЕБУЕТСЯ ПРОХОД"
   },
   "FLAVOUR_1_DANGER": {
     "description": "",
@@ -261,7 +281,11 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "ИЩЕМ ТРАНСПОРТ: для перелёта маленькой группы в систему {system}. Заплатим {cash}."
+    "message": "ИЩЕМ ТРАНСПОРТ: для перелета небольшой группы в систему {system} за {cash}."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "ПРОХОД ДЛЯ МАЛЫХ ГРУПП"
   },
   "FLAVOUR_2_DANGER": {
     "description": "",
@@ -293,7 +317,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "ИЩУ КОРАБЛЬ: для перелета в систему {system}. Плачу {cash}."
+    "message": "Корабль, необходимый для перехода с высоким риском в систему {system}. Плачу {cash}."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "ТРЕБУЕТСЯ КОРАБЛЬ"
   },
   "FLAVOUR_3_DANGER": {
     "description": "",
@@ -325,7 +353,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "ИЩУ КОРАБЛЬ: для перелета до системы {system}. Оплата {cash}."
+    "message": "Требуется корабль бизнес-класса для перехода в систему {system}. Оплата {cash}."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "ДЕЛОВОЙ ПРОХОД"
   },
   "FLAVOUR_4_DANGER": {
     "description": "",
@@ -357,7 +389,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "ИЩУ КОРАБЛЬ: для тура в систему {system}. Цена контракта {cash}."
+    "message": "Требуется конфиденциальный проход анонимного VIP клиента в систему {system}. Заплатит {cash}."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "КОНФИДЕНЦИАЛЬНЫЙ ПРОХОД"
   },
   "FLAVOUR_5_DANGER": {
     "description": "",
@@ -389,7 +425,11 @@
   },
   "FLAVOUR_6_ADTEXT": {
     "description": "",
-    "message": "ИЩУ КОРАБЛЬ: для перелета в систему {system}. Готов заплатить {cash}."
+    "message": "Репортеру нужна близость к сюжету, развивающемуся в системе {system}. Заплатит {cash}."
+  },
+  "FLAVOUR_6_ADTITLE": {
+    "description": "",
+    "message": "ТРЕБУЕТСЯ КОРАБЛЬ"
   },
   "FLAVOUR_6_DANGER": {
     "description": "",
@@ -421,7 +461,11 @@
   },
   "FLAVOUR_7_ADTEXT": {
     "description": "",
-    "message": "ИЩУ КОРАБЛЬ: чтобы отправиться в систему {system}. Оплата {cash}."
+    "message": "Корабль разыскивается для безопасного прохода в систему {system}. Требуется безопасный транспорт. Будет оплачено {cash}."
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "ТРЕБУЕТСЯ БЕЗОПАСНЫЙ ПРОХОД"
   },
   "FLAVOUR_7_DANGER": {
     "description": "",
@@ -453,7 +497,11 @@
   },
   "FLAVOUR_8_ADTEXT": {
     "description": "",
-    "message": "ИЩУ КОРАБЛЬ: для срочного полёта в систему {system}. С меня {cash}."
+    "message": "Требуется срочный личный проход в систему {system}. Доплата включена в оплату."
+  },
+  "FLAVOUR_8_ADTITLE": {
+    "description": "",
+    "message": "БЫСТРЫЙ ЛИЧНЫЙ ТРАНСПОРТ"
   },
   "FLAVOUR_8_DANGER": {
     "description": "",
@@ -485,7 +533,11 @@
   },
   "FLAVOUR_9_ADTEXT": {
     "description": "",
-    "message": "ИЩУ КОРАБЛЬ: для быстрого перелета в систему {system}. Заплачу {cash}."
+    "message": "Срочно требуется транспорт для честного гражданина. Необходим быстрый проход в систему {system}."
+  },
+  "FLAVOUR_9_ADTITLE": {
+    "description": "",
+    "message": "ЗАКОННЫЙ ПРОХОД"
   },
   "FLAVOUR_9_DANGER": {
     "description": "",
@@ -538,10 +590,6 @@
   "I_MUST_BE_THERE_BEFORE": {
     "description": "",
     "message": "Я хочу быть там не позднее "
-  },
-  "LY": {
-    "description": "",
-    "message": "св.лет"
   },
   "OK_AGREED": {
     "description": "",

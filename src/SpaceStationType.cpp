@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "SpaceStationType.h"
@@ -112,21 +112,20 @@ void SpaceStationType::OnSetupComplete()
 		m_ports.push_back(new_port);
 	}
 
-	int bay = 0;
 	for (auto locIter : locator_mts) {
-		int bayStr, portId;
+		int bay, portId;
 		int minSize, maxSize;
 		char padname[8];
 		const matrix4x4f &locTransform = locIter->GetTransform();
 
-		++bay;
-
 		// eg:loc_A001_p01_s0_500_b01
-		PiVerify(5 == sscanf(locIter->GetName().c_str(), "loc_%4s_p%d_s%d_%d_b%d", &padname[0], &portId, &minSize, &maxSize, &bayStr));
+		PiVerify(5 == sscanf(locIter->GetName().c_str(), "loc_%4s_p%d_s%d_%d_b%d", &padname[0], &portId, &minSize, &maxSize, &bay));
 		PiVerify(bay > 0 && portId > 0);
 
 		// find the port and setup the rest of it's information
+#ifndef NDEBUG
 		bool bFoundPort = false;
+#endif
 		matrix4x4f approach1(0.0);
 		matrix4x4f approach2(0.0);
 		for (auto &rPort : m_ports) {
@@ -134,7 +133,9 @@ void SpaceStationType::OnSetupComplete()
 				rPort.minShipSize = std::min(minSize, rPort.minShipSize);
 				rPort.maxShipSize = std::max(maxSize, rPort.maxShipSize);
 				rPort.bayIDs.push_back(std::make_pair(bay - 1, padname));
+#ifndef NDEBUG
 				bFoundPort = true;
+#endif
 				approach1 = rPort.m_approach[1];
 				approach2 = rPort.m_approach[2];
 				break;

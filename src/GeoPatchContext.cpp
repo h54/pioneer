@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "GeoPatchContext.h"
@@ -61,8 +61,12 @@ void GeoPatchContext::GenerateIndices()
 	// iterate over each index list and optimize it
 	{
 		VertexCacheOptimizerUInt vco;
+#ifndef NDEBUG
 		VertexCacheOptimizerUInt::Result res = vco.Optimize(&pl_short[0], tri_count);
 		assert(0 == res);
+#else
+		vco.Optimize(&pl_short[0], tri_count);
+#endif
 		//create buffer & copy
 		m_indices.Reset(Pi::renderer->CreateIndexBuffer(pl_short.size(), Graphics::BUFFER_USAGE_STATIC));
 		Uint32 *idxPtr = m_indices->Map(Graphics::BUFFER_MAP_WRITE);

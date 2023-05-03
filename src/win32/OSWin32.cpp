@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #define WIN32_LEAN_AND_MEAN
@@ -229,6 +229,12 @@ namespace OS {
 		return hwInfo + name;
 	}
 
+	const std::string GetUserLangCode()
+	{
+		// TODO: implement me
+		return "en";
+	}
+
 #ifdef WITH_BREAKPAD
 	/////////////////////////////////////////////////////// Google Breakpad
 	bool FilterCallback(void *context, EXCEPTION_POINTERS *exinfo,
@@ -289,6 +295,11 @@ namespace OS {
 		std::wstring dumps_path;
 		dumps_path = transcode_utf8_to_utf16(FileSystem::userFiles.GetRoot());
 		ShellExecuteW(NULL, L"open", dumps_path.c_str(), NULL, NULL, SW_SHOWNORMAL);
+	}
+
+	void SetDPIAware()
+	{
+		SetProcessDPIAware();
 	}
 
 } // namespace OS

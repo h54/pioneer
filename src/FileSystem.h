@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _FILESYSTEM_H
@@ -54,12 +54,25 @@ namespace FileSystem {
 	/// <base> must not be empty
 	std::string JoinPathBelow(const std::string &base, const std::string &path);
 
+	/// Given a path in the form <base>/<relpath>, return <relpath>.
+	/// If <base> is not the exact base of <path>, return <path> unchanged
+	std::string GetRelativePath(const std::string &base, const std::string &path);
+
 	/// Collapse redundant path separators, and '.' and '..' components
 	/// NB: this does not interpret symlinks, so the result may refer to
 	/// an entirely different file than the input
 	/// throws std::invalid_argument if the input path resolves to a 'negative' path
 	/// (e.g., "a/../.." resolves to a negative path)
 	std::string NormalisePath(const std::string &path);
+
+	enum class CopyMode {
+		OVERWRITE,			   // overwrite all files in target with files from source
+		ONLY_MISSING_IN_TARGET // only copy files that aren't present in target
+	};
+
+	/// Copy the contents of a directory from sourceFS into a directory in targetFS, according to copymode.
+	/// Returns false if sourceDir or targetDir are invalid
+	bool CopyDir(FileSource &sourceFS, std::string sourceDir, FileSourceFS &targetFS, std::string targetDir, CopyMode copymode = CopyMode::OVERWRITE);
 
 	class FileInfo {
 		friend class FileSource;
@@ -155,6 +168,7 @@ namespace FileSystem {
 		}
 		StringRange AsStringRange() const { return StringRange(m_data, m_size); }
 		ByteRange AsByteRange() const { return ByteRange(m_data, m_size); }
+		std::string_view AsStringView() const { return std::string_view(m_data, m_size); }
 
 	protected:
 		FileData(const FileInfo &info, size_t size, char *data) :

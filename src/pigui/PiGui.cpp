@@ -1,19 +1,19 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "PiGui.h"
+#include "FileSystem.h"
 #include "Input.h"
 #include "Pi.h"
+#include "PiGuiRenderer.h"
 
+#include "core/TaskGraph.h"
 #include "graphics/Graphics.h"
+#include "graphics/Material.h"
 #include "graphics/Texture.h"
-#include "graphics/opengl/RendererGL.h"
-#include "graphics/opengl/TextureGL.h" // nasty, usage of GL is implementation specific
+#include "graphics/VertexBuffer.h"
 #include "imgui/imgui.h"
 
-// Use GLEW instead of GL3W.
-#define IMGUI_IMPL_OPENGL_LOADER_GLEW 1
-#include "imgui/examples/imgui_impl_opengl3.h"
 #include "imgui/examples/imgui_impl_sdl.h"
 
 #include <float.h>
@@ -26,90 +26,168 @@
 
 using namespace PiGui;
 
-std::vector<Graphics::Texture *> m_svg_textures;
+namespace {
+	std::vector<Graphics::Texture *> m_svg_textures;
+}
 
 std::vector<Graphics::Texture *> &PiGui::GetSVGTextures()
 {
 	return m_svg_textures;
 }
 
-static ImTextureID makeTexture(Graphics::Renderer *renderer, unsigned char *pixels, int width, int height)
+// Handle GPU upload of texture image data on the main application thread.
+class UpdateImageTask : public Task
 {
-	PROFILE_SCOPED()
-	// this is not very pretty code
-	// Texture descriptor defines the size, type.
-	// Gone for LINEAR_CLAMP here and RGBA like the original code
-	const vector2f texSize(1.0f, 1.0f);
-	const vector3f dataSize(width, height, 0.0f);
-	const Graphics::TextureDescriptor texDesc(Graphics::TEXTURE_RGBA_8888,
-		dataSize, texSize, Graphics::LINEAR_CLAMP,
-		false, false, false, 0, Graphics::TEXTURE_2D);
-	// Create the texture, calling it via renderer directly avoids the caching call of TextureBuilder
-	// However interestingly this gets called twice which would have been a WIN for the TextureBuilder :/
-	Graphics::Texture *pTex = renderer->CreateTexture(texDesc);
-	// Update it with the actual pixels, this is a two step process due to legacy code
-	pTex->Update(pixels, dataSize, Graphics::TEXTURE_RGBA_8888);
-	PiGui::GetSVGTextures().push_back(pTex); // store for cleanup later
-	return reinterpret_cast<ImTextureID>(uintptr_t(pTex->GetTextureID()));
+public:
+	Graphics::Texture *texture;
+	const unsigned char *imageData;
+
+	UpdateImageTask(Graphics::Texture *tex, const unsigned char *data) :
+		texture(tex),
+		imageData(data)
+	{}
+
+	virtual void OnExecute(TaskRange range) override
+	{
+		PROFILE_SCOPED()
+
+		const Graphics::TextureDescriptor &desc = texture->GetDescriptor();
+		texture->Update(imageData, desc.dataSize, desc.format);
+		delete[] imageData;
+	}
+};
+
+// Run SVG loading and rasterization on a separate thread, defer GPU upload until end-of-frame.
+class RasterizeSVGTask : public Task
+{
+public:
+	RasterizeSVGTask(std::string filename, int width, int height, Graphics::Texture *outputTexture) :
+		filename(filename),
+		width(width),
+		height(height),
+		texture(outputTexture)
+	{}
+
+	bool LoadFile()
+	{
+		PROFILE_SCOPED();
+
+		image = nsvgParseFromFile(filename.c_str(), "px", 96.0f);
+		if (image == NULL) {
+			Log::Error("Could not open SVG image {}.\n", filename);
+			return false;
+		}
+
+		return true;
+	}
+
+	virtual void OnExecute(TaskRange range) override
+	{
+		PROFILE_SCOPED()
+
+		if (!LoadFile())
+			return;
+
+		size_t stride = width * 4;
+		uint8_t *imageData = new uint8_t[stride*height];
+
+		if (!imageData) {
+			Log::Error("Couldn't allocate memory for SVG image {}.\n", filename);
+			return;
+		}
+
+		memset(imageData, 0, stride * height);
+
+		NSVGrasterizer *rast = nsvgCreateRasterizer();
+		if (!rast) {
+			Log::Error("Couldn't create SVG rasterizer for SVG image {}.\n", filename);
+			delete[] imageData;
+			return;
+		}
+
+		float scale = double(width) / int(image->width);
+		nsvgRasterize(rast, image, 0, 0, scale, imageData, width, height, stride);
+
+		nsvgDeleteRasterizer(rast);
+		nsvgDelete(image);
+
+		Pi::GetApp()->GetTaskGraph()->QueueTaskPinned(new UpdateImageTask(texture, imageData));
+	}
+
+private:
+	std::string filename;
+	int width;
+	int height;
+	Graphics::Texture *texture;
+	NSVGimage *image;
+};
+
+static Graphics::Texture* makeSVGTexture(Graphics::Renderer *renderer, int width, int height)
+{
+	const vector3f dataSize(width, height, 0.f);
+	const Graphics::TextureDescriptor texDesc(
+		Graphics::TEXTURE_RGBA_8888, dataSize,
+		Graphics::LINEAR_CLAMP, false, false, false, 0,
+		Graphics::TEXTURE_2D);
+
+	Graphics::Texture *tex = renderer->CreateTexture(texDesc);
+	return tex;
 }
 
 ImTextureID PiGui::RenderSVG(Graphics::Renderer *renderer, std::string svgFilename, int width, int height)
 {
-	PROFILE_SCOPED()
-	Output("nanosvg: %s %dx%d\n", svgFilename.c_str(), width, height);
+	PROFILE_SCOPED();
 
-	// // re-use existing texture if already loaded
-	// for(auto strTex : m_svg_textures) {
-	// 	if(strTex.first == svgFilename) {
-	// 		// nasty bit as I invoke the TextureGL
-	// 		Graphics::TextureGL *pGLTex = reinterpret_cast<Graphics::TextureGL*>(strTex.second);
-	// 		Uint32 result = pGLTex->GetTexture();
-	// 		Output("Re-used existing texture with id: %i\n", result);
-	// 		return reinterpret_cast<void*>(result);
-	// 	}
-	// }
+	Graphics::Texture *tex = makeSVGTexture(renderer, width, height);
+	PiGui::GetSVGTextures().push_back(tex);
 
-	NSVGimage *image = NULL;
-	NSVGrasterizer *rast = NULL;
-	unsigned char *img = NULL;
-	int w;
-	// size of each icon
-	//	int size = 64;
-	// 16 columns
-	//	int W = 16*size;
-	int W = width;
-	// 16 rows
-	//	int H = 16*size;
-	int H = height;
-	img = static_cast<unsigned char *>(malloc(W * H * 4));
-	memset(img, 0, W * H * 4);
-	{
-		PROFILE_SCOPED_DESC("nsvgParseFromFile")
-		image = nsvgParseFromFile(svgFilename.c_str(), "px", 96.0f);
-		if (image == NULL) {
-			Error("Could not open SVG image.\n");
-		}
-	}
-	w = static_cast<int>(image->width);
+	Pi::GetApp()->GetTaskGraph()->QueueTask(new RasterizeSVGTask(svgFilename, width, height, tex));
 
-	rast = nsvgCreateRasterizer();
-	if (rast == NULL) {
-		Error("Could not init rasterizer.\n");
-	}
+	return ImTextureID(tex);
+}
 
-	if (img == NULL) {
-		Error("Could not alloc image buffer.\n");
-	}
-	{
-		PROFILE_SCOPED_DESC("nsvgRasterize")
-		float scale = double(W) / w;
-		float tx = 0;
-		float ty = 0;
-		nsvgRasterize(rast, image, tx, ty, scale, img, W, H, W * 4);
-	}
-	nsvgDeleteRasterizer(rast);
-	nsvgDelete(image);
-	return makeTexture(renderer, img, W, H);
+// Colors taken with love from the Limit Theory editor
+// http://forums.ltheory.com/viewtopic.php?f=30&t=6459
+void StyleColorsDarkPlus(ImGuiStyle &style)
+{
+	style.FramePadding = ImVec2(6, 5);
+
+	style.WindowRounding = 5.0;
+	style.ChildRounding = 2.0;
+	style.FrameRounding = 2.0;
+	style.GrabRounding = 2.0;
+	style.TabRounding = 2.0;
+
+	style.FrameBorderSize = 1.0;
+	style.TabBorderSize = 1.0;
+
+	style.Colors[ImGuiCol_WindowBg] = ImColor(24, 26, 31);
+	style.Colors[ImGuiCol_ChildBg] = ImColor(20, 22, 26);
+	style.Colors[ImGuiCol_PopupBg] = ImColor(20, 22, 26, 240);
+	style.Colors[ImGuiCol_Border] = ImColor(0, 0, 0);
+
+	style.Colors[ImGuiCol_FrameBg] = ImColor(33, 36, 43);
+	style.Colors[ImGuiCol_FrameBgHovered] = ImColor(45, 50, 59);
+	style.Colors[ImGuiCol_FrameBgActive] = ImColor(56, 126, 210);
+
+	style.Colors[ImGuiCol_TitleBg] = ImColor(20, 23, 26);
+	style.Colors[ImGuiCol_TitleBgActive] = ImColor(27, 31, 35);
+	style.Colors[ImGuiCol_TitleBgCollapsed] = ImColor(15, 17, 19);
+	style.Colors[ImGuiCol_MenuBarBg] = ImColor(20, 23, 26);
+
+	style.Colors[ImGuiCol_ScrollbarBg] = ImColor(19, 20, 24);
+	style.Colors[ImGuiCol_ScrollbarGrab] = ImColor(33, 36, 43);
+	style.Colors[ImGuiCol_ScrollbarGrabHovered] = ImColor(81, 88, 105);
+	style.Colors[ImGuiCol_ScrollbarGrabActive] = ImColor(100, 109, 130);
+
+	style.Colors[ImGuiCol_Button] = ImColor(51, 56, 67);
+	style.Colors[ImGuiCol_Header] = ImColor(51, 56, 67);
+	style.Colors[ImGuiCol_HeaderHovered] = ImColor(56, 126, 210);
+	style.Colors[ImGuiCol_HeaderActive] = ImColor(66, 150, 250);
+
+	style.Colors[ImGuiCol_Tab] = ImColor(20, 23, 26);
+	style.Colors[ImGuiCol_TabActive] = ImColor(60, 133, 224);
+	style.Colors[ImGuiCol_TabHovered] = ImColor(66, 150, 250);
 }
 
 //
@@ -117,7 +195,9 @@ ImTextureID PiGui::RenderSVG(Graphics::Renderer *renderer, std::string svgFilena
 //
 
 Instance::Instance() :
-	m_should_bake_fonts(true)
+	m_should_bake_fonts(true),
+	m_debugStyle(),
+	m_debugStyleActive(false)
 {
 	// TODO: clang-format doesn't like list initializers inside function calls
 	// clang-format off
@@ -158,6 +238,24 @@ Instance::Instance() :
 
 	// ensure the tooltip font exists
 	GetFont("pionillium", 14);
+
+	StyleColorsDarkPlus(m_debugStyle);
+}
+
+void Instance::SetDebugStyle()
+{
+	if (!m_debugStyleActive)
+		std::swap(m_debugStyle, ImGui::GetStyle());
+
+	m_debugStyleActive = true;
+}
+
+void Instance::SetNormalStyle()
+{
+	if (m_debugStyleActive)
+		std::swap(m_debugStyle, ImGui::GetStyle());
+
+	m_debugStyleActive = false;
 }
 
 ImFont *Instance::GetFont(const std::string &name, int size)
@@ -233,15 +331,8 @@ ImFont *Instance::AddFont(const std::string &name, int size)
 void Instance::RefreshFontsTexture()
 {
 	PROFILE_SCOPED()
-	// TODO: fix this, do the right thing, don't just re-create *everything* :)
 	ImGui::GetIO().Fonts->Build();
-	ImGui_ImplOpenGL3_CreateDeviceObjects();
-}
-
-void PiDefaultStyle(ImGuiStyle &style)
-{
-	PROFILE_SCOPED()
-	style.WindowBorderSize = 0.0f; // Thickness of border around windows. Generally set to 0.0f or 1.0f. Other values not well tested.
+	m_instanceRenderer->CreateFontsTexture();
 }
 
 // TODO: this isn't very RAII friendly, are we sure we need to call Init() seperately from creating the instance?
@@ -249,6 +340,7 @@ void Instance::Init(Graphics::Renderer *renderer)
 {
 	PROFILE_SCOPED()
 	m_renderer = renderer;
+	m_instanceRenderer.reset(new InstanceRenderer(renderer));
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -263,11 +355,7 @@ void Instance::Init(Graphics::Renderer *renderer)
 		Error("RENDERER_DUMMY is not a valid renderer, aborting.");
 		return;
 	case Graphics::RENDERER_OPENGL_3x:
-#ifdef __APPLE__
-		ImGui_ImplOpenGL3_Init("#version 140");
-#else
-		ImGui_ImplOpenGL3_Init();
-#endif
+		m_instanceRenderer->Initialize();
 		break;
 	}
 
@@ -275,15 +363,11 @@ void Instance::Init(Graphics::Renderer *renderer)
 	// Apply the base style
 	ImGui::StyleColorsDark();
 
-	// Apply Pioneer's style.
-	// TODO: load this from Lua.
-	PiDefaultStyle(ImGui::GetStyle());
-
 	std::string imguiIni = FileSystem::JoinPath(FileSystem::GetUserDir(), "imgui.ini");
-	// this will be leaked, not sure how to deal with it properly in imgui...
-	char *ioIniFilename = new char[imguiIni.size() + 1];
-	std::strncpy(ioIniFilename, imguiIni.c_str(), imguiIni.size() + 1);
-	io.IniFilename = ioIniFilename;
+
+	m_ioIniFilename = new char[imguiIni.size() + 1];
+	std::strncpy(m_ioIniFilename, imguiIni.c_str(), imguiIni.size() + 1);
+	io.IniFilename = m_ioIniFilename;
 }
 
 bool Instance::ProcessEvent(SDL_Event *event)
@@ -297,13 +381,33 @@ void Instance::NewFrame()
 {
 	PROFILE_SCOPED()
 
+	// Iterate through our fonts and check if IMGUI wants a character we don't have.
+	for (auto &iter : m_fonts) {
+		ImFont *font = iter.second;
+		// font might be nullptr, if it wasn't baked yet
+		if (font && !font->MissingGlyphs.empty()) {
+			//			Output("%s %i is missing glyphs.\n", iter.first.first.c_str(), iter.first.second);
+			for (const auto &glyph : font->MissingGlyphs) {
+				AddGlyph(font, glyph);
+			}
+			font->MissingGlyphs.clear();
+		}
+	}
+
+	// Bake fonts before a frame is begun.
+	// This avoids any dangling texture pointers from recreating the texture between
+	// issuing draw commands and rendering
+	if (m_should_bake_fonts) {
+		BakeFonts();
+	}
+
 	switch (m_renderer->GetRendererType()) {
 	default:
 	case Graphics::RENDERER_DUMMY:
 		Error("RENDERER_DUMMY is not a valid renderer, aborting.");
 		return;
 	case Graphics::RENDERER_OPENGL_3x:
-		ImGui_ImplOpenGL3_NewFrame();
+		m_instanceRenderer->NewFrame();
 		break;
 	}
 	ImGui_ImplSDL2_NewFrame(m_renderer->GetSDLWindow());
@@ -320,30 +424,15 @@ void Instance::EndFrame()
 	// Explicitly end frame, to show tooltips. Otherwise, they are shown at the next NextFrame,
 	// which might crash because the font atlas was rebuilt, and the old fonts were cached inside imgui.
 	ImGui::EndFrame();
-
-	// Iterate through our fonts and check if IMGUI wants a character we don't have.
-	for (auto &iter : m_fonts) {
-		ImFont *font = iter.second;
-		// font might be nullptr, if it wasn't baked yet
-		if (font && !font->MissingGlyphs.empty()) {
-			//			Output("%s %i is missing glyphs.\n", iter.first.first.c_str(), iter.first.second);
-			for (const auto &glyph : font->MissingGlyphs) {
-				AddGlyph(font, glyph);
-			}
-			font->MissingGlyphs.clear();
-		}
-	}
-
-	// Bake fonts *after* a frame is done, so the font atlas is not needed any longer
-	if (m_should_bake_fonts) {
-		BakeFonts();
-	}
 }
 
 void Instance::Render()
 {
 	PROFILE_SCOPED()
 	EndFrame();
+
+	// FIXME: renderer uses async command execution but imgui impl is still directly generating GL commands
+	m_renderer->FlushCommandBuffers();
 
 	ImGui::Render();
 
@@ -352,7 +441,7 @@ void Instance::Render()
 	case Graphics::RENDERER_DUMMY:
 		return;
 	case Graphics::RENDERER_OPENGL_3x:
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		m_instanceRenderer->RenderDrawData(ImGui::GetDrawData());
 		break;
 	}
 }
@@ -455,12 +544,13 @@ void Instance::Uninit()
 	case Graphics::RENDERER_DUMMY:
 		return;
 	case Graphics::RENDERER_OPENGL_3x:
-		ImGui_ImplOpenGL3_Shutdown();
+		m_instanceRenderer->Shutdown();
 		break;
 	}
 
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
+	delete[] m_ioIniFilename;
 }
 
 //

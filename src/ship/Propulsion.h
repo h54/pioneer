@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef PROPULSION_H
@@ -50,9 +50,9 @@ public:
 	vector3d GetThrustUncapped(const vector3d &dir) const;
 
 	inline double GetAccel(Thruster thruster) const { return GetThrust(thruster) / m_dBody->GetMass(); }
-	inline double GetAccelFwd() const { return GetAccel(THRUSTER_FORWARD); } //GetThrustFwd() / m_dBody->GetMass(); }
-	inline double GetAccelRev() const { return GetAccel(THRUSTER_REVERSE); } //GetThrustRev() / m_dBody->GetMass(); }
-	inline double GetAccelUp() const { return GetAccel(THRUSTER_UP); } //GetThrustUp() / m_dBody->GetMass(); }
+	inline double GetAccelFwd() const { return GetAccel(THRUSTER_FORWARD); }
+	inline double GetAccelRev() const { return GetAccel(THRUSTER_REVERSE); }
+	inline double GetAccelUp() const { return GetAccel(THRUSTER_UP); }
 	inline double GetAccelMin() const { return GetThrustMin() / m_dBody->GetMass(); }
 
 	// Clamp thruster levels and scale them down so that a level of 1
@@ -83,7 +83,14 @@ public:
 		FUEL_EMPTY,
 	};
 
-	inline FuelState GetFuelState() const { return (m_thrusterFuel > 0.05f) ? FUEL_OK : (m_thrusterFuel > 0.0f) ? FUEL_WARNING : FUEL_EMPTY; }
+	inline FuelState GetFuelState() const
+	{
+		return (m_thrusterFuel > 0.05f) ?
+			FUEL_OK :
+			(m_thrusterFuel > 0.0f) ?
+				FUEL_WARNING :
+				FUEL_EMPTY;
+	}
 	// fuel left, 0.0-1.0
 	inline double GetFuel() const { return m_thrusterFuel; }
 	inline double GetFuelReserve() const { return m_reserveFuel; }
@@ -104,14 +111,12 @@ public:
 	void Render(Graphics::Renderer *r, const Camera *camera, const vector3d &viewCoords, const matrix4x4d &viewTransform);
 
 	// AI on Propulsion
-	void AIModelCoordsMatchAngVel(const vector3d &desiredAngVel, double softness);
 	void AIModelCoordsMatchSpeedRelTo(const vector3d &v, const DynamicBody *other);
 	void AIAccelToModelRelativeVelocity(const vector3d &v);
-
-	bool AIMatchVel(const vector3d &vel);
-	bool AIChangeVelBy(const vector3d &diffvel); // acts in object space
-	vector3d AIChangeVelDir(const vector3d &diffvel); // object space, maintain direction
-	void AIMatchAngVelObjSpace(const vector3d &angvel);
+	bool AIMatchVel(const vector3d &vel, const vector3d &powerLimit = vector3d(1.0));
+	bool AIChangeVelBy(const vector3d &diffvel, const vector3d &powerLimit = vector3d(1.0)); // acts in object space
+	vector3d AIChangeVelDir(const vector3d &diffvel);										 // object space, maintain direction
+	void AIMatchAngVelObjSpace(const vector3d &angvel, const vector3d &powerLimit = vector3d(1.0), bool ignoreZeroValues = false);
 	double AIFaceUpdir(const vector3d &updir, double av = 0);
 	double AIFaceDirection(const vector3d &dir, double av = 0);
 	vector3d AIGetLeadDir(const Body *target, const vector3d &targaccel, double projspeed);
@@ -128,7 +133,7 @@ private:
 	// Fuel
 	int m_fuelTankMass;
 	double m_thrusterFuel; // 0.0-1.0, remaining fuel
-	double m_reserveFuel; // 0.0-1.0, fuel not to touch for the current AI program
+	double m_reserveFuel;  // 0.0-1.0, fuel not to touch for the current AI program
 	double m_effectiveExhaustVelocity;
 	bool m_fuelStateChange;
 

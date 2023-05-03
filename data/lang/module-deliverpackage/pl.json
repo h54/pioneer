@@ -57,7 +57,11 @@
   },
   "FLAVOUR_0_ADTEXT": {
     "description": "",
-    "message": "LECISZ DO systemu {system}? Zapłata za dostarczenie małej paczki."
+    "message": "Wybierasz się do systemu {system}? Zapłacę za dostarczenie małej przesyłki."
+  },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "MIĘDZYGWIEZDNA DOSTAWA"
   },
   "FLAVOUR_0_FAILUREMSG": {
     "description": "",
@@ -77,7 +81,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "PRZESYŁKA. Dostarczenie paczki do systemu {system}."
+    "message": "Poszukiwane: Dostawa paczki do systemu {system}."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "DOSTAWCA POSZUKIWANY"
   },
   "FLAVOUR_1_FAILUREMSG": {
     "description": "",
@@ -97,7 +105,11 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "PILNE. Potrzebny szybki statek. Dostarczenie paczki do systemu {system}."
+    "message": "Pilne! Szybki statek potrzebny żeby dostarczyć paczkę do systemu {system}."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "PILNA DOSTAWA"
   },
   "FLAVOUR_2_FAILUREMSG": {
     "description": "",
@@ -117,7 +129,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "DORĘCZ. Dokumenty do systemu {system}. {cash} dla doświadczonego pilota."
+    "message": "Dostawa poufnych dokumentów do systemu {system}. Zapłacę {cash} doświadczonemu pilotowi."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "DOSTAWA DOKUMENTÓW"
   },
   "FLAVOUR_3_FAILUREMSG": {
     "description": "",
@@ -137,7 +153,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "KURIER. Poszukujemy kuriera do systemu {system}."
+    "message": "Międzygwiezdne Usługi Pocztowe. Poszukujemy statku który wyruszy z dostawą do systemu {system}"
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "USŁUGI POCZTOWE"
   },
   "FLAVOUR_4_FAILUREMSG": {
     "description": "",
@@ -157,7 +177,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "PRZEPROWADZKA. Przewiezienie sprzętu z magazynu do {starport}."
+    "message": "Transport należy dostarczyć do {starport} z magazynu w porcie."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "PRZEPROWADZKA"
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
@@ -177,7 +201,11 @@
   },
   "FLAVOUR_6_ADTEXT": {
     "description": "",
-    "message": "LOKALNY KURIER. Dostarczenie małej paczki do {starport}."
+    "message": "Usługi lokalnego kuriera poszukiwane. Dostawa małej paczki do {starport}."
+  },
+  "FLAVOUR_6_ADTITLE": {
+    "description": "",
+    "message": "KURIER KRÓTKODYSTANSOWY"
   },
   "FLAVOUR_6_FAILUREMSG": {
     "description": "",
@@ -197,7 +225,11 @@
   },
   "FLAVOUR_7_ADTEXT": {
     "description": "",
-    "message": "FRACHT MIĘDZYPLANETARNY. Transport z lokalnego magazynu do {starport}."
+    "message": "Standardowy kontrakt dostawy międzyplanetarnej. Fracht towaru do {starport}."
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "MIĘDZYPLANETARNY TRASNSPORT"
   },
   "FLAVOUR_7_FAILUREMSG": {
     "description": "",
@@ -217,7 +249,11 @@
   },
   "FLAVOUR_8_ADTEXT": {
     "description": "",
-    "message": "LOKALNA PRZESYŁKA. Szybkie dostarczenie elementu do {starport}."
+    "message": "Pilna osobista dostawa. Potrzebuje szybkiego dostarczenia do {starport}."
+  },
+  "FLAVOUR_8_ADTITLE": {
+    "description": "",
+    "message": "NIEDALEKA DOSTAWA"
   },
   "FLAVOUR_8_FAILUREMSG": {
     "description": "",
@@ -237,7 +273,11 @@
   },
   "FLAVOUR_9_ADTEXT": {
     "description": "",
-    "message": "PILNA PRZESYŁKA. Przewóz nietrwałych produktów do {starport}."
+    "message": "Potrzeba transportu towaru. Pilna wysyłka towarów łatwo psujących się do {starport}/"
+  },
+  "FLAVOUR_9_ADTITLE": {
+    "description": "",
+    "message": "TRANSPORT PRZESYŁKI"
   },
   "FLAVOUR_9_FAILUREMSG": {
     "description": "",
@@ -270,10 +310,6 @@
   "I_HIGHLY_DOUBT_IT": {
     "description": "",
     "message": "Bardzo w to wątpię."
-  },
-  "LY": {
-    "description": "",
-    "message": "lś"
   },
   "NOT_ANY_MORE_THAN_USUAL": {
     "description": "",

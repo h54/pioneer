@@ -1,266 +1,265 @@
--- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
-local Engine = require 'Engine'
 local Game = require 'Game'
-local Space = require 'Space'
 local Format = require 'Format'
-local utils = require 'utils'
-
 local Lang = require 'Lang'
+local utils = require "libs.utils"
+
+local lc = Lang.GetResource("core");
 local lui = Lang.GetResource("ui-core");
 
 local ui = require 'pigui'
 
+local getBodyIcon = require 'pigui.modules.flight-ui.body-icons'
+
 local colors = ui.theme.colors
 local icons = ui.theme.icons
+local styles = ui.theme.styles
+local Vector2 = _G.Vector2
 
-local ASTEROID_RADIUS = 1500000 -- rocky planets smaller than this (in meters) are considered an asteroid, not a planet
+local style = ui.rescaleUI {
+	iconSize = Vector2(24,24),
+	bodyIconSize = Vector2(18,18),
+	buttonSize = Vector2(32,32)
+}
 
-local function getBodyIcon(body)
-	local st = body.superType
-	local t = body.type
-	if st == "STARPORT" then
-		if t == "STARPORT_ORBITAL" then
-			return icons.spacestation
-		elseif body.type == "STARPORT_SURFACE" then
-			return icons.starport
-		end
-	elseif st == "GAS_GIANT" then
-		return icons.gas_giant
-	elseif st == "STAR" then
-		return icons.sun
-	elseif st == "ROCKY_PLANET" then
-		if body:IsMoon() then
-			return icons.moon
-		else
-			local sb = body:GetSystemBody()
-			if sb.radius < ASTEROID_RADIUS then
-				return icons.asteroid_hollow
-			else
-				return icons.rocky_planet
-			end
-		end
-	elseif body:IsShip() then
-		local shipClass = body:GetShipClass()
-		if icons[shipClass] then
-			return icons[shipClass]
-		else
-			print("data/pigui/game.lua: getBodyIcon unknown ship class " .. (shipClass and shipClass or "nil"))
-			return icons.ship -- TODO: better icon
-		end
-	elseif body:IsHyperspaceCloud() then
-		return icons.hyperspace -- TODO: better icon
-	elseif body:IsMissile() then
-		return icons.bullseye -- TODO: better icon
-	elseif body:IsCargoContainer() then
-		return icons.rocky_planet
-	else
-		print("data/pigui/game.lua: getBodyIcon not sure how to process body, supertype: " .. (st and st or "nil") .. ", type: " .. (t and t or "nil"))
-		utils.print_r(body)
-		return icons.ship
-	end
+-- Reusable widget to list the static contents of a system.
+-- Intended to be used by flight-ui as a list of nav targets,
+-- and the system info view as a list of bodies in-system
+
+---@class SystemOverviewWidget
+---@field New fun(): SystemOverviewWidget
+local SystemOverviewWidget = utils.class('ui.SystemOverviewWidget')
+
+function SystemOverviewWidget:Constructor()
+	self.shouldDisplayPlayerDistance = false
+	self.shouldSortByPlayerDistance = false
+	self.shouldShowStations = false
+	self.shouldShowMoons = false
+	self.focusSearchResults = false
+	self.visible = false
+	self.filterText = ""
+	self.size = Vector2(0, 0)
+	self.buttonSize = nil
 end
 
 local function sortByPlayerDistance(a,b)
-	if a.body == nil then
-		return false;
-	end
-	
-	if b.body == nil then
-		return false;
-	end
-	
-	return a.body:DistanceTo(Game.player) < b.body:DistanceTo(Game.player)
+	return (a.body and b.body) and a.body:DistanceTo(Game.player) < b.body:DistanceTo(Game.player)
 end
 
 local function sortBySystemDistance(a,b)
 	return (a.systemBody.periapsis + a.systemBody.apoapsis) < (b.systemBody.periapsis + b.systemBody.apoapsis)
 end
-local function calculateEntry(systemBody, parent, navTarget, filterFunction, always_include)
-	local body = systemBody.body
+
+local function make_result(systemBody, label, isSelected)
+	return {
+		systemBody = systemBody,
+		body = systemBody.body,
+		label = label,
+		children = {},
+		visible = true,
+		children_visible = isSelected,
+		selected = isSelected,
+		has_space_stations = false,
+		has_ground_stations = false,
+		has_moons = false,
+	}
+end
+
+-- Returns a table of entries.
+-- Each entry will have { children_visible = true } if they are a parent of, or are a selected object
+-- Entries that are excluded by the current filter will have { visible = false }
+---@return table @ information about a given SystemBody
+local function calculateEntry(systemBody, parent, selected, filter)
 	local result = nil
-	local should_discard = false
-	local is_target = body == navTarget
-	if body then
-		result = { systemBody = systemBody,
-							 body = body,
-							 label = body.label,
-							 children = {},
-							 is_target = is_target,
-							 has_space_stations = false,
-							 has_ground_stations = false,
-							 has_moons = false,
-		}
-		if not filterFunction(body) then
-			should_discard = true
-		end
-		if body:IsSpaceStation() then
-			parent.has_space_stations = true
-		elseif body:IsGroundStation() then
-			parent.has_ground_stations = true
-		elseif body:IsMoon() then
-			parent.has_moons = true
-		end
-	else
-		result = { systemBody = systemBody,
-							 body = nil,
-							 label = systemBody.name,
-							 children = {},
-							 is_target = false,
-							 has_space_stations = false,
-							 has_ground_stations = false,
-							 has_moons = false,
-		}
+	local isSelected = selected[systemBody] or (systemBody.body and selected[systemBody.body]) or false
+
+	result = make_result(systemBody, systemBody.name, isSelected)
+	result.visible = isSelected or filter(systemBody)
+
+	-- Set show-flags on the direct parent of this body
+	if systemBody.isSpaceStation then
+		parent.has_space_stations = true
+	elseif systemBody.isGroundStation then
+		parent.has_ground_stations = true
+	elseif systemBody.isMoon then
+		parent.has_moons = true
 	end
 
-	local children = systemBody.children or {}
-	for _,v in pairs(children) do
-		local c = calculateEntry(v, result, navTarget, filterFunction, is_target)
-		if c then
-			should_discard = false
-			table.insert(result.children, c)
-		end
+	for _, child in pairs(systemBody.children or {}) do
+		table.insert(result.children, calculateEntry(child, result, selected, filter))
 	end
-	if should_discard and not always_include and not is_target then
-		return nil
+
+	-- propagate children_visible and visible upwards
+	if parent then
+		if result.visible then parent.visible = true end
+		if result.children_visible then parent.children_visible = true end
+	end
+
+	return result
+end
+
+function SystemOverviewWidget:onBodySelected(sBody, body)
+	-- override me
+end
+
+function SystemOverviewWidget:onBodyDoubleClicked(sBody, body)
+	-- override me
+end
+
+function SystemOverviewWidget:onBodyContextMenu(sBody, body)
+	-- override me
+end
+
+-- Render a row for an entry in the system overview
+function SystemOverviewWidget:renderEntry(entry, indent)
+	local sbody = entry.systemBody
+	local label = entry.label or "UNKNOWN"
+
+	ui.dummy(Vector2(style.iconSize.x * indent / 2.0, style.iconSize.y))
+	ui.sameLine()
+	ui.icon(getBodyIcon(sbody), style.iconSize, colors.font)
+	ui.sameLine()
+
+	local pos = ui.getCursorPos()
+	if ui.selectable("##" .. label, entry.selected, {"SpanAllColumns"}, Vector2(0, style.iconSize.y)) then
+		self:onBodySelected(sbody, entry.body)
+	end
+	if ui.isItemHovered() and ui.isMouseDoubleClicked(0) then
+		self:onBodyDoubleClicked(sbody, entry.body)
+	end
+	if ui.isItemHovered() and ui.isMouseClicked(1) then
+		self:onBodyContextMenu(sbody, entry.body)
+	end
+
+	ui.setCursorPos(pos)
+	ui.alignTextToLineHeight(style.iconSize.y)
+	ui.text(label)
+	ui.sameLine()
+
+	if entry.has_moons then
+		ui.icon(icons.moon, style.bodyIconSize, colors.font)
+		ui.sameLine(0,0.01)
+	end
+	if entry.has_ground_stations then
+		ui.icon(icons.starport, style.bodyIconSize, colors.font)
+		ui.sameLine(0,0.01)
+	end
+	if entry.has_space_stations then
+		ui.icon(icons.spacestation, style.bodyIconSize, colors.font)
+		ui.sameLine(0,0.01)
+	end
+
+	ui.nextColumn()
+	ui.dummy(Vector2(0, style.iconSize.y))
+	ui.sameLine()
+	ui.alignTextToLineHeight(style.iconSize.y)
+
+	local distance
+	if entry.body and self.shouldDisplayPlayerDistance then
+		distance = entry.body:DistanceTo(Game.player)
 	else
-		return result
+		distance = (sbody.apoapsis + sbody.periapsis) / 2.0
+	end
+	ui.text(Format.Distance(distance))
+	ui.nextColumn()
+end
+
+function SystemOverviewWidget:showEntry(entry, indent, sortFunction)
+	if entry.systemBody.type ~= 'GRAVPOINT' then self:renderEntry(entry, indent) end
+
+	local isVisible = entry.children_visible and not self.focusSearchResults
+	table.sort(entry.children, sortFunction)
+	for _, v in pairs(entry.children) do
+		if v.visible or isVisible then
+			self:showEntry(v, indent + 1, sortFunction)
+		end
 	end
 end
-local function showEntry(entry, indent, sortFunction)
-	local body = entry.body
-	local is_target = entry.is_target
-	local label = entry.label
-	local has_ground_stations = entry.has_ground_stations
-	local has_space_stations = entry.has_space_stations
-	local has_moons = entry.has_moons
-	if body then
-		ui.text(string.rep(" ", indent))
-		ui.sameLine()
-		ui.icon(getBodyIcon(body), Vector2(16,16), colors.white)
-		ui.sameLine()
-		if ui.selectable(label or "UNKNOWN", is_target, {"SpanAllColumns"}) then
-			Game.player:SetNavTarget(body)
-		end
-		if ui.isItemHovered() and ui.isMouseClicked(1) then
-			ui.openDefaultRadialMenu(body)
+
+function SystemOverviewWidget:drawControlButtons()
+	local buttonSize = self.buttonSize or styles.MainButtonSize
+
+	if self.shouldDisplayPlayerDistance then
+		if ui.mainMenuButton(icons.distance, lui.TOGGLE_OVERVIEW_SORT_BY_PLAYER_DISTANCE, self.shouldSortByPlayerDistance, buttonSize) then
+			self.shouldSortByPlayerDistance = not self.shouldSortByPlayerDistance
 		end
 		ui.sameLine()
-		if has_moons then
-			ui.icon(icons.moon, Vector2(16,16), colors.white)
-			ui.sameLine(0,0.01)
-		end
-		if has_ground_stations then
-			ui.icon(icons.starport, Vector2(16,16), colors.white)
-			ui.sameLine(0,0.01)
-		end
-		if has_space_stations then
-			ui.icon(icons.spacestation, Vector2(16,16), colors.white)
-			ui.sameLine(0,0.01)
-		end
-		ui.nextColumn()
-		ui.text(Format.Distance(body:DistanceTo(Game.player)))
-		ui.nextColumn()
 	end
-	local children = entry.children or {}
-	table.sort(children, sortFunction)
-	for _,v in pairs(children) do
-		showEntry(v, indent + 4, sortFunction)
+
+	if ui.mainMenuButton(icons.moon, lui.TOGGLE_OVERVIEW_SHOW_MOONS, self.shouldShowMoons, buttonSize) then
+		self.shouldShowMoons = not self.shouldShowMoons
+	end
+	ui.sameLine()
+	if ui.mainMenuButton(icons.filter_stations, lui.TOGGLE_OVERVIEW_SHOW_STATIONS, self.shouldShowStations, buttonSize) then
+		self.shouldShowStations = not self.shouldShowStations
 	end
 end
-local shouldSortByPlayerDistance = false
-local shouldShowStations = false
-local shouldShowMoons = false
-local filterText = ""
-local ignore
-local showWindow = false
-local function showInfoWindow()
-	if Game.CurrentView() == "world" and not Game.player:IsDocked() then
-		if Game.InHyperspace() or not Game.system.explored then
-			showWindow = false
+
+function SystemOverviewWidget:displaySearch()
+	local filterText = ui.inputText("", self.filterText, {})
+	self.filterText = filterText
+	self.focusSearchResults = filterText and filterText ~= ""
+
+	ui.sameLine()
+	ui.icon(icons.filter_bodies, style.buttonSize, colors.frame, lui.OVERVIEW_NAME_FILTER)
+end
+
+function SystemOverviewWidget:display(system, root, selected)
+	root = root or system.rootSystemBody
+
+	local sortFunction = self.shouldSortByPlayerDistance and sortByPlayerDistance or sortBySystemDistance
+
+	local filterText = self.filterText
+	local filterFunction = function(systemBody)
+		-- only plain text matches, no regexes
+		if filterText ~= "" and filterText ~= nil and not string.find(systemBody.name:lower(), filterText:lower(), 1, true) then
+			return false
 		end
-		local width_fraction = 5
-		local height_fraction = 2
-		local mainButtonSize = Vector2(32,32) * (ui.screenHeight / 1200)
-		local button_size = Vector2(24,24) * (ui.screenHeight / 1200)
-		local frame_padding = 1
-		local bg_color = colors.buttonBlue
-		local fg_color = colors.white
-		if not showWindow then
-			ui.setNextWindowPos(Vector2(ui.screenWidth - button_size.x * 3 - 10 , 10) , "Always")
-			ui.window("SystemTargetsSmall", {"NoTitleBar", "NoResize", "NoFocusOnAppearing", "NoBringToFrontOnFocus", "NoSavedSettings"},
-			function()
-				if ui.coloredSelectedIconButton(icons.system_overview, mainButtonSize, false, frame_padding, bg_color, fg_color, lui.TOGGLE_OVERVIEW_WINDOW) then
-					showWindow = true
-				end
-			end)
+		if not (self.shouldShowMoons or self.focusSearchResults) and systemBody.isMoon then
+			return false
+		elseif not (self.shouldShowStations or self.focusSearchResults) and systemBody.isStation then
+			return false
+		end
+		return true
+	end
+
+	ui.child("spaceTargets", self.size, function()
+		local tree = calculateEntry(root, nil, selected, filterFunction)
+
+		if tree then
+			ui.columns(2, "spaceTargetColumnsOn", false) -- no border
+			ui.setColumnOffset(1, ui.getWindowSize().x * 0.66)
+			self:showEntry(tree, 0, sortFunction)
+			ui.columns(1, "spaceTargetColumnsOff", false) -- no border
+			ui.radialMenu("systemoverviewspacetargets")
 		else
-			ui.setNextWindowSize(Vector2(ui.screenWidth / width_fraction, ui.screenHeight / height_fraction) , "Always")
-			ui.setNextWindowPos(Vector2(ui.screenWidth - (ui.screenWidth / width_fraction) - 10 , 10) , "Always")
-			ui.withStyleColors({ ["WindowBg"] = colors.commsWindowBackground }, function()
-				ui.withStyleVars({ ["WindowRounding"] = 0.0 }, function()
-					ui.window("SystemTargets", {"NoTitleBar", "NoResize", "NoFocusOnAppearing", "NoBringToFrontOnFocus"},
-					function()
-						ui.withFont(ui.fonts.pionillium.medium.name, ui.fonts.pionillium.medium.size, function()
-							--											ignore, shouldSortByPlayerDistance = ui.checkbox("Player Distance", shouldSortByPlayerDistance)
-							if ui.coloredSelectedIconButton(icons.distance, button_size, shouldSortByPlayerDistance, frame_padding, bg_color, fg_color, lui.TOGGLE_OVERVIEW_SORT_BY_PLAYER_DISTANCE) then
-								shouldSortByPlayerDistance = not shouldSortByPlayerDistance
-							end
-							ui.sameLine()
-							--											ignore, shouldShowMoons = ui.checkbox("Moons", shouldShowMoons)
-							if ui.coloredSelectedIconButton(icons.moon, button_size, shouldShowMoons, frame_padding, bg_color, fg_color, lui.TOGGLE_OVERVIEW_SHOW_MOONS) then
-								shouldShowMoons = not shouldShowMoons
-							end
-							ui.sameLine()
-							-- ignore, shouldShowStations = ui.checkbox("Stations", shouldShowStations)
-							if ui.coloredSelectedIconButton(icons.filter_stations, button_size, shouldShowStations, frame_padding, bg_color, fg_color, lui.TOGGLE_OVERVIEW_SHOW_STATIONS) then
-								shouldShowStations = not shouldShowStations
-							end
-							ui.sameLine(ui.getWindowSize().x - button_size.x - 10)
-							if ui.coloredSelectedIconButton(icons.system_overview, button_size, false, frame_padding, bg_color, fg_color, lui.TOGGLE_OVERVIEW_WINDOW) then
-								showWindow = false
-							end
-							filterText, ignore = ui.inputText("", filterText, {})
-							ui.sameLine()
-							ui.icon(icons.filter_bodies, button_size, colors.frame, lui.OVERVIEW_NAME_FILTER)
-							local sortFunction = shouldSortByPlayerDistance and sortByPlayerDistance or sortBySystemDistance
-							local filterFunction = function(body)
-								if body then
-									-- only plain text matches, no regexes
-									if filterText ~= "" and filterText ~= nil and not string.find(body.label:lower(), filterText:lower(), 1, true) then
-										return false
-									end
-									if (not shouldShowMoons) and body:IsMoon() then
-										return false
-									elseif (not shouldShowStations) and body:IsStation() then
-										return false
-									end
-								end
-								return true
-							end
-							ui.child("spaceTargets", function()
-								local root = Space.rootSystemBody
-								local tree = calculateEntry(root, nil, Game.player:GetNavTarget(), filterFunction, false)
-								if tree then
-									ui.columns(2, "spaceTargetColumnsOn", false) -- no border
-									ui.setColumnOffset(1, ui.screenWidth / width_fraction * 0.66)
-									showEntry(tree, 0, sortFunction)
-									ui.columns(1, "spaceTargetColumnsOff", false) -- no border
-									ui.radialMenu("systemoverviewspacetargets")
-								else
-									ui.text(lui.NO_FILTER_MATCHES)
-								end
-							end)
-						end)
-					end)
-				end)
-			end)
+			ui.text(lui.NO_FILTER_MATCHES)
 		end
+	end)
+end
+
+function SystemOverviewWidget:displaySidebarTitle(system)
+	local spacing = styles.ItemInnerSpacing
+	local numButtons = self.shouldDisplayPlayerDistance and 3 or 2
+	local button_width = (ui.getLineHeight() + spacing.x) * numButtons - spacing.x
+
+	local pos = ui.getCursorPos() + Vector2(ui.getContentRegion().x - button_width, 0)
+	self.buttonSize = Vector2(ui.getLineHeight() - styles.MainButtonPadding * 2)
+
+	if system then
+		ui.text(system.name)
+
+		ui.setCursorPos(pos)
+		ui.withStyleVars({ ItemSpacing = spacing }, function()
+			ui.withFont(ui.fonts.pionillium.medium, function()
+				self:drawControlButtons()
+			end)
+		end)
+	else
+		ui.text(lc.HYPERSPACE)
 	end
 end
-ui.registerModule("game", showInfoWindow)
-ui.toggleSystemTargets = function()
-	showWindow = not showWindow
-end
-return {}
+
+return SystemOverviewWidget

@@ -1,10 +1,11 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "LuaMetaType.h"
 #include "Lua.h"
 #include "LuaObject.h"
-#include "PropertyMap.h"
+#include "LuaPropertyMap.h"
+#include "core/Property.h"
 
 // if found, returns true, leaves item to return to lua on top of stack
 // if not found, returns false
@@ -109,17 +110,16 @@ static int l_index(lua_State *l)
 	// normal userdata object
 	// first check properties. we don't need to drill through lua if the
 	// property is already available
-	lua_getuservalue(l, 1);
-	if (!lua_isnil(l, -1)) {
-		lua_pushvalue(l, 2); // push the key
-		lua_gettable(l, -2); // get the property from the table
-		if (!lua_isnil(l, -1)) {
-			return 1; // return the property if it is set
+	if (lua_isstring(l, 2)) {
+		PropertyMap *map = LuaObjectBase::GetPropertiesFromObject(l, 1);
+		if (map) {
+			auto &prop = map->Get(LuaPull<std::string_view>(l, 2));
+			if (!prop.is_null()) {
+				LuaPush(l, prop);
+				return 1;
+			}
 		}
-
-		lua_pop(l, 1);
 	}
-	lua_pop(l, 1);
 
 	// push the metatype registry here for later
 	lua_getfield(l, LUA_REGISTRYINDEX, "LuaMetaTypes");
@@ -170,35 +170,21 @@ static int l_newindex(lua_State *l)
 	// Once we've dealt with the chance of a typeless object, the only thing
 	// left is userdata.
 
-	// first check properties. we don't need to drill through the metatype stack
-	// if the property is already available
-	lua_getuservalue(l, 1);
-
-	// Ensure the object already has the property defined
+	// First, check properties. We don't need to drill through the metatype stack
+	// if the property is already available.
 	// Properties take precedence over attrs only if they've been previously set
 	// (use setprop if you want to be sure you're setting a property)
-	bool hasProperty = false;
-	if (!lua_isnil(l, -1)) {
-		lua_pushvalue(l, 2);
-		lua_gettable(l, -2);
-		hasProperty = !lua_isnil(l, -1);
-		lua_pop(l, 1);
-	}
+	if (lua_isstring(l, 2)) {
+		PropertyMap *map = LuaObjectBase::GetPropertiesFromObject(l, 1);
+		if (map) {
+			auto key = LuaPull<std::string_view>(l, 2);
 
-	// if the object is a valid propertied object, call its setters
-	if (hasProperty) {
-		auto *properties = LuaObjectBase::GetPropertiesFromObject(l, 1);
-
-		std::string name = lua_tostring(l, 2);
-		if (lua_isnumber(l, 3)) {
-			properties->Set(name, lua_tonumber(l, 2));
-		} else if (lua_isstring(l, 3)) {
-			properties->Set(name, lua_tostring(l, 3));
+			if (!map->Get(key).is_null()) {
+				map->Set(key, LuaPull<Property>(l, 3));
+				return 0;
+			}
 		}
-
-		return 0;
 	}
-	lua_pop(l, 1);
 
 	// push the metatype registry here for later
 	lua_getfield(l, LUA_REGISTRYINDEX, "LuaMetaTypes");
@@ -345,10 +331,11 @@ void LuaMetaTypeBase::GetNames(std::vector<std::string> &names, const std::strin
 
 	// properties
 	if (!methodsOnly) {
-		lua_getuservalue(l, -1);
-		if (!lua_isnil(l, -1))
-			get_names_from_table(l, names, prefix, false);
-		lua_pop(l, 1);
+		// TODO: iterate over PropertyMap if we need this functionality
+		// lua_getuservalue(l, -1);
+		// if (!lua_istable(l, -1))
+		// 	get_names_from_table(l, names, prefix, false);
+		// lua_pop(l, 1);
 	}
 
 	// check the metatable (and its parents) for methods and attributes
@@ -409,6 +396,30 @@ void LuaMetaTypeBase::GetMetatable() const
 	LUA_DEBUG_END(m_lua, 1);
 }
 
+void *LuaMetaTypeBase::TestUserdata(lua_State *l, int index, const char *type)
+{
+	void *p = lua_touserdata(l, index);
+	if (p != nullptr && lua_getmetatable(l, index)) {
+		if (GetMetatableFromName(l, type) && lua_rawequal(l, -1, -2)) {
+			lua_pop(l, 2);
+			return p;
+		}
+		lua_pop(l, 1);
+	}
+	return nullptr;
+}
+
+void *LuaMetaTypeBase::CheckUserdata(lua_State *l, int index, const char *type)
+{
+	void *p = TestUserdata(l, index, type);
+	if (!p) {
+		const char *msg = lua_pushfstring(l, "%s expected, got %s", type, luaL_typename(l, index));
+		luaL_argerror(l, index, msg);
+	}
+
+	return p;
+}
+
 void LuaMetaTypeBase::CreateMetaType(lua_State *l)
 {
 	luaL_getsubtable(l, LUA_REGISTRYINDEX, "LuaMetaTypes");
@@ -450,6 +461,9 @@ void LuaMetaTypeBase::CreateMetaType(lua_State *l)
 
 	// create the methods table
 	lua_newtable(l);
+	// create the methods metatable
+	lua_newtable(l);
+	lua_setmetatable(l, -2);
 	lua_setfield(l, -2, "methods");
 
 	lua_pushcclosure(l, &l_index, 0);

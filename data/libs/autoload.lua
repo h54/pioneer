@@ -1,4 +1,4 @@
--- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 -- this is the only library automatically loaded at startup
@@ -6,8 +6,30 @@
 
 require 'SpaceStation'
 
+string.trim = function(s)
+	return string.gsub(s or "", "^%s*(.-)%s*$", "%1")
+end
+
+math.round = function(v)
+	return (math.modf(v + (v < 0.0 and -.5 or .5)))
+end
+
+math.sign = function(v)
+	return (v > 0 and 1) or (v == 0 and 0) or -1
+end
+
 math.clamp = function(v, min, max)
 	return math.min(max, math.max(v,min))
+end
+
+-- linearly interpolate between min and max according to V
+math.lerp = function(min, max, v)
+	return min + (max - min) * v
+end
+
+-- calculate the interpolation factor of the given number v relative to min and max
+math.invlerp = function(min, max, v)
+	return (v - min) / (max - min)
 end
 
 debug.deprecated = function(name)
@@ -26,7 +48,32 @@ end
 
 -- a nice string interpolator
 string.interp = function (s, t)
-	return (s:gsub('(%b{})', function(w) return t[w:sub(2,-2)] or w end))
+	local i = 0
+	return (s:gsub('(%b{})', function(w)
+		if #w > 2 then
+			return t[w:sub(2, -2)] or w
+		else
+			i = i + 1; return t[i] or w
+		end
+	end))
+end
+
+-- allow using string.interp via "s" % { t }
+---@class string
+---@operator mod(table): string
+getmetatable("").__mod = string.interp
+
+-- make a simple shallow copy of the passed-in table
+-- does not copy metatable nor recurse into the table
+---@generic T
+---@param t T
+---@return T
+table.copy = function(t)
+	local ret = {}
+	for k, v in pairs(t) do
+		ret[k] = v
+	end
+	return ret
 end
 
 -- make import break. you should never import this file

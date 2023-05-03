@@ -1,15 +1,31 @@
 {
+  "ADTITLE_0": {
+    "description": "",
+    "message": "ТЪРГОВСКИ ЦЕНТЪР"
+  },
+  "ADTITLE_1": {
+    "description": "",
+    "message": "ТЪРГОВСКА КАНТОРА"
+  },
+  "ADTITLE_2": {
+    "description": "",
+    "message": "ТЪРГОВСКИ СКЛАД"
+  },
+  "ADTITLE_3": {
+    "description": "",
+    "message": "ОБМЯНА НА СТОКИ"
+  },
   "GOODS_TRADER_0": {
     "description": "",
-    "message": "Универмаг на {name}"
+    "message": "Търговски център {name}"
   },
   "GOODS_TRADER_1": {
     "description": "",
-    "message": "Търговска Кантора на {name}"
+    "message": "Търговска кантора {name}"
   },
   "GOODS_TRADER_2": {
     "description": "",
-    "message": "Склад на {name}"
+    "message": "Склад {name}"
   },
   "GOODS_TRADER_3": {
     "description": "",
@@ -17,11 +33,11 @@
   },
   "GOODS_TRADER_4": {
     "description": "",
-    "message": "Холдинг на {name}"
+    "message": "Холдинг {name}"
   },
   "GOODS_TRADER_5": {
     "description": "",
-    "message": "{name} & Синове"
+    "message": "{name} и Синове"
   },
   "SLOGAN_0": {
     "description": "",
@@ -41,11 +57,11 @@
   },
   "SLOGAN_4": {
     "description": "",
-    "message": "Пазар без граници, за Вашата свобода на действие."
+    "message": "Пазарът без граници, който гарантира Вашата свобода."
   },
   "SLOGAN_5": {
     "description": "",
-    "message": "Честния търговец."
+    "message": "Честният търговец."
   },
   "SLOGAN_6": {
     "description": "",

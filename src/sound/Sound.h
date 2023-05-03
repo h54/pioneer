@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef __OGGMIX_H
@@ -67,6 +67,7 @@ namespace Sound {
 	 * Silence all active sound events.
 	 */
 	void DestroyAllEvents();
+	void DestroyAllEventsExceptMusic();
 	void Pause(int on);
 	eventid PlaySfx(const char *fx, const float volume_left, const float volume_right, const Op op);
 	eventid PlayMusic(const char *fx, const float volume_left, const float volume_right, const Op op);

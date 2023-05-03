@@ -25,39 +25,75 @@
   },
   "ADTEXT_1": {
     "description": "",
-    "message": "ENVIAMENT DE CÀRREGA. Enviament de càrrega al sistema {system}."
+    "message": "Ship needed for delivery of cargo to the {system} system."
   },
   "ADTEXT_2": {
     "description": "",
-    "message": "ES NECESSITA TRANSPORT. Es necessita transport de mercaderies al sistema {system}. Pagament {cash}."
+    "message": "Transport of goods to the {system} system needed. Pay {cash}."
   },
   "ADTEXT_EXPENSIVE_1": {
     "description": "",
-    "message": "ENVIAMENT. Càrrega valuosa pel sistema {system}. {cash} per a un pilot experimentat."
+    "message": "Deliver valuable cargo to the {system} system. {cash} to an experienced pilot."
   },
   "ADTEXT_LOCAL_1": {
     "description": "",
-    "message": "ENVIAMENT LOCAL. Transport de mercaderies a {starport}."
+    "message": "Haulers wanted for in-system transport. Move of goods to {starport}."
   },
   "ADTEXT_LOCAL_2": {
     "description": "",
-    "message": "ES NECESSITA TRANSPORT. Enviament de càrrega local a {starport}."
+    "message": "Need local delivery of personal cargo to {starport}."
   },
   "ADTEXT_LOCAL_3": {
     "description": "",
-    "message": "ENVIAMENT DE CÀRREGA LOCAL. Transport de mercaderies a {starport}."
+    "message": "Private cargo delivery contract. Need certified delivery of goods to {starport}."
   },
   "ADTEXT_PICKUP_1": {
     "description": "",
-    "message": "RECOLLIDA DE CÀRREGA. Es necessita recollida de càrrega al sistema {system}."
+    "message": "Pickup of cargo from the {system} system required. Details available on request."
   },
   "ADTEXT_PICKUP_LOCAL_1": {
     "description": "",
-    "message": "TRASLLAT. Es requereix transport de càrrega des de {starport}."
+    "message": "Cargo relocation service needed. Move of cargo to this starport from {starport} required."
   },
   "ADTEXT_WHOLESALER_1": {
     "description": "",
-    "message": "SERVEI DE CÀRREGA. Es necessita nau per a enviament al sistema {system}."
+    "message": "Qualified contractor needed for cargo run. We require a ship for a bulk delivery to {system} system."
+  },
+  "ADTITLE_1": {
+    "description": "",
+    "message": "CARGO RUN"
+  },
+  "ADTITLE_2": {
+    "description": "",
+    "message": "NEED CARGO TRANSPORT"
+  },
+  "ADTITLE_EXPENSIVE_1": {
+    "description": "",
+    "message": "INSURED DELIVERY"
+  },
+  "ADTITLE_LOCAL_1": {
+    "description": "",
+    "message": "SHORT-RANGE FREIGHT"
+  },
+  "ADTITLE_LOCAL_2": {
+    "description": "",
+    "message": "LOCAL FREIGHT TRANSPORT"
+  },
+  "ADTITLE_LOCAL_3": {
+    "description": "",
+    "message": "LOCAL CARGO RUN"
+  },
+  "ADTITLE_PICKUP_1": {
+    "description": "",
+    "message": "CARGO PICKUP"
+  },
+  "ADTITLE_PICKUP_LOCAL_1": {
+    "description": "",
+    "message": "IN-SYSTEM RELOCATION"
+  },
+  "ADTITLE_WHOLESALER_1": {
+    "description": "",
+    "message": "BULK CARGO SERVICE"
   },
   "ALUMINIUM_TUBES": {
     "description": "custom cargo",
@@ -135,6 +171,18 @@
     "description": "",
     "message": "Torneu quan tingueu més experiència."
   },
+  "DENY_AGAIN_1": {
+    "description": "",
+    "message": "Sorry, we already have a deal. However, I would be happy to do business with you again after a successful delivery."
+  },
+  "DENY_AGAIN_2": {
+    "description": "",
+    "message": "Excuse me sir, please complete our existing contract first. Then we can negotiate another delivery."
+  },
+  "DENY_AGAIN_3": {
+    "description": "",
+    "message": "Sir, please deliver my cargo first. Then I will do more business with you."
+  },
   "DIAMONDS": {
     "description": "custom cargo",
     "message": "Diamants"
@@ -199,6 +247,10 @@
     "description": "custom cargo",
     "message": "Mobles"
   },
+  "GO_BACK": {
+    "description": "Shown on a button in a sub-menu, to move back, to previous menu",
+    "message": "Go back."
+  },
   "GREENHOUSES": {
     "description": "custom cargo",
     "message": "Hivernacles"
@@ -228,7 +280,7 @@
     "message": "N'hi ha {amount} tones."
   },
   "HOWMUCH_SINGULAR_1": {
-    "description": "This string is only used for 1 metric tons (singular)",
+    "description": "This string is only used for 1 metric ton (singular)",
     "message": "Només {amount} tona."
   },
   "HOWMUCH_WHOLESALER_1": {
@@ -315,6 +367,10 @@
     "description": "",
     "message": "Salutacions, em dic {name} i treballo per a la Corporació Haber. Oferim {cash} pel transport a {starport} al sistema {system} ({sectorx}, {sectory}, {sectorz}), a una distància de {dist} anys llum."
   },
+  "IS_IT_NEGOTIABLE": {
+    "description": "",
+    "message": "Is the amount of cargo negotiable?"
+  },
   "I_AM_ON_MY_WAY": {
     "description": "",
     "message": "Els sensors confirmen que esteu rebent danys. Vaig cap allà."
@@ -327,21 +383,45 @@
     "description": "",
     "message": "Estic rebent danys. Demano auxili."
   },
-  "LY": {
-    "description": "",
-    "message": "al"
-  },
   "MACHINE_TOOLS": {
     "description": "custom cargo",
     "message": "Màquines eina"
+  },
+  "NEGOTIABLE_1": {
+    "description": "regarding mass, always more than 1t",
+    "message": "I can offer the following freight runs:"
+  },
+  "NEGOTIABLE_2": {
+    "description": "regarding mass, always more than 1t",
+    "message": "{amount}t {cargoname} can be divided as follows:"
+  },
+  "NEGOTIABLE_3": {
+    "description": "regarding mass, always more than 1t",
+    "message": "Yes, we can split the cargo."
+  },
+  "NEGOTIABLE_NO_1": {
+    "description": "regarding mass, always more than 1t",
+    "message": "No, sorry. It is not possible to split the cargo. You have to transport the whole {amount} tons at once."
+  },
+  "NEGOTIABLE_SINGULAR_1": {
+    "description": "This string is only used for 1 metric ton (singular)",
+    "message": "No it is not. It's only {amount}t."
   },
   "NEPTUNIUM": {
     "description": "custom cargo",
     "message": "Neptuni"
   },
+  "OFFER": {
+    "description": "",
+    "message": "Transport {amount}t for {reward}"
+  },
   "OK_AGREED": {
     "description": "",
     "message": "Molt bé, d'acord."
+  },
+  "OK_WE_AGREE": {
+    "description": "",
+    "message": "OK, we agree on {amount}t for {reward}."
   },
   "PICKUP_FROM": {
     "description": "from a location",
@@ -502,6 +582,10 @@
   "TITANIUM": {
     "description": "custom cargo",
     "message": "Titani"
+  },
+  "TOO_LATE_TO_PICK_UP": {
+    "description": "",
+    "message": "You are much too late! Your performance is so bad that I am cancelling my contract with you."
   },
   "TUNGSTEN": {
     "description": "custom cargo",

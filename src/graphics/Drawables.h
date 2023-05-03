@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _DRAWABLES_H
@@ -11,7 +11,6 @@
 
 namespace Graphics {
 	class Renderer;
-	class RenderState;
 
 	namespace Drawables {
 
@@ -19,6 +18,8 @@ namespace Graphics {
 		// (circles, disks, polylines etc)
 		//------------------------------------------------------------
 
+		// Two-dimensional open circle.
+		/* TODO: reimplement as an immediate-mode API writing to a shared vertex array for debug use
 		class Circle {
 		public:
 			Circle(Renderer *renderer, const float radius, const Color &c, RenderState *state);
@@ -33,26 +34,23 @@ namespace Graphics {
 			Color m_color;
 			Graphics::RenderState *m_renderState;
 		};
+		*/
 		//------------------------------------------------------------
 
 		// Two-dimensional filled circle
+		// Generates a TRIANGLE_FAN primitive
 		class Disk {
 		public:
-			Disk(Graphics::Renderer *r, Graphics::RenderState *, const Color &c, float radius);
-			Disk(Graphics::Renderer *r, RefCountedPtr<Material>, Graphics::RenderState *, const int edges = 72, const float radius = 1.0f);
-			void Draw(Graphics::Renderer *r);
-
-			void SetColor(const Color &);
+			Disk(Renderer *r, const int edges = 72, const float radius = 1.0f);
+			void Draw(Renderer *r, Material *mat);
 
 		private:
-			void SetupVertexBuffer(const Graphics::VertexArray &, Graphics::Renderer *);
-			std::unique_ptr<VertexBuffer> m_vertexBuffer;
-			RefCountedPtr<Material> m_material;
-			Graphics::RenderState *m_renderState;
+			std::unique_ptr<MeshObject> m_diskMesh;
 		};
 		//------------------------------------------------------------
 
 		// A three dimensional line between two points
+		/* TODO: reimplement as an immediate-mode API writing to a shared vertex array for debug use
 		class Line3D {
 		public:
 			Line3D();
@@ -73,39 +71,41 @@ namespace Graphics {
 			RefCountedPtr<VertexBuffer> m_vertexBuffer;
 			std::unique_ptr<Graphics::VertexArray> m_va;
 		};
+		*/
+
 		//------------------------------------------------------------
 
 		// Three dimensional line segments between two points
+		// Data can be drawn with any of the LINE_* primitive types depending on what the calling code intends
 		class Lines {
 		public:
 			Lines();
 			void SetData(const Uint32 vertCount, const vector3f *vertices, const Color &color);
 			void SetData(const Uint32 vertCount, const vector3f *vertices, const Color *colors);
-			void Draw(Renderer *, RenderState *, const PrimitiveType pt = Graphics::LINE_SINGLE);
+			void Draw(Renderer *, Material *);
 
 		private:
-			void CreateVertexBuffer(Graphics::Renderer *r, const Uint32 size);
-
 			bool m_refreshVertexBuffer;
-			RefCountedPtr<Material> m_material;
-			RefCountedPtr<VertexBuffer> m_vertexBuffer;
+			RefCountedPtr<MeshObject> m_lineMesh;
 			std::unique_ptr<VertexArray> m_va;
 		};
 		//------------------------------------------------------------
 
 		// Screen aligned quad / billboard / pointsprite
+		// Material must be created with a primitive type of Graphics::POINTS
 		class PointSprites {
 		public:
 			PointSprites();
-			void SetData(const int count, const vector3f *positions, const Color *colours, const float *sizes, Graphics::Material *pMaterial);
-			void Draw(Renderer *, RenderState *);
+			void SetData(const int count, const vector3f *positions, const Color *colours, const float *sizes);
+
+			// Transfer ownership of the vertex data to the PointSprites instance
+			void SetData(const int count, std::vector<vector3f> &&positions, std::vector<Color> &&colors, std::vector<float> &&sizes);
+
+			void Draw(Renderer *, Material *);
 
 		private:
-			void CreateVertexBuffer(Graphics::Renderer *r, const Uint32 size);
-
 			bool m_refreshVertexBuffer;
-			RefCountedPtr<Graphics::Material> m_material;
-			RefCountedPtr<VertexBuffer> m_vertexBuffer;
+			RefCountedPtr<Graphics::MeshObject> m_pointData;
 			std::unique_ptr<VertexArray> m_va;
 		};
 		//------------------------------------------------------------
@@ -116,46 +116,51 @@ namespace Graphics {
 			Points();
 			void SetData(Renderer *, const int count, const vector3f *positions, const matrix4x4f &trans, const Color &color, const float size);
 			void SetData(Renderer *, const int count, const vector3f *positions, const Color *color, const matrix4x4f &trans, const float size);
-			void Draw(Renderer *, RenderState *);
+			void Draw(Renderer *, Material *);
 
 		private:
 			void CreateVertexBuffer(Graphics::Renderer *r, const Uint32 size);
 
 			bool m_refreshVertexBuffer;
-			RefCountedPtr<Material> m_material;
-			RefCountedPtr<VertexBuffer> m_vertexBuffer;
+			RefCountedPtr<MeshObject> m_pointMesh;
 			std::unique_ptr<VertexArray> m_va;
 		};
+
 		//------------------------------------------------------------
+
+		// Helper class to generate an Icosphere mesh
+		class Icosphere {
+		public:
+			static Graphics::MeshObject *Generate(Graphics::Renderer *r, int subdivisions = 0, float scale = 1.f, AttributeSet attribs = (ATTRIB_POSITION | ATTRIB_NORMAL | ATTRIB_UV0));
+
+		private:
+			//add a new vertex, return the index
+			static int AddVertex(VertexArray &, const vector3f &v, const vector3f &n);
+			//add three vertex indices to form a triangle
+			static void AddTriangle(std::vector<Uint32> &, int i1, int i2, int i3);
+			static void Subdivide(VertexArray &, std::vector<Uint32> &,
+				const matrix4x4f &trans, const vector3f &v1, const vector3f &v2, const vector3f &v3,
+				int i1, int i2, int i3, int depth);
+		};
 
 		// Three dimensional sphere (subdivided icosahedron) with normals
 		// and spherical texture coordinates.
 		class Sphere3D {
 		public:
 			//subdivisions must be 0-4
-			Sphere3D(Renderer *, RefCountedPtr<Material> material, Graphics::RenderState *, int subdivisions = 0, float scale = 1.f, const Uint32 attribs = (ATTRIB_POSITION | ATTRIB_NORMAL | ATTRIB_UV0));
+			Sphere3D(Renderer *, RefCountedPtr<Material> material, int subdivisions = 0, float scale = 1.f, AttributeSet attribs = (ATTRIB_POSITION | ATTRIB_NORMAL | ATTRIB_UV0));
 			void Draw(Renderer *r);
 
 			RefCountedPtr<Material> GetMaterial() const { return m_material; }
 
 		private:
-			std::unique_ptr<VertexBuffer> m_vertexBuffer;
-			std::unique_ptr<IndexBuffer> m_indexBuffer;
+			std::unique_ptr<MeshObject> m_sphereMesh;
 			RefCountedPtr<Material> m_material;
-			Graphics::RenderState *m_renderState;
-
-			//std::unique_ptr<Surface> m_surface;
-			//add a new vertex, return the index
-			int AddVertex(VertexArray &, const vector3f &v, const vector3f &n);
-			//add three vertex indices to form a triangle
-			void AddTriangle(std::vector<Uint32> &, int i1, int i2, int i3);
-			void Subdivide(VertexArray &, std::vector<Uint32> &,
-				const matrix4x4f &trans, const vector3f &v1, const vector3f &v2, const vector3f &v3,
-				int i1, int i2, int i3, int depth);
 		};
 		//------------------------------------------------------------
 
 		// a textured quad with reversed winding
+		/* TODO: reimplement this as an immediate-mode API for debug use
 		class TexturedQuad {
 		public:
 			// Simple constructor to build a textured quad from an image.
@@ -180,9 +185,12 @@ namespace Graphics {
 			RefCountedPtr<VertexBuffer> m_vertexBuffer;
 			Graphics::RenderState *m_renderState;
 		};
+		*/
+
 		//------------------------------------------------------------
 
 		// a coloured rectangle
+		/* TODO: reimplement this as an immediate-mode API for debug use
 		class Rect {
 		public:
 			Rect(Graphics::Renderer *r, const vector2f &pos, const vector2f &size, const Color &c, RenderState *state, const bool bIsStatic = true);
@@ -194,9 +202,12 @@ namespace Graphics {
 			RefCountedPtr<VertexBuffer> m_vertexBuffer;
 			Graphics::RenderState *m_renderState;
 		};
+		*/
+
 		//------------------------------------------------------------
 
 		// a coloured rectangle
+		/* TODO: reimplement this as an immediate-mode API for debug use
 		class RoundEdgedRect {
 		public:
 			RoundEdgedRect(Graphics::Renderer *r, const vector2f &size, const float rad, const Color &c, RenderState *state, const bool bIsStatic = true);
@@ -209,18 +220,63 @@ namespace Graphics {
 			RefCountedPtr<VertexBuffer> m_vertexBuffer;
 			Graphics::RenderState *m_renderState;
 		};
+		*/
+
+		//------------------------------------------------------------
+
+		// Shader-based anti-aliased XZ-plane grid rendering.
+		class GridLines {
+		public:
+			GridLines(Graphics::Renderer *r);
+
+			void SetLineColors(Color minorLineColor, Color majorLineColor, float lineWidth = 2.0);
+
+			void Draw(Graphics::Renderer *r, vector2f grid_size, float cell_size);
+
+		private:
+			struct GridData;
+
+			std::unique_ptr<Graphics::Material> m_gridMat;
+			Color m_minorColor;
+			Color m_majorColor;
+			float m_lineWidth;
+		};
+
+		//------------------------------------------------------------
+
+		// Shader-based anti-aliased UV-sphere grid rendering.
+		// Grid has primary lines at 90 and 10 degree intervals, and subdivides by tenths from there
+		// The visual density of the grid can be controlled by the lineSpacing parameter
+		class GridSphere {
+		public:
+			GridSphere(Graphics::Renderer *r, uint32_t numSubdivs = 12);
+
+			void SetLineColors(Color minorLineColor, Color majorLineColor, float lineWidth = 2.0);
+
+			void Draw(Graphics::Renderer *r, float lineSpacing = 2.0);
+
+		private:
+			struct GridData;
+
+			std::unique_ptr<Graphics::Material> m_gridMat;
+			std::unique_ptr<Graphics::MeshObject> m_sphereMesh;
+			Color m_minorColor;
+			Color m_majorColor;
+			float m_lineWidth;
+			uint32_t m_numSubdivs;
+		};
+
 		//------------------------------------------------------------
 
 		//industry-standard red/green/blue XYZ axis indicator
 		class Axes3D {
 		public:
-			Axes3D(Graphics::Renderer *r, Graphics::RenderState *state = nullptr);
+			Axes3D(Graphics::Renderer *r);
 			void Draw(Graphics::Renderer *r);
 
 		private:
-			RefCountedPtr<Graphics::Material> m_material;
-			RefCountedPtr<VertexBuffer> m_vertexBuffer;
-			Graphics::RenderState *m_renderState;
+			RefCountedPtr<Graphics::MeshObject> m_axesMesh;
+			RefCountedPtr<Graphics::Material> m_axesMat;
 		};
 
 		Axes3D *GetAxes3DDrawable(Graphics::Renderer *r);

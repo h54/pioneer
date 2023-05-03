@@ -8,12 +8,12 @@
     "message": "知道什么时候出城"
   },
   "ADVICE_1_BODYTEXT": {
-    "description": "Point made is: the real illegal goods traders are fix to each station, but police's fake illegal goods traders will be random every time.",
-    "message": "当你回到一个车站，厌倦那些你不认识的另类市场，你将远离法律的麻烦。"
+    "description": "Point made is: the real illegal goods traders are fixed to each station, but police's fake illegal goods traders will be random every time.",
+    "message": "当你回到站点时,要提防那些你不认识的另类市场,这样你就不会触犯法律。"
   },
   "ADVICE_1_HEADLINE": {
     "description": "",
-    "message": "驾驭黑市交易"
+    "message": "掌控黑市"
   },
   "ADVICE_2_BODYTEXT": {
     "description": "",
@@ -41,7 +41,7 @@
   },
   "ADVICE_5_BODYTEXT": {
     "description": "",
-    "message": "低价买入, 高价卖出. "
+    "message": "低买 高卖. "
   },
   "ADVICE_5_HEADLINE": {
     "description": "",
@@ -77,11 +77,19 @@
   },
   "ADVICE_9_HEADLINE": {
     "description": "",
-    "message": "对你的船好点儿! "
+    "message": "对你的船好点儿"
   },
   "RUMOUR": {
     "description": "Headline starts with this pre-headline",
     "message": "传言"
+  },
+  "RUMOUR_1_BODYTEXT": {
+    "description": "",
+    "message": "联邦海军有人告诉我，有一天，他们的一艘护卫舰不小心跳到了离索尔大约50英里远的哈伯前哨系统，名叫朗德尔；几乎引起公开冲突。除了海军之外，似乎没有多少人知道这起事件本身，但有人说，朗德尔政府从那以后对游客更具侵略性，货运飞行员开始避开这一系统"
+  },
+  "RUMOUR_1_HEADLINE": {
+    "description": "",
+    "message": "朗德尔事件"
   },
   "TALE_1_BODYTEXT": {
     "description": "",

@@ -1,4 +1,8 @@
 {
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "MOTOR SERVİSİ"
+  },
   "FLAVOUR_0_INTRO": {
     "description": "",
     "message": "Bozulan bir hipersürücünün vereceği sıkıntıyı yaşamayın. Hemen resmi olarak onaylanmış {name} Motor Servis Şirketi ile sürücünüzün servisini yapın.\n"
@@ -18,6 +22,10 @@
   "FLAVOUR_0_YESPLEASE": {
     "description": "",
     "message": "Hipersürücüye bakım yap"
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "HİPERSÜRÜCÜ BAKIMI"
   },
   "FLAVOUR_1_INTRO": {
     "description": "",
@@ -39,9 +47,13 @@
     "description": "",
     "message": "Sürücüme bakım yapın"
   },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "GEMİ HİPER-TEKNİSYENİ"
+  },
   "FLAVOUR_2_INTRO": {
     "description": "",
-    "message": "Merhabalar.  {proprietor} & Co'da çalışan bizler, işimizi namusumuz olarak görürüz.\nGeminizin hipersürücüsünü 12 aylık sorunsuzluk garantisiyle muayene edebiliriz."
+    "message": "Merhabalar. Biz, {proprietor} & Co olarak işimizi namusumuz olarak görürüz.\nGeminizin hipersürücüsünü 12 aylık sorunsuzluk garantisiyle muayene edebiliriz."
   },
   "FLAVOUR_2_PRICE": {
     "description": "",
@@ -59,9 +71,13 @@
     "description": "",
     "message": "Lütfen hipersürücümü söylenen fiyattan ayarlayın."
   },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "HİPERSÜRÜCÜ BAKIMI"
+  },
   "FLAVOUR_3_INTRO": {
     "description": "",
-    "message": "SüperTamir Bakıma hoşgeldiniz. Yıllık bakım zamanınız mı geldi? Hipersürücünüzü SüperTamir etmemize izin verin!"
+    "message": "SüperTamir Bakıma hoşgeldiniz. İki yıllık bakım zamanınız mı geldi? Hipersürücünüzü SüperTamir etmemize izin verin!"
   },
   "FLAVOUR_3_PRICE": {
     "description": "",
@@ -78,6 +94,10 @@
   "FLAVOUR_3_YESPLEASE": {
     "description": "",
     "message": "Beni SüperTamir et!"
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "MOTOR SERVİSİ"
   },
   "FLAVOUR_4_INTRO": {
     "description": "",
@@ -98,6 +118,10 @@
   "FLAVOUR_4_YESPLEASE": {
     "description": "",
     "message": "Evet, lütfen devam et."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "HİPERSÜRÜCÜ SERVİSİ"
   },
   "FLAVOUR_5_INTRO": {
     "description": "",

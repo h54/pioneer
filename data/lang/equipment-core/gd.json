@@ -9,7 +9,7 @@
   },
   "ATMOSPHERIC_SHIELDING": {
     "description": "",
-    "message": "Sgiath àile"
+    "message": "Dìonadh àile"
   },
   "ATMOSPHERIC_SHIELDING_DESCRIPTION": {
     "description": "",
@@ -59,77 +59,81 @@
     "description": "",
     "message": "Leigidh e leat bogsaichean carago a thogail on fhànas."
   },
+  "DAMAGE_PER_SHOT": {
+    "description": "Tooltip explaining weapon damage per shot",
+    "message": "Damage Per Shot"
+  },
   "DRIVE_CLASS1": {
     "description": "",
-    "message": "Os-fhànais clas 1"
+    "message": "Draibh os-fhànais clas 1"
   },
   "DRIVE_CLASS2": {
     "description": "",
-    "message": "Os-fhànais clas 2"
+    "message": "Draibh os-fhànais clas 2"
   },
   "DRIVE_CLASS3": {
     "description": "",
-    "message": "Os-fhànais clas 3"
+    "message": "Draibh os-fhànais clas 3"
   },
   "DRIVE_CLASS4": {
     "description": "",
-    "message": "Os-fhànais clas 4"
+    "message": "Draibh os-fhànais clas 4"
   },
   "DRIVE_CLASS5": {
     "description": "",
-    "message": "Os-fhànais clas 5"
+    "message": "Draibh os-fhànais clas 5"
   },
   "DRIVE_CLASS6": {
     "description": "",
-    "message": "Os-fhànais clas 6"
+    "message": "Draibh os-fhànais clas 6"
   },
   "DRIVE_CLASS7": {
     "description": "",
-    "message": "Os-fhànais clas 7"
+    "message": "Draibh os-fhànais clas 7"
   },
   "DRIVE_CLASS8": {
     "description": "",
-    "message": "Os-fhànais clas 8"
+    "message": "Draibh os-fhànais clas 8"
   },
   "DRIVE_CLASS9": {
     "description": "",
-    "message": "Os-fhànais clas 9"
+    "message": "Draibh os-fhànais clas 9"
   },
   "DRIVE_MIL1": {
     "description": "",
-    "message": "Draibh an airm clas 1"
+    "message": "Draibh-airm clas 1"
   },
   "DRIVE_MIL2": {
     "description": "",
-    "message": "Draibh an airm clas 2"
+    "message": "Draibh-airm clas 2"
   },
   "DRIVE_MIL3": {
     "description": "",
-    "message": "Draibh an airm clas 3"
+    "message": "Draibh-airm clas 3"
   },
   "DRIVE_MIL4": {
     "description": "",
-    "message": "Draibh an airm clas 4"
+    "message": "Draibh-airm clas 4"
   },
   "DRIVE_MIL5": {
     "description": "",
-    "message": "Draibh an airm clas 5"
+    "message": "Draibh-airm clas 5"
   },
   "DRIVE_MIL6": {
     "description": "",
-    "message": "Draibh an airm clas 6"
+    "message": "Draibh-airm clas 6"
   },
   "DRIVE_MIL7": {
     "description": "",
-    "message": "Draibh an airm clas 7"
+    "message": "Draibh-airm clas 7"
   },
   "DRIVE_MIL8": {
     "description": "",
-    "message": "Draibh an airm clas 8"
+    "message": "Draibh-airm clas 8"
   },
   "DRIVE_MIL9": {
     "description": "",
-    "message": "Draibh an airm clas 9"
+    "message": "Draibh-airm clas 9"
   },
   "ECM_ADVANCED": {
     "description": "",
@@ -137,7 +141,7 @@
   },
   "ECM_ADVANCED_DESCRIPTION": {
     "description": "",
-    "message": "Siostam dìon astasan-bacaidh leatronach aig a bheil comas seòrsaichean nas adhartaiche de dh'astasan-iùil a sgrios."
+    "message": "Siostam dìon astasan-bacaidh leatronach aig a bheil comas seòrsaichean nas adhartaiche de dh’astasan-iùil a sgrios."
   },
   "ECM_BASIC": {
     "description": "",
@@ -145,7 +149,19 @@
   },
   "ECM_BASIC_DESCRIPTION": {
     "description": "",
-    "message": "Siostam dìona dealanach an aghaidh astasan a nì milleadh air cuid a dh'astasan le fèin-stiùireadh."
+    "message": "Siostam dìona dealanach an aghaidh astasan a nì milleadh air cuid a dh’astasan le fèin-stiùireadh."
+  },
+  "EMPTY_SLOT": {
+    "description": "Text indicating an empty equipment slot.",
+    "message": "EMPTY"
+  },
+  "EQUIPMENT_INTEGRITY": {
+    "description": "Tooltip explaining remaining equipment integrity",
+    "message": "Equipment Integrity"
+  },
+  "EQUIPMENT_WEIGHT": {
+    "description": "Tooltip explaining equipment weight",
+    "message": "Equipment Weight"
   },
   "FUEL_SCOOP": {
     "description": "",
@@ -177,7 +193,7 @@
   },
   "LASER_COOLING_BOOSTER": {
     "description": "",
-    "message": "Neartachadh air fuarachadh nan leusair"
+    "message": "Inneal-fuarachaidh leusair"
   },
   "LASER_COOLING_BOOSTER_DESCRIPTION": {
     "description": "",
@@ -189,7 +205,19 @@
   },
   "MININGCANNON_17MW_DESCRIPTION": {
     "description": "",
+    "message": "Losgaidh tu air dreagan beartach leis a chùm mèinnearachd."
+  },
+  "MININGCANNON_5MW": {
+    "description": "",
+    "message": "Canan mèinnearachd 5MW"
+  },
+  "MININGCANNON_5MW_DESCRIPTION": {
+    "description": "",
     "message": "Losgaidh tu air dreagan beartach leis a chum mèinnearachd."
+  },
+  "MISSILES": {
+    "description": "Category name of missile-related equipment",
+    "message": "Missiles"
   },
   "MISSILE_GUIDED": {
     "description": "",
@@ -208,12 +236,28 @@
     "message": "Rocaid R40 gun stiùireadh"
   },
   "MULTI_SCOOP": {
-    "description": "A ship equipment: a cargo scoop and fuel scoop combined to one",
+    "description": "A ship equipment: a cargo scoop and fuel scoop combined into one",
     "message": "Iomadh sgiob"
   },
   "MULTI_SCOOP_DESCRIPTION": {
     "description": "",
-    "message": "Ged nach eil e cho èifeachdach 's a tha sgiob connaidh, 's urrainn dhut an dà chuid carago is connadh a sgobadh leis."
+    "message": "Ged nach eil e cho èifeachdach ’s a tha sgiob connaidh, ’s urrainn dhut an dà chuid carago is connadh a sgobadh leis"
+  },
+  "ORBIT_SCANNER": {
+    "description": "A ship equipment that records data of terrain, for cartography mapping/geological survey. Note: Scout Mission module reference and distinguishes between 'orbital' and 'surface' scanner types, the former scans planet from orbit, the latter from low altitude.",
+    "message": "Orbital scanner XKM-650"
+  },
+  "ORBIT_SCANNER_DESCRIPTION": {
+    "description": "tooltip",
+    "message": "Scans planet from orbit, for scientific data"
+  },
+  "ORBIT_SCANNER_GOOD": {
+    "description": "A sensor used to scan planets from high altitude / orbit + model number (that's minimum km altitude)",
+    "message": "Orbital scanner XKM-1750"
+  },
+  "ORBIT_SCANNER_GOOD_DESCRIPTION": {
+    "description": "tooltip",
+    "message": "Scans planet from orbit, for scientific data, with high resolution and wide aperture lens"
   },
   "OUT_OF_SCANRANGE": {
     "description": "",
@@ -223,13 +267,9 @@
     "description": "",
     "message": "Cèibinn thaistealach"
   },
-  "PLANETSCANNER": {
-    "description": "Scans the nearest body for resources",
-    "message": "Sganair bodhaige"
-  },
-  "PLANETSCANNER_DESCRIPTION": {
-    "description": "",
-    "message": "Sganaich a' bhodhaig as faisge airson stòrasan."
+  "PROPULSION": {
+    "description": "Category name of propulsion-related equipment",
+    "message": "Propulsion"
   },
   "PULSECANNON_10MW": {
     "description": "",
@@ -275,9 +315,29 @@
     "description": "",
     "message": "Chaidh leantainn air an sganadh"
   },
+  "SCOOPS": {
+    "description": "Category name of scoop-related equipment",
+    "message": "Scoops"
+  },
+  "SENSORS": {
+    "description": "Category name of sensor-related equipment",
+    "message": "Sensors"
+  },
+  "SENSOR_MIN_ALTITUDE": {
+    "description": "",
+    "message": "Sensor min altitude"
+  },
+  "SENSOR_RESOLUTION": {
+    "description": "Resolution of e.g. optical sensor",
+    "message": "Sensor resolution"
+  },
+  "SHIELDS": {
+    "description": "Category name of shield-related equipment",
+    "message": "Shields"
+  },
   "SHIELD_ENERGY_BOOSTER": {
     "description": "",
-    "message": "Neartachadh air lùths nan sgiath"
+    "message": "Inneal-lùiths sgèithe"
   },
   "SHIELD_ENERGY_BOOSTER_DESCRIPTION": {
     "description": "",
@@ -291,13 +351,33 @@
     "description": "",
     "message": "Bheir seo barrachd dìona dhan t-slige leis gach aonad a chuireas tu ris."
   },
+  "SHOTS_PER_MINUTE": {
+    "description": "Tooltip explaining weapon fire rate / RPM counter",
+    "message": "Firing Rate / Minute"
+  },
   "SMALL_PLASMA_ACCEL": {
     "description": "",
     "message": "Luathaichear plasma beag"
   },
   "STARTING_SCAN": {
     "description": "",
-    "message": "A' tòiseachadh air an sganadh, astar amais:"
+    "message": "A’ tòiseachadh air an sganadh, astar amais:"
+  },
+  "SURFACE_SCANNER": {
+    "description": "A ship equipment that records data of terrain, for cartography mapping/geological survey. Note: Scout Mission module reference and distinguishes between 'orbital' and 'surface' scanner types, the former scans planet from orbit, the latter from low altitude. Model manufacturer name is meant to sound like a cheap brand.",
+    "message": "Surface scanner Nadir-150"
+  },
+  "SURFACE_SCANNER_DESCRIPTION": {
+    "description": "tooltip",
+    "message": "Cartography mapping and geological survey recorder"
+  },
+  "SURFACE_SCANNER_GOOD": {
+    "description": "A ship equipment that records data of terrain, for cartography mapping/geological survey. Note: Scout Mission module reference and distinguishes between 'orbital' and 'surface' scanner types. Model manufacturer name is meant to be associated with high quality.",
+    "message": "Surface scanner Xeiss-250"
+  },
+  "SURFACE_SCANNER_GOOD_DESCRIPTION": {
+    "description": "tooltip",
+    "message": "High resolution cartography mapping and geological survey recorder"
   },
   "TARGET_SCANNER": {
     "description": "ship equipment showing target information/stats",
@@ -321,7 +401,7 @@
   },
   "THRUSTERS_BEST_DESCRIPTION": {
     "description": "",
-    "message": "Putairean gnàthaichte a bheir a' chumhachd as fhearr dhut."
+    "message": "Putairean gnàthaichte a bheir a’ chumhachd as fheàrr dhut."
   },
   "THRUSTERS_MEDIUM": {
     "description": "",
@@ -329,7 +409,15 @@
   },
   "THRUSTERS_MEDIUM_DESCRIPTION": {
     "description": "",
-    "message": "Putairean a chaidh a phiseachadh ach am bi iad nas èifeachdaiche agus a' putadh le barrachd cumhachd."
+    "message": "Putairean a chaidh a phiseachadh ach am bi iad nas èifeachdaiche agus a’ putadh le barrachd cumhachd."
+  },
+  "TOTAL_MODULE_CAPACITY": {
+    "description": "Tooltip explaining module capacity of specific slot",
+    "message": "Total Capacity"
+  },
+  "TOTAL_MODULE_WEIGHT": {
+    "description": "Tooltip explaining total equipped weight of specific slot",
+    "message": "Total Weight"
   },
   "TRADE_COMPUTER": {
     "description": "Ship equipment computing profitable commodities to trade between two systems",
@@ -346,5 +434,13 @@
   "UNOCCUPIED_CABIN_DESCRIPTION": {
     "description": "",
     "message": "Riatanach airson còmhdhail aon taistealaich"
+  },
+  "UTILITY": {
+    "description": "Category name of utility equipment",
+    "message": "Utility"
+  },
+  "WEAPONS": {
+    "description": "Category name of weapon-related equipment",
+    "message": "Airm"
   }
 }

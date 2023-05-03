@@ -49,7 +49,11 @@
   },
   "FLAVOUR_0_ADTEXT": {
     "description": "",
-    "message": "ARANIYOR: {system} sisteminden {target}'ın ortadan kaldırılması."
+    "message": "Aranıyor: {system} sisteminden {target}'in ortadan kaldırılması."
+  },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "YOK ETME İSTENİYOR"
   },
   "FLAVOUR_0_FAILUREMSG": {
     "description": "",
@@ -69,7 +73,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "ARANIYOR: {system} sisteminden {target}'ı öldürecek biri."
+    "message": "Aranıyor: {system} sisteminde {target}'i öldürecek biri."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "HEDEF ELİMİNASYONU"
   },
   "FLAVOUR_1_FAILUREMSG": {
     "description": "",
@@ -89,7 +97,11 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "ORTADAN KALDIRMA: {system} sistemindeki {target} artık istenmiyor."
+    "message": "Trajik bir şekilde, artık {target}, {system} sisteminde istenmiyor. Ortadan kaldırma uzmanı gerekiyor."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "ORTADAN KALDIRMA OPERASYONU"
   },
   "FLAVOUR_2_FAILUREMSG": {
     "description": "",
@@ -109,7 +121,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "YOK ETME:  {target}'ı yok edecek biri."
+    "message": "{target}'i yok etmek için kiralık katil gerekli."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "SON VERME"
   },
   "FLAVOUR_3_FAILUREMSG": {
     "description": "",
@@ -129,7 +145,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "EMEKLİLİK: {target} için emekliye ayıracak birisi."
+    "message": "{target}'in ölümcül emekliliği için ağzı sıkı bir cerrah gerekiyor."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "EMEKLİYE AYIRMA"
   },
   "FLAVOUR_4_FAILUREMSG": {
     "description": "",
@@ -149,7 +169,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "BİYOGRAFİK: Bazı hayranları {target}ın ölü olmasını diliyor. "
+    "message": "Kimi hayranları {target}'in ölmesini diliyor. Kalifiye iş-bitirme uzmanları lütfen başvurun."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "BİYOGRAFİK"
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
@@ -178,10 +202,6 @@
   "IT_MUST_BE_DONE_AFTER": {
     "description": "",
     "message": "{target} {spaceport}ndan ayrıldıktan sonra yapılmalı. Bu fırsatı kaçırma"
-  },
-  "LY": {
-    "description": "",
-    "message": "ıy"
   },
   "OK_AGREED": {
     "description": "",

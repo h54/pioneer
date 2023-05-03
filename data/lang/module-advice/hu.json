@@ -8,8 +8,8 @@
     "message": "Tudd, mikor kell elhagyni a várost"
   },
   "ADVICE_1_BODYTEXT": {
-    "description": "Point made is: the real illegal goods traders are fix to each station, but police's fake illegal goods traders will be random every time.",
-    "message": "Kikötéskor érdemes figyelni az ismeretlen alternatív kereskedőket, ha nem akarsz bajba kerülni a hatóságokkal."
+    "description": "Point made is: the real illegal goods traders are fixed to each station, but police's fake illegal goods traders will be random every time.",
+    "message": "Az űrállomásokra visszatérve légy óvatos az ismeretlen \"alternatív kereskedőkkel\", és nem fogsz összeütközésbe kerülni a hatóságokkal."
   },
   "ADVICE_1_HEADLINE": {
     "description": "",
@@ -82,6 +82,14 @@
   "RUMOUR": {
     "description": "Headline starts with this pre-headline",
     "message": "PLETYKA"
+  },
+  "RUMOUR_1_BODYTEXT": {
+    "description": "",
+    "message": "Valaki a Föderációs Hadiflottától mesélte nemrég, hogy egy korvettjük véletlenül egy Haber előőrsbe botlott 50 fényévre Sol-tól, a Rondel rendszerben. Majdnem nyílt konfliktus lett az esetből. Nem sokan hallottak az ügyről a Hadiflottán kívül, de néhányan azt mondják a Rondel-i vezetés azóta sokkal aggresszívebben lép fel a látogatókkal szemben. A kereskedők azóta kerülik is a rendszert."
+  },
+  "RUMOUR_1_HEADLINE": {
+    "description": "",
+    "message": "A Rondel incidens"
   },
   "TALE_1_BODYTEXT": {
     "description": "",

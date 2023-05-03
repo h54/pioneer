@@ -1,25 +1,22 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _LUACONSOLE_H
 #define _LUACONSOLE_H
 
+#include "Input.h"
 #include "LuaManager.h"
 #include "RefCounted.h"
-#include "ui/Widget.h"
+#include "ConnectionTicket.h"
 #include <deque>
 
-namespace UI {
-	class TextEntry;
-	class MultiLineText;
-	class Scroller;
-} // namespace UI
+struct ImGuiInputTextCallbackData;
 
 class LuaConsole {
 public:
 	LuaConsole();
-	virtual ~LuaConsole();
 
+	void SetupBindings();
 	void Toggle();
 
 	bool IsActive() const { return m_active; }
@@ -27,20 +24,20 @@ public:
 
 #ifdef REMOTE_LUA_REPL
 	void OpenTCPDebugConnection(int portnumber);
+	void CloseTCPDebugConnection();
 	void HandleTCPDebugConnections();
 #endif
 
 	static void Register();
+	void HandleCallback(ImGuiInputTextCallbackData *data);
+	void Draw();
 
 private:
-	bool OnKeyDown(const UI::KeyboardEvent &event);
-	void OnChange(const std::string &text);
-	void OnEnter(const std::string &text);
+	bool OnCompletion(bool backward);
+	bool OnHistory(bool upArrow);
+	void LogCallback(Time::DateTime, Log::Severity, std::string_view);
 
-	void ExecOrContinue(const std::string &stmt, bool repeatStatement = true);
-
-	void OnKeyPressed(const SDL_Keysym *);
-	void OnTextChanged();
+	bool ExecOrContinue(const std::string &stmt, bool repeatStatement = true);
 	void UpdateCompletion(const std::string &statement);
 	void RegisterAutoexec();
 
@@ -51,17 +48,21 @@ private:
 #endif
 
 	bool m_active;
+	Input::InputFrame m_inputFrame;
+	InputBindings::Action *toggleLuaConsole;
+	ConnectionTicket m_logCallbackConn;
 
-	RefCountedPtr<UI::Widget> m_container;
-	UI::MultiLineText *m_output;
-	UI::TextEntry *m_entry;
-	UI::Scroller *m_scroller;
+	// Output log
+	std::vector<std::string> m_outputLines;
 
+	// statement history
 	std::deque<std::string> m_statementHistory;
 	std::string m_stashedStatement;
+	std::string m_activeStr;
+	std::unique_ptr<char[]> m_editBuffer;
 	int m_historyPosition;
-	int m_nextOutputLine;
 
+	// autocompletion
 	std::string m_precompletionStatement;
 	std::vector<std::string> m_completionList;
 	unsigned int m_currentCompletion;

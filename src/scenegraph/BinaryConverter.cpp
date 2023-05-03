@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 #include "BinaryConverter.h"
 #include "FileSystem.h"
@@ -13,28 +13,12 @@
 #include "scenegraph/Serializer.h"
 #include "utils.h"
 
-#ifdef __GNUC__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wattributes"
-#endif
 extern "C" {
 #include <miniz/miniz.h>
 }
-#ifdef __GNUC__
-#pragma GCC diagnostic pop
-#endif
 
 using namespace SceneGraph;
 
-// Attempt at version history:
-// 1:	prototype
-// 2:	converted StaticMesh to VertexBuffer
-// 3:	store processed collision mesh
-// 4:	compressed SGM files and instancing support
-// 5:	normal mapping
-// 6:	32-bit indicies
-// 6.1:	rewrote serialization, use lz4 compression instead of INFLATE/DEFLATE. Still compatible.
-const Uint32 SGM_VERSION = 6;
 union SGM_STRING_VALUE {
 	char name[4];
 	Uint32 value;
@@ -162,9 +146,7 @@ void BinaryConverter::Save(const std::string &filename, const std::string &savep
 
 Model *BinaryConverter::Load(const std::string &filename)
 {
-	PROFILE_SCOPED()
-	Model *m = Load(filename, "models");
-	return m;
+	return Load(filename, "models");
 }
 
 Model *BinaryConverter::Load(const std::string &name, RefCountedPtr<FileSystem::FileData> binfile)
@@ -268,7 +250,7 @@ Model *BinaryConverter::CreateModel(const std::string &filename, Serializer::Rea
 
 	LoadAnimations(rd);
 
-	m_model->UpdateAnimations();
+	m_model->InitAnimations();
 	//m_model->CreateCollisionMesh();
 	if (m_patternsUsed) SetUpPatterns();
 
@@ -437,7 +419,7 @@ ModelDefinition BinaryConverter::FindModelDefinition(const std::string &shortnam
 
 Node *BinaryConverter::LoadNode(Serializer::Reader &rd)
 {
-	PROFILE_SCOPED()
+	PROFILE_START()
 	const std::string ntype = rd.String();
 	const std::string nname = rd.String();
 	//Output("Loading: %s %s\n", ntype.c_str(), nname.c_str());
@@ -457,9 +439,6 @@ Node *BinaryConverter::LoadNode(Serializer::Reader &rd)
 	}
 
 	node = loadFuncIt->second(db);
-	Group *grp = dynamic_cast<Group *>(node);
-	if (grp)
-		LoadChildren(rd, grp);
 
 	//register tag nodes
 	if (nflags & NODE_TAG)
@@ -468,15 +447,17 @@ Node *BinaryConverter::LoadNode(Serializer::Reader &rd)
 	node->SetName(nname);
 	node->SetNodeMask(nmask);
 	node->SetNodeFlags(nflags);
-	return node;
-}
 
-void BinaryConverter::LoadChildren(Serializer::Reader &rd, Group *parent)
-{
-	PROFILE_SCOPED()
-	const Uint32 numChildren = rd.Int32();
-	for (Uint32 i = 0; i < numChildren; i++)
-		parent->AddChild(LoadNode(rd));
+	// Stop profiling this func before loading children to avoid a giant tree of calls
+	PROFILE_STOP()
+
+	if (Group *grp = dynamic_cast<Group *>(node)) {
+		Uint32 numChildren = rd.Int32();
+		for (Uint32 i = 0; i < numChildren; i++)
+			grp->AddChild(LoadNode(rd));
+	}
+
+	return node;
 }
 
 Label3D *BinaryConverter::LoadLabel3D(NodeDatabase &db)

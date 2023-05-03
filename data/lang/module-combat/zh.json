@@ -13,23 +13,43 @@
   },
   "ADTEXT_1": {
     "description": "",
-    "message": "需要可靠的飞行员：付 {cash}."
+    "message": "秘密任务所需的合格飞行员：支付{cash}。"
   },
   "ADTEXT_2": {
     "description": "",
-    "message": "挑战：船和船员需要在系统系统中执行作战任务。"
+    "message": "需要在{system}星系中执行作战任务的飞船和船员。"
   },
   "ADTEXT_3": {
     "description": "",
-    "message": "战斗：需要装备精良的船作为合格的雇佣兵。"
+    "message": "需要有装备精良的飞船的合格佣兵。任务详情可按要求提供。"
   },
   "ADTEXT_4": {
     "description": "",
-    "message": "无畏的雇佣军需要：支付{cash} 来执行 {system}星系的任务。"
+    "message": "{org}寻找无畏的雇佣军前往{system}星系执行任务。将支付{cash}。"
   },
   "ADTEXT_5": {
     "description": "",
     "message": "任务{mission} ：薪水 {cash}。"
+  },
+  "ADTITLE_1": {
+    "description": "",
+    "message": "需要可靠的飞行员"
+  },
+  "ADTITLE_2": {
+    "description": "",
+    "message": "挑战解决方案"
+  },
+  "ADTITLE_3": {
+    "description": "",
+    "message": "战斗飞行"
+  },
+  "ADTITLE_4": {
+    "description": "",
+    "message": "需要无所畏惧的雇佣军"
+  },
+  "ADTITLE_5": {
+    "description": "",
+    "message": "授权作战任务"
   },
   "AGENT": {
     "description": "Secret Service Agent",
@@ -175,10 +195,6 @@
     "description": "",
     "message": "有时间限制吗？"
   },
-  "LY": {
-    "description": "",
-    "message": "光年"
-  },
   "MANAGER": {
     "description": "",
     "message": "经理"
@@ -235,6 +251,10 @@
     "description": "Message from the ship computer",
     "message": "完成主要任务目标"
   },
+  "MISSION_INFO": {
+    "description": "Message from the ship computer",
+    "message": "到达目标区域。开始数据记录。预计最大任务时间{duration}."
+  },
   "MISSION_TYPE_1": {
     "description": "Name of mission type",
     "message": "侦察"
@@ -246,6 +266,10 @@
   "MISSION_TYPE_3": {
     "description": "Name of mission type. Derived from Fighter Sweep. An aggressive mission to hunt down and destroy every enemy fighter in the allotted area.",
     "message": "扫描区域"
+  },
+  "MISSION_WARNING": {
+    "description": "Message from the ship computer",
+    "message": "目标区域太远。无法完成数据收集。"
   },
   "OBJECTIVE_1": {
     "description": "",
@@ -291,6 +315,10 @@
     "description": "",
     "message": "只需在一个有{org}办公室的站点停靠。"
   },
+  "RADAR_NOT_INSTALLED": {
+    "description": "",
+    "message": "抱歉，没有雷达你是做不到的。"
+  },
   "RISK_1": {
     "description": "",
     "message": "竞争对手的资源有限。没有什么是你搞不定的。"
@@ -330,6 +358,10 @@
   "SYSTEM": {
     "description": "",
     "message": "星系:"
+  },
+  "TARGET_AREA_REACHED": {
+    "description": "",
+    "message": "Target area reached. Start data logging."
   },
   "TIME_LIMIT": {
     "description": "",

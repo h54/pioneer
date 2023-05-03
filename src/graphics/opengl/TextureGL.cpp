@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "TextureGL.h"
@@ -82,13 +82,14 @@ namespace Graphics {
 			return (format == TEXTURE_DXT1 || format == TEXTURE_DXT5);
 		}
 
-		TextureGL::TextureGL(const TextureDescriptor &descriptor, const bool useCompressed, const bool useAnisoFiltering) :
+		TextureGL::TextureGL(const TextureDescriptor &descriptor, const bool useCompressed, const bool useAnisoFiltering, const Uint16 numSamples) :
 			Texture(descriptor),
 			m_allocSize(0),
 			m_useAnisoFiltering(useAnisoFiltering && descriptor.useAnisotropicFiltering)
 		{
 			PROFILE_SCOPED()
-			m_target = GLTextureType(descriptor.type);
+			// this is kind of a hack, but it limits the amount of things that need to care about multisample textures.
+			m_target = numSamples ? GL_TEXTURE_2D_MULTISAMPLE : GLTextureType(descriptor.type);
 
 			glGenTextures(1, &m_texture);
 			glBindTexture(m_target, m_texture);
@@ -99,6 +100,14 @@ namespace Graphics {
 			const bool compressTexture = useCompressed && descriptor.allowCompression;
 
 			switch (m_target) {
+			// XXX(sturnclaw): multisample assumes an uncompressed, un-mipmapped 2d texture descriptor.
+			case GL_TEXTURE_2D_MULTISAMPLE: {
+				glTexParameteri(m_target, GL_TEXTURE_MAX_LEVEL, 0);
+				glTexImage2DMultisample(
+					m_target, numSamples, GLInternalFormat(descriptor.format),
+					descriptor.dataSize.x, descriptor.dataSize.y, true); // must use fixedsamplelocations when mixed with renderbuffer
+				CHECKERRORS();
+			} break;
 			case GL_TEXTURE_2D:
 				if (!IsCompressed(descriptor.format)) {
 					if (!descriptor.generateMipmaps)
@@ -123,8 +132,8 @@ namespace Graphics {
 						if (!Width || !Height)
 							break;
 
-						Width /= 2;
-						Height /= 2;
+						Width = std::max<size_t>(Width / 2, 1ul);
+						Height = std::max<size_t>(Height / 2, 1ul);
 						m_allocSize += bufSize;
 					}
 					glTexParameteri(m_target, GL_TEXTURE_MAX_LEVEL, maxMip);
@@ -183,8 +192,8 @@ namespace Graphics {
 						glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, i, GLInternalFormat(descriptor.format), Width, Height, 0, bufSize, 0);
 						glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, i, GLInternalFormat(descriptor.format), Width, Height, 0, bufSize, 0);
 						glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, i, GLInternalFormat(descriptor.format), Width, Height, 0, bufSize, 0);
-						Width /= 2;
-						Height /= 2;
+						Width = std::max<size_t>(Width / 2, 1ul);
+						Height = std::max<size_t>(Height / 2, 1ul);
 						m_allocSize += bufSize * 6;
 
 						if (!Width || !Height)
@@ -223,8 +232,8 @@ namespace Graphics {
 						glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, i, GLInternalFormat(descriptor.format), Width, Height, Layers, 0, bufSize * Layers, nullptr);
 						RendererOGL::CheckErrors();
 
-						Width /= 2;
-						Height /= 2;
+						Width = std::max<size_t>(Width / 2, 1ul);
+						Height = std::max<size_t>(Height / 2, 1ul);
 						m_allocSize += bufSize * Layers;
 
 						if (!Width || !Height)
@@ -269,10 +278,13 @@ namespace Graphics {
 				break;
 			}
 
-			glTexParameteri(m_target, GL_TEXTURE_WRAP_S, wrapS);
-			glTexParameteri(m_target, GL_TEXTURE_WRAP_T, wrapS);
-			glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, magFilter);
-			glTexParameteri(m_target, GL_TEXTURE_MIN_FILTER, minFilter);
+			// multisample textures don't support wrap or filter operations.
+			if (!numSamples) {
+				glTexParameteri(m_target, GL_TEXTURE_WRAP_S, wrapS);
+				glTexParameteri(m_target, GL_TEXTURE_WRAP_T, wrapS);
+				glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, magFilter);
+				glTexParameteri(m_target, GL_TEXTURE_MIN_FILTER, minFilter);
+			}
 
 			// Anisotropic texture filtering
 			if (m_useAnisoFiltering) {
@@ -312,8 +324,8 @@ namespace Graphics {
 						glCompressedTexSubImage2D(m_target, i, pos.x, pos.y, Width, Height, oglInternalFormat, bufSize, &pData[Offset]);
 
 						Offset += bufSize;
-						Width /= 2;
-						Height /= 2;
+						Width = std::max<size_t>(Width / 2, 1ul);
+						Height = std::max<size_t>(Height / 2, 1ul);
 
 						if (!Width || !Height)
 							break;
@@ -369,8 +381,8 @@ namespace Graphics {
 						glCompressedTexSubImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, i, 0, 0, Width, Height, oglInternalFormat, bufSize, &pData_nz[Offset]);
 
 						Offset += bufSize;
-						Width /= 2;
-						Height /= 2;
+						Width = std::max<size_t>(Width / 2, 1ul);
+						Height = std::max<size_t>(Height / 2, 1ul);
 						if (!Width || !Height)
 							break;
 					}
@@ -436,8 +448,8 @@ namespace Graphics {
 							bufSize,		   //	GLsizei  		imageSize,
 							&pData[Offset]);   //	const GLvoid *  data);
 						Offset += bufSize;
-						Width /= 2;
-						Height /= 2;
+						Width = std::max<size_t>(Width / 2, 1ul);
+						Height = std::max<size_t>(Height / 2, 1ul);
 
 						if (!Width || !Height)
 							break;

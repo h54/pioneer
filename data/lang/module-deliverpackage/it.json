@@ -57,7 +57,11 @@
   },
   "FLAVOUR_0_ADTEXT": {
     "description": "",
-    "message": "ANDATE sul sistema {system}? Si paga per la consegna di un piccolo pacco."
+    "message": "Andate sul sistema {system}? Si paga per la consegna di un piccolo pacco."
+  },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "CONSEGNA INTERSTELLARE"
   },
   "FLAVOUR_0_FAILUREMSG": {
     "description": "",
@@ -77,7 +81,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "CERCASI: Consegna di un pacco sul sistema {system}."
+    "message": "Cercasi: Consegna di un pacco sul sistema {system}."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "CERCHIAMO POSTINO"
   },
   "FLAVOUR_1_FAILUREMSG": {
     "description": "",
@@ -97,7 +105,11 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "URGENTE: Richiesta astronave veloce per consegnare un pacco nel sistema {system}."
+    "message": "Urgente! Richiesta astronave veloce per consegnare un pacco nel sistema {system}."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "CONSEGNA URGENTE"
   },
   "FLAVOUR_2_FAILUREMSG": {
     "description": "",
@@ -117,7 +129,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "CONSEGNA: Documenti al sistema {system}. {cash} ad un pilota con esperienza."
+    "message": "Consegna di documenti sensibili verso il sistema {system}. {cash} per pilota esperto."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "CONSEGNA DOCUMENTI"
   },
   "FLAVOUR_3_FAILUREMSG": {
     "description": "",
@@ -137,7 +153,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "SERVIZIO POSTALE: Richiediamo un'astronave per il giro di consegne al sistema {system}."
+    "message": "Servizio Postale Interstellare: Richiediamo un'astronave per il giro di consegne al sistema {system}."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "SERVIZIO POSTALE"
   },
   "FLAVOUR_4_FAILUREMSG": {
     "description": "",
@@ -157,7 +177,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "TRASLOCO: Trasporto di hardware dal magazzino a {starport}."
+    "message": "Trasporto di possedimenti dal magazzino a {starport}."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "TRASLOCO"
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
@@ -177,7 +201,11 @@
   },
   "FLAVOUR_6_ADTEXT": {
     "description": "",
-    "message": "CORRIERE A CORTO-RAGGIO: Consegna di un pacchetto a {starport}"
+    "message": "Richiesto corriere nel sistema: Consegna di un pacchetto a {starport}"
+  },
+  "FLAVOUR_6_ADTITLE": {
+    "description": "",
+    "message": "CORRIERE A CORTO RAGGIO"
   },
   "FLAVOUR_6_FAILUREMSG": {
     "description": "",
@@ -197,7 +225,11 @@
   },
   "FLAVOUR_7_ADTEXT": {
     "description": "",
-    "message": "CARICO INTERPLANETARIO: Trasporto di merci locali a {starport}."
+    "message": "Contratto standardizzato di trasporto interplanetario. Trasporto di un cargo locale a {starport}."
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "CARGO INTERPLANETARIO"
   },
   "FLAVOUR_7_FAILUREMSG": {
     "description": "",
@@ -217,7 +249,11 @@
   },
   "FLAVOUR_8_ADTEXT": {
     "description": "",
-    "message": "CONSEGNA VICINA: Richiesta consegna rapida di merce a {starport}"
+    "message": "Richiesta consegna urgente di merce a {starport}"
+  },
+  "FLAVOUR_8_ADTITLE": {
+    "description": "",
+    "message": "CONSEGNA VICINA"
   },
   "FLAVOUR_8_FAILUREMSG": {
     "description": "",
@@ -237,7 +273,11 @@
   },
   "FLAVOUR_9_ADTEXT": {
     "description": "",
-    "message": "CONSEGNA PACCO: Spedizione urgente di materiale deperibile a {starport}"
+    "message": "Consegna pacco: Spedizione urgente di materiale deperibile a {starport}"
+  },
+  "FLAVOUR_9_ADTITLE": {
+    "description": "",
+    "message": "CONSEGNA PACCO"
   },
   "FLAVOUR_9_FAILUREMSG": {
     "description": "",
@@ -270,10 +310,6 @@
   "I_HIGHLY_DOUBT_IT": {
     "description": "",
     "message": "Ne dubito fortemente."
-  },
-  "LY": {
-    "description": "",
-    "message": "AL"
   },
   "NOT_ANY_MORE_THAN_USUAL": {
     "description": "",

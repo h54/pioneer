@@ -165,7 +165,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "NAVE SCHIANTATA su {planet}."
+    "message": "La stazione di controllo locale riferisce di una nave schiantata sul pianeta {planet}. Si richiede assistenza."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "NAVE SCHIANTATA"
   },
   "FLAVOUR_1_FAILUREMSG": {
     "description": "",
@@ -197,7 +201,11 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "NAVE SENZA CARBURANTE in rotta verso {starport}."
+    "message": "La torre di controllo di {starport} ha ricevuto una richiesta d'aiuto per esaurimento carburante da una nave in arrivo. Si richiede servizio di rifornimento."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "NAVE SENZA CARBURANTE"
   },
   "FLAVOUR_2_FAILUREMSG": {
     "description": "",
@@ -229,7 +237,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "EMERGENZA MEDICA su astronave vicina a {starport}."
+    "message": "Una nave vicina a {starport} ha segnalato un'emergenza medica. È richiesto un trasporto urgente in ospedale."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "EMERGENZA MEDICA"
   },
   "FLAVOUR_3_FAILUREMSG": {
     "description": "",
@@ -261,7 +273,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "NAVE SENZA CARBURANTE su {planet}."
+    "message": "Ricevuto segnale di emergenza: nave alla deriva e priva di cabrante sul pianeta {planet}."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "NAVE SENZA CARBURANTE"
   },
   "FLAVOUR_4_FAILUREMSG": {
     "description": "",
@@ -293,7 +309,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "NAVE SENZA CARBURANTE vicino a {starport}."
+    "message": "Nave alla deriva richiede rifornimento di carburante nei pressi di {starport}."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "NAVE SENZA CARBURANTE"
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
@@ -325,7 +345,11 @@
   },
   "FLAVOUR_6_ADTEXT": {
     "description": "",
-    "message": "PERSE COMUNICAZIONI con vascello nel sistema {system}."
+    "message": "Emergenza: nessuna comunicazione da vascello corporativo nel sistema {system}."
+  },
+  "FLAVOUR_6_ADTITLE": {
+    "description": "",
+    "message": "PERSI I CONTATTI DA UN VASCELLO"
   },
   "FLAVOUR_6_FAILUREMSG": {
     "description": "",
@@ -357,7 +381,11 @@
   },
   "FLAVOUR_7_ADTEXT": {
     "description": "",
-    "message": "TRASPORTO CELERE EQUIPAGGIO richiesto verso il sistema {system}."
+    "message": "Richiesta trasporto immediato di equipaggio da nave alla deriva nel sistema {system}."
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "TRASPORTO D'EMERGENZA EQUIPAGGIO"
   },
   "FLAVOUR_7_FAILUREMSG": {
     "description": "",
@@ -434,10 +462,6 @@
   "LON": {
     "description": "",
     "message": "Lon:"
-  },
-  "LY": {
-    "description": "",
-    "message": "AL"
   },
   "MISSING_COMM": {
     "description": "",

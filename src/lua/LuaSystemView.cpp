@@ -1,10 +1,11 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "EnumStrings.h"
 #include "Game.h"
 #include "LuaColor.h"
 #include "LuaObject.h"
+#include "LuaTable.h"
 #include "LuaVector.h"
 #include "LuaVector2.h"
 #include "Pi.h"
@@ -150,7 +151,6 @@ static int l_systemview_get_projected_grouped(lua_State *l)
 
 	const Body *nav_target = Pi::game->GetPlayer()->GetNavTarget();
 	const Body *combat_target = Pi::game->GetPlayer()->GetCombatTarget();
-	const Body *player_body = static_cast<Body *>(Pi::game->GetPlayer());
 
 	for (Projectable &p : projected) {
 		// --- icons---
@@ -219,7 +219,7 @@ static int l_systemview_get_projected_grouped(lua_State *l)
 					touchedGroups.push_back(&group);
 			//now select the nearest group (if have)
 			if (touchedGroups.size()) {
-				GroupInfo *nearest;
+				GroupInfo *nearest = nullptr;
 				double min_length = 1e64;
 				for (GroupInfo *&g : touchedGroups) {
 					double this_length = (g->m_mainObject.screenpos - special_object[object_type]->screenpos).Length();
@@ -250,6 +250,7 @@ static int l_systemview_get_projected_grouped(lua_State *l)
 		for (GroupInfo &group : groups) {
 			LuaTable info_table(l, 0, 6);
 			info_table.Set("screenCoordinates", group.m_mainObject.screenpos);
+			info_table.Set("screenSize", group.m_mainObject.screensize);
 			info_table.Set("mainObject", projectable_to_lua_row(group.m_mainObject, l));
 			lua_pop(l, 1);
 			if (group.m_objects.size() > 1) {
@@ -272,12 +273,40 @@ static int l_systemview_get_projected_grouped(lua_State *l)
 	return 1;
 }
 
+static int l_systemview_get_system(lua_State *l)
+{
+	SystemView *sv = LuaObject<SystemView>::CheckFromLua(1);
+	LuaPush(l, sv->GetCurrentSystem());
+	return 1;
+}
+
 static int l_systemview_get_selected_object(lua_State *l)
 {
 	SystemView *sv = LuaObject<SystemView>::CheckFromLua(1);
 	Projectable *p = sv->GetSelectedObject();
 	LuaPush(l, projectable_to_lua_row(*p, l));
 	return 1;
+}
+
+static int l_systemview_clear_selected_object(lua_State *l)
+{
+	SystemView *sv = LuaObject<SystemView>::CheckFromLua(1);
+	sv->ClearSelectedObject();
+	return 0;
+}
+
+static int l_systemview_view_selected_object(lua_State *l)
+{
+	SystemView *sv = LuaObject<SystemView>::CheckFromLua(1);
+	sv->ViewSelectedObject();
+	return 0;
+}
+
+static int l_systemview_reset_viewpoint(lua_State *l)
+{
+	SystemView *sv = LuaObject<SystemView>::CheckFromLua(1);
+	sv->ResetViewpoint();
+	return 0;
 }
 
 static int l_systemview_set_visibility(lua_State *l)
@@ -334,6 +363,43 @@ static int l_systemview_set_zoom_mode(lua_State *l)
 	return 0;
 }
 
+static int l_systemview_get_zoom(lua_State *l)
+{
+	SystemView *sv = LuaObject<SystemView>::CheckFromLua(1);
+	LuaPush(l, sv->GetZoom());
+	return 1;
+}
+
+static int l_systemview_atlas_view_planet_gap(lua_State *l)
+{
+	SystemView *sv = LuaObject<SystemView>::CheckFromLua(1);
+	auto radius = LuaPull<float>(l, 2);
+	LuaPush(l, sv->AtlasViewPlanetGap(radius));
+	return 1;
+}
+
+static int l_systemview_atlas_view_pixel_per_unit(lua_State *l)
+{
+	SystemView *sv = LuaObject<SystemView>::CheckFromLua(1);
+	LuaPush(l, sv->AtlasViewPixelPerUnit());
+	return 1;
+}
+
+static int l_systemview_get_display_mode(lua_State *l)
+{
+	SystemView *sv = LuaObject<SystemView>::CheckFromLua(1);
+	LuaPush(l, EnumStrings::GetString("SystemViewMode", int(sv->GetDisplayMode())));
+	return 1;
+}
+
+static int l_systemview_set_display_mode(lua_State *l)
+{
+	SystemView *sv = LuaObject<SystemView>::CheckFromLua(1);
+	int mode = EnumStrings::GetValue("SystemViewMode", LuaPull<const char *>(l, 2));
+	sv->SetDisplayMode(SystemView::Mode(mode));
+	return 1;
+}
+
 static int l_systemview_transfer_planner_get(lua_State *l)
 {
 	SystemView *sv = LuaObject<SystemView>::CheckFromLua(1);
@@ -341,11 +407,11 @@ static int l_systemview_transfer_planner_get(lua_State *l)
 
 	TransferPlanner *planner = sv->GetTransferPlanner();
 	if (key == "prograde") {
-		LuaPush<double>(l, planner->GetDv(BurnDirection::PROGRADE));
+		LuaPush<double>(l, planner->GetDv(TransferPlanner::PROGRADE));
 	} else if (key == "normal") {
-		LuaPush<double>(l, planner->GetDv(BurnDirection::NORMAL));
+		LuaPush<double>(l, planner->GetDv(TransferPlanner::NORMAL));
 	} else if (key == "radial") {
-		LuaPush<double>(l, planner->GetDv(BurnDirection::RADIAL));
+		LuaPush<double>(l, planner->GetDv(TransferPlanner::RADIAL));
 	} else if (key == "starttime") {
 		LuaPush<double>(l, planner->GetStartTime());
 	} else if (key == "factor") {
@@ -365,11 +431,11 @@ static int l_systemview_transfer_planner_add(lua_State *l)
 
 	TransferPlanner *planner = sv->GetTransferPlanner();
 	if (key == "prograde") {
-		planner->AddDv(BurnDirection::PROGRADE, delta);
+		planner->AddDv(TransferPlanner::PROGRADE, delta);
 	} else if (key == "normal") {
-		planner->AddDv(BurnDirection::NORMAL, delta);
+		planner->AddDv(TransferPlanner::NORMAL, delta);
 	} else if (key == "radial") {
-		planner->AddDv(BurnDirection::RADIAL, delta);
+		planner->AddDv(TransferPlanner::RADIAL, delta);
 	} else if (key == "starttime") {
 		planner->AddStartTime(delta);
 	} else if (key == "factor") {
@@ -390,11 +456,11 @@ static int l_systemview_transfer_planner_reset(lua_State *l)
 
 	TransferPlanner *planner = sv->GetTransferPlanner();
 	if (key == "prograde") {
-		planner->ResetDv(BurnDirection::PROGRADE);
+		planner->ResetDv(TransferPlanner::PROGRADE);
 	} else if (key == "normal") {
-		planner->ResetDv(BurnDirection::NORMAL);
+		planner->ResetDv(TransferPlanner::NORMAL);
 	} else if (key == "radial") {
-		planner->ResetDv(BurnDirection::RADIAL);
+		planner->ResetDv(TransferPlanner::RADIAL);
 	} else if (key == "starttime") {
 		planner->ResetStartTime();
 	} else if (key == "factor") {
@@ -414,16 +480,25 @@ void LuaObject<SystemView>::RegisterClass()
 {
 	static const luaL_Reg l_methods[] = {
 
+		{ "GetSystem", l_systemview_get_system },
+		{ "ClearSelectedObject", l_systemview_clear_selected_object },
 		{ "GetProjectedGrouped", l_systemview_get_projected_grouped },
 		{ "GetSelectedObject", l_systemview_get_selected_object },
 		{ "GetOrbitPlannerStartTime", l_systemview_get_orbit_planner_start_time },
 		{ "GetOrbitPlannerTime", l_systemview_get_orbit_planner_time },
 		{ "AccelerateTime", l_systemview_accelerate_time },
 		{ "SetSelectedObject", l_systemview_set_selected_object },
+		{ "ViewSelectedObject", l_systemview_view_selected_object },
+		{ "ResetViewpoint", l_systemview_reset_viewpoint },
 		{ "SetVisibility", l_systemview_set_visibility },
 		{ "SetColor", l_systemview_set_color },
 		{ "SetRotateMode", l_systemview_set_rotate_mode },
-		{ "SetZoomMode" , l_systemview_set_zoom_mode },
+		{ "SetZoomMode", l_systemview_set_zoom_mode },
+		{ "GetDisplayMode", l_systemview_get_display_mode },
+		{ "SetDisplayMode", l_systemview_set_display_mode },
+		{ "GetZoom", l_systemview_get_zoom },
+		{ "AtlasViewPlanetGap", l_systemview_atlas_view_planet_gap },
+		{ "AtlasViewPixelPerUnit", l_systemview_atlas_view_pixel_per_unit },
 
 		{ "TransferPlannerAdd", l_systemview_transfer_planner_add },
 		{ "TransferPlannerGet", l_systemview_transfer_planner_get },

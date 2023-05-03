@@ -1,24 +1,25 @@
--- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
-local Lang = import 'Lang'
-local Game = import 'Game'
-local Format = import 'Format'
-local ShipDef = import 'ShipDef'
-local Equipment = import 'Equipment'
-local StationView = import 'pigui/views/station-view'
-local Table = import 'pigui/libs/table.lua'
-local PiImage = import 'ui/PiImage'
-local ModelSpinner = import 'PiGui.Modules.ModelSpinner'
+local Lang = require 'Lang'
+local Game = require 'Game'
+local Format = require 'Format'
+local ShipDef = require 'ShipDef'
+local Equipment = require 'Equipment'
+local StationView = require 'pigui.views.station-view'
+local Table = require 'pigui.libs.table'
+local PiImage = require 'pigui.libs.image'
+local ModelSpinner = require 'PiGui.Modules.ModelSpinner'
+local CommodityType= require 'CommodityType'
 
-local ui = import 'pigui/pigui.lua'
+local ui = require 'pigui'
 local pionillium = ui.fonts.pionillium
 local orbiteer = ui.fonts.orbiteer
+local styleColors = ui.theme.styleColors
 local l = Lang.GetResource("ui-core")
-local colors = ui.theme.colors
+local Vector2 = _G.Vector2
 
 local vZero = Vector2(0,0)
-local rescaleVector = ui.rescaleUI(Vector2(1, 1), Vector2(1600, 900), true)
 local widgetSizes = ui.rescaleUI({
 	iconSize = Vector2(64, 64),
 	buyButton = Vector2(96, 36),
@@ -32,9 +33,7 @@ local icons = {}
 local manufacturerIcons = {}
 local selectedItem
 
-local currentIconSize = Vector2(0,0)
-
-local shipSellPriceReduction = 0.5
+local shipSellPriceReduction = 0.65
 local equipSellPriceReduction = 0.8
 
 local modelSpinner = ModelSpinner()
@@ -64,12 +63,20 @@ local shipClassString = {
 	unknown                    = "",
 }
 
+local function refreshModelSpinner()
+	if not selectedItem then return end
+	cachedShip = selectedItem.def.modelName
+	cachedPattern = selectedItem.pattern
+	modelSpinner:setModel(cachedShip, selectedItem.skin, cachedPattern)
+end
+
 local function refreshShipMarket()
 	widgetSizes.rowVerticalSpacing = Vector2(0, (widgetSizes.iconSize.y + widgetSizes.itemSpacing.y - pionillium.large.size)/2)
 
 	local station = Game.player:GetDockedWith()
 	shipMarket.items = station:GetShipsOnSale()
 	selectedItem = nil
+	shipMarket.selectedItem = nil
 end
 
 local function manufacturerIcon (manufacturer)
@@ -127,7 +134,6 @@ local function buyShip (mkt, sos)
 		return
 	end
 
-	local manifest = player:GetEquip("cargo")
 	player:AddMoney(-cost)
 
 	station:ReplaceShipOnSale(sos, {
@@ -141,12 +147,11 @@ local function buyShip (mkt, sos)
 	player:SetSkin(sos.skin)
 	if sos.pattern then player.model:SetPattern(sos.pattern) end
 	player:SetLabel(sos.label)
+
 	if def.hyperdriveClass > 0 then
 		player:AddEquip(Equipment.hyperspace["hyperdrive_" .. def.hyperdriveClass])
 	end
-	for _, e in pairs(manifest) do
-		player:AddEquip(e)
-	end
+
 	player:SetFuelPercent(100)
 	refreshShipMarket();
 
@@ -165,32 +170,34 @@ end
 
 local tradeMenu = function()
 	if(selectedItem) then
-		ui.withStyleVars({ WindowPadding = shipMarket.style.windowPadding, ItemSpacing = shipMarket.style.itemSpacing}, function()
-			ui.child("TradeMenu", Vector2(0,0), {"AlwaysUseWindowPadding"}, function()
+		ui.withStyleVars({ ItemSpacing = shipMarket.style.itemSpacing}, function()
+			ui.child("TradeMenu", Vector2(0,0), function()
 				local colHeadingWidth = ui.getContentRegion().x - widgetSizes.buyButton.x
 				local def = selectedItem.def
 
 				ui.columns(2, "shipMarketInfo")
 				ui.setColumnWidth(0, colHeadingWidth)
 
-				ui.withFont(orbiteer.xlarge.name, orbiteer.xlarge.size, function()
+				ui.withFont(orbiteer.title, function()
 					ui.text(selectedItem.def.name)
 				end)
-				ui.withFont(orbiteer.medlarge.name, orbiteer.medlarge.size, function()
+				ui.withFont(orbiteer.body, function()
 					ui.text(shipClassString[selectedItem.def.shipClass])
 				end)
 
-				ui.text(l.PRICE..": "..Format.Money(selectedItem.def.basePrice, false))
-				ui.sameLine()
-				ui.text(l.AFTER_TRADE_IN..": "..Format.Money(selectedItem.def.basePrice - tradeInValue(ShipDef[Game.player.shipId]), false))
+				ui.withFont(pionillium.heading, function()
+					ui.text(l.PRICE..": "..Format.Money(selectedItem.def.basePrice, false))
+					ui.sameLine()
+					ui.text(l.AFTER_TRADE_IN..": "..Format.Money(selectedItem.def.basePrice - tradeInValue(ShipDef[Game.player.shipId]), false))
+				end)
 
 				ui.nextColumn()
 				ui.dummy(widgetSizes.iconSpacer)
 				ui.sameLine()
 				manufacturerIcon(selectedItem.def.manufacturer)
 				local shipBought = false
-				ui.withFont(pionillium.medlarge.name, orbiteer.medlarge.size, function()
-					shipBought = ui.coloredSelectedButton(l.BUY_SHIP, widgetSizes.buyButton, false, colors.buttonBlue, nil, true)
+				ui.withFont(pionillium.body, function()
+					shipBought = ui.button(l.BUY_SHIP, widgetSizes.buyButton)
 				end)
 				ui.columns(1, "")
 
@@ -201,119 +208,95 @@ local tradeMenu = function()
 
 				local spinnerWidth = ui.getContentRegion().x
 				modelSpinner:setSize(Vector2(spinnerWidth, spinnerWidth / 2.5))
-				if selectedItem.def.modelName ~= cachedShip then
-					cachedShip = selectedItem.def.modelName
-					cachedPattern = selectedItem.pattern
-					modelSpinner:setModel(cachedShip, selectedItem.skin, cachedPattern)
-				end
-
 				modelSpinner:draw()
 
 				local hyperdrive_str = selectedItem.def.hyperdriveClass > 0 and
-						Equipment.hyperspace["hyperdrive_" .. selectedItem.def.hyperdriveClass]:GetName() or l.NONE
+					Equipment.hyperspace["hyperdrive_" .. selectedItem.def.hyperdriveClass]:GetName() or l.NONE
 
-				local forwardAccelEmpty =  def.linearThrust.FORWARD / (-9.81*1000*(def.hullMass+def.fuelTankMass))
-				local forwardAccelFull  =  def.linearThrust.FORWARD / (-9.81*1000*(def.hullMass+def.capacity+def.fuelTankMass))
-				local reverseAccelEmpty = -def.linearThrust.REVERSE / (-9.81*1000*(def.hullMass+def.fuelTankMass))
-				local reverseAccelFull  = -def.linearThrust.REVERSE / (-9.81*1000*(def.hullMass+def.capacity+def.fuelTankMass))
-				local deltav = def.effectiveExhaustVelocity * math.log((def.hullMass + def.fuelTankMass) / def.hullMass)
-				local deltav_f = def.effectiveExhaustVelocity * math.log((def.hullMass + def.fuelTankMass + def.capacity) / (def.hullMass + def.capacity))
-				local deltav_m = def.effectiveExhaustVelocity * math.log((def.hullMass + def.fuelTankMass + def.capacity) / def.hullMass)
+				local emptyMass = def.hullMass + def.fuelTankMass
+				local fullMass = def.hullMass + def.capacity + def.fuelTankMass
+				local forwardAccelEmpty =  def.linearThrust.FORWARD / (-9.81*1000*(emptyMass))
+				local forwardAccelFull  =  def.linearThrust.FORWARD / (-9.81*1000*(fullMass))
+				local reverseAccelEmpty = -def.linearThrust.REVERSE / (-9.81*1000*(emptyMass))
+				local reverseAccelFull  = -def.linearThrust.REVERSE / (-9.81*1000*(fullMass))
+				local deltav = def.effectiveExhaustVelocity * math.log((emptyMass) / def.hullMass)
+				local deltav_f = def.effectiveExhaustVelocity * math.log((fullMass) / (def.hullMass + def.capacity))
+				local deltav_m = def.effectiveExhaustVelocity * math.log((fullMass) / def.hullMass)
 
-				ui.withFont(pionillium.medlarge.name, pionillium.medlarge.size, function()
-					ui.child("ShipSpecs", ui.getContentRegion() - widgetSizes.itemSpacing, {"AlwaysUseWindowPadding"}, function()
-						local colSpecNameWidth = ui.getContentRegion().x / 3.5
-						local colSpecValWidth = (ui.getContentRegion().x - colSpecNameWidth*2) / 2
+				local atmoSlot
+				if def.equipSlotCapacity["atmo_shield"] > 0 then
+					atmoSlot = string.format("%d(+%d/+%d) atm", def.atmosphericPressureLimit,
+						def.atmosphericPressureLimit * (Equipment.misc.atmospheric_shielding.capabilities.atmo_shield - 1),
+						def.atmosphericPressureLimit * (Equipment.misc.heavy_atmospheric_shielding.capabilities.atmo_shield - 1) )
+				else
+					atmoSlot = string.format("%d atm", def.atmosphericPressureLimit)
+				end
 
-						ui.columns(4, "ShipSpecsTable")
-						ui.setColumnWidth(0, colSpecNameWidth)
-						ui.setColumnWidth(1, colSpecValWidth)
-						ui.setColumnWidth(2, colSpecNameWidth)
-						ui.setColumnWidth(3, colSpecValWidth)
+				local shipInfoTable = {
+					{
+						l.HYPERDRIVE_FITTED, hyperdrive_str,
+						l.CARGO_SPACE, Format.MassTonnes(def.equipSlotCapacity["cargo"])
+					}, {
+						l.FORWARD_ACCEL_FULL, Format.AccelG(forwardAccelFull),
+						l.WEIGHT_FULLY_LOADED, Format.MassTonnes(fullMass)
+					}, {
+						l.FORWARD_ACCEL_EMPTY, Format.AccelG(forwardAccelEmpty),
+						l.WEIGHT_EMPTY,  Format.MassTonnes(def.hullMass)
+					}, {
+						l.REVERSE_ACCEL_EMPTY, Format.AccelG(reverseAccelEmpty),
+						l.CAPACITY, Format.MassTonnes(def.capacity)
+					}, {
+						l.REVERSE_ACCEL_FULL, Format.AccelG(reverseAccelFull),
+						l.FUEL_WEIGHT, Format.MassTonnes(def.fuelTankMass)
+					}, {
+						l.DELTA_V_EMPTY, string.format("%d km/s", deltav / 1000),
+						l.MINIMUM_CREW, def.minCrew
+					}, {
+						l.DELTA_V_FULL, string.format("%d km/s", deltav_f / 1000),
+						l.MAXIMUM_CREW, def.maxCrew
+					}, {
+						l.DELTA_V_MAX, string.format("%d km/s", deltav_m / 1000),
+						l.MISSILE_MOUNTS, def.equipSlotCapacity["missile"]
+					}, {
+						l.ATMOSPHERIC_SHIELDING, yes_no(def.equipSlotCapacity["atmo_shield"]),
+						l.ATMO_PRESS_LIMIT, atmoSlot
+					}, {
+						l.SCOOP_MOUNTS, def.equipSlotCapacity["scoop"],
+						l.PASSENGER_CABIN_CAPACITY, def.equipSlotCapacity["cabin"]
+					},
+				}
 
-						ui.text(l.HYPERDRIVE_FITTED)
-						ui.nextColumn()
-						ui.text(hyperdrive_str)
-						ui.nextColumn()
-						ui.nextColumn()
-						ui.nextColumn()
+				ui.child("ShipSpecs", Vector2(0, 0), function()
+					ui.withStyleVars({ CellPadding = Vector2(8, 4) }, function()
 
-						ui.text(l.WEIGHT_FULLY_LOADED)
-						ui.nextColumn()
-						ui.text(Format.MassTonnes(def.hullMass+def.capacity+def.fuelTankMass))
-						ui.nextColumn()
-						ui.text(l.WEIGHT_EMPTY)
-						ui.nextColumn()
-						ui.text(Format.MassTonnes(def.hullMass))
-						ui.nextColumn()
+						if not ui.beginTable("specs", 4) then return end
 
-						ui.text(l.FORWARD_ACCEL_FULL)
-						ui.nextColumn()
-						ui.text(Format.AccelG(forwardAccelFull))
-						ui.nextColumn()
-						ui.text(l.CAPACITY)
-						ui.nextColumn()
-						ui.text(Format.MassTonnes(def.capacity))
-						ui.nextColumn()
+						ui.tableSetupColumn("name1")
+						ui.tableSetupColumn("body1")
+						ui.tableSetupColumn("name2")
+						ui.tableSetupColumn("body2")
 
-						ui.text(l.FORWARD_ACCEL_EMPTY)
-						ui.nextColumn()
-						ui.text(Format.AccelG(forwardAccelEmpty))
-						ui.nextColumn()
-						ui.text(l.FUEL_WEIGHT)
-						ui.nextColumn()
-						ui.text(Format.MassTonnes(def.fuelTankMass))
-						ui.nextColumn()
+						for _, item in ipairs(shipInfoTable) do
+							ui.tableNextRow()
 
-						ui.text(l.REVERSE_ACCEL_EMPTY)
-						ui.nextColumn()
-						ui.text(Format.AccelG(reverseAccelEmpty))
-						ui.nextColumn()
-						ui.text(l.MINIMUM_CREW)
-						ui.nextColumn()
-						ui.text(def.minCrew)
-						ui.nextColumn()
+							ui.tableSetColumnIndex(0)
+							ui.textColored(styleColors.gray_300, item[1])
 
-						ui.text(l.REVERSE_ACCEL_FULL)
-						ui.nextColumn()
-						ui.text(Format.AccelG(reverseAccelFull))
-						ui.nextColumn()
-						ui.text(l.MAXIMUM_CREW)
-						ui.nextColumn()
-						ui.text(def.maxCrew)
-						ui.nextColumn()
+							ui.tableSetColumnIndex(1)
+							ui.textAligned(item[2], 1.0)
 
-						ui.text(l.DELTA_V_EMPTY)
-						ui.nextColumn()
-						ui.text(string.format("%d km/s", deltav / 1000))
-						ui.nextColumn()
-						ui.text(l.MISSILE_MOUNTS)
-						ui.nextColumn()
-						ui.text(def.equipSlotCapacity["missile"])
-						ui.nextColumn()
+							ui.tableSetColumnIndex(2)
+							ui.textColored(styleColors.gray_300, item[3])
 
-						ui.text(l.DELTA_V_FULL)
-						ui.nextColumn()
-						ui.text(string.format("%d km/s", deltav_f / 1000))
-						ui.nextColumn()
-						ui.text(l.ATMOSPHERIC_SHIELDING)
-						ui.nextColumn()
-						ui.text(yes_no(def.equipSlotCapacity["atmo_shield"]))
-						ui.nextColumn()
+							ui.tableSetColumnIndex(3)
+							ui.textAligned(item[4], 1.0)
+						end
 
-						ui.text(l.DELTA_V_MAX)
-						ui.nextColumn()
-						ui.text(string.format("%d km/s", deltav_m / 1000))
-						ui.nextColumn()
-						ui.text(l.SCOOP_MOUNTS)
-						ui.nextColumn()
-						ui.text(def.equipSlotCapacity["scoop"])
-						ui.nextColumn()
+						ui.endTable()
 
-						ui.columns(1, "")
 					end)
-
 				end)
+
 			end)
 		end)
 	end
@@ -329,8 +312,8 @@ shipMarket = Table.New("shipMarketWidget", false, {
 		ui.setColumnWidth(2, columnWidth)
 		ui.setColumnWidth(3, columnWidth)
 	end,
-	renderHeaderRow = function(s)
-		ui.withFont(orbiteer.xlarge.name, orbiteer.xlarge.size, function()
+	renderHeaderRow = function(_)
+		ui.withFont(orbiteer.heading, function()
 			ui.text('')
 			ui.nextColumn()
 			ui.text(l.SHIP)
@@ -341,12 +324,15 @@ shipMarket = Table.New("shipMarketWidget", false, {
 			ui.nextColumn()
 		end)
 	end,
-	renderItem = function(s, item)
+	renderItem = function(_, item)
 		if(icons[item.def.shipClass] == nil) then
 			icons[item.def.shipClass] = PiImage.New("icons/shipclass/".. item.def.shipClass ..".png")
-			currentIconSize = icons[item.def.shipClass].texture.size
 		end
-		if not selectedItem then selectedItem = item end
+		if not selectedItem then
+			selectedItem = item
+			shipMarket.selectedItem = item
+			refreshModelSpinner()
+		end
 		icons[item.def.shipClass]:Draw(widgetSizes.iconSize)
 		ui.nextColumn()
 		ui.withStyleVars({ItemSpacing = vZero}, function()
@@ -361,32 +347,32 @@ shipMarket = Table.New("shipMarketWidget", false, {
 			ui.nextColumn()
 		end)
 	end,
-	onClickItem = function(s,e)
+	onClickItem = function(_,e)
 		selectedItem = e
+		shipMarket.selectedItem = e
+		refreshModelSpinner()
 	end,
 	sortingFunction = function(s1,s2) return s1.def.name < s2.def.name end
 })
-
-local function renderShipMarket()
-	ui.withFont(pionillium.large.name, pionillium.large.size, function()
-		ui.child("shipMarketContainer", Vector2(0, ui.getContentRegion().y - StationView.style.height), {}, function()
-			shipMarket:render()
-			ui.sameLine()
-			tradeMenu()
-		end)
-
-		StationView:shipSummary()
-	end)
-end
 
 StationView:registerView({
 	id = "shipMarketView",
 	name = l.SHIP_MARKET,
 	icon = ui.theme.icons.ship,
 	showView = true,
-	draw = renderShipMarket,
+	draw = function()
+		ui.withFont(pionillium.heading, function()
+			shipMarket:render()
+		end)
+
+		ui.sameLine(0, widgetSizes.itemSpacing.x)
+		tradeMenu()
+	end,
 	refresh = function()
 		refreshShipMarket()
 		shipMarket.scrollReset = true
 	end,
+	debugReload = function()
+		package.reimport()
+	end
 })

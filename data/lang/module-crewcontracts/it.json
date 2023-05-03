@@ -19,6 +19,14 @@
     "description": "",
     "message": "Candidati per l'equipaggio"
   },
+  "CREW_FOR_HIRE_DESC": {
+    "description": "",
+    "message": "Ci sono potenziali candidati per equipaggio in questo spazioporto."
+  },
+  "CREW_FOR_HIRE_TITLE": {
+    "description": "",
+    "message": "ASSUNZIONE EQUIPAGGI"
+  },
   "GO_BACK": {
     "description": "",
     "message": "Indietro"

@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Planet.h"
@@ -11,6 +11,9 @@
 #include "graphics/RenderState.h"
 #include "graphics/Renderer.h"
 #include "graphics/Texture.h"
+#include "graphics/Types.h"
+#include "graphics/VertexArray.h"
+#include "graphics/VertexBuffer.h"
 #include "perlin.h"
 
 #ifdef _MSC_VER
@@ -22,17 +25,13 @@ using namespace Graphics;
 static const Graphics::AttributeSet RING_VERTEX_ATTRIBS = Graphics::ATTRIB_POSITION | Graphics::ATTRIB_UV0;
 
 Planet::Planet(SystemBody *sbody) :
-	TerrainBody(sbody),
-	m_ringVertices(RING_VERTEX_ATTRIBS),
-	m_ringState(nullptr)
+	TerrainBody(sbody)
 {
 	InitParams(sbody);
 }
 
 Planet::Planet(const Json &jsonObj, Space *space) :
-	TerrainBody(jsonObj, space),
-	m_ringVertices(RING_VERTEX_ATTRIBS),
-	m_ringState(nullptr)
+	TerrainBody(jsonObj, space)
 {
 	const SystemBody *sbody = GetSystemBody();
 	assert(sbody);
@@ -54,15 +53,15 @@ void Planet::InitParams(const SystemBody *sbody)
 	const double GAS_CONSTANT = 8.3144621;
 	const double PA_2_ATMOS = 1.0 / 101325.0;
 
-	// surface gravity = -G*M/planet radius^2
-	m_surfaceGravity_g = -G * sbody->GetMass() / (sbody->GetRadius() * sbody->GetRadius());
-	const double lapseRate_L = -m_surfaceGravity_g / specificHeatCp; // negative deg/m
-	const double surfaceTemperature_T0 = sbody->GetAverageTemp(); //K
+	// surface gravity = G*M/planet radius^2
+	m_surfaceGravity_g = G * sbody->GetMass() / (sbody->GetRadius() * sbody->GetRadius());
+	const double lapseRate_L = m_surfaceGravity_g / specificHeatCp; // deg/m
+	const double surfaceTemperature_T0 = sbody->GetAverageTemp();	//K
 
 	double surfaceDensity, h;
 	Color c;
 	sbody->GetAtmosphereFlavor(&c, &surfaceDensity); // kg / m^3
-	surfaceDensity /= gasMolarMass; // convert to moles/m^3
+	surfaceDensity /= gasMolarMass;					 // convert to moles/m^3
 
 	//P = density*R*T=(n/V)*R*T
 	const double surfaceP_p0 = PA_2_ATMOS * ((surfaceDensity)*GAS_CONSTANT * surfaceTemperature_T0); // in atmospheres
@@ -72,7 +71,7 @@ void Planet::InitParams(const SystemBody *sbody)
 		//*outPressure = p0*(1-l*h/T0)^(g*M/(R*L);
 		// want height for pressure 0.001 atm:
 		// h = (1 - exp(RL/gM * log(P/p0))) * T0 / l
-		double RLdivgM = (GAS_CONSTANT * lapseRate_L) / (-m_surfaceGravity_g * gasMolarMass);
+		double RLdivgM = (GAS_CONSTANT * lapseRate_L) / (m_surfaceGravity_g * gasMolarMass);
 		h = (1.0 - exp(RLdivgM * log(0.001 / surfaceP_p0))) * surfaceTemperature_T0 / lapseRate_L;
 		//		double h2 = (1.0 - pow(0.001/surfaceP_p0, RLdivgM)) * surfaceTemperature_T0 / lapseRate_L;
 		//		double P = surfaceP_p0*pow((1.0-lapseRate_L*h/surfaceTemperature_T0),1/RLdivgM);
@@ -136,9 +135,9 @@ void Planet::GetAtmosphericState(double dist, double *outPressure, double *outDe
 	// lapse rate http://en.wikipedia.org/wiki/Adiabatic_lapse_rate#Dry_adiabatic_lapse_rate
 	// the wet adiabatic rate can be used when cloud layers are incorporated
 	// fairly accurate in the troposphere
-	const double lapseRate_L = -m_surfaceGravity_g / specificHeatCp; // negative deg/m
+	const double lapseRate_L = m_surfaceGravity_g / specificHeatCp; // deg/m
 
-	const double height_h = (dist - sbody->GetRadius()); // height in m
+	const double height_h = (dist - sbody->GetRadius());		  // height in m
 	const double surfaceTemperature_T0 = sbody->GetAverageTemp(); //K
 
 	Color c;
@@ -157,10 +156,10 @@ void Planet::GetAtmosphericState(double dist, double *outPressure, double *outDe
 	}
 
 	//*outPressure = p0*(1-l*h/T0)^(g*M/(R*L);
-	*outPressure = surfaceP_p0 * pow((1 - lapseRate_L * height_h / surfaceTemperature_T0), (-m_surfaceGravity_g * gasMolarMass / (GAS_CONSTANT * lapseRate_L))); // in ATM since p0 was in ATM
+	*outPressure = surfaceP_p0 * pow((1 - lapseRate_L * height_h / surfaceTemperature_T0), (m_surfaceGravity_g * gasMolarMass / (GAS_CONSTANT * lapseRate_L))); // in ATM since p0 was in ATM
 	//                                                                               ^^g used is abs(g)
 	// temperature at height
-	double temp = surfaceTemperature_T0 + lapseRate_L * height_h;
+	double temp = surfaceTemperature_T0 - lapseRate_L * height_h;
 
 	*outDensity = (*outPressure / (PA_2_ATMOS * GAS_CONSTANT * temp)) * gasMolarMass;
 }
@@ -169,7 +168,7 @@ void Planet::GenerateRings(Graphics::Renderer *renderer)
 {
 	const SystemBody *sbody = GetSystemBody();
 
-	m_ringVertices.Clear();
+	Graphics::VertexArray ringVertices(RING_VERTEX_ATTRIBS);
 
 	// generate the ring geometry
 	const float inner = sbody->GetRings().minRadius.ToFloat();
@@ -179,9 +178,12 @@ void Planet::GenerateRings(Graphics::Renderer *renderer)
 		const float a = (2.0f * float(M_PI)) * (float(i) / float(segments));
 		const float ca = cosf(a);
 		const float sa = sinf(a);
-		m_ringVertices.Add(vector3f(inner * sa, 0.0f, inner * ca), vector2f(float(i), 0.0f));
-		m_ringVertices.Add(vector3f(outer * sa, 0.0f, outer * ca), vector2f(float(i), 1.0f));
+		ringVertices.Add(vector3f(inner * sa, 0.0f, inner * ca), vector2f(float(i), 0.0f));
+		ringVertices.Add(vector3f(outer * sa, 0.0f, outer * ca), vector2f(float(i), 1.0f));
 	}
+
+	// Upload vertex data to GPU
+	m_ringMesh.reset(renderer->CreateMeshObjectFromArray(&ringVertices));
 
 	// generate the ring texture
 	// NOTE: texture width must be > 1 to avoid graphical glitches with Intel GMA 900 systems
@@ -222,9 +224,9 @@ void Planet::GenerateRings(Graphics::Renderer *renderer)
 	{
 		Color *row;
 		row = buf.get();
-                std::fill_n(row, RING_TEXTURE_WIDTH, Color::BLACK);
+		std::fill_n(row, RING_TEXTURE_WIDTH, Color::BLACK);
 		row = buf.get() + (RING_TEXTURE_LENGTH - 1) * RING_TEXTURE_WIDTH;
-                std::fill_n(row, RING_TEXTURE_WIDTH, Color::BLACK);
+		std::fill_n(row, RING_TEXTURE_WIDTH, Color::BLACK);
 	}
 
 	const vector3f texSize(RING_TEXTURE_WIDTH, RING_TEXTURE_LENGTH, 0.0f);
@@ -237,16 +239,16 @@ void Planet::GenerateRings(Graphics::Renderer *renderer)
 		Graphics::TEXTURE_RGBA_8888);
 
 	Graphics::MaterialDescriptor desc;
-	desc.effect = Graphics::EFFECT_PLANETRING;
 	desc.lighting = true;
 	desc.textures = 1;
-	m_ringMaterial.reset(renderer->CreateMaterial(desc));
-	m_ringMaterial->texture0 = m_ringTexture.Get();
 
 	Graphics::RenderStateDesc rsd;
 	rsd.blendMode = Graphics::BLEND_ALPHA_PREMULT;
 	rsd.cullMode = Graphics::CULL_NONE;
-	m_ringState = renderer->CreateRenderState(rsd);
+	rsd.primitiveType = Graphics::TRIANGLE_STRIP;
+
+	m_ringMaterial.reset(renderer->CreateMaterial("planetrings", desc, rsd));
+	m_ringMaterial->SetTexture("texture0"_hash, m_ringTexture.Get());
 }
 
 void Planet::DrawGasGiantRings(Renderer *renderer, const matrix4x4d &modelView)
@@ -256,8 +258,8 @@ void Planet::DrawGasGiantRings(Renderer *renderer, const matrix4x4d &modelView)
 	if (!m_ringTexture)
 		GenerateRings(renderer);
 
-	renderer->SetTransform(modelView);
-	renderer->DrawTriangles(&m_ringVertices, m_ringState, m_ringMaterial.get(), TRIANGLE_STRIP);
+	renderer->SetTransform(matrix4x4f(modelView));
+	renderer->DrawMesh(m_ringMesh.get(), m_ringMaterial.get());
 }
 
 void Planet::SubRender(Renderer *r, const matrix4x4d &viewTran, const vector3d &camPos)

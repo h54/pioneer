@@ -1,4 +1,20 @@
 {
+  "ADTITLE_0": {
+    "description": "",
+    "message": "IMPERIUM TOWARÓW"
+  },
+  "ADTITLE_1": {
+    "description": "",
+    "message": "DOM HANDLOWY"
+  },
+  "ADTITLE_2": {
+    "description": "",
+    "message": "MAGAZYN HANDLOWY"
+  },
+  "ADTITLE_3": {
+    "description": "",
+    "message": "TARGOWISKO"
+  },
   "GOODS_TRADER_0": {
     "description": "",
     "message": "Uczciwy {name}'s - Magazyn Towarów"

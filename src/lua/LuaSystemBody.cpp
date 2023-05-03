@@ -1,10 +1,11 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Body.h"
 #include "EnumStrings.h"
 #include "Game.h"
 #include "LuaObject.h"
+#include "LuaTable.h"
 #include "LuaUtils.h"
 #include "Pi.h"
 #include "SectorView.h"
@@ -156,6 +157,26 @@ static int l_sbody_attr_parent(lua_State *l)
 		return 0;
 
 	LuaObject<SystemBody>::PushToLua(live_sbody->GetParent());
+	return 1;
+}
+
+/*
+ * Attribute: system
+ *
+ * The StarSystem which contains this SystemBody
+ *
+ * Availability:
+ *
+ *   alpha 16
+ *
+ * Status:
+ *
+ *   experimental
+ */
+static int l_sbody_attr_system(lua_State *l)
+{
+	SystemBody *sbody = LuaObject<SystemBody>::CheckFromLua(1);
+	LuaPush(l, sbody->GetStarSystem());
 	return 1;
 }
 
@@ -400,19 +421,19 @@ static int l_sbody_attr_average_temp(lua_State *l)
 }
 
 /*
-* Attribute: metallicity
-*
-* Returns the measure of metallicity of the body
-* (crust) 0.0 = light (Al, SiO2, etc), 1.0 = heavy (Fe, heavy metals)
-*
-* Availability:
-*
-*   January 2018
-*
-* Status:
-*
-*   experimental
-*/
+ * Attribute: metallicity
+ *
+ * Returns the measure of metallicity of the body
+ * (crust) 0.0 = light (Al, SiO2, etc), 1.0 = heavy (Fe, heavy metals)
+ *
+ * Availability:
+ *
+ *   January 2018
+ *
+ * Status:
+ *
+ *   experimental
+ */
 static int l_sbody_attr_metallicity(lua_State *l)
 {
 	SystemBody *sbody = LuaObject<SystemBody>::CheckFromLua(1);
@@ -421,19 +442,19 @@ static int l_sbody_attr_metallicity(lua_State *l)
 }
 
 /*
-* Attribute: volatileGas
-*
-* Returns the measure of volatile gas present in the atmosphere of the body
-* 0.0 = no atmosphere, 1.0 = earth atmosphere density, 4.0+ ~= venus
-*
-* Availability:
-*
-*   January 2018
-*
-* Status:
-*
-*   experimental
-*/
+ * Attribute: volatileGas
+ *
+ * Returns the measure of volatile gas present in the atmosphere of the body
+ * 0.0 = no atmosphere, 1.0 = earth atmosphere density, 4.0+ ~= venus
+ *
+ * Availability:
+ *
+ *   January 2018
+ *
+ * Status:
+ *
+ *   experimental
+ */
 static int l_sbody_attr_volatileGas(lua_State *l)
 {
 	SystemBody *sbody = LuaObject<SystemBody>::CheckFromLua(1);
@@ -442,19 +463,19 @@ static int l_sbody_attr_volatileGas(lua_State *l)
 }
 
 /*
-* Attribute: atmosOxidizing
-*
-* Returns the compositional value of any atmospheric gasses in the bodys atmosphere (if any)
-* 0.0 = reducing (H2, NH3, etc), 1.0 = oxidising (CO2, O2, etc)
-*
-* Availability:
-*
-*   January 2018
-*
-* Status:
-*
-*   experimental
-*/
+ * Attribute: atmosOxidizing
+ *
+ * Returns the compositional value of any atmospheric gasses in the bodys atmosphere (if any)
+ * 0.0 = reducing (H2, NH3, etc), 1.0 = oxidising (CO2, O2, etc)
+ *
+ * Availability:
+ *
+ *   January 2018
+ *
+ * Status:
+ *
+ *   experimental
+ */
 static int l_sbody_attr_atmosOxidizing(lua_State *l)
 {
 	SystemBody *sbody = LuaObject<SystemBody>::CheckFromLua(1);
@@ -463,19 +484,19 @@ static int l_sbody_attr_atmosOxidizing(lua_State *l)
 }
 
 /*
-* Attribute: volatileLiquid
-*
-* Returns the measure of volatile liquids present on the body
-* 0.0 = none, 1.0 = waterworld (earth = 70%)
-*
-* Availability:
-*
-*   January 2018
-*
-* Status:
-*
-*   experimental
-*/
+ * Attribute: volatileLiquid
+ *
+ * Returns the measure of volatile liquids present on the body
+ * 0.0 = none, 1.0 = waterworld (earth = 70%)
+ *
+ * Availability:
+ *
+ *   January 2018
+ *
+ * Status:
+ *
+ *   experimental
+ */
 static int l_sbody_attr_volatileLiquid(lua_State *l)
 {
 	SystemBody *sbody = LuaObject<SystemBody>::CheckFromLua(1);
@@ -484,19 +505,19 @@ static int l_sbody_attr_volatileLiquid(lua_State *l)
 }
 
 /*
-* Attribute: volatileIces
-*
-* Returns the measure of volatile ices present on the body
-* 0.0 = none, 1.0 = total ice cover (earth = 3%)
-*
-* Availability:
-*
-*   January 2018
-*
-* Status:
-*
-*   experimental
-*/
+ * Attribute: volatileIces
+ *
+ * Returns the measure of volatile ices present on the body
+ * 0.0 = none, 1.0 = total ice cover (earth = 3%)
+ *
+ * Availability:
+ *
+ *   January 2018
+ *
+ * Status:
+ *
+ *   experimental
+ */
 static int l_sbody_attr_volatileIces(lua_State *l)
 {
 	SystemBody *sbody = LuaObject<SystemBody>::CheckFromLua(1);
@@ -505,19 +526,19 @@ static int l_sbody_attr_volatileIces(lua_State *l)
 }
 
 /*
-* Attribute: volcanicity
-*
-* Returns the measure of volcanicity of the body
-* 0.0 = none, 1.0 = lava planet
-*
-* Availability:
-*
-*   January 2018
-*
-* Status:
-*
-*   experimental
-*/
+ * Attribute: volcanicity
+ *
+ * Returns the measure of volcanicity of the body
+ * 0.0 = none, 1.0 = lava planet
+ *
+ * Availability:
+ *
+ *   January 2018
+ *
+ * Status:
+ *
+ *   experimental
+ */
 static int l_sbody_attr_volcanicity(lua_State *l)
 {
 	SystemBody *sbody = LuaObject<SystemBody>::CheckFromLua(1);
@@ -526,19 +547,19 @@ static int l_sbody_attr_volcanicity(lua_State *l)
 }
 
 /*
-* Attribute: life
-*
-* Returns the measure of life present on the body
-* 0.0 = dead, 1.0 = teeming (~= pandora)
-*
-* Availability:
-*
-*   January 2018
-*
-* Status:
-*
-*   experimental
-*/
+ * Attribute: life
+ *
+ * Returns the measure of life present on the body
+ * 0.0 = dead, 1.0 = teeming (~= pandora)
+ *
+ * Availability:
+ *
+ *   January 2018
+ *
+ * Status:
+ *
+ *   experimental
+ */
 static int l_sbody_attr_life(lua_State *l)
 {
 	SystemBody *sbody = LuaObject<SystemBody>::CheckFromLua(1);
@@ -547,18 +568,39 @@ static int l_sbody_attr_life(lua_State *l)
 }
 
 /*
-* Attribute: hasRings
-*
-* Returns true if the body has a ring or rings of debris or ice in orbit around it
-*
-* Availability:
-*
-*   January 2018
-*
-* Status:
-*
-*  experimental
-*/
+ * Attribute: agricultural
+ *
+ * Returns the measure of agricultural activity present on the body
+ * 0.0 = dead, 1.0 = teeming (~= breadbasket)
+ *
+ * Availability:
+ *
+ *   January 2023
+ *
+ * Status:
+ *
+ *   experimental
+ */
+static int l_sbody_attr_agricultural(lua_State *l)
+{
+	SystemBody *sbody = LuaObject<SystemBody>::CheckFromLua(1);
+	lua_pushnumber(l, sbody->GetAgriculturalAsFixed().ToDouble());
+	return 1;
+}
+
+/*
+ * Attribute: hasRings
+ *
+ * Returns true if the body has a ring or rings of debris or ice in orbit around it
+ *
+ * Availability:
+ *
+ *   January 2018
+ *
+ * Status:
+ *
+ *  experimental
+ */
 
 static int l_sbody_attr_has_rings(lua_State *l)
 {
@@ -656,23 +698,43 @@ static int l_sbody_attr_children(lua_State *l)
 	return 1;
 }
 
+static int l_sbody_attr_nearest_jumpable(lua_State *l)
+{
+	LuaObject<SystemBody>::PushToLua(LuaObject<SystemBody>::CheckFromLua(1)->GetNearestJumpable());
+	return 1;
+}
+
 static int l_sbody_attr_is_moon(lua_State *l)
 {
 	LuaPush<bool>(l, LuaObject<SystemBody>::CheckFromLua(1)->IsMoon());
 	return 1;
 }
 
+static int l_sbody_attr_is_station(lua_State *l)
+{
+	LuaPush<bool>(l, LuaObject<SystemBody>::CheckFromLua(1)->GetSuperType() == SystemBody::SUPERTYPE_STARPORT);
+	return 1;
+}
+
+static int l_sbody_attr_is_ground_station(lua_State *l)
+{
+	SystemBody *sb = LuaObject<SystemBody>::CheckFromLua(1);
+	LuaPush<bool>(l, sb->GetSuperType() == SystemBody::SUPERTYPE_STARPORT && sb->GetType() == SystemBody::TYPE_STARPORT_SURFACE);
+	return 1;
+}
+
+static int l_sbody_attr_is_space_station(lua_State *l)
+{
+	SystemBody *sb = LuaObject<SystemBody>::CheckFromLua(1);
+	LuaPush<bool>(l, sb->GetSuperType() == SystemBody::SUPERTYPE_STARPORT && sb->GetType() == SystemBody::TYPE_STARPORT_ORBITAL);
+	return 1;
+}
+
 static int l_sbody_attr_physics_body(lua_State *l)
 {
 	SystemBody *b = LuaObject<SystemBody>::CheckFromLua(1);
-	Body *physbody = nullptr;
-	SystemPath headpath = Pi::game->GetSectorView()->GetSelected().SystemOnly();
-	SystemPath gamepath = Pi::game->GetSpace()->GetStarSystem()->GetPath();
-	if (headpath == gamepath) {
-		RefCountedPtr<StarSystem> ss = Pi::game->GetGalaxy()->GetStarSystem(headpath);
-		SystemPath path = ss->GetPathOf(b);
-		physbody = Pi::game->GetSpace()->FindBodyForPath(&path);
-	}
+
+	Body *physbody = Pi::game->GetSpace()->FindBodyForPath(&b->GetPath());
 	LuaObject<Body>::PushToLua(physbody);
 	return 1;
 }
@@ -690,6 +752,7 @@ void LuaObject<SystemBody>::RegisterClass()
 		{ "superType", l_sbody_attr_super_type },
 		{ "seed", l_sbody_attr_seed },
 		{ "parent", l_sbody_attr_parent },
+		{ "system", l_sbody_attr_system },
 		{ "population", l_sbody_attr_population },
 		{ "radius", l_sbody_attr_radius },
 		{ "mass", l_sbody_attr_mass },
@@ -710,13 +773,18 @@ void LuaObject<SystemBody>::RegisterClass()
 		{ "volcanicity", l_sbody_attr_volcanicity },
 		{ "life", l_sbody_attr_life },
 		{ "hasRings", l_sbody_attr_has_rings },
+		{ "agricultural", l_sbody_attr_agricultural },
 		{ "hasAtmosphere", l_sbody_attr_has_atmosphere },
 		{ "isScoopable", l_sbody_attr_is_scoopable },
 		{ "astroDescription", l_sbody_attr_astro_description },
 		{ "path", l_sbody_attr_path },
 		{ "body", l_sbody_attr_body },
 		{ "children", l_sbody_attr_children },
+		{ "nearestJumpable", l_sbody_attr_nearest_jumpable },
 		{ "isMoon", l_sbody_attr_is_moon },
+		{ "isStation", l_sbody_attr_is_station },
+		{ "isGroundStation", l_sbody_attr_is_ground_station },
+		{ "isSpaceStation", l_sbody_attr_is_space_station },
 		{ "physicsBody", l_sbody_attr_physics_body },
 		{ 0, 0 }
 	};

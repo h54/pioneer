@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "FileSystem.h"
@@ -57,7 +57,20 @@ namespace FileSystem {
 #ifdef __APPLE__
 		path += "Library/Application Support/Pioneer";
 #else
-		path += ".pioneer";
+		struct stat info;
+		stat((path + ".pioneer").c_str(), &info);
+		if (S_ISDIR(info.st_mode)) {
+			// Check for legacy pioneer directory.
+			path += ".pioneer";
+		} else {
+			char *data_home = getenv("XDG_DATA_HOME");
+			if (data_home == NULL || strcmp(data_home, "") == 0) {
+				path += ".local/share/pioneer";
+			} else {
+				path = data_home;
+				path += "/pioneer";
+			}
+		}
 #endif
 		return path;
 	}
@@ -82,15 +95,17 @@ namespace FileSystem {
 		CFRelease(resourcesURL);
 		return path;
 #else
-		/* PIONEER_DATA_DIR should point to ${prefix}/share/pioneer/data.
-         * If this directory does not exist, try to use the "data" folder
-         * in the current directory. */
-		Time::DateTime mtime;
-		std::string str = absolute_path(std::string(PIONEER_DATA_DIR));
-		FileInfo::FileType ty = stat_path(str.c_str(), mtime);
+		if (!getenv("PIONEER_LOCAL_DATA_ONLY")) {
+			/* PIONEER_DATA_DIR should point to ${prefix}/share/pioneer/data.
+			 * If this directory does not exist, try to use the "data" folder
+			 * in the current directory. */
+			Time::DateTime mtime;
+			std::string str = absolute_path(std::string(PIONEER_DATA_DIR));
+			FileInfo::FileType ty = stat_path(str.c_str(), mtime);
 
-		if (ty == FileInfo::FT_DIR)
-			return str;
+			if (ty == FileInfo::FT_DIR)
+				return str;
+		}
 
 		return absolute_path(std::string("data"));
 #endif

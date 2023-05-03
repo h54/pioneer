@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "GeoPatch.h"
@@ -15,14 +15,21 @@
 #include "graphics/Graphics.h"
 #include "graphics/Material.h"
 #include "graphics/Renderer.h"
+#include "graphics/Types.h"
 #include "graphics/VertexBuffer.h"
 #include "perlin.h"
 #include "vcacheopt/vcacheopt.h"
 #include <algorithm>
 #include <deque>
 
+#define DEBUG_CENTROIDS 0
+
 #ifdef DEBUG_BOUNDING_SPHERES
 #include "graphics/RenderState.h"
+#endif
+
+#if DEBUG_CENTROIDS
+#include "graphics/Drawables.h"
 #endif
 
 // tri edge lengths
@@ -82,21 +89,13 @@ void GeoPatch::UpdateVBOs(Graphics::Renderer *renderer)
 		m_needUpdateVBOs = false;
 
 		//create buffer and upload data
-		Graphics::VertexBufferDesc vbd;
-		vbd.attrib[0].semantic = Graphics::ATTRIB_POSITION;
-		vbd.attrib[0].format = Graphics::ATTRIB_FORMAT_FLOAT3;
-		vbd.attrib[1].semantic = Graphics::ATTRIB_NORMAL;
-		vbd.attrib[1].format = Graphics::ATTRIB_FORMAT_FLOAT3;
-		vbd.attrib[2].semantic = Graphics::ATTRIB_DIFFUSE;
-		vbd.attrib[2].format = Graphics::ATTRIB_FORMAT_UBYTE4;
-		vbd.attrib[3].semantic = Graphics::ATTRIB_UV0;
-		vbd.attrib[3].format = Graphics::ATTRIB_FORMAT_FLOAT2;
+		auto vbd = Graphics::VertexBufferDesc::FromAttribSet(Graphics::ATTRIB_POSITION | Graphics::ATTRIB_NORMAL | Graphics::ATTRIB_DIFFUSE | Graphics::ATTRIB_UV0);
 		vbd.numVertices = m_ctx->NUMVERTICES();
 		vbd.usage = Graphics::BUFFER_USAGE_STATIC;
-		m_vertexBuffer.reset(renderer->CreateVertexBuffer(vbd));
+		Graphics::VertexBuffer *vtxBuffer = renderer->CreateVertexBuffer(vbd);
 
-		GeoPatchContext::VBOVertex *VBOVtxPtr = m_vertexBuffer->Map<GeoPatchContext::VBOVertex>(Graphics::BUFFER_MAP_WRITE);
-		assert(m_vertexBuffer->GetDesc().stride == sizeof(GeoPatchContext::VBOVertex));
+		GeoPatchContext::VBOVertex *VBOVtxPtr = vtxBuffer->Map<GeoPatchContext::VBOVertex>(Graphics::BUFFER_MAP_WRITE);
+		assert(vtxBuffer->GetDesc().stride == sizeof(GeoPatchContext::VBOVertex));
 
 		const Sint32 edgeLen = m_ctx->GetEdgeLen();
 		const double frac = m_ctx->GetFrac();
@@ -236,22 +235,25 @@ void GeoPatch::UpdateVBOs(Graphics::Renderer *renderer)
 
 		// ----------------------------------------------------
 		// end of mapping
-		m_vertexBuffer->Unmap();
+		vtxBuffer->Unmap();
+
+		// use the new vertex buffer and the shared index buffer
+		m_patchMesh.reset(renderer->CreateMeshObject(vtxBuffer, m_ctx->GetIndexBuffer()));
 
 		// Don't need this anymore so throw it away
 		m_normals.reset();
 		m_colors.reset();
 
 #ifdef DEBUG_BOUNDING_SPHERES
-		RefCountedPtr<Graphics::Material> mat(Pi::renderer->CreateMaterial(Graphics::MaterialDescriptor()));
+		RefCountedPtr<Graphics::Material> mat(Pi::renderer->CreateMaterial("unlit", Graphics::MaterialDescriptor(), Graphics::RenderStateDesc()));
 		switch (m_depth) {
-			case 0: mat->diffuse = Color::WHITE; break;
-			case 1: mat->diffuse = Color::RED; break;
-			case 2: mat->diffuse = Color::GREEN; break;
-			case 3: mat->diffuse = Color::BLUE; break;
-			default: mat->diffuse = Color::BLACK; break;
+		case 0: mat->diffuse = Color::WHITE; break;
+		case 1: mat->diffuse = Color::RED; break;
+		case 2: mat->diffuse = Color::GREEN; break;
+		case 3: mat->diffuse = Color::BLUE; break;
+		default: mat->diffuse = Color::BLACK; break;
 		}
-		m_boundsphere.reset(new Graphics::Drawables::Sphere3D(Pi::renderer, mat, Pi::renderer->CreateRenderState(Graphics::RenderStateDesc()), 2, m_clipRadius));
+		m_boundsphere.reset(new Graphics::Drawables::Sphere3D(Pi::renderer, mat, 1, m_clipRadius));
 #endif
 	}
 }
@@ -287,19 +289,23 @@ void GeoPatch::Render(Graphics::Renderer *renderer, const vector3d &campos, cons
 		for (int i = 0; i < NUM_KIDS; i++)
 			m_kids[i]->Render(renderer, campos, modelView, frustum);
 	} else if (m_heights) {
-		RefCountedPtr<Graphics::Material> mat = m_geosphere->GetSurfaceMaterial();
-		Graphics::RenderState *rs = m_geosphere->GetSurfRenderState();
-
 		const vector3d relpos = m_clipCentroid - campos;
-		renderer->SetTransform(modelView * matrix4x4d::Translation(relpos));
+		renderer->SetTransform(matrix4x4f(modelView * matrix4x4d::Translation(relpos)));
 
 		Pi::statSceneTris += (m_ctx->GetNumTris());
 		++Pi::statNumPatches;
 
 		// per-patch detail texture scaling value
-		m_geosphere->GetMaterialParameters().patchDepth = m_depth;
+		const float fDetailFrequency = pow(2.0f, float(m_geosphere->GetMaxDepth()) - float(m_depth));
 
-		renderer->DrawBufferIndexed(m_vertexBuffer.get(), m_ctx->GetIndexBuffer(), rs, mat.Get());
+		m_geosphere->GetSurfaceMaterial()->SetPushConstant("PatchDetailFrequency"_hash, fDetailFrequency);
+		renderer->DrawMesh(m_patchMesh.get(), m_geosphere->GetSurfaceMaterial().Get());
+
+#if DEBUG_CENTROIDS
+		renderer->SetTransform(matrix4x4f(modelView * matrix4x4d::Translation(m_centroid - campos) * matrix4x4d::ScaleMatrix(0.2 / pow(2.0f, m_depth))));
+		Graphics::Drawables::GetAxes3DDrawable(renderer)->Draw(renderer);
+#endif
+
 #ifdef DEBUG_BOUNDING_SPHERES
 		if (m_boundsphere.get()) {
 			renderer->SetWireFrameMode(true);
@@ -323,7 +329,7 @@ void GeoPatch::LODUpdate(const vector3d &campos, const Graphics::Frustum &frustu
 	// always split at first level
 	double centroidDist = DBL_MAX;
 	if (m_parent) {
-		centroidDist = (campos - m_centroid).Length(); // distance from camera to centre of the patch
+		centroidDist = (campos - m_centroid).Length();		 // distance from camera to centre of the patch
 		const bool tooFar = (centroidDist >= m_roughLength); // check if the distance is greater than the rough length, which is how far it should be before it can split
 		if (m_depth >= std::min(GEOPATCH_MAX_DEPTH, m_geosphere->GetMaxDepth()) || tooFar) {
 			canSplit = false; // we're too deep in the quadtree or too far away so cannot split
@@ -407,7 +413,7 @@ void GeoPatch::ReceiveHeightmaps(SQuadSplitResult *psr)
 		const int newDepth = m_depth + 1;
 		for (int i = 0; i < NUM_KIDS; i++) {
 			assert(!m_kids[i]);
-			const SQuadSplitResult::SSplitResultData &data = psr->data(i);
+			const SSplitResultData &data = psr->data(i);
 			assert(i == data.patchID.GetPatchIdx(newDepth));
 			assert(0 == data.patchID.GetPatchIdx(newDepth + 1));
 			m_kids[i].reset(new GeoPatch(m_ctx, m_geosphere,
@@ -417,13 +423,7 @@ void GeoPatch::ReceiveHeightmaps(SQuadSplitResult *psr)
 		m_kids[0]->m_parent = m_kids[1]->m_parent = m_kids[2]->m_parent = m_kids[3]->m_parent = this;
 
 		for (int i = 0; i < NUM_KIDS; i++) {
-			const SQuadSplitResult::SSplitResultData &data = psr->data(i);
-			m_kids[i]->m_heights.reset(data.heights);
-			m_kids[i]->m_normals.reset(data.normals);
-			m_kids[i]->m_colors.reset(data.colors);
-		}
-		for (int i = 0; i < NUM_KIDS; i++) {
-			m_kids[i]->NeedToUpdateVBOs();
+			m_kids[i]->ReceiveHeightResult(psr->data(i));
 		}
 		m_HasJobRequest = false;
 	}
@@ -435,13 +435,29 @@ void GeoPatch::ReceiveHeightmap(const SSingleSplitResult *psr)
 	assert(nullptr == m_parent);
 	assert(nullptr != psr);
 	assert(m_HasJobRequest);
-	{
-		const SSingleSplitResult::SSplitResultData &data = psr->data();
-		m_heights.reset(data.heights);
-		m_normals.reset(data.normals);
-		m_colors.reset(data.colors);
-	}
+
+	ReceiveHeightResult(psr->data());
 	m_HasJobRequest = false;
+}
+
+void GeoPatch::ReceiveHeightResult(const SSplitResultData &data)
+{
+	m_heights.reset(data.heights);
+	m_normals.reset(data.normals);
+	m_colors.reset(data.colors);
+
+	// skirt vertices are not present in the heights array
+	const int edgeLen = m_ctx->GetEdgeLen() - 2;
+
+	const double h0 = m_heights[0];
+	const double h1 = m_heights[edgeLen - 1];
+	const double h2 = m_heights[edgeLen * (edgeLen - 1)];
+	const double h3 = m_heights[edgeLen * edgeLen - 1];
+
+	const double height = (h0 + h1 + h2 + h3) * 0.25;
+	m_centroid *= (1.0 + height);
+
+	NeedToUpdateVBOs();
 }
 
 void GeoPatch::ReceiveJobHandle(Job::Handle job)

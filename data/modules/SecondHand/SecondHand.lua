@@ -1,4 +1,4 @@
--- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Engine = require 'Engine'
@@ -10,6 +10,7 @@ local Format = require 'Format'
 local Serializer = require 'Serializer'
 local Equipment = require 'Equipment'
 local Character = require 'Character'
+local utils = require 'utils'
 
 local l = Lang.GetResource("module-secondhand")
 local l2 = Lang.GetResource("ui-core")
@@ -27,6 +28,7 @@ local flavours = {}
 for i = 0,max_flavour_index do
     table.insert(flavours, {
         adtitle = l["FLAVOUR_" .. i .. "_TITLE"],
+        adtext = l["FLAVOUR_" .. i .. "_TEXT"],
         adbody  = l["FLAVOUR_" .. i .. "_BODY"],
     })
 end
@@ -135,7 +137,7 @@ local makeAdvert = function (station)
 	-- buy back price in equipment market is 0.8, so make sure the value is higher
 	local reduction = Engine.rand:Number(0.8,0.9)
 
-    local price = math.ceil(station:GetEquipmentPrice(equipment) * reduction)
+    local price = utils.round(station:GetEquipmentPrice(equipment) * reduction, 2)
 
     local ad = {
         character = character,
@@ -146,10 +148,11 @@ local makeAdvert = function (station)
 		station = station,
     }
 
-    ad.desc = string.interp(flavours[ad.flavour].adtitle, {
+    ad.desc = string.interp(flavours[ad.flavour].adtext, {
 		equipment = equipment:GetName(),
     })
     local ref = station:AddAdvert({
+		title       = flavours[ad.flavour].adtitle,
         description = ad.desc,
         icon        = "second_hand",
         onChat      = onChat,
@@ -233,6 +236,7 @@ local onGameStart = function ()
 
     for k,ad in pairs(loaded_data.ads) do
         local ref = ad.station:AddAdvert({
+			title       = flavours[ad.flavour].adtitle,
             description = ad.desc,
             icon        = "second_hand",
             onChat      = onChat,

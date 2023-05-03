@@ -1,4 +1,20 @@
 {
+  "ADTITLE_0": {
+    "description": "",
+    "message": "SZÁLLÍTMÁNY ÁRUDA"
+  },
+  "ADTITLE_1": {
+    "description": "",
+    "message": "KERESKEDŐHÁZ"
+  },
+  "ADTITLE_2": {
+    "description": "",
+    "message": "KERESKEDELMI RAKTÁR"
+  },
+  "ADTITLE_3": {
+    "description": "",
+    "message": "ÁRU KERESKEDŐ"
+  },
   "GOODS_TRADER_0": {
     "description": "",
     "message": "Becsületes {name} áruházában"

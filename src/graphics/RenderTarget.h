@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _GRAPHICS_RENDERTARGET_H
@@ -18,12 +18,13 @@ namespace Graphics {
 	// Specifying a depth format with no allowDepthTexture will create a depth buffer
 	// fixed to this rendertarget
 	struct RenderTargetDesc {
-		RenderTargetDesc(Uint16 _width, Uint16 _height, TextureFormat _colorFormat, TextureFormat _depthFormat, bool _allowDepthTexture) :
+		RenderTargetDesc(Uint16 _width, Uint16 _height, TextureFormat _colorFormat, TextureFormat _depthFormat, bool _allowDepthTexture = false, Uint16 _samples = 0) :
 			width(_width),
 			height(_height),
 			colorFormat(_colorFormat),
 			depthFormat(_depthFormat),
-			allowDepthTexture(_allowDepthTexture)
+			allowDepthTexture(_allowDepthTexture),
+			numSamples(_samples)
 		{}
 
 		const Uint16 width;
@@ -31,6 +32,7 @@ namespace Graphics {
 		const TextureFormat colorFormat;
 		const TextureFormat depthFormat;
 		const bool allowDepthTexture;
+		const Uint16 numSamples;
 	};
 
 	class RenderTarget {
@@ -39,6 +41,7 @@ namespace Graphics {
 
 		virtual Texture *GetColorTexture() const = 0;
 		virtual Texture *GetDepthTexture() const = 0;
+
 		//Replace the texture attachment, or pass zero to detach
 		//Increases the new texture's reference count and decreases
 		//any existing texture's count

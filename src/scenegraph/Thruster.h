@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _SCENEGRAPH_THRUSTER_H
@@ -11,8 +11,8 @@
 
 namespace Graphics {
 	class Renderer;
-	class VertexBuffer;
 	class Material;
+	class MeshObject;
 	class RenderState;
 } // namespace Graphics
 
@@ -32,13 +32,14 @@ namespace SceneGraph {
 		const vector3f &GetDirection() { return dir; }
 
 	private:
-		static Graphics::VertexBuffer *CreateThrusterGeometry(Graphics::Renderer *, Graphics::Material *);
-		static Graphics::VertexBuffer *CreateGlowGeometry(Graphics::Renderer *, Graphics::Material *);
+		// thruster geometry is shared between all instances of Thruster
+		// TODO: load this as a model to allow customization
+		static void CreateThrusterGeometry(Graphics::Renderer *);
+		static RefCountedPtr<Graphics::MeshObject> s_thrustMesh;
+		static RefCountedPtr<Graphics::MeshObject> s_glowMesh;
+
 		RefCountedPtr<Graphics::Material> m_tMat;
 		RefCountedPtr<Graphics::Material> m_glowMat;
-		RefCountedPtr<Graphics::VertexBuffer> m_tBuffer;
-		RefCountedPtr<Graphics::VertexBuffer> m_glowBuffer;
-		Graphics::RenderState *m_renderState;
 		bool linearOnly;
 		vector3f dir;
 		vector3f pos;

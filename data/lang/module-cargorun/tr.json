@@ -25,39 +25,75 @@
   },
   "ADTEXT_1": {
     "description": "",
-    "message": "NAKLİYAT. {system} sistemine kargo teslimatı."
+    "message": "{system} sistemine kargo nakliyesi için gemi gerekiyor."
   },
   "ADTEXT_2": {
     "description": "",
-    "message": "TAŞIMA GEREKİYOR. {system} sisitemine mal sevkiyatı gerekiyor. Ödeme: {cash}."
+    "message": "Malların {system} sistemine taşınması gerekli. Ödeme {cash}."
   },
   "ADTEXT_EXPENSIVE_1": {
     "description": "",
-    "message": "TESLİMAT. {system} sistemine değerli kargo. Tecrübeli bir pilota {cash}."
+    "message": "Değerli kargoyu {system} sistemine taşı. Tecrübeli bir pilota {cash}."
   },
   "ADTEXT_LOCAL_1": {
     "description": "",
-    "message": "YEREL TESLİMAT. Malların {starport} istasyonuna sevkiyatı."
+    "message": "Sistem-içi taşıma için nakliyeci aranıyor. Malların {starport} limanına taşınması."
   },
   "ADTEXT_LOCAL_2": {
     "description": "",
-    "message": "NAKLİYE GEREKİYOR. Yerel kargonun {starport} istasyonuna teslimatı."
+    "message": "Kişisel kargonun {starport}'a yerel nakliyesi gerekli."
   },
   "ADTEXT_LOCAL_3": {
     "description": "",
-    "message": "YEREL NAKLİYAT. {starport} istasyonuna mal taşıma."
+    "message": "Özel kargo nakliyat kontratı. Malların {starport}'a sertifikalı taşınması."
   },
   "ADTEXT_PICKUP_1": {
     "description": "",
-    "message": "KARGO. {system} sisteminden kargo getirilmesi gerekiyor."
+    "message": "{system} sisteminden kargo alınması gerekiyor. Detaylar istek üzerine verilecek."
   },
   "ADTEXT_PICKUP_LOCAL_1": {
     "description": "",
-    "message": "TAŞIMA. {starport} istasyonundan kargo getirilmesi gerekiyor."
+    "message": "Kargo taşıma hizmeti gerekli. Kargonun bu limandan {starport}'a taşınması lazım."
   },
   "ADTEXT_WHOLESALER_1": {
     "description": "",
-    "message": "KARGO HİZMETİ. {system} sistemine kargo teslimatı yapacak bir gemi gerekiyor."
+    "message": "Kontratlı kargo işi için kalifiye pilot gerekiyor. {system} sistemine toplu bir nakliye için gemiye ihtiyacımız var."
+  },
+  "ADTITLE_1": {
+    "description": "",
+    "message": "KARGO İŞİ"
+  },
+  "ADTITLE_2": {
+    "description": "",
+    "message": "KARGO TAŞIMA GEREKLİ"
+  },
+  "ADTITLE_EXPENSIVE_1": {
+    "description": "",
+    "message": "GÜVENLİ NAKLİYAT"
+  },
+  "ADTITLE_LOCAL_1": {
+    "description": "",
+    "message": "KISA-MENZİL TAŞIMA"
+  },
+  "ADTITLE_LOCAL_2": {
+    "description": "",
+    "message": "YEREL YÜK TAŞIMA"
+  },
+  "ADTITLE_LOCAL_3": {
+    "description": "",
+    "message": "YEREL KARGO İŞİ"
+  },
+  "ADTITLE_PICKUP_1": {
+    "description": "",
+    "message": "KARGO TOPLAMA"
+  },
+  "ADTITLE_PICKUP_LOCAL_1": {
+    "description": "",
+    "message": "SİSTEM-İÇİ TAŞIMA"
+  },
+  "ADTITLE_WHOLESALER_1": {
+    "description": "",
+    "message": "TOPLU TAŞIMA HİZMETİ"
   },
   "ALUMINIUM_TUBES": {
     "description": "custom cargo",
@@ -135,6 +171,18 @@
     "description": "",
     "message": "Tecrübe kazandığın zaman geri gel."
   },
+  "DENY_AGAIN_1": {
+    "description": "",
+    "message": "Üzgünüm, şu an halihazırda bir anlaşmamız var. Ancak, bu işi başarıyla hallederseniz sizinle tekrar çalışmaktan mutluluk duyarım."
+  },
+  "DENY_AGAIN_2": {
+    "description": "",
+    "message": "Lütfen önce varolan kontratımızı tamamlayın, daha sonra başka bir taşıma işi için anlaşabiliriz."
+  },
+  "DENY_AGAIN_3": {
+    "description": "",
+    "message": "Lütfen önce kargomu teslim edin. Sonra sizinle daha çok iş yapabilirim."
+  },
   "DIAMONDS": {
     "description": "custom cargo",
     "message": "Elmas"
@@ -199,6 +247,10 @@
     "description": "custom cargo",
     "message": "Ev eşyası"
   },
+  "GO_BACK": {
+    "description": "Shown on a button in a sub-menu, to move back, to previous menu",
+    "message": "Geri dön."
+  },
   "GREENHOUSES": {
     "description": "custom cargo",
     "message": "Seralar"
@@ -228,7 +280,7 @@
     "message": "{amount}t mal var."
   },
   "HOWMUCH_SINGULAR_1": {
-    "description": "This string is only used for 1 metric tons (singular)",
+    "description": "This string is only used for 1 metric ton (singular)",
     "message": "Sadece {amount}t."
   },
   "HOWMUCH_WHOLESALER_1": {
@@ -315,6 +367,10 @@
     "description": "",
     "message": "Selamlar, benim adım {name} ve Haber Corp için çalışıyorum. {dist} ıy uzaklığında bulunan  {system} ({sectorx}, {sectory}, {sectorz}) sistemindeki {starport} limanına yapılacak bir teslimata {cash} ödeyeceğiz."
   },
+  "IS_IT_NEGOTIABLE": {
+    "description": "",
+    "message": "Kargo miktarında pazarlık yapabilir miyiz?"
+  },
   "I_AM_ON_MY_WAY": {
     "description": "",
     "message": "Sensörlerim hasar aldığını gösteriyor. Yoldayım."
@@ -327,21 +383,45 @@
     "description": "",
     "message": "Hasar alıyorum, yardıma ihtiyacım var."
   },
-  "LY": {
-    "description": "",
-    "message": "ıy"
-  },
   "MACHINE_TOOLS": {
     "description": "custom cargo",
     "message": "Makine"
+  },
+  "NEGOTIABLE_1": {
+    "description": "regarding mass, always more than 1t",
+    "message": "Şu kargo seferlerini teklif edebilirim:"
+  },
+  "NEGOTIABLE_2": {
+    "description": "regarding mass, always more than 1t",
+    "message": "{amount}t {cargoname} şu şekilde ayrılabilir:"
+  },
+  "NEGOTIABLE_3": {
+    "description": "regarding mass, always more than 1t",
+    "message": "Evet, kargoyu bölüştürebiliriz."
+  },
+  "NEGOTIABLE_NO_1": {
+    "description": "regarding mass, always more than 1t",
+    "message": "Hayır, üzgünüm. Kargoyu bölüştüremeyiz. {amount} ton malın hepsi birlikte ulaştırılmalı."
+  },
+  "NEGOTIABLE_SINGULAR_1": {
+    "description": "This string is only used for 1 metric ton (singular)",
+    "message": "Hayır, bu mümkün değil. Kargo sadece {amount}t kadar."
   },
   "NEPTUNIUM": {
     "description": "custom cargo",
     "message": "Neptünyum"
   },
+  "OFFER": {
+    "description": "",
+    "message": "{reward} için {amount}t taşı"
+  },
   "OK_AGREED": {
     "description": "",
     "message": "Tamam, kabul."
+  },
+  "OK_WE_AGREE": {
+    "description": "",
+    "message": "Tamam, {reward} için {amount} tonda anlaştık."
   },
   "PICKUP_FROM": {
     "description": "from a location",
@@ -502,6 +582,10 @@
   "TITANIUM": {
     "description": "custom cargo",
     "message": "Titanyum"
+  },
+  "TOO_LATE_TO_PICK_UP": {
+    "description": "",
+    "message": "Çok ama çok geciktin! Performansın o kadar kötü ki anlaşmamızı feshediyorum."
   },
   "TUNGSTEN": {
     "description": "custom cargo",

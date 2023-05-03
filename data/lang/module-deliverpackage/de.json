@@ -57,7 +57,11 @@
   },
   "FLAVOUR_0_ADTEXT": {
     "description": "",
-    "message": "AUF DEM WEG zum »{system}«-System? Geld für die Ablieferung eines kleinen Paketes."
+    "message": "Auf dem Weg ins {system} System? Zahle gutes Geld für die Lieferung eines kleinen Paketes."
+  },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "INTERSTELLARE LIEFERUNG"
   },
   "FLAVOUR_0_FAILUREMSG": {
     "description": "",
@@ -77,7 +81,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "GESUCHT. Lieferung eines Paketes zum »{system}«-System."
+    "message": "Gesucht: Lieferung eines Paketes ins {system} System."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "LIEFERUNG BENÖTIGT"
   },
   "FLAVOUR_1_FAILUREMSG": {
     "description": "",
@@ -97,7 +105,11 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "DRINGEND. Schnelles Schiff, das ein Paket zum »{system}«-System bringen kann, gesucht."
+    "message": "Eilfracht! Brauche schnelles Schiff für Paketlieferung ins {system} System."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "DRINGENDE LIEFERUNG"
   },
   "FLAVOUR_2_FAILUREMSG": {
     "description": "",
@@ -117,7 +129,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "LIEFERUNG. Dokumente zum »{system}«-System. {cash} für einen erfahrenen Piloten."
+    "message": "Lieferung von heiklen Dokumenten ins {system} System. {cash} für einen erfahrenen Piloten."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "LIEFERUNG VON DOKUMENTEN"
   },
   "FLAVOUR_3_FAILUREMSG": {
     "description": "",
@@ -137,7 +153,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "POSTDIENST. Wir brauchen ein Schiff für eine Lieferung zum »{system}«-System."
+    "message": "Interstellarer Zustellservice. Wir benötigen ein Schiff für einen Lieferflug ins {system} System."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "POSTDIENST"
   },
   "FLAVOUR_4_FAILUREMSG": {
     "description": "",
@@ -157,7 +177,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "UMZUG. Transport von Haushaltswagen nach {starport} aus einem Lager."
+    "message": "Transport von Habseligkeiten nach {starport} aus dem Lager des Raumhafens."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "ZIEHE UM"
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
@@ -177,7 +201,11 @@
   },
   "FLAVOUR_6_ADTEXT": {
     "description": "",
-    "message": "KURZSTRECKEN-KURIER. Lieferung eines kleinen Paketes nach {starport}."
+    "message": "Systeminterner Kurierdienst gesucht. Lieferung eines kleinen Pakets nach {starport}."
+  },
+  "FLAVOUR_6_ADTITLE": {
+    "description": "",
+    "message": "KURZSTRECKENKURIER"
   },
   "FLAVOUR_6_FAILUREMSG": {
     "description": "",
@@ -197,7 +225,11 @@
   },
   "FLAVOUR_7_ADTEXT": {
     "description": "",
-    "message": "INTERPLATETARISCHE FRACHT. Lokale Frachtlieferung nach {starport}."
+    "message": "Standardvertrag für interplanetarischen Transport. Lokale Fracht nach {starport}."
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "INTERPLANETARISCHE FRACHT"
   },
   "FLAVOUR_7_FAILUREMSG": {
     "description": "",
@@ -217,7 +249,11 @@
   },
   "FLAVOUR_8_ADTEXT": {
     "description": "",
-    "message": "KURZSTRECKEN-LIEFERUNG. Brauche schnelle Lieferung nach {starport}."
+    "message": "Eiliger persönlicher Liefervertrag. Brauche schnelle Lieferung eines Objekts nach {starport}."
+  },
+  "FLAVOUR_8_ADTITLE": {
+    "description": "",
+    "message": "LOKALE LIEFERUNG"
   },
   "FLAVOUR_8_FAILUREMSG": {
     "description": "",
@@ -237,7 +273,11 @@
   },
   "FLAVOUR_9_ADTEXT": {
     "description": "",
-    "message": "PAKET-ABWURF. Dringende Auslieferung von verderblichen Waren nach {starport}."
+    "message": "Benötige Paketzustellung. Dringende Sendung von vergänglichen Waren nach {starport}."
+  },
+  "FLAVOUR_9_ADTITLE": {
+    "description": "",
+    "message": "PAKETLIEFERUNG"
   },
   "FLAVOUR_9_FAILUREMSG": {
     "description": "",
@@ -270,10 +310,6 @@
   "I_HIGHLY_DOUBT_IT": {
     "description": "",
     "message": "Ich bezweifele das."
-  },
-  "LY": {
-    "description": "",
-    "message": "Lj"
   },
   "NOT_ANY_MORE_THAN_USUAL": {
     "description": "",

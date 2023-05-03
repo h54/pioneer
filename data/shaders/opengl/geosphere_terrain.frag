@@ -1,31 +1,17 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "attributes.glsl"
-#include "logz.glsl"
 #include "lib.glsl"
-#include "eclipse.glsl"
-
-uniform vec4 atmosColor;
-// to keep distances sane we do a nearer, smaller scam. this is how many times
-// smaller the geosphere has been made
-uniform float geosphereRadius;
-uniform float geosphereInvRadius;
-uniform float geosphereAtmosTopRad;
-uniform vec3 geosphereCenter;
-uniform float geosphereAtmosFogDensity;
-uniform float geosphereAtmosInvScaleHeight;
+#include "basesphere_uniforms.glsl"
 
 uniform sampler2D texture0;
 uniform sampler2D texture1;
 in vec2 texCoord0;
 
-in float dist;
-uniform float detailScaleHi;
-uniform float detailScaleLo;
+uniform int NumShadows;
 
-uniform Material material;
-uniform Scene scene;
+in float dist;
 
 in vec3 varyingEyepos;
 in vec3 varyingNormal;
@@ -36,6 +22,11 @@ in vec4 varyingEmission;
 #endif
 
 out vec4 frag_color;
+
+uniform float PatchDetailFrequency;
+
+#define detailScaleHi (PatchDetailFrequency * 4.0)
+#define detailScaleLo (PatchDetailFrequency * 0.5)
 
 void main(void)
 {
@@ -64,16 +55,16 @@ void main(void)
 	vec3 v = (eyepos - geosphereCenter) * geosphereInvRadius;
 	float lenInvSq = 1.0/(dot(v,v));
 	for (int i=0; i<NUM_LIGHTS; ++i) {
-		float uneclipsed = clamp(calcUneclipsed(i, v, normalize(vec3(uLight[i].position))), 0.0, 1.0);
+		float uneclipsed = clamp(calcUneclipsed(eclipse, NumShadows, v, normalize(vec3(uLight[i].position))), 0.0, 1.0);
 		nDotVP  = max(0.0, dot(tnorm, normalize(vec3(uLight[i].position))));
 		nnDotVP = max(0.0, dot(tnorm, normalize(-vec3(uLight[i].position)))); //need backlight to increase horizon
 		diff += uLight[i].diffuse * uneclipsed * 0.5*(nDotVP+0.5*clamp(1.0-nnDotVP*4.0,0.0,1.0) * INV_NUM_LIGHTS);
 
 #ifdef TERRAIN_WITH_WATER
 		//Specular reflection
-		vec3 L = normalize(uLight[i].position.xyz - eyepos); 
+		vec3 L = normalize(uLight[i].position.xyz - eyepos);
 		vec3 E = normalize(-eyepos);
-		vec3 R = normalize(-reflect(L,tnorm)); 
+		vec3 R = normalize(-reflect(L,tnorm));
 		//water only for specular
 	    if (vertexColor.b > 0.05 && vertexColor.r < 0.05) {
 			specularReflection += pow(max(dot(R,E),0.0),16.0)*0.4 * INV_NUM_LIGHTS;
@@ -83,7 +74,7 @@ void main(void)
 
 	// Use the detail value to multiply the final colour before lighting
 	vec4 final = vertexColor * detailMul;
-	
+
 #ifdef ATMOSPHERE
 	// when does the eye ray intersect atmosphere
 	float atmosStart = findSphereEyeRayEntryDistance(geosphereCenter, eyepos, geosphereRadius * geosphereAtmosTopRad);
@@ -91,12 +82,12 @@ void main(void)
 	float fogFactor=0.0;
 	{
 		float atmosDist = (length(eyepos) - atmosStart);
-		
+
 		// a&b scaled so length of 1.0 means planet surface.
 		vec3 a = (atmosStart * eyenorm - geosphereCenter) * geosphereInvRadius;
 		vec3 b = (eyepos - geosphereCenter) * geosphereInvRadius;
 		ldprod = AtmosLengthDensityProduct(a, b, atmosColor.w*geosphereAtmosFogDensity, atmosDist, geosphereAtmosInvScaleHeight);
-		fogFactor = clamp( 1.5 / exp(ldprod),0.0,1.0); 
+		fogFactor = clamp( 1.5 / exp(ldprod),0.0,1.0);
 	}
 
 	//calculate sunset tone red when passing through more atmosphere, clamp everything.
@@ -115,7 +106,7 @@ void main(void)
 #ifdef TERRAIN_WITH_WATER
 		  diff*specularReflection*sunset +
 #endif
-		  (0.02-clamp(fogFactor,0.0,0.01))*diff*ldprod*sunset +	      //increase fog scatter				
+		  (0.02-clamp(fogFactor,0.0,0.01))*diff*ldprod*sunset +	      //increase fog scatter
 		  (pow((1.0-pow(fogFactor,0.75)),256.0)*0.4*diff*atmosColor)*sunset;  //distant fog.
 #else // atmosphere-less planetoids and dim stars
 	frag_color =
@@ -131,5 +122,4 @@ void main(void)
 	//emission is used to boost colour of stars, which is a bit odd
 	frag_color = material.emission + vertexColor;
 #endif
-	SetFragDepth();
 }

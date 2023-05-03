@@ -101,7 +101,11 @@
   },
   "FLAVOUR_0_ADTEXT": {
     "description": "",
-    "message": "GESUCHT: Überfahrt einer kleine Gruppe zum »{system}«-System. Wir werden {cash} zahlen."
+    "message": "Gesucht: Flug für eine kleine Gruppe ins {system} System. Zahlen {cash}."
+  },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "PASSAGE GESUCHT"
   },
   "FLAVOUR_0_DANGER": {
     "description": "",
@@ -133,7 +137,11 @@
   },
   "FLAVOUR_10_ADTEXT": {
     "description": "",
-    "message": "SUCHE SCHIFF: Überfahrt auf einem schnellen Schiff zum »{system}«-System."
+    "message": "VIP benötigt dringenden Flug auf schnellem Schiff ins {system} System. Verschwiegenheit wird vorausgesetzt."
+  },
+  "FLAVOUR_10_ADTITLE": {
+    "description": "",
+    "message": "VERSCHWIEGENES SCHIFF GESUCHT"
   },
   "FLAVOUR_10_DANGER": {
     "description": "",
@@ -165,7 +173,11 @@
   },
   "FLAVOUR_11_ADTEXT": {
     "description": "",
-    "message": "SCHNELLES SCHIFF: Flug auf einem schnellen Schiff zum »{system}«-System."
+    "message": "Wirtschaftprüfer sucht Flug auf einem schnellen Schiff ins {system} System."
+  },
+  "FLAVOUR_11_ADTITLE": {
+    "description": "",
+    "message": "SCHNELLES SCHIFF BENÖTIGT"
   },
   "FLAVOUR_11_DANGER": {
     "description": "",
@@ -197,7 +209,11 @@
   },
   "FLAVOUR_12_ADTEXT": {
     "description": "",
-    "message": "BRAUCHE SCHIFF: Reise zum »{system}«-System."
+    "message": "Bürger auf der Flucht suchen dringend Flug. Passage in das {system} System benötigt."
+  },
+  "FLAVOUR_12_ADTITLE": {
+    "description": "",
+    "message": "SCHIFF GESUCHT"
   },
   "FLAVOUR_12_DANGER": {
     "description": "",
@@ -229,7 +245,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "GESUCHT: Reise für eine kleine Gruppe zum »{system}«-System. Wir werden {cash} zahlen."
+    "message": "Gesucht: Flug für eine kleine Gruppe ins {system} System. Zahlen {cash}."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "FLUG GESUCHT"
   },
   "FLAVOUR_1_DANGER": {
     "description": "",
@@ -261,7 +281,11 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "GESUCHT: Flug für eine kleine Gruppe zum »{system}«-System. Wir werden {cash} zahlen."
+    "message": "Gesucht: Flug für eine kleine Gruppe ins {system} System. Zahlen {cash}."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "FLUG FÜR KLEINE GRUPPE"
   },
   "FLAVOUR_2_DANGER": {
     "description": "",
@@ -293,7 +317,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "BRAUCHE SCHIFF: Überfahrt zum »{system}«-System. Werde {cash} zahlen."
+    "message": "Schiff gesucht für risikoreichen Flug ins {system} System. Zahle {cash}."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "SUCHE SCHIFF"
   },
   "FLAVOUR_3_DANGER": {
     "description": "",
@@ -325,7 +353,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "SUCHE SCHIFF: Überfahrt zum »{system}«-System. Ich zahle {cash}."
+    "message": "Suche Schiff mit Business-Class für Flug in das {system} System. Biete Entlohnung von {cash}."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "GESCHÄFTSFLUG"
   },
   "FLAVOUR_4_DANGER": {
     "description": "",
@@ -357,7 +389,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "GESUCHT: Überfahrt zum »{system}«-System. Ich zahle {cash}."
+    "message": "Benötige diskreten Flug eines anonymen VIP nach {system}. Zahle {cash}."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "VERTRAULICHER PASSAGIERFLUG"
   },
   "FLAVOUR_5_DANGER": {
     "description": "",
@@ -389,7 +425,11 @@
   },
   "FLAVOUR_6_ADTEXT": {
     "description": "",
-    "message": "BRAUCHE SCHIFF: Flug zum »{system}«-System. Ich zahle {cash}."
+    "message": "Journalist sucht Flug ins {system} System für die nächste große Story. Kann {cash} zahlen."
+  },
+  "FLAVOUR_6_ADTITLE": {
+    "description": "",
+    "message": "BENÖTIGE SCHIFF"
   },
   "FLAVOUR_6_DANGER": {
     "description": "",
@@ -421,7 +461,11 @@
   },
   "FLAVOUR_7_ADTEXT": {
     "description": "",
-    "message": "SCHIFF GESUCHT: Sichere Überfahrt zum »{system}«-System. Ich werde {cash} zahlen."
+    "message": "Schiff gesucht für sichere Passage ins {system} System. Spezielle Sicherung benötigt. Ich zahle {cash}."
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "BRAUCHE SICHERE PASSAGE"
   },
   "FLAVOUR_7_DANGER": {
     "description": "",
@@ -453,7 +497,11 @@
   },
   "FLAVOUR_8_ADTEXT": {
     "description": "",
-    "message": "SCHIFF GESUCHT: Überfahrt auf einem schnellen Schiff zum »{system}«-System."
+    "message": "Suche Schiff, das eine dringende Nachricht ins {system} System überbringen kann. Aufschlag für schnelle Lieferung im Preis enthalten."
+  },
+  "FLAVOUR_8_ADTITLE": {
+    "description": "",
+    "message": "SCHNELLER PERSONENTANSPORT"
   },
   "FLAVOUR_8_DANGER": {
     "description": "",
@@ -485,7 +533,11 @@
   },
   "FLAVOUR_9_ADTEXT": {
     "description": "",
-    "message": "SCHIFF GESUCHT: Express-Flug zum »{system}«-System."
+    "message": "Dringender Transport für ehrlichen Bürger. Schneller Flug nach {system} gesucht."
+  },
+  "FLAVOUR_9_ADTITLE": {
+    "description": "",
+    "message": "SERIÖSER FLUGDIENST"
   },
   "FLAVOUR_9_DANGER": {
     "description": "",
@@ -538,10 +590,6 @@
   "I_MUST_BE_THERE_BEFORE": {
     "description": "",
     "message": "Ich muss dort sein vor "
-  },
-  "LY": {
-    "description": "",
-    "message": "Lj"
   },
   "OK_AGREED": {
     "description": "",

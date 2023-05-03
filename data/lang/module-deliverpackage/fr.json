@@ -57,7 +57,11 @@
   },
   "FLAVOUR_0_ADTEXT": {
     "description": "",
-    "message": "VOUS ALLEZ VERS le systeme {system}? Argent payé pour livraison d'un petit paquet."
+    "message": "Vous allez vers le système {system}? Nous payons pour la livraison d'un petit colis."
+  },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "LIVRAISON INTERSTELLAIRE"
   },
   "FLAVOUR_0_FAILUREMSG": {
     "description": "",
@@ -65,7 +69,7 @@
   },
   "FLAVOUR_0_INTROTEXT": {
     "description": "",
-    "message": "Salut , Je suis {name}. Je vous payerai {cash} si vous livrez ce petit paquet a  {starport} dans le systeme  {system} ({sectorx}, {sectory}, {sectorz}), a une distance de {dist} al."
+    "message": "Salut , Je suis {name}. Je vous payerai {cash} si vous livrez ce petit paquet a {starport} dans le système  {system} ({sectorx}, {sectory}, {sectorz}), a une distance de {dist} al."
   },
   "FLAVOUR_0_SUCCESSMSG": {
     "description": "",
@@ -77,7 +81,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "RECHERCHE. Livraison d'un paquet vers le systeme {system}. "
+    "message": "Cherche livraison de colis vers le système {system}."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "CHERCHE LIVREUR"
   },
   "FLAVOUR_1_FAILUREMSG": {
     "description": "",
@@ -85,7 +93,7 @@
   },
   "FLAVOUR_1_INTROTEXT": {
     "description": "",
-    "message": "Bonjour. je suis {name}. Je suis pret a payer {cash} un vaisseau pour emmener un paquet vers  {starport} dans le systeme {system} ({sectorx}, {sectory}, {sectorz}), a une distance de {dist} al."
+    "message": "Bonjour. Je suis {name}. Je suis prêt a payer {cash} un vaisseau pour emmener un paquet vers  {starport} dans le système {system} ({sectorx}, {sectory}, {sectorz}), a une distance de {dist} al."
   },
   "FLAVOUR_1_SUCCESSMSG": {
     "description": "",
@@ -97,7 +105,11 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "URGENT. Vaisseau rapide requis pour livrer un colis vers le systeme {system}."
+    "message": "Urgent! Cherche vaisseau rapide pour livrer un paquet dans le système {system}."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "LIVRAISON URGENTE"
   },
   "FLAVOUR_2_FAILUREMSG": {
     "description": "",
@@ -105,7 +117,7 @@
   },
   "FLAVOUR_2_INTROTEXT": {
     "description": "",
-    "message": "Bonjour. je suis {name}. Je suis pret a payer {cash} un vaisseau pour tranporter un colis vers  {starport} dans le systeme {system} ({sectorx}, {sectory}, {sectorz}), a une distance de {dist} al."
+    "message": "Bonjour. Je suis {name}. Je suis prêt a payer {cash} un vaisseau pour transporter un colis vers  {starport} dans le système {system} ({sectorx}, {sectory}, {sectorz}), a une distance de {dist} al."
   },
   "FLAVOUR_2_SUCCESSMSG": {
     "description": "",
@@ -117,7 +129,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "LIVRAISON. Documents vers le systeme {system}. {cash} pour un pilote expérimenté."
+    "message": "Livraison de documents sensibles vers le système {system}. {cash} pour un pilote expérimenté."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "LIVRAISON DE DOCUMENT"
   },
   "FLAVOUR_3_FAILUREMSG": {
     "description": "",
@@ -125,7 +141,7 @@
   },
   "FLAVOUR_3_INTROTEXT": {
     "description": "",
-    "message": "Bonjour. je suis {name}. Je suis pret a payer {cash} un vaisseau pour tranporter un colis vers  {starport} dans le systeme {system} ({sectorx}, {sectory}, {sectorz}), a une distance de {dist} al."
+    "message": "Bonjour. Je suis {name}. Je suis prêt a payer {cash} un vaisseau pour transporter un colis vers  {starport} dans le système {system} ({sectorx}, {sectory}, {sectorz}), a une distance de {dist} al."
   },
   "FLAVOUR_3_SUCCESSMSG": {
     "description": "",
@@ -137,7 +153,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "SERVICE POSTAL. Requisition d'un vaisseau pour executer une livraison vers le systeme {system}."
+    "message": "Services Postaux Interstellaire. Nous avons besoin d'un vaisseau pour une livraison vers le système {system}."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "SERVICE POSTAL"
   },
   "FLAVOUR_4_FAILUREMSG": {
     "description": "",
@@ -145,7 +165,7 @@
   },
   "FLAVOUR_4_INTROTEXT": {
     "description": "",
-    "message": "Salutations. Cci est un message automatisé de Bedford &  {name} services postaux. nous payons {cash} pour une course vers {starport} dans le systeme {system} ({sectorx}, {sectory}, {sectorz}), a une distance de {dist} al. "
+    "message": "Salutations. Ceci est un message automatisé de Bedford &  {name} services postaux. nous payons {cash} pour une course vers {starport} dans le système {system} ({sectorx}, {sectory}, {sectorz}), a une distance de {dist} al. "
   },
   "FLAVOUR_4_SUCCESSMSG": {
     "description": "",
@@ -157,7 +177,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "TRANSPORT PRIVE. Déplacement de materiel d'un stock vers {starport}. "
+    "message": "Transport de mes biens vers {starport} depuis le centre de stockage du port."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "DÉMÉNAGEMENT"
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
@@ -165,7 +189,7 @@
   },
   "FLAVOUR_5_INTROTEXT": {
     "description": "",
-    "message": "Ravi de vous rencontrer, je suis {name} et je suis prêt a payer {cash} a quelqu'un possèdant un vaisseau pour m'aider a transporter des affaires vers {starport}. Pas d'urgence, ce sont juste des restes suite a un déménagement."
+    "message": "Ravi de vous rencontrer, je suis {name} et je suis prêt à payer {cash} à quelqu'un possédant un vaisseau pour m'aider à transporter des affaires vers {starport}. Pas d'urgence, ce sont juste des restes suite à un déménagement."
   },
   "FLAVOUR_5_SUCCESSMSG": {
     "description": "",
@@ -177,7 +201,11 @@
   },
   "FLAVOUR_6_ADTEXT": {
     "description": "",
-    "message": "COURRIER COURTE PORTEE. Livraison d'un petit paquet vers {starport}."
+    "message": "Services de courrier Intra-système requis. Livraison d'un petit colis vers {starport}."
+  },
+  "FLAVOUR_6_ADTITLE": {
+    "description": "",
+    "message": "COURRIER COURTE DISTANCE"
   },
   "FLAVOUR_6_FAILUREMSG": {
     "description": "",
@@ -197,7 +225,11 @@
   },
   "FLAVOUR_7_ADTEXT": {
     "description": "",
-    "message": "CARGAISON INTERPLANÉTAIRE. Fret de cargaison locale vers {starport}. "
+    "message": "Contrat standard de transport inter-planétaire. Livraison  locale d'une cargaison vers {starport}."
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "CARGAISON INTER-PLANÉTAIRE"
   },
   "FLAVOUR_7_FAILUREMSG": {
     "description": "",
@@ -217,7 +249,11 @@
   },
   "FLAVOUR_8_ADTEXT": {
     "description": "",
-    "message": "LIVRAISON LOCALE. Recrute pour livraison rapide d'un article a {starport}."
+    "message": "Contrat de livraison privée urgent. Besoin de livraison rapide d'un object vers {starport}."
+  },
+  "FLAVOUR_8_ADTITLE": {
+    "description": "",
+    "message": "LIVRAISON DE PROXIMITÉ"
   },
   "FLAVOUR_8_FAILUREMSG": {
     "description": "",
@@ -237,7 +273,11 @@
   },
   "FLAVOUR_9_ADTEXT": {
     "description": "",
-    "message": "COLIS EXPRESS. Expédition urgente de denrées périssables vers {starport}."
+    "message": "Besoin de livraison de coli. Expédition urgente de produits périssables vers {starport}."
+  },
+  "FLAVOUR_9_ADTITLE": {
+    "description": "",
+    "message": "LIVRAISON DE COLIS"
   },
   "FLAVOUR_9_FAILUREMSG": {
     "description": "",
@@ -265,15 +305,11 @@
   },
   "IT_MUST_BE_DELIVERED_BY": {
     "description": "",
-    "message": "Ce doit etre livré avant"
+    "message": "Ce doit être livré avant "
   },
   "I_HIGHLY_DOUBT_IT": {
     "description": "",
     "message": "J'en doute fortement."
-  },
-  "LY": {
-    "description": "",
-    "message": "al"
   },
   "NOT_ANY_MORE_THAN_USUAL": {
     "description": "",
@@ -333,7 +369,7 @@
   },
   "SYSTEM": {
     "description": "",
-    "message": "Systeme:"
+    "message": "Système:"
   },
   "THIS_IS_A_VALUABLE_PACKAGE_YOU_SHOULD_KEEP_YOUR_EYES_OPEN": {
     "description": "",

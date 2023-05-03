@@ -1,20 +1,20 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Image.h"
 #include "FileSystem.h"
 #include "graphics/TextureBuilder.h"
 
-namespace PiGUI {
+namespace PiGui {
 
 	Image::Image(const std::string &filename)
 	{
 		m_texture.Reset(Graphics::TextureBuilder::UI(filename).GetOrCreateTexture(Pi::renderer, "ui"));
 	}
 
-	Uint32 Image::GetId()
+	void *Image::GetImTextureID()
 	{
-		return m_texture->GetTextureID();
+		return m_texture.Get();
 	}
 
 	vector2f Image::GetSize()
@@ -28,4 +28,4 @@ namespace PiGUI {
 		return m_texture->GetDescriptor().texSize;
 	}
 
-} // namespace PiGUI
+} // namespace PiGui

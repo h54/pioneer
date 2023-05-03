@@ -1,4 +1,20 @@
 {
+  "ADTITLE_0": {
+    "description": "",
+    "message": "EMPORIO DELLE MERCI"
+  },
+  "ADTITLE_1": {
+    "description": "",
+    "message": "CASA DI COMMERCIO"
+  },
+  "ADTITLE_2": {
+    "description": "",
+    "message": "MAGAZZINO COMMERCIALE"
+  },
+  "ADTITLE_3": {
+    "description": "",
+    "message": "COMPRAVENDITA MERCI"
+  },
   "GOODS_TRADER_0": {
     "description": "",
     "message": "Emporio di {name} l'Onesto."

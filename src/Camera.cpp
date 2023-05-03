@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Camera.h"
@@ -13,6 +13,7 @@
 #include "Space.h"
 #include "galaxy/StarSystem.h"
 #include "graphics/TextureBuilder.h"
+#include "graphics/Types.h"
 
 using namespace Graphics;
 
@@ -40,6 +41,12 @@ CameraContext::~CameraContext()
 {
 	if (m_camFrame)
 		EndFrame();
+}
+
+void CameraContext::SetFovAng(float newAng)
+{
+	m_fovAng = newAng;
+	m_frustum = Frustum(m_width, m_height, m_fovAng, m_zNear, m_zFar);
 }
 
 void CameraContext::BeginFrame()
@@ -72,7 +79,8 @@ void CameraContext::EndFrame()
 
 void CameraContext::ApplyDrawTransforms(Graphics::Renderer *r)
 {
-	r->SetPerspectiveProjection(m_fovAng, m_width / m_height, m_zNear, m_zFar);
+	Graphics::SetFov(m_fovAng);
+	r->SetProjection(matrix4x4f::InfinitePerspectiveMatrix(DEG2RAD(m_fovAng), m_width / m_height, m_zNear));
 	r->SetTransform(matrix4x4f::Identity());
 }
 
@@ -99,11 +107,16 @@ Camera::Camera(RefCountedPtr<CameraContext> context, Graphics::Renderer *rendere
 	m_renderer(renderer)
 {
 	Graphics::MaterialDescriptor desc;
-	desc.effect = Graphics::EFFECT_BILLBOARD;
 	desc.textures = 1;
 
-	m_billboardMaterial.reset(m_renderer->CreateMaterial(desc));
-	m_billboardMaterial->texture0 = Graphics::TextureBuilder::Billboard("textures/planet_billboard.dds").GetOrCreateTexture(m_renderer, "billboard");
+	Graphics::RenderStateDesc rsd;
+	rsd.blendMode = Graphics::BLEND_ALPHA_ONE;
+	rsd.depthWrite = false;
+	rsd.primitiveType = Graphics::POINTS;
+
+	m_billboardMaterial.reset(m_renderer->CreateMaterial("billboards", desc, rsd));
+	m_billboardMaterial->SetTexture("texture0"_hash,
+		Graphics::TextureBuilder::Billboard("textures/planet_billboard.dds").GetOrCreateTexture(m_renderer, "billboard"));
 }
 
 static void position_system_lights(Frame *camFrame, Frame *frame, std::vector<Camera::LightSource> &lights)
@@ -134,7 +147,7 @@ static void position_system_lights(Frame *camFrame, Frame *frame, std::vector<Ca
 
 void Camera::Update()
 {
-	FrameId camFrame = m_context->GetCamFrame();
+	FrameId camFrame = m_context->GetTempFrame();
 
 	// evaluate each body and determine if/where/how to draw it
 	m_sortedBodies.clear();
@@ -142,6 +155,10 @@ void Camera::Update()
 		BodyAttrs attrs;
 		attrs.body = b;
 		attrs.billboard = false; // false by default
+
+		// If the body wishes to be excluded from the draw, skip it.
+		if (b->GetFlags() & Body::FLAG_DRAW_EXCLUDE)
+			continue;
 
 		// determine position and transform for draw
 		//		Frame::GetFrameTransform(b->GetFrame(), camFrame, attrs.viewTransform);		// doesn't use interp coords, so breaks in some cases
@@ -162,7 +179,7 @@ void Camera::Update()
 		const float pixSize = Graphics::GetScreenHeight() * 2.0 * rad / (attrs.camDist * Graphics::GetFovFactor());
 
 		// terrain objects are visible from distance but might not have any discernable features
-		if (b->IsType(Object::TERRAINBODY)) {
+		if (b->IsType(ObjectType::TERRAINBODY)) {
 			if (pixSize < BILLBOARD_PIXEL_THRESHOLD) {
 				attrs.billboard = true;
 
@@ -173,9 +190,9 @@ void Camera::Update()
 
 				// limit the minimum billboard size for planets so they're always a little visible
 				attrs.billboardSize = std::max(1.0f, pixSize);
-				if (b->IsType(Object::STAR)) {
+				if (b->IsType(ObjectType::STAR)) {
 					attrs.billboardColor = StarSystem::starRealColors[b->GetSystemBody()->GetType()];
-				} else if (b->IsType(Object::PLANET)) {
+				} else if (b->IsType(ObjectType::PLANET)) {
 					// XXX this should incorporate some lighting effect
 					// (ie, colour of the illuminating star(s))
 					attrs.billboardColor = b->GetSystemBody()->GetAlbedo();
@@ -184,7 +201,7 @@ void Camera::Update()
 				}
 
 				// this should always be the main star in the system - except for the star itself!
-				if (!m_lightSources.empty() && !b->IsType(Object::STAR)) {
+				if (!m_lightSources.empty() && !b->IsType(ObjectType::STAR)) {
 					const Graphics::Light &light = m_lightSources[0].GetLight();
 					attrs.billboardColor *= light.GetDiffuse(); // colour the billboard a little with the Starlight
 				}
@@ -202,11 +219,11 @@ void Camera::Update()
 	m_sortedBodies.sort();
 }
 
-void Camera::Draw(const Body *excludeBody, ShipCockpit *cockpit)
+void Camera::Draw(const Body *excludeBody)
 {
 	PROFILE_SCOPED()
 
-	FrameId camFrameId = m_context->GetCamFrame();
+	FrameId camFrameId = m_context->GetTempFrame();
 	FrameId rootFrameId = Pi::game->GetSpace()->GetRootFrame();
 
 	Frame *camFrame = Frame::GetFrame(camFrameId);
@@ -235,7 +252,7 @@ void Camera::Draw(const Body *excludeBody, ShipCockpit *cockpit)
 	if (camParent && camParent->IsRotFrame()) {
 		//check if camera is near a planet
 		Body *camParentBody = camParent->GetBody();
-		if (camParentBody && camParentBody->IsType(Object::PLANET)) {
+		if (camParentBody && camParentBody->IsType(ObjectType::PLANET)) {
 			Planet *planet = static_cast<Planet *>(camParentBody);
 			const vector3f relpos(planet->GetInterpPositionRelTo(camFrameId));
 			double altitude(relpos.Length());
@@ -270,6 +287,8 @@ void Camera::Draw(const Body *excludeBody, ShipCockpit *cockpit)
 		m_renderer->SetLights(rendererLights.size(), &rendererLights[0]);
 	}
 
+	Graphics::VertexArray billboards(Graphics::ATTRIB_POSITION | Graphics::ATTRIB_NORMAL);
+
 	for (std::list<BodyAttrs>::iterator i = m_sortedBodies.begin(); i != m_sortedBodies.end(); ++i) {
 		BodyAttrs *attrs = &(*i);
 
@@ -279,24 +298,17 @@ void Camera::Draw(const Body *excludeBody, ShipCockpit *cockpit)
 
 		// draw something!
 		if (attrs->billboard) {
-			Graphics::Renderer::MatrixTicket mt(m_renderer, Graphics::MatrixMode::MODELVIEW);
-			m_renderer->SetTransform(matrix4x4d::Identity());
-			m_billboardMaterial->diffuse = attrs->billboardColor;
-			m_renderer->DrawPointSprites(1, &attrs->billboardPos, SfxManager::additiveAlphaState, m_billboardMaterial.get(), attrs->billboardSize);
+			billboards.Add(attrs->billboardPos, vector3f(0.f, 0.f, attrs->billboardSize));
 		} else
 			attrs->body->Render(m_renderer, this, attrs->viewCoords, attrs->viewTransform);
 	}
 
+	if (!billboards.IsEmpty()) {
+		Graphics::Renderer::MatrixTicket mt(m_renderer, matrix4x4f::Identity());
+		m_renderer->DrawBuffer(&billboards, m_billboardMaterial.get());
+	}
+
 	SfxManager::RenderAll(m_renderer, rootFrameId, camFrameId);
-
-	// NB: Do any screen space rendering after here:
-	// Things like the cockpit and AR features like hudtrails, space dust etc.
-
-	// Render cockpit
-	// XXX only here because it needs a frame for lighting calc
-	// should really be in WorldView, immediately after camera draw
-	if (cockpit)
-		cockpit->RenderCockpit(m_renderer, this, camFrameId);
 }
 
 void Camera::CalcShadows(const int lightNum, const Body *b, std::vector<Shadow> &shadowsOut) const
@@ -311,14 +323,14 @@ void Camera::CalcShadows(const int lightNum, const Body *b, std::vector<Shadow> 
 	const vector3d lightDir = bLightPos.Normalized();
 
 	double bRadius;
-	if (b->IsType(Object::TERRAINBODY))
+	if (b->IsType(ObjectType::TERRAINBODY))
 		bRadius = b->GetSystemBody()->GetRadius();
 	else
 		bRadius = b->GetPhysRadius();
 
 	// Look for eclipsing third bodies:
 	for (const Body *b2 : Pi::game->GetSpace()->GetBodies()) {
-		if (b2 == b || b2 == lightBody || !(b2->IsType(Object::PLANET) || b2->IsType(Object::STAR)))
+		if (b2 == b || b2 == lightBody || !(b2->IsType(ObjectType::PLANET) || b2->IsType(ObjectType::STAR)))
 			continue;
 
 		double b2Radius = b2->GetSystemBody()->GetRadius();

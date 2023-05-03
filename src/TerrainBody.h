@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _TERRAINBODY_H
@@ -25,7 +25,7 @@ public:
 	virtual void Render(Graphics::Renderer *r, const Camera *camera, const vector3d &viewCoords, const matrix4x4d &viewTransform) override;
 	virtual void SubRender(Graphics::Renderer *r, const matrix4x4d &modelView, const vector3d &camPos) {}
 	virtual void SetFrame(FrameId fId) override;
-	virtual bool OnCollision(Object *b, Uint32 flags, double relVel) override { return true; }
+	virtual bool OnCollision(Body *b, Uint32 flags, double relVel) override { return true; }
 	virtual double GetMass() const override { return m_mass; }
 	double GetTerrainHeight(const vector3d &pos) const;
 	virtual const SystemBody *GetSystemBody() const override { return m_sbody; }

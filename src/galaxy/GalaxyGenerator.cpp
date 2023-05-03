@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "GalaxyGenerator.h"
@@ -19,6 +19,7 @@ RefCountedPtr<Galaxy> GalaxyGenerator::s_galaxy;
 //static
 void GalaxyGenerator::Init(const std::string &name, Version version)
 {
+	PROFILE_SCOPED()
 	s_defaultGenerator = name;
 	s_defaultVersion = (version == LAST_VERSION) ? GetLastVersion(name) : version;
 	GalaxyGenerator::Create(); // This will set s_galaxy
@@ -43,6 +44,7 @@ GalaxyGenerator::Version GalaxyGenerator::GetLastVersion(const std::string &name
 // static
 RefCountedPtr<Galaxy> GalaxyGenerator::Create(const std::string &name, Version version)
 {
+	PROFILE_SCOPED()
 	if (version == LAST_VERSION)
 		version = GetLastVersion(name);
 
@@ -121,7 +123,7 @@ void GalaxyGenerator::ToJson(Json &jsonObj, RefCountedPtr<Galaxy> galaxy)
 		sysgen->ToJson(starSystemStageArrayEl, galaxy);
 		starSystemStageArray.push_back(starSystemStageArrayEl); // Append system stage object to array.
 	}
-	galaxyGenObj["sector_stage"] = sectorStageArray; // Add sector stage array to galaxy generator object.
+	galaxyGenObj["sector_stage"] = sectorStageArray;		  // Add sector stage array to galaxy generator object.
 	galaxyGenObj["star_system_stage"] = starSystemStageArray; // Add system stage array to galaxy generator object.
 
 	jsonObj["galaxy_generator"] = galaxyGenObj; // Add galaxy generator object to supplied object.
@@ -180,8 +182,9 @@ RefCountedPtr<Sector> GalaxyGenerator::GenerateSector(RefCountedPtr<Galaxy> gala
 
 RefCountedPtr<StarSystem> GalaxyGenerator::GenerateStarSystem(RefCountedPtr<Galaxy> galaxy, const SystemPath &path, StarSystemCache *cache)
 {
+	PROFILE_SCOPED()
 	RefCountedPtr<const Sector> sec = galaxy->GetSector(path);
-	assert(path.systemIndex >= 0 && path.systemIndex < sec->m_systems.size());
+	assert(path.systemIndex < sec->m_systems.size());
 	Uint32 seed = sec->m_systems[path.systemIndex].GetSeed();
 	std::string name = sec->m_systems[path.systemIndex].GetName();
 	Uint32 _init[6] = { path.systemIndex, Uint32(path.sectorX), Uint32(path.sectorY), Uint32(path.sectorZ), UNIVERSE_SEED, Uint32(seed) };

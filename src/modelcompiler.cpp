@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "buildopts.h"
@@ -206,7 +206,6 @@ start:
 	FileSystem::userFiles.MakeDirectory(""); // ensure the config directory exists
 #ifdef PIONEER_PROFILER
 	FileSystem::userFiles.MakeDirectory("profiler");
-	const std::string profilerPath = FileSystem::JoinPathBelow(FileSystem::userFiles.GetRoot(), "profiler");
 #endif
 
 	// what mode are we in?
@@ -325,7 +324,7 @@ start:
 	}
 
 #ifdef PIONEER_PROFILER
-	Profiler::dumphtml(profilerPath.c_str());
+	Profiler::dumphtml(FileSystem::JoinPathBelow(FileSystem::GetUserDir(), "profiler").c_str());
 #endif
 
 	Graphics::Uninit();

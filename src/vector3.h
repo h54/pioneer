@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _VECTOR3_H
@@ -10,10 +10,10 @@
 #include <stdio.h>
 
 // Need this pragma due to operator[] implementation.
-// #pragma pack(4)
+#pragma pack(4)
 
 template <typename T>
-class vector3 {
+class alignas(sizeof(T)) vector3 {
 public:
 	T x, y, z;
 
@@ -108,6 +108,10 @@ public:
 	{
 		const T inv = 1.0 / scalar;
 		return vector3(a.x * inv, a.y * inv, a.z * inv);
+	}
+	friend vector3 operator/(const T scalar, const vector3 &a)
+	{
+		return vector3(scalar / a.x, scalar / a.y, scalar / a.z);
 	}
 
 	vector3 Cross(const vector3 &b) const { return vector3(y * b.z - z * b.y, z * b.x - x * b.z, x * b.y - y * b.x); }
@@ -280,9 +284,18 @@ inline vector3<double>::vector3(const double vals[3]) :
 	z(vals[2])
 {}
 
-// #pragma pack()
+#pragma pack()
 
 typedef vector3<float> vector3f;
 typedef vector3<double> vector3d;
+
+// ensure both packing and structure alignment match the constraints we have set
+static_assert(alignof(vector3d) == 8);
+static_assert(offsetof(vector3d, y) == 8);
+static_assert(offsetof(vector3d, z) == 16);
+
+static_assert(alignof(vector3f) == 4);
+static_assert(offsetof(vector3f, y) == 4);
+static_assert(offsetof(vector3f, z) == 8);
 
 #endif /* _VECTOR3_H */

@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "LuaEngine.h"
@@ -9,19 +9,17 @@
 #include "Game.h"
 #include "GameConfig.h"
 #include "Intro.h"
-#include "KeyBindings.h"
 #include "Lang.h"
 #include "LuaColor.h"
 #include "LuaConstants.h"
 #include "LuaObject.h"
-#include "LuaPiGui.h"
+#include "LuaPiGuiInternal.h"
 #include "LuaUtils.h"
 #include "LuaVector.h"
 #include "LuaVector2.h"
 #include "Pi.h"
 #include "Player.h"
 #include "Random.h"
-#include "SectorView.h"
 #include "WorldView.h"
 #include "buildopts.h"
 #include "core/OS.h"
@@ -30,7 +28,6 @@
 #include "scenegraph/Model.h"
 #include "sound/Sound.h"
 #include "sound/SoundMusic.h"
-#include "ui/Context.h"
 #include "utils.h"
 /*
  * Interface: Engine
@@ -83,22 +80,44 @@ static int l_engine_attr_ticks(lua_State *l)
 }
 
 /*
- * Attribute: ui
+ * Attribute: time
  *
- * The global <UI.Context> object. New UI widgets are created through this
- * object.
+ * Number of real-time seconds since Pioneer was started. This should be used
+ * for debugging or UI purposes only (eg animations), and should never be used
+ * in game logic of any kind.
  *
  * Availability:
  *
- *   alpha 25
+ *   July 2022
  *
  * Status:
  *
- *   experimental
+ *   stable
  */
-static int l_engine_attr_ui(lua_State *l)
+static int l_engine_attr_time(lua_State *l)
 {
-	LuaObject<UI::Context>::PushToLua(Pi::ui.Get());
+	lua_pushnumber(l, Pi::GetApp()->GetTime());
+	return 1;
+}
+
+/*
+ * Attribute: frameTime
+ *
+ * Length of the last frame in seconds. This should be used for debugging or UI
+ * purposes only (e.g. animations) and should never be used in game logic of
+ * any kind.
+ *
+ * Availability:
+ *
+ *   July 2022
+ *
+ * Status:
+ *
+ *   stable
+ */
+static int l_engine_attr_frame_time(lua_State *l)
+{
+	lua_pushnumber(l, Pi::GetFrameTime());
 	return 1;
 }
 
@@ -575,7 +594,7 @@ static int l_engine_set_display_hud_trails(lua_State *l)
 
 static int l_engine_set_amount_stars(lua_State *l)
 {
-	const float amount = Clamp(luaL_checknumber(l, 1), 0.01, 1.0);
+	const float amount = Clamp(luaL_checknumber(l, 1), 0.0, 1.0);
 	Pi::config->SetFloat("AmountOfBackgroundStars", amount);
 	Pi::config->Save();
 	Pi::SetAmountBackgroundStars(amount);
@@ -585,6 +604,21 @@ static int l_engine_set_amount_stars(lua_State *l)
 static int l_engine_get_amount_stars(lua_State *l)
 {
 	lua_pushnumber(l, Pi::config->Float("AmountOfBackgroundStars"));
+	return 1;
+}
+
+static int l_engine_set_star_field_star_size_factor(lua_State *l)
+{
+	const float amount = Clamp(luaL_checknumber(l, 1), 0.0, 1.0);
+	Pi::config->SetFloat("StarFieldStarSizeFactor", amount);
+	Pi::config->Save();
+	Pi::SetStarFieldStarSizeFactor(amount);
+	return 0;
+}
+
+static int l_engine_get_star_field_star_size_factor(lua_State *l)
+{
+	lua_pushnumber(l, Pi::config->Float("StarFieldStarSizeFactor"));
 	return 1;
 }
 
@@ -743,9 +777,38 @@ static int l_engine_get_intro_current_model_name(lua_State *l)
 }
 
 /*
+ * Method: WorldSpaceToShipSpace
+ *
+ * Convert a direction Vector from world space to screen space
+ *
+ * > screen_space = Engine.WorldSpaceToShipSpace(world_space)
+ *
+ * Parameters:
+ *
+ *   camera_space - a Vector in camera space
+ *
+ * Availability:
+ *
+ *   2017-04
+ *
+ * Status:
+ *
+ *   stable
+ */
+
+static int l_engine_world_space_to_ship_space(lua_State *l)
+{
+	vector3d vec = LuaPull<vector3d>(l, 1);
+	auto res = vec * Pi::game->GetPlayer()->GetOrient();
+
+	LuaPush<vector3d>(l, res);
+	return 1;
+}
+
+/*
  * Method: ShipSpaceToScreenSpace
  *
- * Convert a Vector from ship space to screen space
+ * Convert a direction Vector from ship space to screen space
  *
  * > screen_space = Engine.ShipSpaceToScreenSpace(ship_space)
  *
@@ -765,7 +828,7 @@ static int l_engine_get_intro_current_model_name(lua_State *l)
 static int l_engine_ship_space_to_screen_space(lua_State *l)
 {
 	vector3d pos = LuaPull<vector3d>(l, 1);
-	vector3d cam = Pi::game->GetWorldView()->ShipSpaceToScreenSpace(pos);
+	vector3d cam = Pi::game->GetWorldView()->WorldDirToScreenSpace(Pi::player->GetInterpOrient() * pos);
 	LuaPush<vector3d>(l, cam);
 	return 1;
 }
@@ -773,7 +836,7 @@ static int l_engine_ship_space_to_screen_space(lua_State *l)
 /*
  * Method: CameraSpaceToScreenSpace
  *
- * Convert a Vector from camera space to screen space
+ * Convert a direction Vector from camera space to screen space
  *
  * > screen_space = Engine.CameraSpaceToScreenSpace(camera_space)
  *
@@ -799,44 +862,124 @@ static int l_engine_camera_space_to_screen_space(lua_State *l)
 }
 
 /*
- * Method: WorldSpaceToScreenSpace
+ * Method: ProjectRelPosition
  *
- * Convert a Vector from world space to screen space
+ * Project a player-relative position onto the screen
  *
- * > screen_space = Engine.WorldSpaceToScreenSpace(world_space)
+ * > visible, position, direction = Engine.ProjectRelativePosition(rel_space)
  *
  * Parameters:
  *
- *   world_space - a Vector in world space
- *
+ *   rel_space - a position Vector in player-relative space
+ *               (e.g. `body:GetPositionRelTo(player)`)*
  * Availability:
  *
- *   2017-04
+ *   2020-12
  *
  * Status:
  *
  *   stable
  */
 
-static int l_engine_world_space_to_screen_space(lua_State *l)
+static int l_engine_project_rel_position(lua_State *l)
 {
 	vector3d pos = LuaPull<vector3d>(l, 1);
 
-	PiGUI::TScreenSpace res = PiGUI::lua_world_space_to_screen_space(pos); // defined in LuaPiGui.cpp
-
-	LuaPush<bool>(l, res._onScreen);
-	LuaPush<vector2d>(l, res._screenPosition);
-	LuaPush<vector3d>(l, res._direction);
-	return 3;
+	pos = Pi::game->GetWorldView()->WorldSpaceToScreenSpace(pos + Pi::player->GetInterpPosition());
+	return PiGui::pushOnScreenPositionDirection(l, pos);
 }
 
-static int l_engine_world_space_to_ship_space(lua_State *l)
-{
-	vector3d vec = LuaPull<vector3d>(l, 1);
-	auto res = vec * Pi::game->GetPlayer()->GetOrient();
+/*
+ * Method: ProjectRelDirection
+ *
+ * Project a direction relative to the player ship onto the screen
+ *
+ * > visible, position, direction = Engine.ProjectRelativeDirection(rel_space)
+ *
+ * Parameters:
+ *
+ *   rel_space - a direction Vector in player-relative space
+ *               (e.g. `body:GetVelocityRelTo(player)`)
+ *
+ * Availability:
+ *
+ *   2020-12
+ *
+ * Status:
+ *
+ *   stable
+ */
 
-	LuaPush<vector3d>(l, res);
-	return 1;
+static int l_engine_project_rel_direction(lua_State *l)
+{
+	vector3d pos = LuaPull<vector3d>(l, 1);
+
+	pos = Pi::game->GetWorldView()->WorldDirToScreenSpace(pos.NormalizedSafe());
+	return PiGui::pushOnScreenPositionDirection(l, pos);
+}
+
+/*
+ * Function: GetBodyProjectedScreenPosition
+ *
+ * Get the body's position projected to screen space as a Vector
+ *
+ * > Engine.GetBodyProjectedScreenPosition(body)
+ *
+ * Parameters:
+ *   body - a <Body> to project onto the screen.
+ *
+ * Returns:
+ *   onscreen - a boolean indicating if the body's position is visible.
+ *   position - the screen-space position of the body if onscreen.
+ *   direction - the screen-space direction from the center of the screen
+ *               to the body if offscreen.
+ *
+ * Availability:
+ *
+ *   2020-12
+ *
+ * Status:
+ *
+ *   experimental
+ */
+
+static int l_engine_get_projected_screen_position(lua_State *l)
+{
+	Body *b = LuaObject<Body>::CheckFromLua(1);
+	vector3d p = Pi::game->GetWorldView()->WorldSpaceToScreenSpace(b);
+	return PiGui::pushOnScreenPositionDirection(l, p);
+}
+
+/*
+ * Function: GetTargetIndicatorScreenPosition
+ *
+ * Get a body's nav-target indicator override projected to screen space as a Vector
+ *
+ * > Engine.GetTargetIndicatorScreenPosition(body)
+ *
+ * Parameters:
+ *   body - a <Body> to project onto the screen.
+ *
+ * Returns:
+ *   onscreen - a boolean indicating if the body's position is visible.
+ *   position - the screen-space position of the body if onscreen.
+ *   direction - the screen-space direction from the center of the screen
+ *               to the body if offscreen.
+ *
+ * Availability:
+ *
+ *   2020-12
+ *
+ * Status:
+ *
+ *   experimental
+ */
+
+static int l_engine_get_target_indicator_screen_position(lua_State *l)
+{
+	Body *b = LuaObject<Body>::CheckFromLua(1);
+	vector3d p = Pi::game->GetWorldView()->GetTargetIndicatorScreenPosition(b);
+	return PiGui::pushOnScreenPositionDirection(l, p);
 }
 
 static int l_engine_get_confirm_quit(lua_State *l)
@@ -863,260 +1006,15 @@ static int l_engine_get_model(lua_State *l)
 	return 1;
 }
 
-static int l_engine_sector_map_clear_route(lua_State *l)
+static int l_engine_request_profile_frame(lua_State *l)
 {
-	SectorView *sv = Pi::game->GetSectorView();
-	sv->ClearRoute();
-	return 0;
-}
-
-static int l_engine_sector_map_add_to_route(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	SystemPath *path = LuaObject<SystemPath>::CheckFromLua(1);
-	sv->AddToRoute(path);
-	return 0;
-}
-
-static int l_engine_get_sector_map_zoom_level(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	LuaPush(l, sv->GetZoomLevel());
-	return 1;
-}
-
-static int l_engine_get_sector_map_center_distance(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	LuaPush(l, sv->GetCenterDistance());
-	return 1;
-}
-
-static int l_engine_get_sector_map_center_sector(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	LuaPush<vector3d>(l, vector3d(sv->GetCenterSector()));
-	return 1;
-}
-
-static int l_engine_get_sector_map_current_system_path(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	LuaObject<SystemPath>::PushToLua(sv->GetCurrent());
-	return 1;
-}
-
-static int l_engine_get_sector_map_selected_system_path(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	LuaObject<SystemPath>::PushToLua(sv->GetSelected());
-	return 1;
-}
-
-static int l_engine_get_sector_map_hyperspace_target_system_path(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	LuaObject<SystemPath>::PushToLua(sv->GetHyperspaceTarget());
-	return 1;
-}
-
-static int l_engine_set_sector_map_draw_uninhabited_labels(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	bool value = LuaPull<bool>(l, 1);
-	sv->SetDrawUninhabitedLabels(value);
-	return 0;
-}
-
-static int l_engine_set_sector_map_draw_out_range_labels(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	bool value = LuaPull<bool>(l, 1);
-	sv->SetDrawOutRangeLabels(value);
-	return 0;
-}
-
-static int l_engine_set_sector_map_lock_hyperspace_target(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	bool value = LuaPull<bool>(l, 1);
-	sv->LockHyperspaceTarget(value);
-	return 0;
-}
-
-static int l_engine_set_sector_map_draw_vertical_lines(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	bool value = LuaPull<bool>(l, 1);
-	sv->SetDrawVerticalLines(value);
-	return 0;
-}
-
-static int l_engine_set_sector_map_automatic_system_selection(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	bool value = LuaPull<bool>(l, 1);
-	sv->SetAutomaticSystemSelection(value);
-	return 0;
-}
-
-static int l_engine_sector_map_get_route(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	std::vector<SystemPath> route = sv->GetRoute();
-
-	lua_newtable(l);
-	int i = 1;
-	for (const SystemPath &j : route) {
-		lua_pushnumber(l, i++);
-		LuaObject<SystemPath>::PushToLua(j);
-		lua_settable(l, -3);
-	}
-	return 1;
-}
-
-static int l_engine_sector_map_get_route_size(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	std::vector<SystemPath> route = sv->GetRoute();
-	const int size = route.size();
-	LuaPush(l, size);
-	return 1;
-}
-
-static int l_engine_sector_map_auto_route(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	SystemPath current_path = sv->GetCurrent();
-	SystemPath target_path = sv->GetSelected();
-
-	std::vector<SystemPath> route;
-	sv->AutoRoute(current_path, target_path, route);
-	sv->ClearRoute();
-	for (auto it = route.begin(); it != route.end(); it++) {
-		sv->AddToRoute(*it);
+	if (lua_gettop(l) > 0) {
+		Pi::GetApp()->RequestProfileFrame(luaL_checkstring(l, 1));
+	} else {
+		Pi::GetApp()->RequestProfileFrame();
 	}
 
-	return l_engine_sector_map_get_route(l);
-}
-
-static int l_engine_sector_map_move_route_item_up(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	int element = LuaPull<int>(l, 1);
-
-	// lua indexes start at 1
-	element -= 1;
-
-	bool r = sv->MoveRouteItemUp(element);
-	LuaPush<bool>(l, r);
-	return 1;
-}
-
-static int l_engine_sector_map_move_route_item_down(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	int element = LuaPull<int>(l, 1);
-
-	// lua indexes start at 1
-	element -= 1;
-
-	bool r = sv->MoveRouteItemDown(element);
-	LuaPush<bool>(l, r);
-	return 1;
-}
-
-static int l_engine_sector_map_remove_route_item(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	int element = LuaPull<int>(l, 1);
-
-	// lua indexes start at 1
-	element -= 1;
-
-	bool r = sv->RemoveRouteItem(element);
-	LuaPush<bool>(l, r);
-	return 1;
-}
-
-static int l_engine_set_sector_map_selected(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	SystemPath *path = LuaObject<SystemPath>::CheckFromLua(1);
-	sv->SetSelected(*path);
 	return 0;
-}
-
-static int l_engine_sector_map_goto_sector_path(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	SystemPath *path = LuaObject<SystemPath>::CheckFromLua(1);
-	sv->GotoSector(*path);
-	return 0;
-}
-
-static int l_engine_sector_map_goto_system_path(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	SystemPath *path = LuaObject<SystemPath>::CheckFromLua(1);
-	sv->GotoSystem(*path);
-	return 0;
-}
-
-static int l_engine_search_nearby_star_systems_by_name(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	std::string pattern = LuaPull<std::string>(l, 1);
-
-	std::vector<SystemPath> matches = sv->GetNearbyStarSystemsByName(pattern);
-	int i = 1;
-	lua_newtable(l);
-	for (const SystemPath &path : matches) {
-		lua_pushnumber(l, i++);
-		LuaObject<SystemPath>::PushToLua(path);
-		lua_settable(l, -3);
-	}
-	return 1;
-}
-
-static int l_engine_sector_map_zoom_in(lua_State *l)
-{
-	Pi::game->GetSectorView()->ZoomIn();
-	return 0;
-}
-
-static int l_engine_sector_map_zoom_out(lua_State *l)
-{
-	Pi::game->GetSectorView()->ZoomOut();
-	return 0;
-}
-
-static int l_engine_set_sector_map_faction_visible(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	Faction *faction = LuaObject<Faction>::CheckFromLua(1);
-	bool visible = LuaPull<bool>(l, 2);
-	sv->SetFactionVisible(faction, visible);
-	return 0;
-}
-
-static int l_engine_get_sector_map_factions(lua_State *l)
-{
-	SectorView *sv = Pi::game->GetSectorView();
-	const std::set<const Faction *> visible = sv->GetVisibleFactions();
-	const std::set<const Faction *> hidden = sv->GetHiddenFactions();
-	lua_newtable(l); // outer table
-	int i = 1;
-	for (const Faction *f : visible) {
-		lua_pushnumber(l, i++);
-		lua_newtable(l); // inner table
-		LuaObject<Faction>::PushToLua(const_cast<Faction *>(f));
-		lua_setfield(l, -2, "faction");
-		lua_pushboolean(l, hidden.count(f) == 0);
-		lua_setfield(l, -2, "visible"); // inner table
-		lua_settable(l, -3);			// outer table
-	}
-	return 1;
 }
 
 static int l_get_can_browse_user_folders(lua_State *l)
@@ -1188,6 +1086,8 @@ void LuaEngine::Register()
 
 		{ "SetAmountStars", l_engine_set_amount_stars },
 		{ "GetAmountStars", l_engine_get_amount_stars },
+		{ "SetStarFieldStarSizeFactor", l_engine_set_star_field_star_size_factor },
+		{ "GetStarFieldStarSizeFactor", l_engine_get_star_field_star_size_factor },
 
 		{ "GetMasterMuted", l_engine_get_master_muted },
 		{ "SetMasterMuted", l_engine_set_master_muted },
@@ -1210,45 +1110,24 @@ void LuaEngine::Register()
 		{ "IsIntroZooming", l_engine_is_intro_zooming },
 		{ "GetIntroCurrentModelName", l_engine_get_intro_current_model_name },
 
-		{ "GetSectorMapZoomLevel", l_engine_get_sector_map_zoom_level },
-		{ "SectorMapZoomIn", l_engine_sector_map_zoom_in },
-		{ "SectorMapZoomOut", l_engine_sector_map_zoom_out },
-		{ "GetSectorMapCenterSector", l_engine_get_sector_map_center_sector },
-		{ "GetSectorMapCenterDistance", l_engine_get_sector_map_center_distance },
-		{ "GetSectorMapCurrentSystemPath", l_engine_get_sector_map_current_system_path },
-		{ "GetSectorMapSelectedSystemPath", l_engine_get_sector_map_selected_system_path },
-		{ "GetSectorMapHyperspaceTargetSystemPath", l_engine_get_sector_map_hyperspace_target_system_path },
-		{ "SetSectorMapDrawUninhabitedLabels", l_engine_set_sector_map_draw_uninhabited_labels },
-		{ "SetSectorMapDrawVerticalLines", l_engine_set_sector_map_draw_vertical_lines },
-		{ "SetSectorMapDrawOutRangeLabels", l_engine_set_sector_map_draw_out_range_labels },
-		{ "SetSectorMapAutomaticSystemSelection", l_engine_set_sector_map_automatic_system_selection },
-		{ "SetSectorMapLockHyperspaceTarget", l_engine_set_sector_map_lock_hyperspace_target },
-		{ "SetSectorMapSelected", l_engine_set_sector_map_selected },
-		{ "SectorMapGotoSectorPath", l_engine_sector_map_goto_sector_path },
-		{ "SectorMapGotoSystemPath", l_engine_sector_map_goto_system_path },
-		{ "GetSectorMapFactions", l_engine_get_sector_map_factions },
-		{ "SetSectorMapFactionVisible", l_engine_set_sector_map_faction_visible },
-		{ "SectorMapAutoRoute", l_engine_sector_map_auto_route },
-		{ "SectorMapGetRoute", l_engine_sector_map_get_route },
-		{ "SectorMapGetRouteSize", l_engine_sector_map_get_route_size },
-		{ "SectorMapMoveRouteItemUp", l_engine_sector_map_move_route_item_up },
-		{ "SectorMapMoveRouteItemDown", l_engine_sector_map_move_route_item_down },
-		{ "SectorMapRemoveRouteItem", l_engine_sector_map_remove_route_item },
-		{ "SectorMapClearRoute", l_engine_sector_map_clear_route },
-		{ "SectorMapAddToRoute", l_engine_sector_map_add_to_route },
-		{ "SearchNearbyStarSystemsByName", l_engine_search_nearby_star_systems_by_name },
+		{ "WorldSpaceToShipSpace", l_engine_world_space_to_ship_space },
 		{ "ShipSpaceToScreenSpace", l_engine_ship_space_to_screen_space },
 		{ "CameraSpaceToScreenSpace", l_engine_camera_space_to_screen_space },
-		{ "WorldSpaceToScreenSpace", l_engine_world_space_to_screen_space },
-		{ "WorldSpaceToShipSpace", l_engine_world_space_to_ship_space },
+		{ "ProjectRelPosition", l_engine_project_rel_position },
+		{ "ProjectRelDirection", l_engine_project_rel_direction },
+		{ "GetBodyProjectedScreenPosition", l_engine_get_projected_screen_position },
+		{ "GetTargetIndicatorScreenPosition", l_engine_get_target_indicator_screen_position },
 		{ "GetEnumValue", l_engine_get_enum_value },
+
+		{ "RequestProfileFrame", l_engine_request_profile_frame },
 		{ 0, 0 }
 	};
 
 	static const luaL_Reg l_attrs[] = {
 		{ "rand", l_engine_attr_rand },
 		{ "ticks", l_engine_attr_ticks },
-		{ "ui", l_engine_attr_ui },
+		{ "time", l_engine_attr_time },
+		{ "frameTime", l_engine_attr_frame_time },
 		{ "pigui", l_engine_attr_pigui },
 		{ "version", l_engine_attr_version },
 		{ 0, 0 }

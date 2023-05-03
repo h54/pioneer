@@ -13,7 +13,7 @@
   },
   "ANIMAL_MEAT_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "一个主要的争议点是，肉是动物的肉。由于合成蛋白质唾手可得，大多数人认为动物不应该被杀死。虽然肉类在大多数核心系统中是非法的，但活的动物和它们的肉在更传统的世界里是人们生活的重要组成部分。\n\n"
+    "message": "一个主要的争议点是，肉是动物的肉。由于合成蛋白质唾手可得，大多数人认为动物不应该被杀死。虽然肉类在大多数核心系统中是非法的，但活的动物和它们的肉在更传统的世界里是人们生活的重要组成部分。"
   },
   "BATTLE_WEAPONS": {
     "description": "",
@@ -25,7 +25,7 @@
   },
   "CARBON_ORE": {
     "description": "",
-    "message": "碳矿"
+    "message": "煤矿"
   },
   "CARBON_ORE_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
@@ -53,7 +53,7 @@
   },
   "FARM_MACHINERY_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "虽然很少见，偶尔还是有农民捕捉牛拖犁耕田。但在几乎任何一个有农业的地方，机器都被用于土地的耕作，无论是地下栖息地的水培法，还是花园世界无边无际的田野。\n\n"
+    "message": "虽然很少见，偶尔还是有农民捕捉牛拖犁耕田。但在几乎任何一个有农业的地方，机器都被用于土地的耕作，无论是地下栖息地的水培法，还是花园世界无边无际的田野。"
   },
   "FERTILIZER": {
     "description": "",
@@ -157,7 +157,7 @@
   },
   "MILITARY_FUEL_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "在更先进的军事行动中用作燃料。这些驱动装置在运行过程中会产生核废料，必须进行处理。由于其合成性质，军用燃料比氢更昂贵，也不常见，而且不能发现天然存在。"
+    "message": "在更先进的军事行动中使用的燃料。军用驱动器在运行期间会产生放射性废物，必须加以处理。由于其合成性质，军用燃料比普通氢燃料更贵，也更稀有，而且无法从自然环境中找到。"
   },
   "MINING_MACHINERY": {
     "description": "",
@@ -205,7 +205,7 @@
   },
   "RADIOACTIVES_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "核废料由核反应堆和军用超空间推进器制造，是运输和处置最困难和最危险的商品。出于这个原因，大多数星际港都会花钱来清除多余的库存。倾倒核废料是一种严重的犯罪行为。"
+    "message": "由核反应堆和军用超空间飞行器产生的放射性废物是最难运输和处理的最危险的商品。由于这个原因，大多数的星际港都会花钱清除多余的库存。倾倒放射性废物是严重的违法行为。"
   },
   "ROBOTS": {
     "description": "",

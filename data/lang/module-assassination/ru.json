@@ -21,7 +21,7 @@
   },
   "DENY_3": {
     "description": "",
-    "message": "Вы не похожи на человека, способного сделать то, что поручено."
+    "message": "Вы не похожи на человека, способного выполнить это поручение."
   },
   "DENY_4": {
     "description": "",
@@ -49,7 +49,11 @@
   },
   "FLAVOUR_0_ADTEXT": {
     "description": "",
-    "message": "РАЗЫСКИВАЮ: человека для решения проблемы в системе {system}. Моя проблема - {target}."
+    "message": "Требуется: Эвакуация {target} из системы {system}."
+  },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "ТРЕБУЕТСЯ ЭВАКУАЦИЯ"
   },
   "FLAVOUR_0_FAILUREMSG": {
     "description": "",
@@ -69,7 +73,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "ПРЕДЛОЖЕНИЕ: {target} должен навсегда исчезнуть из моей жизни в системе {system}."
+    "message": "Разыскивается: Кто-то, кто убьет {target} из системы {system}."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "УСТРАНЕНИЕ ЦЕЛИ"
   },
   "FLAVOUR_1_FAILUREMSG": {
     "description": "",
@@ -89,11 +97,15 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "УСТРАНЕНИЕ: {target} был недавно замечен в системе {system}."
+    "message": "{target}, к сожалению, больше не нужен в системе {system}. Требуется специалист по эвакуации."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "ОПЕРАЦИЯ ПО ЭВАКУАЦИИ"
   },
   "FLAVOUR_2_FAILUREMSG": {
     "description": "",
-    "message": "Весьма прискорбно, что {target} всё ещё жив и здоров. Вы не получите денег за незавершенный контракт!"
+    "message": "Очень прискорбно, что {target} всё ещё жив и здоров. Вы не получите оплаты, так как не выполнили контракт."
   },
   "FLAVOUR_2_FAILUREMSG2": {
     "description": "",
@@ -109,7 +121,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "ЗАДАНИЕ: {target} должен быть устранен."
+    "message": "Нужен наемный убийца для устранения {target}."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "УНИЧТОЖЕНИЕ"
   },
   "FLAVOUR_3_FAILUREMSG": {
     "description": "",
@@ -117,7 +133,7 @@
   },
   "FLAVOUR_3_FAILUREMSG2": {
     "description": "",
-    "message": "Просите деньги за чужую работу? Проваливайте!"
+    "message": "Ты просишь деньги за работу, которую выполнил кто-то другой? Убирайся."
   },
   "FLAVOUR_3_INTROTEXT": {
     "description": "",
@@ -129,7 +145,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "НА СВАЛКУ истории должен отправиться {target}"
+    "message": "Скрытный оператор, необходимый для обеспечения фатального выхода из строя {target}."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "ОТСТАВКА"
   },
   "FLAVOUR_4_FAILUREMSG": {
     "description": "",
@@ -149,7 +169,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "КОНТРАКТ: требуется человек для деликатной работы. Цель - {target}."
+    "message": "Некоторые поклонники желают смерти {target}. Квалифицированные специалисты по расторжению договора подают заявки внутри."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "БИОГРАФИЯ"
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
@@ -178,10 +202,6 @@
   "IT_MUST_BE_DONE_AFTER": {
     "description": "",
     "message": "Вы должны сделать это когда {target} покинет космопорт {spaceport}. Не упустите момент."
-  },
-  "LY": {
-    "description": "",
-    "message": "св.лет"
   },
   "OK_AGREED": {
     "description": "",

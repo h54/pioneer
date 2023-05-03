@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _MATRIX4X4_H
@@ -8,24 +8,42 @@
 #include "vector3.h"
 #include <math.h>
 #include <stdio.h>
+#include <cassert>
+#include <type_traits>
 
 template <typename T>
 class matrix4x4 {
 private:
 	T cell[16];
+	using other_float_t = typename std::conditional<std::is_same<T, float>::value, double, float>::type;
 
 public:
 	matrix4x4() {}
-	matrix4x4(T val)
+	explicit matrix4x4(T val)
 	{
 		cell[0] = cell[1] = cell[2] = cell[3] = cell[4] = cell[5] = cell[6] =
 			cell[7] = cell[8] = cell[9] = cell[10] = cell[11] = cell[12] = cell[13] =
 				cell[14] = cell[15] = val;
 	}
-	matrix4x4(const T *vals)
+	explicit matrix4x4(const T *vals)
 	{
 		memcpy(cell, vals, sizeof(T) * 16);
 	}
+	matrix4x4(const matrix3x3<T> &m)
+	{
+		LoadFrom3x3Matrix(m.Data());
+	}
+	matrix4x4(const matrix3x3<T> &m, const vector3<T> &v)
+	{
+		LoadFrom3x3Matrix(m.Data());
+		SetTranslate(v);
+	}
+	explicit matrix4x4(const matrix4x4<other_float_t> &m)
+	{
+		for (int i = 0; i < 16; i++)
+			cell[i] = T(m[i]);
+	}
+
 	void SetTranslate(const vector3<T> &v)
 	{
 		cell[12] = v.x;
@@ -37,25 +55,6 @@ public:
 	{
 		for (int i = 0; i < 12; i++)
 			cell[i] = m.cell[i];
-	}
-	matrix4x4(const matrix3x3<T> &m)
-	{
-		cell[0] = m[0];
-		cell[4] = m[1];
-		cell[8] = m[2];
-		cell[12] = 0;
-		cell[1] = m[3];
-		cell[5] = m[4];
-		cell[9] = m[5];
-		cell[13] = 0;
-		cell[2] = m[6];
-		cell[6] = m[7];
-		cell[10] = m[8];
-		cell[14] = 0;
-		cell[3] = 0;
-		cell[7] = 0;
-		cell[11] = 0;
-		cell[15] = 1;
 	}
 	matrix3x3<T> GetOrient() const
 	{
@@ -187,6 +186,25 @@ public:
 		m[15] = 1;
 		return m;
 	}
+
+	///////////////////////////////////////////////////////////////////////////////
+	// Matrix Construction Functions
+	// NOTE: all matrix functions here are optimized for reverse-Z depth buffers.
+	// Compared to "standard" DirectX or OpenGL matricies they invert the Z value
+	// so it ranges from 1.0 at the near plane to 0.0 at the far plane.
+	///////////////////////////////////////////////////////////////////////////////
+
+	// Construct a perspective projection matrix based on arbitrary left/right/top/bottom
+	// plane positions.
+	// This method is slower than the others, but supports view frustrums that are not
+	// aligned with the Z-axis. Unless you know what you're doing, you shouldn't use this.
+	//
+	// @param left - the minimum x-value of the view volume at the near plane
+	// @param right - the maximum x-value of the view volume at the near plane
+	// @param bottom - the maximum y-value of the view volume at the near plane
+	// @param top - the maximum y-value of the view volume at the near plane
+	// @param znear - the near clipping plane
+	// @param zfar - the far clipping plane
 	static matrix4x4 FrustumMatrix(T left, T right, T bottom, T top, T znear, T zfar)
 	{
 		assert((znear > T(0)) && (zfar > T(0)));
@@ -195,47 +213,136 @@ public:
 		const T sy = (T(2) * znear) / (top - bottom);
 		const T A = (right + left) / (right - left);
 		const T B = (top + bottom) / (top - bottom);
-		const T C = -(zfar + znear) / (zfar - znear);
-		const T D = -(T(2) * zfar * znear) / (zfar - znear);
+		const T C = (zfar) / (zfar - znear) - 1;
+		const T D = (zfar * znear) / (zfar - znear);
 		matrix4x4 m;
-		m[0] = sx;
-		m[4] = 0;
-		m[8] = A;
-		m[12] = 0;
-		m[1] = 0;
-		m[5] = sy;
-		m[9] = B;
-		m[13] = 0;
-		m[2] = 0;
-		m[6] = 0;
-		m[10] = C;
-		m[14] = D;
-		m[3] = 0;
-		m[7] = 0;
-		m[11] = -1;
-		m[15] = 0;
-		return m;
+
+		// http://glprogramming.com/red/appendixf.html
+		// OpenGL 'Red Book' on Perspective Projection
+		// Presented here in row-major notation (because that's what matrix4x4f uses internally)
+		T perspective[16] = {
+			sx, 0, 0, 0,
+			0, sy, 0, 0,
+			A, B, C, -1,
+			0, 0, D, 0
+		};
+		return matrix4x4(&perspective[0]);
 	}
+
+	// Construct a perspective projection matrix based field of view and aspect ratio.
+	// This method is the optimized case when you know your screen aspect ratio and
+	// field of view and aren't interested in fancy math. Use this function or
+	// InfinitePerspectiveMatrix if at all possible.
+	//
+	// @param fovR - the camera FOV in radians
+	// @param aspect - the aspect ratio (width / height) of the viewport
+	// @param znear - the near clipping plane
+	// @param zfar - the far clipping plane
+	// @param fovX - whether the field of view is horizontal or vertical (default)
+	static matrix4x4 PerspectiveMatrix(T fovR, T aspect, T znear, T zfar, bool fovX = false)
+	{
+		assert((znear > T(0)) && (zfar > znear));
+
+		const T e = 1 / tan(fovR / T(2));
+		const T x = fovX ? e : e / aspect;
+		const T y = fovX ? e / aspect : e;
+		const T z = (znear) / (zfar - znear);
+		const T w = (zfar * znear) / (zfar - znear);
+
+		// Based on: http://www.terathon.com/gdc07_lengyel.pdf
+		// Unlike gluProject / FrustumMatrix, this projection matrix can only be
+		//  symmetric about the Z axis.
+		// This is what you want in 99% of cases, and simplifies the math a good deal.
+		T perspective[16] = {
+			x, 0, 0, 0,
+			0, y, 0, 0,
+			0, 0, z, -1,
+			0, 0, w, 0
+		};
+
+		return matrix4x4(&perspective[0]);
+	}
+
+	// Construct an infinite far-plane perspective projection matrix.
+	// Unless you specifically want to clip objects beyond a specific distance,
+	// this projection will work for any object at any distance.
+	//
+	// @param fovR - the camera FOV in radians
+	// @param aspect - the aspect ratio (width / height) of the viewport
+	// @param znear - the near clipping plane
+	// @param fovX - whether the field of view is horizontal or vertical (default)
+	static matrix4x4 InfinitePerspectiveMatrix(T fovR, T aspect, T znear, bool fovX = false)
+	{
+		assert(znear > T(0));
+
+		const T e = 1 / tan(fovR / T(2));
+		const T x = fovX ? e : e / aspect;
+		const T y = fovX ? e / aspect : e;
+		const T w = znear;
+
+		// Based on: http://dev.theomader.com/depth-precision/
+		// An 'infinite far-plane' projection matrix. There is no concept of a zFar value,
+		// and it can handle everything up to and including homogeneous coordinates with w=0.
+		T perspective[16] = {
+			x, 0, 0, 0,
+			0, y, 0, 0,
+			0, 0, 0, -1,
+			0, 0, w, 0
+		};
+
+		return matrix4x4(&perspective[0]);
+	}
+
 	///////////////////////////////////////////////////////////////////////////////
 	// set a orthographic frustum with 6 params similar to glOrtho()
 	// (left, right, bottom, top, near, far)
+	//
+	// Derived from:
+	// [1] https://docs.microsoft.com/en-us/windows/win32/direct3d9/d3dxmatrixorthorh
+	// [2] https://thxforthefish.com/posts/reverse_z/
+	//
+	// Specifically, the `tz` and `c` terms are based on a right-handed DirectX-style
+	// (Z=0..1) matrix [1], multiplied by the given reversing matrix [2].
+	// If looking at the sources, keep in mind that [1] is presented in row-major order
+	// and [2] is presented in column-major order, and thus multiplication occurs in
+	// column-column fashion.
 	///////////////////////////////////////////////////////////////////////////////
 	static matrix4x4 OrthoFrustum(T left, T right, T bottom, T top, T znear, T zfar)
 	{
-		assert((znear >= T(-1)) && (zfar > T(0)));
+		assert((znear >= T(-1)) && (zfar >= T(0)));
 		T a = T(2) / (right - left);
 		T b = T(2) / (top - bottom);
-		T c = -T(2) / (zfar - znear);
+		T c = T(1) / (zfar - znear);
 
-		T tx = -(right + left) / (right - left);
-		T ty = -(top + bottom) / (top - bottom);
-		T tz = -(zfar + znear) / (zfar - znear);
+		T tx = (right + left) / (left - right);
+		T ty = (top + bottom) / (bottom - top);
+		T tz = (zfar) / (zfar - znear);
 
 		T ortho[16] = {
 			a, 0, 0, 0,
 			0, b, 0, 0,
 			0, 0, c, 0,
-			tx, ty, tz, T(1)
+			tx, ty, tz, 1
+		};
+		matrix4x4 m(&ortho[0]);
+		return m;
+	}
+
+	// Optimized form that takes width/height and near/far planes
+	static matrix4x4 OrthoMatrix(T width, T height, T znear, T zfar)
+	{
+		assert((znear >= T(-1)) && (zfar > T(0)));
+		T a = T(2) / width;
+		T b = T(2) / height;
+		T c = T(1) / (zfar - znear);
+
+		T tz = (zfar) / (zfar - znear);
+
+		T ortho[16] = {
+			a, 0, 0, 0,
+			0, b, 0, 0,
+			0, 0, c, 0,
+			0, 0, tz, 1
 		};
 		matrix4x4 m(&ortho[0]);
 		return m;
@@ -442,6 +549,37 @@ public:
 		out.z = a.cell[8] * v.x + a.cell[9] * v.y + a.cell[10] * v.z;
 		return out;
 	}
+
+	// Transform a vector by the affine inverse of a matrix4x4
+	// internally this does a transpose operation, and thus only works on
+	// Euclidean (translation + rotation) matricies.
+	vector3<T> InvTransform(const vector3<T> &inVec)
+	{
+		// Formula derivation from songho (https://songho.ca/opengl):
+		//
+		// M = [ R | T ]
+		//     [ --+-- ]    (R denotes 3x3 rotation/reflection matrix)
+		//     [ 0 | 1 ]    (T denotes 1x3 translation matrix)
+		//
+		// y = M*x  ->  y = R*x + T  ->  x = R^-1*(y - T)  ->  x = R^T*y - R^T*T
+		// (R is orthogonal,  R^-1 = R^T)
+
+		// thanks to https://stackoverflow.com/a/2625420
+		// "Depending on your situation, it may be faster to compute the result of
+		// inv(A) * x instead of actually forming inv(A)..."
+		//
+		// inv(A) * [x] = [ inv(M) * (x - b) ]
+		//          [1] = [        1         ]
+		//
+
+		vector3<T> v = inVec - GetTranslate();
+		vector3<T> out;
+		out.x = cell[0] * v.x + cell[1] * v.y + cell[2] * v.z;
+		out.y = cell[4] * v.x + cell[5] * v.y + cell[6] * v.z;
+		out.z = cell[8] * v.x + cell[9] * v.y + cell[10] * v.z;
+		return out;
+	}
+
 	friend matrix4x4 operator*(const matrix4x4 &a, T v)
 	{
 		matrix4x4 m;
@@ -556,17 +694,6 @@ public:
 
 typedef matrix4x4<float> matrix4x4f;
 typedef matrix4x4<double> matrix4x4d;
-
-static inline void matrix4x4ftod(const matrix4x4f &in, matrix4x4d &out)
-{
-	for (int i = 0; i < 16; i++)
-		out[i] = double(in[i]);
-}
-static inline void matrix4x4dtof(const matrix4x4d &in, matrix4x4f &out)
-{
-	for (int i = 0; i < 16; i++)
-		out[i] = float(in[i]);
-}
 
 static const matrix4x4f matrix4x4fIdentity(matrix4x4f::Identity());
 static const matrix4x4d matrix4x4dIdentity(matrix4x4d::Identity());

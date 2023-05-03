@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Geom.h"
@@ -35,7 +35,6 @@ Geom::Geom(const GeomTree *geomtree, const matrix4x4d &m, const vector3d &pos, v
 
 void Geom::MoveTo(const matrix4x4d &m)
 {
-	PROFILE_SCOPED()
 	m_orient = m;
 	m_pos = m_orient.GetTranslate();
 	m_invOrient = m.Inverse();
@@ -43,7 +42,6 @@ void Geom::MoveTo(const matrix4x4d &m)
 
 void Geom::MoveTo(const matrix4x4d &m, const vector3d &pos)
 {
-	PROFILE_SCOPED()
 	m_orient = m;
 	m_pos = pos;
 	m_orient.SetTranslate(pos);
@@ -98,7 +96,6 @@ void Geom::Collide(Geom *b, void (*callback)(CollisionContact *)) const
 
 static bool rotatedAabbIsectsNormalOne(Aabb &a, const matrix4x4d &transA, Aabb &b)
 {
-	PROFILE_SCOPED()
 	Aabb arot;
 	vector3d p[8];
 	p[0] = transA * vector3d(a.min.x, a.min.y, a.min.z);
@@ -183,7 +180,7 @@ void Geom::CollideEdgesWithTrisOf(int &maxContacts, const Geom *b, const matrix4
 void Geom::CollideEdgesTris(int &maxContacts, const BVHNode *edgeNode, const matrix4x4d &transToB,
 	const Geom *b, const BVHNode *btriNode, void (*callback)(CollisionContact *)) const
 {
-	PROFILE_SCOPED()
+	// PROFILE_SCOPED() // verbose profiling only, this gets called a LOT
 	if (maxContacts <= 0) return;
 	if (edgeNode->triIndicesStart) {
 		const GeomTree::Edge *edges = this->GetGeomTree()->GetEdges();

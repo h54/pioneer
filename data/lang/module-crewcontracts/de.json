@@ -19,6 +19,14 @@
     "description": "",
     "message": "Anstellung gesucht"
   },
+  "CREW_FOR_HIRE_DESC": {
+    "description": "",
+    "message": "Mannschaftsmitglieder, die an diesem Raumhafen anheuern möchten."
+  },
+  "CREW_FOR_HIRE_TITLE": {
+    "description": "",
+    "message": "ANSTELLUNG GESUCHT"
+  },
   "GO_BACK": {
     "description": "",
     "message": "Zurück"

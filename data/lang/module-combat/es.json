@@ -13,23 +13,43 @@
   },
   "ADTEXT_1": {
     "description": "",
-    "message": "SE BUSCA PILOTO DE CONFIANZA: Paga {cash}."
+    "message": "Se necesita un piloto cualificado para un encargo clandestino: Pagamos {cash}."
   },
   "ADTEXT_2": {
     "description": "",
-    "message": "DESAFÍO: Se busca nave y tripulación para una misión de combate en el sistema {system}."
+    "message": "Se busca nave y tripulación para una misión de combate en el sistema {system}."
   },
   "ADTEXT_3": {
     "description": "",
-    "message": "COMBATE: Se necesita un mercenario cualificado con una nave bien equipada."
+    "message": "Se necesita mercenario cualificado con una nave bien equipada. Detalles de la misión disponibles bajo petición."
   },
   "ADTEXT_4": {
     "description": "",
-    "message": "SE BUSCA MERCENARIO AUDAZ: Se paga {cash} por una misión al sistema {system}."
+    "message": "{org} solicita un mercenario audaz para una misión al sistema {system}. Se abonarán {cash}."
   },
   "ADTEXT_5": {
     "description": "",
     "message": "Misión de {mission}: Salario {cash}."
+  },
+  "ADTITLE_1": {
+    "description": "",
+    "message": "SE BUSCA PILOTO DE CONFIANZA"
+  },
+  "ADTITLE_2": {
+    "description": "",
+    "message": "RESOLUCÓN DE DESAFÍO"
+  },
+  "ADTITLE_3": {
+    "description": "",
+    "message": "COMBATE AEREO"
+  },
+  "ADTITLE_4": {
+    "description": "",
+    "message": "SE BUSCA MERCENARIO AUDAZ"
+  },
+  "ADTITLE_5": {
+    "description": "",
+    "message": "MISIÓN DE COMBATE AUTORIZADA"
   },
   "AGENT": {
     "description": "Secret Service Agent",
@@ -175,10 +195,6 @@
     "description": "",
     "message": "¿Hay límite de tiempo?"
   },
-  "LY": {
-    "description": "",
-    "message": "AL"
-  },
   "MANAGER": {
     "description": "",
     "message": "Gerente"
@@ -235,6 +251,10 @@
     "description": "Message from the ship computer",
     "message": "Objetivo de la misión principal completado"
   },
+  "MISSION_INFO": {
+    "description": "Message from the ship computer",
+    "message": "Área objetivo alcanzada. Iniciando el registro de datos. Tiempo máximo previsto de la misión {duration}."
+  },
   "MISSION_TYPE_1": {
     "description": "Name of mission type",
     "message": "Reconocimiento"
@@ -246,6 +266,10 @@
   "MISSION_TYPE_3": {
     "description": "Name of mission type. Derived from Fighter Sweep. An aggressive mission to hunt down and destroy every enemy fighter in the allotted area.",
     "message": "Barrido de Area"
+  },
+  "MISSION_WARNING": {
+    "description": "Message from the ship computer",
+    "message": "Área objetivo demasiado alejada. No se puede completar la recopilación de datos."
   },
   "OBJECTIVE_1": {
     "description": "",
@@ -277,7 +301,7 @@
   },
   "POLICE_2": {
     "description": "{area} is an asteroid or planet",
-    "message": "{org} pagará {cash} por una misión de combate en el sistema {system} ({sectorx}, {sectory}, {sectorz}). Andamos cortos de pilotos y naves. Por eso esto será una oportunidad de hacer dinero para un ciudadano leal. El objetivo es una pequeña base pirata en {area}. Necesitarás  propelente de hipermotor para {dist} ly y fuel adicional para la ruta de regreso."
+    "message": "{org} pagará {cash} por una misión de combate en el sistema {system} ({sectorx}, {sectory}, {sectorz}). Andamos cortos de pilotos y naves. Por eso esto será una oportunidad de hacer dinero para un ciudadano leal. El objetivo es una pequeña base pirata en {area}. Necesitarás  propelente de hiperimpulsor para {dist} ly y fuel adicional para la ruta de regreso."
   },
   "POLICE_3": {
     "description": "{area} is an asteroid or planet",
@@ -290,6 +314,10 @@
   "POLICE_LAND_THERE": {
     "description": "",
     "message": "Símplemente atraca en una estación con una oficina de {org} "
+  },
+  "RADAR_NOT_INSTALLED": {
+    "description": "",
+    "message": "Lo siento, no creo que pueda hacer eso sin un radar."
   },
   "RISK_1": {
     "description": "",
@@ -330,6 +358,10 @@
   "SYSTEM": {
     "description": "",
     "message": "Sistema:"
+  },
+  "TARGET_AREA_REACHED": {
+    "description": "",
+    "message": "Area objetivo alcanzada. Iniciar registro de datos."
   },
   "TIME_LIMIT": {
     "description": "",

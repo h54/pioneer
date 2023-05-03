@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Space.h"
@@ -28,390 +28,6 @@
 
 //#define DEBUG_CACHE
 
-void Space::BodyNearFinder::Prepare()
-{
-	m_bodyDist.clear();
-
-	for (Body *b : m_space->GetBodies())
-		m_bodyDist.emplace_back(b, b->GetPositionRelTo(m_space->GetRootFrame()).Length());
-
-	std::sort(m_bodyDist.begin(), m_bodyDist.end());
-}
-
-Space::BodyNearList Space::BodyNearFinder::GetBodiesMaybeNear(const Body *b, double dist)
-{
-	return GetBodiesMaybeNear(b->GetPositionRelTo(m_space->GetRootFrame()), dist);
-}
-
-Space::BodyNearList Space::BodyNearFinder::GetBodiesMaybeNear(const vector3d &pos, double dist)
-{
-	if (m_bodyDist.empty()) {
-		m_nearBodies.clear();
-		return std::move(m_nearBodies);
-	}
-
-	const double len = pos.Length();
-
-	std::vector<BodyDist>::const_iterator min = std::lower_bound(m_bodyDist.begin(), m_bodyDist.end(), len - dist);
-	std::vector<BodyDist>::const_iterator max = std::upper_bound(min, m_bodyDist.cend(), len + dist);
-
-	m_nearBodies.clear();
-	m_nearBodies.reserve(max - min);
-
-	std::for_each(min, max, [&](BodyDist const &bd) { m_nearBodies.push_back(bd.body); });
-
-	return std::move(m_nearBodies);
-}
-
-Space::Space(Game *game, RefCountedPtr<Galaxy> galaxy, Space *oldSpace) :
-	m_starSystemCache(oldSpace ? oldSpace->m_starSystemCache : galaxy->NewStarSystemSlaveCache()),
-	m_game(game),
-	m_bodyIndexValid(false),
-	m_sbodyIndexValid(false),
-	m_bodyNearFinder(this)
-#ifndef NDEBUG
-	,
-	m_processingFinalizationQueue(false)
-#endif
-{
-	m_background.reset(new Background::Container(Pi::renderer, Pi::rng, this, m_game->GetGalaxy()));
-
-	m_rootFrameId = Frame::CreateFrame(FrameId::Invalid, Lang::SYSTEM, Frame::FLAG_DEFAULT, FLT_MAX);
-
-	GenSectorCache(galaxy, &game->GetHyperspaceDest());
-}
-
-Space::Space(Game *game, RefCountedPtr<Galaxy> galaxy, const SystemPath &path, Space *oldSpace) :
-	m_starSystemCache(oldSpace ? oldSpace->m_starSystemCache : galaxy->NewStarSystemSlaveCache()),
-	m_starSystem(galaxy->GetStarSystem(path)),
-	m_game(game),
-	m_bodyIndexValid(false),
-	m_sbodyIndexValid(false),
-	m_bodyNearFinder(this)
-#ifndef NDEBUG
-	,
-	m_processingFinalizationQueue(false)
-#endif
-{
-	Uint32 _init[5] = { path.systemIndex, Uint32(path.sectorX), Uint32(path.sectorY), Uint32(path.sectorZ), UNIVERSE_SEED };
-	Random rand(_init, 5);
-	m_background.reset(new Background::Container(Pi::renderer, rand, this, m_game->GetGalaxy()));
-
-	CityOnPlanet::SetCityModelPatterns(m_starSystem->GetPath());
-
-	m_rootFrameId = Frame::CreateFrame(FrameId::Invalid, Lang::SYSTEM, Frame::FLAG_DEFAULT, FLT_MAX);
-
-	std::vector<vector3d> positionAccumulator;
-	GenBody(m_game->GetTime(), m_starSystem->GetRootBody().Get(), m_rootFrameId, positionAccumulator);
-	Frame::UpdateOrbitRails(m_game->GetTime(), m_game->GetTimeStep());
-
-	GenSectorCache(galaxy, &path);
-}
-
-Space::Space(Game *game, RefCountedPtr<Galaxy> galaxy, const Json &jsonObj, double at_time) :
-	m_starSystemCache(galaxy->NewStarSystemSlaveCache()),
-	m_game(game),
-	m_bodyIndexValid(false),
-	m_sbodyIndexValid(false),
-	m_bodyNearFinder(this)
-#ifndef NDEBUG
-	,
-	m_processingFinalizationQueue(false)
-#endif
-{
-	Json spaceObj = jsonObj["space"];
-
-	m_starSystem = StarSystem::FromJson(galaxy, spaceObj);
-
-	const SystemPath &path = m_starSystem->GetPath();
-	Uint32 _init[5] = { path.systemIndex, Uint32(path.sectorX), Uint32(path.sectorY), Uint32(path.sectorZ), UNIVERSE_SEED };
-	Random rand(_init, 5);
-	m_background.reset(new Background::Container(Pi::renderer, rand, this, m_game->GetGalaxy()));
-
-	RebuildSystemBodyIndex();
-
-	CityOnPlanet::SetCityModelPatterns(m_starSystem->GetPath());
-
-	if (!spaceObj.count("frame")) throw SavedGameCorruptException();
-	m_rootFrameId = Frame::FromJson(spaceObj["frame"], this, FrameId::Invalid, at_time);
-
-	try {
-		Json bodyArray = spaceObj["bodies"].get<Json::array_t>();
-		for (Uint32 i = 0; i < bodyArray.size(); i++)
-			m_bodies.push_back(Body::FromJson(bodyArray[i], this));
-	} catch (Json::type_error &) {
-		throw SavedGameCorruptException();
-	}
-
-	RebuildBodyIndex();
-
-	Frame::PostUnserializeFixup(m_rootFrameId, this);
-	for (Body *b : m_bodies)
-		b->PostLoadFixup(this);
-
-	GenSectorCache(galaxy, &path);
-
-	//DebugDumpFrames();
-}
-
-Space::~Space()
-{
-	UpdateBodies(); // make sure anything waiting to be removed gets removed before we go and kill everything else
-	for (std::list<Body *>::iterator i = m_bodies.begin(); i != m_bodies.end(); ++i)
-		KillBody(*i);
-	UpdateBodies();
-	Frame::DeleteFrames();
-}
-
-void Space::RefreshBackground()
-{
-	const SystemPath &path = m_starSystem->GetPath();
-	Uint32 _init[5] = { path.systemIndex, Uint32(path.sectorX), Uint32(path.sectorY), Uint32(path.sectorZ), UNIVERSE_SEED };
-	Random rand(_init, 5);
-	m_background.reset(new Background::Container(Pi::renderer, rand, this, m_game->GetGalaxy()));
-}
-
-void Space::ToJson(Json &jsonObj)
-{
-	PROFILE_SCOPED()
-	RebuildBodyIndex();
-	RebuildSystemBodyIndex();
-
-	Json spaceObj({}); // Create JSON object to contain space data (all the bodies and things).
-
-	StarSystem::ToJson(spaceObj, m_starSystem.Get());
-
-	Json frameObj({});
-	Frame::ToJson(frameObj, m_rootFrameId, this);
-	spaceObj["frame"] = frameObj;
-
-	Json bodyArray = Json::array(); // Create JSON array to contain body data.
-	for (Body *b : m_bodies) {
-		Json bodyArrayEl({}); // Create JSON object to contain body.
-		b->ToJson(bodyArrayEl, this);
-		bodyArray.push_back(bodyArrayEl); // Append body object to array.
-	}
-	spaceObj["bodies"] = bodyArray; // Add body array to space object.
-
-	jsonObj["space"] = spaceObj; // Add space object to supplied object.
-}
-
-Body *Space::GetBodyByIndex(Uint32 idx) const
-{
-	assert(m_bodyIndexValid);
-	assert(m_bodyIndex.size() > idx);
-	return m_bodyIndex[idx];
-}
-
-SystemBody *Space::GetSystemBodyByIndex(Uint32 idx) const
-{
-	assert(m_sbodyIndexValid);
-	assert(m_sbodyIndex.size() > idx);
-	return m_sbodyIndex[idx];
-}
-
-Uint32 Space::GetIndexForBody(const Body *body) const
-{
-	assert(m_bodyIndexValid);
-	for (Uint32 i = 0; i < m_bodyIndex.size(); i++)
-		if (m_bodyIndex[i] == body) return i;
-	assert(0);
-	return Uint32(-1);
-}
-
-Uint32 Space::GetIndexForSystemBody(const SystemBody *sbody) const
-{
-	assert(m_sbodyIndexValid);
-	for (Uint32 i = 0; i < m_sbodyIndex.size(); i++)
-		if (m_sbodyIndex[i] == sbody) return i;
-	assert(0);
-	return Uint32(-1);
-}
-
-void Space::AddSystemBodyToIndex(SystemBody *sbody)
-{
-	assert(sbody);
-	m_sbodyIndex.push_back(sbody);
-	for (Uint32 i = 0; i < sbody->GetNumChildren(); i++)
-		AddSystemBodyToIndex(sbody->GetChildren()[i]);
-}
-
-void Space::RebuildBodyIndex()
-{
-	m_bodyIndex.clear();
-	m_bodyIndex.push_back(nullptr);
-
-	for (Body *b : m_bodies) {
-		m_bodyIndex.push_back(b);
-		// also index ships inside clouds
-		// XXX we should not have to know about this. move indexing grunt work
-		// down into the bodies?
-		if (b->IsType(Object::HYPERSPACECLOUD)) {
-			Ship *s = static_cast<HyperspaceCloud *>(b)->GetShip();
-			if (s) m_bodyIndex.push_back(s);
-		}
-	}
-
-	Pi::SetAmountBackgroundStars(Pi::GetAmountBackgroundStars());
-
-	m_bodyIndexValid = true;
-}
-
-void Space::RebuildSystemBodyIndex()
-{
-	m_sbodyIndex.clear();
-	m_sbodyIndex.push_back(nullptr);
-
-	if (m_starSystem)
-		AddSystemBodyToIndex(m_starSystem->GetRootBody().Get());
-
-	m_sbodyIndexValid = true;
-}
-
-void Space::AddBody(Body *b)
-{
-	m_bodies.push_back(b);
-}
-
-void Space::RemoveBody(Body *b)
-{
-#ifndef NDEBUG
-	assert(!m_processingFinalizationQueue);
-#endif
-	m_removeBodies.push_back(b);
-}
-
-void Space::KillBody(Body *b)
-{
-#ifndef NDEBUG
-	assert(!m_processingFinalizationQueue);
-#endif
-	if (!b->IsDead()) {
-		b->MarkDead();
-
-		// player needs to stay alive so things like the death animation
-		// (which uses a camera positioned relative to the player) can
-		// continue to work. it will be cleaned up with the space is torn down
-		// XXX this seems like the wrong way to do it. since its still "alive"
-		// it still collides, moves, etc. better to just snapshot its position
-		// elsewhere
-		if (b != Pi::player)
-			m_killBodies.push_back(b);
-	}
-}
-
-void Space::GetHyperspaceExitParams(const SystemPath &source, const SystemPath &dest,
-	vector3d &pos, vector3d &vel) const
-{
-	assert(m_starSystem);
-	assert(source.IsSystemPath());
-
-	assert(dest.IsSameSystem(m_starSystem->GetPath()));
-
-	RefCountedPtr<const Sector> source_sec = m_sectorCache->GetCached(source);
-	RefCountedPtr<const Sector> dest_sec = m_sectorCache->GetCached(dest);
-
-	Sector::System source_sys = source_sec->m_systems[source.systemIndex];
-	Sector::System dest_sys = dest_sec->m_systems[dest.systemIndex];
-
-	const vector3d sourcePos = vector3d(source_sys.GetFullPosition());
-	const vector3d destPos = vector3d(dest_sys.GetFullPosition());
-
-	Body *primary = 0;
-	if (dest.IsBodyPath()) {
-		assert(dest.bodyIndex < m_starSystem->GetNumBodies());
-		primary = FindBodyForPath(&dest);
-		while (primary && primary->GetSystemBody()->GetSuperType() != SystemBody::SUPERTYPE_STAR) {
-			SystemBody *parent = primary->GetSystemBody()->GetParent();
-			primary = parent ? FindBodyForPath(&parent->GetPath()) : 0;
-		}
-	}
-	if (!primary) {
-		// find the first non-gravpoint. should be the primary star
-		for (Body *b : GetBodies())
-			if (b->GetSystemBody()->GetType() != SystemBody::TYPE_GRAVPOINT) {
-				primary = b;
-				break;
-			}
-	}
-	assert(primary);
-
-	// calculate distance to primary body relative to body's mass and radius
-	const double max_orbit_vel = 100e3;
-	double dist = G * primary->GetSystemBody()->GetMass() /
-		(max_orbit_vel * max_orbit_vel);
-
-	// ensure an absolute minimum and an absolute maximum distance
-	dist = Clamp(dist, 0.2 * AU, std::max(primary->GetSystemBody()->GetRadius() * 1.1, 100 * AU));
-
-	// point velocity vector along the line from source to dest,
-	// make exit position perpendicular to it,
-	// add random component to exit position,
-	// set velocity for (almost) circular orbit
-	vel = (destPos - sourcePos).Normalized();
-	{
-		vector3d a{ MathUtil::OrthogonalDirection(vel) };
-		vector3d b{ vel.Cross(a) };
-		vector3d p{ MathUtil::RandomPointOnCircle(1.) };
-		pos = p.x * a + p.y * b;
-	}
-	pos *= dist * Pi::rng.Double(0.95, 1.2);
-	vel *= sqrt(G * primary->GetSystemBody()->GetMass() / dist);
-
-	assert(pos.Length() > primary->GetSystemBody()->GetRadius());
-	pos += primary->GetPositionRelTo(GetRootFrame());
-}
-
-Body *Space::FindNearestTo(const Body *b, Object::Type t) const
-{
-	Body *nearest = 0;
-	double dist = FLT_MAX;
-	for (std::list<Body *>::const_iterator i = m_bodies.begin(); i != m_bodies.end(); ++i) {
-		if ((*i)->IsDead()) continue;
-		if ((*i)->IsType(t)) {
-			double d = (*i)->GetPositionRelTo(b).Length();
-			if (d < dist) {
-				dist = d;
-				nearest = *i;
-			}
-		}
-	}
-	return nearest;
-}
-
-Body *Space::FindBodyForPath(const SystemPath *path) const
-{
-	// it is a bit dumb that currentSystem is not part of Space...
-	SystemBody *body = m_starSystem->GetBodyByPath(path);
-
-	if (!body) return 0;
-
-	for (Body *b : m_bodies) {
-		if (b->GetSystemBody() == body) return b;
-	}
-	return 0;
-}
-
-static FrameId find_frame_with_sbody(FrameId fId, const SystemBody *b)
-{
-	Frame *f = Frame::GetFrame(fId);
-	if (f->GetSystemBody() == b)
-		return fId;
-	else {
-		for (FrameId kid : f->GetChildren()) {
-			FrameId found = find_frame_with_sbody(kid, b);
-			if (found.valid())
-				return found;
-		}
-	}
-	return FrameId::Invalid;
-}
-
-FrameId Space::GetFrameWithSystemBody(const SystemBody *b) const
-{
-	return find_frame_with_sbody(m_rootFrameId, b);
-}
-
 static void RelocateStarportIfNecessary(SystemBody *sbody, Planet *planet, vector3d &pos, matrix3x3d &rot, const std::vector<vector3d> &prevPositions)
 {
 	const double radius = planet->GetSystemBody()->GetRadius();
@@ -421,8 +37,8 @@ static void RelocateStarportIfNecessary(SystemBody *sbody, Planet *planet, vecto
 	pos = rot * vector3d(0, 1, 0);
 
 	// Check if height varies too much around the starport center
-	// by sampling 6 points around it. try upto 100 new positions randomly until a match is found
-	// this is not guaranteed to find a match but greatly increases the chancessteroids which are not too steep.
+	// by sampling 6 points around it. Try up to 100 new positions randomly until a match is found.
+	// This is not guaranteed to find a match but greatly increases the chancessteroids which are not too steep.
 
 	bool variationWithinLimits = true;
 	double bestVariation = 1e10; // any high value
@@ -461,7 +77,7 @@ static void RelocateStarportIfNecessary(SystemBody *sbody, Planet *planet, vecto
 
 		// check height at 6 points around the starport center stays within variation tolerances
 		// GetHeight gives a varying height field in 3 dimensions.
-		// Given it's smoothly varying it's fine to sample it in arbitary directions to get an idea of how sharply it varies
+		// Given it's smoothly varying it's fine to sample it in arbitrary directions to get an idea of how sharply it varies
 		double v[6];
 		v[0] = fabs(planet->GetTerrainHeight(vector3d(pos_.x + delta, pos_.y, pos_.z)) - radius - height);
 		v[1] = fabs(planet->GetTerrainHeight(vector3d(pos_.x - delta, pos_.y, pos_.z)) - radius - height);
@@ -535,6 +151,451 @@ static void RelocateStarportIfNecessary(SystemBody *sbody, Planet *planet, vecto
 				sbody->GetName().c_str(), sbody->GetParent()->GetName().c_str(), p.sectorX, p.sectorY, p.sectorZ);
 		}
 	}
+}
+
+void Space::BodyNearFinder::Prepare()
+{
+	PROFILE_SCOPED()
+	m_bodyDist.clear();
+
+	for (Body *b : m_space->GetBodies())
+		m_bodyDist.emplace_back(b, b->GetPositionRelTo(m_space->GetRootFrame()).Length());
+
+	std::sort(m_bodyDist.begin(), m_bodyDist.end());
+}
+
+Space::BodyNearList Space::BodyNearFinder::GetBodiesMaybeNear(const Body *b, double dist)
+{
+	return GetBodiesMaybeNear(b->GetPositionRelTo(m_space->GetRootFrame()), dist);
+}
+
+Space::BodyNearList Space::BodyNearFinder::GetBodiesMaybeNear(const vector3d &pos, double dist)
+{
+	if (m_bodyDist.empty()) {
+		m_nearBodies.clear();
+		return std::move(m_nearBodies);
+	}
+
+	const double len = pos.Length();
+
+	std::vector<BodyDist>::const_iterator min = std::lower_bound(m_bodyDist.begin(), m_bodyDist.end(), len - dist);
+	std::vector<BodyDist>::const_iterator max = std::upper_bound(min, m_bodyDist.cend(), len + dist);
+
+	m_nearBodies.clear();
+	m_nearBodies.reserve(max - min);
+
+	std::for_each(min, max, [&](BodyDist const &bd) { m_nearBodies.push_back(bd.body); });
+
+	return std::move(m_nearBodies);
+}
+
+Space::Space(Game *game, RefCountedPtr<Galaxy> galaxy, Space *oldSpace) :
+	m_starSystemCache(oldSpace ? oldSpace->m_starSystemCache : galaxy->NewStarSystemSlaveCache()),
+	m_game(game),
+	m_bodyIndexValid(false),
+	m_sbodyIndexValid(false),
+	m_bodyNearFinder(this)
+#ifndef NDEBUG
+	,
+	m_processingFinalizationQueue(false)
+#endif
+{
+	m_background.reset(new Background::Container(Pi::renderer, Pi::rng, this, m_game->GetGalaxy()));
+
+	m_rootFrameId = Frame::CreateFrame(FrameId::Invalid, Lang::SYSTEM, Frame::FLAG_DEFAULT, FLT_MAX);
+
+	GenSectorCache(galaxy, &game->GetHyperspaceDest());
+}
+
+Space::Space(Game *game, RefCountedPtr<Galaxy> galaxy, const SystemPath &path, Space *oldSpace) :
+	m_starSystemCache(oldSpace ? oldSpace->m_starSystemCache : galaxy->NewStarSystemSlaveCache()),
+	m_starSystem(galaxy->GetStarSystem(path)),
+	m_game(game),
+	m_bodyIndexValid(false),
+	m_sbodyIndexValid(false),
+	m_bodyNearFinder(this)
+#ifndef NDEBUG
+	,
+	m_processingFinalizationQueue(false)
+#endif
+{
+	PROFILE_SCOPED()
+	Uint32 _init[5] = { path.systemIndex, Uint32(path.sectorX), Uint32(path.sectorY), Uint32(path.sectorZ), UNIVERSE_SEED };
+	Random rand(_init, 5);
+	m_background.reset(new Background::Container(Pi::renderer, rand, this, m_game->GetGalaxy()));
+
+	CityOnPlanet::SetCityModelPatterns(m_starSystem->GetPath());
+
+	m_rootFrameId = Frame::CreateFrame(FrameId::Invalid, Lang::SYSTEM, Frame::FLAG_DEFAULT, FLT_MAX);
+
+	std::vector<vector3d> positionAccumulator;
+	GenBody(m_game->GetTime(), m_starSystem->GetRootBody().Get(), m_rootFrameId, positionAccumulator);
+	Frame::UpdateOrbitRails(m_game->GetTime(), m_game->GetTimeStep());
+
+	GenSectorCache(galaxy, &path);
+}
+
+Space::Space(Game *game, RefCountedPtr<Galaxy> galaxy, const Json &jsonObj, double at_time) :
+	m_starSystemCache(galaxy->NewStarSystemSlaveCache()),
+	m_game(game),
+	m_bodyIndexValid(false),
+	m_sbodyIndexValid(false),
+	m_bodyNearFinder(this)
+#ifndef NDEBUG
+	,
+	m_processingFinalizationQueue(false)
+#endif
+{
+	PROFILE_SCOPED()
+	Json spaceObj = jsonObj["space"];
+
+	m_starSystem = StarSystem::FromJson(galaxy, spaceObj);
+
+	const SystemPath &path = m_starSystem->GetPath();
+	Uint32 _init[5] = { path.systemIndex, Uint32(path.sectorX), Uint32(path.sectorY), Uint32(path.sectorZ), UNIVERSE_SEED };
+	Random rand(_init, 5);
+	m_background.reset(new Background::Container(Pi::renderer, rand, this, m_game->GetGalaxy()));
+
+	RebuildSystemBodyIndex();
+
+	CityOnPlanet::SetCityModelPatterns(m_starSystem->GetPath());
+
+	if (!spaceObj.count("frame")) throw SavedGameCorruptException();
+	m_rootFrameId = Frame::FromJson(spaceObj["frame"], this, FrameId::Invalid, at_time);
+
+	try {
+		Json bodyArray = spaceObj["bodies"].get<Json::array_t>();
+		for (Uint32 i = 0; i < bodyArray.size(); i++)
+			m_bodies.push_back(Body::FromJson(bodyArray[i], this));
+	} catch (Json::type_error &) {
+		throw SavedGameCorruptException();
+	}
+
+	RebuildBodyIndex();
+
+	Frame::PostUnserializeFixup(m_rootFrameId, this);
+	for (Body *b : m_bodies)
+		b->PostLoadFixup(this);
+
+	// some spaceports could be moved, now their physical bodies were loaded from
+	// json, with offsets, now we should move the system bodies also so that
+	// there is no mismatch
+	for (auto sbody : m_starSystem->GetBodies()) {
+		if (sbody->GetSuperType() == SystemBody::SUPERTYPE_ROCKY_PLANET) {
+			// needs a clean posAccum for each planet
+			std::vector<vector3d> posAccum;
+			SystemPath planet_path = m_starSystem->GetPathOf(sbody.Get());
+			Planet *planet = static_cast<Planet *>(FindBodyForPath(&planet_path));
+			for (auto kid : sbody->GetChildren()) {
+				if (kid->GetType() == SystemBody::TYPE_STARPORT_SURFACE) {
+					// out arguments
+					matrix3x3d rot;
+					vector3d pos;
+					RelocateStarportIfNecessary(kid, planet, pos, rot, posAccum);
+					// the surface starport's location is stored in its "orbit", as orientation matrix
+					kid->SetOrbitPlane(rot);
+					// accumulate for testing against
+					posAccum.push_back(pos);
+				}
+			}
+		}
+	}
+
+	GenSectorCache(galaxy, &path);
+
+	//DebugDumpFrames();
+}
+
+Space::~Space()
+{
+	UpdateBodies(); // make sure anything waiting to be removed gets removed before we go and kill everything else
+	for (Body *body : m_bodies)
+		KillBody(body);
+	UpdateBodies();
+	Frame::DeleteFrames();
+}
+
+void Space::RefreshBackground()
+{
+	PROFILE_SCOPED()
+	const SystemPath &path = m_starSystem->GetPath();
+	Uint32 _init[5] = { path.systemIndex, Uint32(path.sectorX), Uint32(path.sectorY), Uint32(path.sectorZ), UNIVERSE_SEED };
+	Random rand(_init, 5);
+	m_background.reset(new Background::Container(Pi::renderer, rand, this, m_game->GetGalaxy()));
+}
+
+void Space::ToJson(Json &jsonObj)
+{
+	PROFILE_SCOPED()
+	RebuildBodyIndex();
+	RebuildSystemBodyIndex();
+
+	Json spaceObj({}); // Create JSON object to contain space data (all the bodies and things).
+
+	StarSystem::ToJson(spaceObj, m_starSystem.Get());
+
+	Json frameObj({});
+	Frame::ToJson(frameObj, m_rootFrameId, this);
+	spaceObj["frame"] = frameObj;
+
+	Json bodyArray = Json::array(); // Create JSON array to contain body data.
+	for (Body *b : m_bodies) {
+		Json bodyArrayEl({}); // Create JSON object to contain body.
+		b->ToJson(bodyArrayEl, this);
+		bodyArray.push_back(bodyArrayEl); // Append body object to array.
+	}
+	spaceObj["bodies"] = bodyArray; // Add body array to space object.
+
+	jsonObj["space"] = spaceObj; // Add space object to supplied object.
+}
+
+Body *Space::GetBodyByIndex(Uint32 idx) const
+{
+	assert(m_bodyIndexValid);
+	assert(m_bodyIndex.size() > idx);
+	if (idx == SDL_MAX_UINT32 || m_bodyIndex.size() <= idx) {
+		Output("GetBodyByIndex passed bad index %u", idx);
+		return nullptr;
+	}
+	return m_bodyIndex[idx];
+}
+
+SystemBody *Space::GetSystemBodyByIndex(Uint32 idx) const
+{
+	assert(m_sbodyIndexValid);
+	assert(m_sbodyIndex.size() > idx);
+	return m_sbodyIndex[idx];
+}
+
+Uint32 Space::GetIndexForBody(const Body *body) const
+{
+	assert(m_bodyIndexValid);
+	for (Uint32 i = 0; i < m_bodyIndex.size(); i++)
+		if (m_bodyIndex[i] == body) return i;
+	assert(false);
+	Output("GetIndexForBody passed unknown body");
+	return SDL_MAX_UINT32;
+}
+
+Uint32 Space::GetIndexForSystemBody(const SystemBody *sbody) const
+{
+	assert(m_sbodyIndexValid);
+	for (Uint32 i = 0; i < m_sbodyIndex.size(); i++)
+		if (m_sbodyIndex[i] == sbody) return i;
+	assert(0);
+	return SDL_MAX_UINT32;
+}
+
+void Space::AddSystemBodyToIndex(SystemBody *sbody)
+{
+	assert(sbody);
+	m_sbodyIndex.push_back(sbody);
+	for (Uint32 i = 0; i < sbody->GetNumChildren(); i++)
+		AddSystemBodyToIndex(sbody->GetChildren()[i]);
+}
+
+void Space::RebuildBodyIndex()
+{
+	m_bodyIndex.clear();
+	m_bodyIndex.push_back(nullptr);
+
+	for (Body *b : m_bodies) {
+		m_bodyIndex.push_back(b);
+		// also index ships inside clouds
+		// XXX we should not have to know about this. move indexing grunt work
+		// down into the bodies?
+		if (b->IsType(ObjectType::HYPERSPACECLOUD)) {
+			Ship *s = static_cast<HyperspaceCloud *>(b)->GetShip();
+			if (s) m_bodyIndex.push_back(s);
+		}
+	}
+
+	Pi::SetAmountBackgroundStars(Pi::GetAmountBackgroundStars());
+	Pi::SetStarFieldStarSizeFactor(Pi::GetStarFieldStarSizeFactor());
+
+	m_bodyIndexValid = true;
+}
+
+void Space::RebuildSystemBodyIndex()
+{
+	m_sbodyIndex.clear();
+	m_sbodyIndex.push_back(nullptr);
+
+	if (m_starSystem)
+		AddSystemBodyToIndex(m_starSystem->GetRootBody().Get());
+
+	m_sbodyIndexValid = true;
+}
+
+void Space::AddBody(Body *b)
+{
+	m_bodies.push_back(b);
+}
+
+void Space::RemoveBody(Body *b)
+{
+#ifndef NDEBUG
+	assert(!m_processingFinalizationQueue);
+#endif
+	m_assignedBodies.emplace_back(b, BodyAssignation::REMOVE);
+}
+
+void Space::KillBody(Body *b)
+{
+#ifndef NDEBUG
+	assert(!m_processingFinalizationQueue);
+#endif
+	if (!b->IsDead()) {
+		b->MarkDead();
+
+		// player needs to stay alive so things like the death animation
+		// (which uses a camera positioned relative to the player) can
+		// continue to work. it will be cleaned up with the space is torn down
+		// XXX this seems like the wrong way to do it. since its still "alive"
+		// it still collides, moves, etc. better to just snapshot its position
+		// elsewhere
+		if (b != Pi::player)
+			m_assignedBodies.emplace_back(b, BodyAssignation::KILL);
+	}
+}
+
+void Space::GetHyperspaceExitParams(const SystemPath &source, const SystemPath &dest,
+	vector3d &pos, vector3d &vel) const
+{
+	assert(m_starSystem);
+	assert(source.IsSystemPath());
+
+	assert(dest.IsSameSystem(m_starSystem->GetPath()));
+
+	RefCountedPtr<const Sector> source_sec = m_sectorCache->GetCached(source);
+	RefCountedPtr<const Sector> dest_sec = m_sectorCache->GetCached(dest);
+
+	Sector::System source_sys = source_sec->m_systems[source.systemIndex];
+	Sector::System dest_sys = dest_sec->m_systems[dest.systemIndex];
+
+	const vector3d sourcePos = vector3d(source_sys.GetFullPosition());
+	const vector3d destPos = vector3d(dest_sys.GetFullPosition());
+
+	Body *primary = 0;
+	if (dest.IsBodyPath()) {
+		assert(dest.bodyIndex < m_starSystem->GetNumBodies());
+		primary = FindBodyForPath(&dest);
+		while (primary && primary->GetSystemBody()->GetSuperType() != SystemBody::SUPERTYPE_STAR) {
+			SystemBody *parent = primary->GetSystemBody()->GetParent();
+			primary = parent ? FindBodyForPath(&parent->GetPath()) : 0;
+		}
+	}
+	if (!primary) {
+		// find the first non-gravpoint. should be the primary star
+		for (Body *b : GetBodies())
+			if (b->GetSystemBody()->GetType() != SystemBody::TYPE_GRAVPOINT) {
+				primary = b;
+				break;
+			}
+	}
+	assert(primary);
+
+	// calculate distance to primary body relative to body's mass and radius
+	const double max_orbit_vel = 100e3;
+	double dist = G * primary->GetSystemBody()->GetMass() /
+		(max_orbit_vel * max_orbit_vel);
+
+	// ensure an absolute minimum and an absolute maximum distance
+	// the minimum distance from the center of the star should not be less than the radius of the star
+	dist = Clamp(dist, primary->GetSystemBody()->GetRadius() * 1.1, std::max(primary->GetSystemBody()->GetRadius() * 1.1, 100 * AU));
+
+	// point velocity vector along the line from source to dest,
+	// make exit position perpendicular to it,
+	// add random component to exit position,
+	// set velocity for (almost) circular orbit
+	vel = (destPos - sourcePos).Normalized();
+	{
+		vector3d a{ MathUtil::OrthogonalDirection(vel) };
+		vector3d b{ vel.Cross(a) };
+		vector3d p{ MathUtil::RandomPointOnCircle(1.) };
+		pos = p.x * a + p.y * b;
+	}
+	pos *= dist * Pi::rng.Double(0.95, 1.2);
+	vel *= sqrt(G * primary->GetSystemBody()->GetMass() / dist);
+
+	assert(pos.Length() > primary->GetSystemBody()->GetRadius());
+	pos += primary->GetPositionRelTo(GetRootFrame());
+}
+
+Body *Space::FindNearestTo(const Body *b, ObjectType t) const
+{
+	Body *nearest = 0;
+	double dist = FLT_MAX;
+	for (Body *const body : m_bodies) {
+		if (body->IsDead()) continue;
+		if (body->IsType(t)) {
+			double d = body->GetPositionRelTo(b).Length();
+			if (d < dist) {
+				dist = d;
+				nearest = body;
+			}
+		}
+	}
+	return nearest;
+}
+
+std::vector<Space::BodyDist> Space::BodiesInAngle(const Body *b, const vector3d &offset, const vector3d &view_dir, double cosOfMaxAngle) const
+{
+	std::vector<BodyDist> ret;
+	for (Body *const body : m_bodies) {
+		if (body == b) continue;
+		if (body->IsDead()) continue;
+
+		//offset from the body center - like for view from ship cocpit
+		vector3d dirBody = body->GetPositionRelTo(b) * b->GetOrient() -  offset;
+		double d = dirBody.Length();
+		//Normalizing but not using Normalized() function to avoid calculating Length again
+		dirBody = dirBody / d;
+
+		//Bodies outside of the cone disregarded
+		if(dirBody.Dot(view_dir) < cosOfMaxAngle)
+			continue;
+
+		ret.emplace_back(body, d);
+	}
+	return ret;
+}
+
+Body *Space::FindBodyForPath(const SystemPath *path) const
+{
+	if (!m_game->IsNormalSpace() || !path->IsSameSystem(m_starSystem->GetPath()))
+		return nullptr;
+
+	// it is a bit dumb that currentSystem is not part of Space...
+	SystemBody *body = m_starSystem->GetBodyByPath(path);
+	if (!body)
+		return nullptr;
+
+	for (Body *b : m_bodies) {
+		if (b->GetSystemBody() == body) return b;
+	}
+
+	return nullptr;
+}
+
+static FrameId find_frame_with_sbody(FrameId fId, const SystemBody *b)
+{
+	Frame *f = Frame::GetFrame(fId);
+	if (f->GetSystemBody() == b)
+		return fId;
+	else {
+		for (FrameId kid : f->GetChildren()) {
+			FrameId found = find_frame_with_sbody(kid, b);
+			if (found.valid())
+				return found;
+		}
+	}
+	return FrameId::Invalid;
+}
+
+FrameId Space::GetFrameWithSystemBody(const SystemBody *b) const
+{
+	return find_frame_with_sbody(m_rootFrameId, b);
 }
 
 // used to define a cube centred on your current location
@@ -663,8 +724,7 @@ void Space::UpdateStarSystemCache(const SystemPath *here)
 
 static FrameId MakeFramesFor(const double at_time, SystemBody *sbody, Body *b, FrameId fId, std::vector<vector3d> &prevPositions)
 {
-	Frame *f = Frame::GetFrame(fId);
-
+	PROFILE_SCOPED()
 	if (!sbody->GetParent()) {
 		if (b) b->SetFrame(fId);
 		Frame *f = Frame::GetFrame(fId);
@@ -753,7 +813,7 @@ static FrameId MakeFramesFor(const double at_time, SystemBody *sbody, Body *b, F
 
 		Frame *rotFrame = Frame::GetFrame(rotFrameId);
 		assert(rotFrame->IsRotFrame());
-		assert(rotFrame->GetBody()->IsType(Object::PLANET));
+		assert(rotFrame->GetBody()->IsType(ObjectType::PLANET));
 		matrix3x3d rot;
 		vector3d pos;
 		Planet *planet = static_cast<Planet *>(rotFrame->GetBody());
@@ -772,6 +832,7 @@ static FrameId MakeFramesFor(const double at_time, SystemBody *sbody, Body *b, F
 
 void Space::GenBody(const double at_time, SystemBody *sbody, FrameId fId, std::vector<vector3d> &posAccum)
 {
+	PROFILE_START()
 	Body *b = nullptr;
 
 	if (sbody->GetType() != SystemBody::TYPE_GRAVPOINT) {
@@ -794,22 +855,17 @@ void Space::GenBody(const double at_time, SystemBody *sbody, FrameId fId, std::v
 	}
 	fId = MakeFramesFor(at_time, sbody, b, fId, posAccum);
 
+	PROFILE_STOP()
 	for (SystemBody *kid : sbody->GetChildren()) {
 		GenBody(at_time, kid, fId, posAccum);
 	}
 }
 
-static bool OnCollision(Object *o1, Object *o2, CollisionContact *c, double relativeVel)
+static bool OnCollision(Body *o1, Body *o2, CollisionContact *c, double relativeVel)
 {
-	Body *pb1 = static_cast<Body *>(o1);
-	Body *pb2 = static_cast<Body *>(o2);
-	/* Not always a Body (could be CityOnPlanet, which is a nasty exception I should eradicate) */
-	if (o1->IsType(Object::BODY)) {
-		if (pb1 && !pb1->OnCollision(o2, c->geomFlag, relativeVel)) return false;
-	}
-	if (o2->IsType(Object::BODY)) {
-		if (pb2 && !pb2->OnCollision(o1, c->geomFlag, relativeVel)) return false;
-	}
+	/* XXX: if you create a new class inheriting from Object instead of Body, this code must be updated */
+	if (o1 && !o1->OnCollision(o2, c->geomFlag, relativeVel)) return false;
+	if (o2 && !o2->OnCollision(o1, c->geomFlag, relativeVel)) return false;
 	return true;
 }
 
@@ -817,11 +873,11 @@ static void hitCallback(CollisionContact *c)
 {
 	//Output("OUCH! %x (depth %f)\n", SDL_GetTicks(), c->depth);
 
-	Object *po1 = static_cast<Object *>(c->userData1);
-	Object *po2 = static_cast<Object *>(c->userData2);
+	Body *po1 = static_cast<Body *>(c->userData1);
+	Body *po2 = static_cast<Body *>(c->userData2);
 
-	const bool po1_isDynBody = po1->IsType(Object::DYNAMICBODY);
-	const bool po2_isDynBody = po2->IsType(Object::DYNAMICBODY);
+	const bool po1_isDynBody = po1->IsType(ObjectType::DYNAMICBODY);
+	const bool po2_isDynBody = po2->IsType(ObjectType::DYNAMICBODY);
 	// collision response
 	assert(po1_isDynBody || po2_isDynBody);
 
@@ -936,7 +992,8 @@ static void hitCallback(CollisionContact *c)
 // temporary one-point version
 static void CollideWithTerrain(Body *body, float timeStep)
 {
-	if (!body->IsType(Object::DYNAMICBODY))
+	PROFILE_SCOPED()
+	if (!body->IsType(ObjectType::DYNAMICBODY))
 		return;
 	DynamicBody *dynBody = static_cast<DynamicBody *>(body);
 	if (!dynBody->IsMoving())
@@ -945,7 +1002,7 @@ static void CollideWithTerrain(Body *body, float timeStep)
 	Frame *f = Frame::GetFrame(body->GetFrame());
 	if (!f || !f->GetBody() || f->GetId() != f->GetBody()->GetFrame())
 		return;
-	if (!f->GetBody()->IsType(Object::TERRAINBODY))
+	if (!f->GetBody()->IsType(ObjectType::TERRAINBODY))
 		return;
 	TerrainBody *terrain = static_cast<TerrainBody *>(f->GetBody());
 
@@ -999,27 +1056,31 @@ void Space::TimeStep(float step)
 
 void Space::UpdateBodies()
 {
+	PROFILE_SCOPED()
 #ifndef NDEBUG
 	m_processingFinalizationQueue = true;
 #endif
 
-	for (Body *rmb : m_removeBodies) {
-		rmb->SetFrame(FrameId::Invalid);
-		for (Body *b : m_bodies)
-			b->NotifyRemoved(rmb);
-		if (Pi::GetView()) Pi::game->GetSystemView()->BodyInaccessible(rmb);
-		m_bodies.remove(rmb);
+	// removing or deleting bodies from space
+	for (const auto &b : m_assignedBodies) {
+		auto remove_iterator = m_bodies.end();
+		for (auto it = m_bodies.begin(); it != m_bodies.end(); ++it) {
+			if (*it != b.first)
+				(*it)->NotifyRemoved(b.first);
+			else
+				remove_iterator = it;
+		}
+		if (remove_iterator != m_bodies.end()) {
+			*remove_iterator = m_bodies.back();
+			m_bodies.pop_back();
+			if (b.second == BodyAssignation::KILL)
+				delete b.first;
+			else
+				b.first->SetFrame(FrameId::Invalid);
+		}
 	}
-	m_removeBodies.clear();
 
-	for (Body *killb : m_killBodies) {
-		for (Body *b : m_bodies)
-			b->NotifyRemoved(killb);
-		if (Pi::GetView()) Pi::game->GetSystemView()->BodyInaccessible(killb);
-		m_bodies.remove(killb);
-		delete killb;
-	}
-	m_killBodies.clear();
+	m_assignedBodies.clear();
 
 #ifndef NDEBUG
 	m_processingFinalizationQueue = false;

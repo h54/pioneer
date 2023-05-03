@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _COLLISION_SPACE
@@ -22,6 +22,8 @@ class BvhTree;
 /*
  * Collision spaces have a bunch of geoms and at most one sphere (for a planet).
  */
+// FIXME: CollisionSpace is NOT MOVE/COPY CONSTRUCTIBLE once RebuildObjectTrees
+// has been called. It will cause a double-free due to owning pointers being moved-by-copy.
 class CollisionSpace {
 public:
 	CollisionSpace();
@@ -39,7 +41,7 @@ public:
 		sphere.userData = user_data;
 	}
 	void FlagRebuildObjectTrees() { m_needStaticGeomRebuild = true; }
-	inline void RebuildObjectTrees();
+	void RebuildObjectTrees();
 
 	// Geoms with the same handle will not be collision tested against each other
 	// should be used for geoms that are part of the same body

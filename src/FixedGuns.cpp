@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "FixedGuns.h"
@@ -6,8 +6,15 @@
 #include "DynamicBody.h"
 #include "GameSaveError.h"
 #include "Projectile.h"
+#include "Quaternion.h"
 #include "StringF.h"
+#include "libs.h"
 #include "scenegraph/MatrixTransform.h"
+#include "vector3.h"
+
+REGISTER_COMPONENT_TYPE(FixedGuns) {
+	BodyComponentDB::RegisterComponent<FixedGuns>("FixedGuns");
+}
 
 FixedGuns::FixedGuns()
 {
@@ -55,7 +62,6 @@ void FixedGuns::Init(DynamicBody *b)
 		m_recharge_stat[i] = 0.0;
 		m_temperature_stat[i] = 0.0;
 	}
-	b->AddFeature(DynamicBody::FIXED_GUNS);
 }
 
 void FixedGuns::SaveToJson(Json &jsonObj, Space *space)
@@ -168,7 +174,13 @@ void FixedGuns::UnMountGun(int num)
 	m_gun_present[num] = false;
 }
 
-bool FixedGuns::Fire(const int num, Body *b)
+void FixedGuns::SetGunFiringState(int idx, int s)
+{
+	if (m_gun_present[idx])
+		m_is_firing[idx] = s;
+}
+
+bool FixedGuns::Fire(int num, Body *b)
 {
 	if (!m_gun_present[num]) return false;
 	if (!m_is_firing[num]) return false;
@@ -185,7 +197,8 @@ bool FixedGuns::Fire(const int num, Body *b)
 	const int maxBarrels = std::min(size_t(m_gun[num].dual ? 2 : 1), m_gun[num].locs.size());
 
 	for (int iBarrel = 0; iBarrel < maxBarrels; iBarrel++) {
-		const vector3d dir = (b->GetOrient() * vector3d(m_gun[num].locs[iBarrel].dir)).Normalized();
+		//m_currentLeadDir already points in direction to shoot - corrected with aim assist if near the crosshair
+		const vector3d dir = b->GetOrient() * (m_shouldUseLeadCalc ? m_currentLeadDir : vector3d(m_gun[num].locs[iBarrel].dir));
 		const vector3d pos = b->GetOrient() * vector3d(m_gun[num].locs[iBarrel].pos) + b->GetPosition();
 
 		if (m_gun[num].projData.beam) {
@@ -220,6 +233,84 @@ void FixedGuns::UpdateGuns(float timeStep)
 			m_recharge_stat[i] = 0;
 	}
 }
+
+static constexpr double MAX_LEAD_ANGLE = DEG2RAD(1.5);
+
+void FixedGuns::UpdateLead(float timeStep, int num, Body *ship, Body *target)
+{
+	assert(num < GUNMOUNT_MAX);
+	const vector3d forwardVector = num == GUN_REAR ? vector3d(0, 0, 1) : vector3d(0, 0, -1);
+	m_targetLeadPos = forwardVector;
+	m_firingSolutionOk = false;
+
+	if (!target) {
+		m_currentLeadDir = forwardVector;
+		return;
+	}
+
+	const vector3d targpos = target->GetPositionRelTo(ship) * ship->GetOrient();
+
+	// calculate firing solution and relative velocity along our z axis
+	double projspeed = m_gun[num].projData.speed;
+
+	// don't calculate lead if there's no gun there
+	if (m_gun_present[num] && projspeed > 0) {
+		if (m_gun[num].projData.beam) {
+			//For beems just shoot where the target is - no lead needed
+			m_targetLeadPos = targpos;
+		} else {
+			const vector3d targvel = target->GetVelocityRelTo(ship) * ship->GetOrient();
+
+			//Exact lead calculation. We start with:
+			// |targpos * l + targvel| = projspeed
+			//we solve for l which can be interpreted as 1/time for the projectile to reach the target
+			//it gives:
+			// |targpos|^2 * l^2 + targpos*targvel * 2l + |targvel|^2 - projspeed^2 = 0;
+			// so it gives scalar quadratic equation with two possible solutions - we care only about the positive one - shooting forward
+			// A basic math for solving, there is probably more elegant and efficient way to do this:
+			double a = targpos.LengthSqr();
+			double b = targpos.Dot(targvel) * 2;
+			double c = targvel.LengthSqr() - projspeed * projspeed;
+			double delta = b * b - 4 * a * c;
+
+			if (delta < 0) {
+				//no solution
+				m_currentLeadDir = forwardVector;
+				return;
+			}
+
+			//l = (-b + sqrt(delta)) / 2a; t=1/l; a>0
+			double t = 2 * a / (-b + sqrt(delta));
+
+			if (t < 0 || t > m_gun[num].projData.lifespan) {
+				//no positive solution or target too far
+				m_currentLeadDir = forwardVector;
+				return;
+			} else {
+				//This is an exact solution as opposed to 2 step approximation used before.
+				//It does not improve the accuracy as expected though.
+				//If the target is accelerating and is far enough then this aim assist will
+				//actually make sure that it is mpossible to hit..
+				m_targetLeadPos = targpos + targvel * t;
+
+				//lets try to adjust for acceleration of the target ship
+				if (target->IsType(ObjectType::SHIP)) {
+					DynamicBody *targetShip = static_cast<DynamicBody *>(target);
+					vector3d acc = targetShip->GetLastForce() * ship->GetOrient() / targetShip->GetMass();
+					//s=a*t^2/2 -> hitting steadily accelerating ships works at much greater distance
+					m_targetLeadPos += acc * t * t * 0.5;
+				}
+			}
+		}
+	}
+
+	const vector3d targetDir = m_targetLeadPos.Normalized();
+	const vector3d gunLeadTarget = (targetDir.Dot(forwardVector) >= cos(MAX_LEAD_ANGLE)) ? targetDir : forwardVector;
+
+	m_currentLeadDir = gunLeadTarget;
+	m_firingSolutionOk = true;
+}
+
 float FixedGuns::GetGunTemperature(int idx) const
 {
 	if (m_gun_present[idx])

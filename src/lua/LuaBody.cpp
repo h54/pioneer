@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Body.h"
@@ -6,6 +6,7 @@
 #include "Frame.h"
 #include "Game.h"
 #include "LuaConstants.h"
+#include "LuaMetaType.h"
 #include "LuaObject.h"
 #include "LuaUtils.h"
 #include "LuaVector.h"
@@ -25,11 +26,11 @@
 #include "SpaceStation.h"
 #include "Star.h"
 
-namespace PiGUI {
-	// Defined in LuaPiGui.h
+namespace PiGui {
+	// Declared in LuaPiGuiInternal.h
 	extern bool first_body_is_more_important_than(Body *, Body *);
 	extern int pushOnScreenPositionDirection(lua_State *l, vector3d position);
-} // namespace PiGUI
+} // namespace PiGui
 
 /*
  * Class: Body
@@ -118,6 +119,90 @@ static int l_body_attr_path(lua_State *l)
 }
 
 /*
+ * Function: GetComponent
+ *
+ * Returns a handle to the specified LuaComponent or C++ Component attached
+ * to the given body, if present. Will return nil if the specified component
+ * does not exist on this body.
+ *
+ * Availability:
+ *
+ *   June 2022
+ *
+ * Status:
+ *
+ *   stable
+ */
+static int l_body_get_component(lua_State *l)
+{
+	Body *b = LuaObject<Body>::CheckFromLua(1);
+	std::string componentName = luaL_checkstring(l, 2);
+
+	BodyComponentDB::PoolBase *pool = BodyComponentDB::GetComponentType(componentName);
+	if (pool && pool->luaInterface) {
+		pool->luaInterface->PushToLua(b);
+		return 1;
+	}
+
+	if (componentName == "__properties") {
+		lua_pushnil(l);
+		return 1;
+	}
+
+	lua_getuservalue(l, 1);
+	lua_pushvalue(l, 2);
+	lua_rawget(l, -2);
+
+	return 1;
+}
+
+/*
+ * Function: SetComponent
+ *
+ * Sets the given LuaComponent slot to a specific table value. Will error if
+ * the slot name is reserved by C++ components or if the caller is attempting
+ * to set the `__properties` reserved name.
+ *
+ * Parameters:
+ *
+ *   comp - a table object to be used as the component value or nil to remove
+ *          the component from the Body.
+ *
+ * Availability:
+ *
+ *   June 2022
+ *
+ * Status:
+ *
+ *   stable
+ */
+static int l_body_set_component(lua_State *l)
+{
+	LuaObject<Body>::CheckFromLua(1);
+	std::string componentName = luaL_checkstring(l, 2);
+
+	BodyComponentDB::PoolBase *pool = BodyComponentDB::GetComponentType(componentName);
+	if (pool) {
+		return luaL_error(l, "Cannot set C++ body component '%s' to a lua value.");
+	}
+
+	if (componentName == "__properties") {
+		return luaL_error(l, "'__properties' is a reserved name and cannot be used as a component.");
+	}
+
+	int type = lua_type(l, 3);
+	if (type != LUA_TNIL && type != LUA_TTABLE) {
+		return luaL_error(l, "Cannot set body component '%s' to non-table value.", componentName.data());
+	}
+
+	lua_getuservalue(l, 1);
+	lua_replace(l, 1);
+	lua_rawset(l, -3);
+
+	return 0;
+}
+
+/*
  * Method: GetVelocityRelTo
  *
  * Get the body's velocity relative to another body as a Vector
@@ -161,14 +246,14 @@ static int l_body_is_moon(lua_State *l)
 static int l_body_is_missile(lua_State *l)
 {
 	Body *body = LuaObject<Body>::CheckFromLua(1);
-	LuaPush<bool>(l, body->GetType() == Object::Type::MISSILE);
+	LuaPush<bool>(l, body->GetType() == ObjectType::MISSILE);
 	return 1;
 }
 
 static int l_body_is_station(lua_State *l)
 {
 	Body *body = LuaObject<Body>::CheckFromLua(1);
-	LuaPush<bool>(l, body->GetType() == Object::Type::SPACESTATION);
+	LuaPush<bool>(l, body->GetType() == ObjectType::SPACESTATION);
 	return 1;
 }
 
@@ -191,21 +276,21 @@ static int l_body_is_ground_station(lua_State *l)
 static int l_body_is_cargo_container(lua_State *l)
 {
 	Body *body = LuaObject<Body>::CheckFromLua(1);
-	LuaPush<bool>(l, body->GetType() == Object::Type::CARGOBODY);
+	LuaPush<bool>(l, body->GetType() == ObjectType::CARGOBODY);
 	return 1;
 }
 
 static int l_body_is_ship(lua_State *l)
 {
 	Body *body = LuaObject<Body>::CheckFromLua(1);
-	LuaPush<bool>(l, body->GetType() == Object::Type::SHIP);
+	LuaPush<bool>(l, body->GetType() == ObjectType::SHIP);
 	return 1;
 }
 
 static int l_body_is_hyperspace_cloud(lua_State *l)
 {
 	Body *body = LuaObject<Body>::CheckFromLua(1);
-	LuaPush<bool>(l, body->GetType() == Object::Type::HYPERSPACECLOUD);
+	LuaPush<bool>(l, body->GetType() == ObjectType::HYPERSPACECLOUD);
 	return 1;
 }
 
@@ -247,7 +332,7 @@ static int l_body_is_more_important_than(lua_State *l)
 		LuaPush<bool>(l, false);
 		return 1;
 	}
-	LuaPush<bool>(l, PiGUI::first_body_is_more_important_than(body, other));
+	LuaPush<bool>(l, PiGui::first_body_is_more_important_than(body, other));
 	return 1;
 }
 /*
@@ -304,10 +389,10 @@ static int l_body_get_altitude_rel_to(lua_State *l)
 	const Body *other = LuaObject<Body>::CheckFromLua(2);
 	vector3d pos = Pi::player->GetPositionRelTo(other);
 	double center_dist = pos.Length();
-	if (other && other->IsType(Object::TERRAINBODY)) {
+	if (other && other->IsType(ObjectType::TERRAINBODY)) {
 		const TerrainBody *terrain = static_cast<const TerrainBody *>(other);
 		vector3d surface_pos = pos.Normalized();
-		double radius = 0.0;
+		double radius = terrain->GetSystemBody()->GetRadius();
 		if (center_dist <= 3.0 * terrain->GetMaxFeatureRadius()) {
 			radius = terrain->GetTerrainHeight(surface_pos);
 		}
@@ -401,7 +486,7 @@ static int l_body_attr_super_type(lua_State *l)
 static int l_body_attr_frame_body(lua_State *l)
 {
 	Body *b = LuaObject<Body>::CheckFromLua(1);
-	if (!b->IsType(Object::DYNAMICBODY)) {
+	if (!b->IsType(ObjectType::DYNAMICBODY)) {
 		lua_pushnil(l);
 		return 1;
 	}
@@ -430,7 +515,7 @@ static int l_body_attr_frame_body(lua_State *l)
 static int l_body_attr_frame_rotating(lua_State *l)
 {
 	Body *b = LuaObject<Body>::CheckFromLua(1);
-	if (!b->IsType(Object::DYNAMICBODY)) {
+	if (!b->IsType(ObjectType::DYNAMICBODY)) {
 		lua_pushnil(l);
 		return 1;
 	}
@@ -473,7 +558,7 @@ static int l_body_attr_frame_rotating(lua_State *l)
 static int l_body_is_dynamic(lua_State *l)
 {
 	Body *b = LuaObject<Body>::CheckFromLua(1);
-	lua_pushboolean(l, b->IsType(Object::DYNAMICBODY));
+	lua_pushboolean(l, b->IsType(ObjectType::DYNAMICBODY));
 	return 1;
 }
 
@@ -544,7 +629,7 @@ static int l_body_distance_to(lua_State *l)
 static int l_body_get_ground_position(lua_State *l)
 {
 	Body *b = LuaObject<Body>::CheckFromLua(1);
-	if (!b->IsType(Object::DYNAMICBODY)) {
+	if (!b->IsType(ObjectType::DYNAMICBODY)) {
 		lua_pushnil(l);
 		return 1;
 	}
@@ -559,7 +644,7 @@ static int l_body_get_ground_position(lua_State *l)
 	lua_pushnumber(l, latitude);
 	lua_pushnumber(l, longitude);
 	Body *astro = f->GetBody();
-	if (astro->IsType(Object::TERRAINBODY)) {
+	if (astro->IsType(ObjectType::TERRAINBODY)) {
 		double radius = static_cast<TerrainBody *>(astro)->GetTerrainHeight(pos.Normalized());
 		double altitude = pos.Length() - radius;
 		lua_pushnumber(l, altitude);
@@ -602,7 +687,7 @@ static int l_body_get_ground_position(lua_State *l)
 static int l_body_find_nearest_to(lua_State *l)
 {
 	Body *b = LuaObject<Body>::CheckFromLua(1);
-	Object::Type type = static_cast<Object::Type>(LuaConstants::GetConstantFromArg(l, "PhysicsObjectType", 2));
+	ObjectType type = static_cast<ObjectType>(LuaConstants::GetConstantFromArg(l, "PhysicsObjectType", 2));
 
 	Body *nearest = Pi::game->GetSpace()->FindNearestTo(b, type);
 	LuaObject<Body>::PushToLua(nearest);
@@ -633,39 +718,16 @@ static int l_body_get_phys_radius(lua_State *l)
 	return 1;
 }
 
-/*
- * Method: GetProjectedScreenPosition
- *
- * Get the body's position projected to screen space as a Vector
- *
- * > body:GetProjectedScreenPosition()
- *
- * Availability:
- *
- *   2017-04
- *
- * Status:
- *
- *   stable
- */
-
-static int l_body_get_projected_screen_position(lua_State *l)
-{
-	Body *b = LuaObject<Body>::CheckFromLua(1);
-	WorldView *wv = Pi::game->GetWorldView();
-	vector3d p = wv->WorldSpaceToScreenSpace(b);
-	return PiGUI::pushOnScreenPositionDirection(l, p);
-}
-
 static int l_body_get_atmospheric_state(lua_State *l)
 {
-	Body *b = LuaObject<Body>::CheckFromLua(1);
+	Body *planetBody = LuaObject<Body>::CheckFromLua(1);
+	Body *b = LuaObject<Body>::CheckFromLua(2);
 	//	const SystemBody *sb = b->GetSystemBody();
-	vector3d pos = Pi::player->GetPosition();
+	vector3d pos = b->GetPositionRelTo(planetBody);
 	double center_dist = pos.Length();
-	if (b->IsType(Object::PLANET)) {
+	if (planetBody->IsType(ObjectType::PLANET)) {
 		double pressure, density;
-		static_cast<Planet *>(b)->GetAtmosphericState(center_dist, &pressure, &density);
+		static_cast<Planet *>(planetBody)->GetAtmosphericState(center_dist, &pressure, &density);
 		lua_pushnumber(l, pressure);
 		lua_pushnumber(l, density);
 		return 2;
@@ -681,46 +743,38 @@ static int l_body_get_label(lua_State *l)
 	return 1;
 }
 
-static int l_body_get_target_indicator_screen_position(lua_State *l)
-{
-	Body *b = LuaObject<Body>::CheckFromLua(1);
-	WorldView *wv = Pi::game->GetWorldView();
-	vector3d p = wv->GetTargetIndicatorScreenPosition(b);
-	return PiGUI::pushOnScreenPositionDirection(l, p);
-}
-
 static bool push_body_to_lua(Body *body)
 {
 	assert(body);
 	switch (body->GetType()) {
-	case Object::BODY:
+	case ObjectType::BODY:
 		LuaObject<Body>::PushToLua(body);
 		break;
-	case Object::MODELBODY:
+	case ObjectType::MODELBODY:
 		LuaObject<Body>::PushToLua(dynamic_cast<ModelBody *>(body));
 		break;
-	case Object::SHIP:
+	case ObjectType::SHIP:
 		LuaObject<Ship>::PushToLua(dynamic_cast<Ship *>(body));
 		break;
-	case Object::PLAYER:
+	case ObjectType::PLAYER:
 		LuaObject<Player>::PushToLua(dynamic_cast<Player *>(body));
 		break;
-	case Object::SPACESTATION:
+	case ObjectType::SPACESTATION:
 		LuaObject<SpaceStation>::PushToLua(dynamic_cast<SpaceStation *>(body));
 		break;
-	case Object::PLANET:
+	case ObjectType::PLANET:
 		LuaObject<Planet>::PushToLua(dynamic_cast<Planet *>(body));
 		break;
-	case Object::STAR:
+	case ObjectType::STAR:
 		LuaObject<Star>::PushToLua(dynamic_cast<Star *>(body));
 		break;
-	case Object::CARGOBODY:
+	case ObjectType::CARGOBODY:
 		LuaObject<Star>::PushToLua(dynamic_cast<CargoBody *>(body));
 		break;
-	case Object::MISSILE:
+	case ObjectType::MISSILE:
 		LuaObject<Missile>::PushToLua(dynamic_cast<Missile *>(body));
 		break;
-	case Object::HYPERSPACECLOUD:
+	case ObjectType::HYPERSPACECLOUD:
 		LuaObject<HyperspaceCloud>::PushToLua(dynamic_cast<HyperspaceCloud *>(body));
 		break;
 	default:
@@ -729,35 +783,41 @@ static bool push_body_to_lua(Body *body)
 	return true;
 }
 
-static std::string _body_serializer(LuaWrappable *o)
+static bool pi_lua_body_serializer(lua_State *l, Json &out)
 {
-	static char buf[256];
-	Body *b = static_cast<Body *>(o);
-	snprintf(buf, sizeof(buf), "%u\n", Pi::game->GetSpace()->GetIndexForBody(b));
-	return std::string(buf);
+	Body *body = LuaObject<Body>::GetFromLua(-1);
+	if (!body) return false;
+
+	out = Json(Pi::game->GetSpace()->GetIndexForBody(body));
+	return true;
 }
 
-static bool _body_deserializer(const char *pos, const char **next)
-{
-	Uint32 n = strtoul(pos, const_cast<char **>(next), 0);
-	if (pos == *next) return false;
-	(*next)++; // skip newline
-
-	Body *body = Pi::game->GetSpace()->GetBodyByIndex(n);
-	return push_body_to_lua(body);
-}
-
-static void _body_to_json(Json &out, LuaWrappable *o)
-{
-	Body *b = static_cast<Body *>(o);
-	out = Json(Pi::game->GetSpace()->GetIndexForBody(b));
-}
-
-static bool _body_from_json(const Json &obj)
+static bool pi_lua_body_deserializer(lua_State *l, const Json &obj)
 {
 	if (!obj.is_number_integer()) return false;
 	Body *body = Pi::game->GetSpace()->GetBodyByIndex(obj);
 	return push_body_to_lua(body);
+}
+
+static int l_body_get_velocity(lua_State *l)
+{
+	Body *b = LuaObject<Body>::CheckFromLua(1);
+	LuaPush<vector3d>(l, b->GetVelocity());
+	return 1;
+}
+
+static int l_body_set_velocity(lua_State *l)
+{
+	Body *b = LuaObject<Body>::CheckFromLua(1);
+	b->SetVelocity(LuaPull<vector3d>(l, 2));
+	return 0;
+}
+
+static int l_body_set_ang_velocity(lua_State *l)
+{
+	Body *b = LuaObject<Body>::CheckFromLua(1);
+	b->SetAngVelocity(LuaPull<vector3d>(l, 2));
+	return 0;
 }
 
 template <>
@@ -769,6 +829,8 @@ void LuaObject<Body>::RegisterClass()
 	const char *l_parent = "PropertiedObject";
 
 	static luaL_Reg l_methods[] = {
+		{ "GetComponent", l_body_get_component },
+		{ "SetComponent", l_body_set_component },
 		{ "IsDynamic", l_body_is_dynamic },
 		{ "DistanceTo", l_body_distance_to },
 		{ "GetGroundPosition", l_body_get_ground_position },
@@ -776,8 +838,6 @@ void LuaObject<Body>::RegisterClass()
 		{ "GetVelocityRelTo", l_body_get_velocity_rel_to },
 		{ "GetPositionRelTo", l_body_get_position_rel_to },
 		{ "GetAltitudeRelTo", l_body_get_altitude_rel_to },
-		{ "GetProjectedScreenPosition", l_body_get_projected_screen_position },
-		{ "GetTargetIndicatorScreenPosition", l_body_get_target_indicator_screen_position },
 		{ "GetPhysicalRadius", l_body_get_phys_radius },
 		{ "GetAtmosphericState", l_body_get_atmospheric_state },
 		{ "GetLabel", l_body_get_label },
@@ -792,6 +852,9 @@ void LuaObject<Body>::RegisterClass()
 		{ "IsGroundStation", l_body_is_ground_station },
 		{ "IsCargoContainer", l_body_is_cargo_container },
 		{ "GetSystemBody", l_body_get_system_body },
+		{ "GetVelocity", l_body_get_velocity },
+		{ "SetVelocity", l_body_set_velocity },
+		{ "SetAngVelocity", l_body_set_ang_velocity },
 		{ 0, 0 }
 	};
 
@@ -805,9 +868,10 @@ void LuaObject<Body>::RegisterClass()
 		{ 0, 0 }
 	};
 
-	const SerializerPair body_serializers(_body_serializer, _body_deserializer, _body_to_json, _body_from_json);
+	// const SerializerPair body_serializers(_body_serializer, _body_deserializer, _body_to_json, _body_from_json);
+	const SerializerPair body_serializers{ pi_lua_body_serializer, pi_lua_body_deserializer };
 
-	LuaObjectBase::CreateClass(s_type, l_parent, l_methods, l_attrs, 0);
+	LuaObjectBase::CreateClass(s_type, 0, l_methods, l_attrs, 0);
 	LuaObjectBase::RegisterPromotion(l_parent, s_type, LuaObject<Body>::DynamicCastPromotionTest);
 	LuaObjectBase::RegisterSerializer(s_type, body_serializers);
 

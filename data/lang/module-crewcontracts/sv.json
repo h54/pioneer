@@ -19,6 +19,14 @@
     "description": "",
     "message": "Arbetssökande besättning"
   },
+  "CREW_FOR_HIRE_DESC": {
+    "description": "",
+    "message": "Potentiella bestättningsmän tillgängliga för tjänst på den här stationen."
+  },
+  "CREW_FOR_HIRE_TITLE": {
+    "description": "",
+    "message": "ANSTÄLLNING SÖKES"
+  },
   "GO_BACK": {
     "description": "",
     "message": "Tillbaka"
@@ -37,7 +45,7 @@
   },
   "MINIMAL_TIME_SERVED_ABOARD_SHIP": {
     "description": "",
-    "message": "Minsta tjänstgöringstid ombord på skeppet"
+    "message": "Minimal tjänstgöringstid ombord på skepp"
   },
   "NO_CREW_AVAILABLE": {
     "description": "",
@@ -49,11 +57,11 @@
   },
   "OK_I_SUPPOSE_THATS_ALL_RIGHT": {
     "description": "",
-    "message": "OK, jag antar att det är korrekt."
+    "message": "Jag antar att det är okej."
   },
   "POTENTIAL_CREW_MEMBERS": {
     "description": "",
-    "message": "Potentiella bestättningsmän är registrerade som jobbsökande på {station}:"
+    "message": "Potentiella bestättningsmän som är registrerade som arbetssökande på {station}:"
   },
   "SIMULATOR_TRAINING_ONLY": {
     "description": "",
@@ -85,10 +93,10 @@
   },
   "TIME_SERVED_CREW_MEMBER": {
     "description": "",
-    "message": "Tid som bestättningsman"
+    "message": "Erfaren besättningsman"
   },
   "VETERAN_TIME_SERVED_CREW_MEMBER": {
     "description": "",
-    "message": "Veteran, tid som bestättningsman"
+    "message": "Veteran, mycket erfaren besättningsman"
   }
 }

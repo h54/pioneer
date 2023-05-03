@@ -165,7 +165,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "LE VAISSEAU A FAIT UN ATTERRISSAGE FORCÉ sur {planet}."
+    "message": "La STC locale rapporte un atterrissage forcé sur {planet}. Assistance requise."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "CRASH DE VAISSEAU"
   },
   "FLAVOUR_1_FAILUREMSG": {
     "description": "",
@@ -197,7 +201,11 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "VAISSEAU EN PANNE DE CARBURANT en route vers {starport}."
+    "message": "La STC de {starport} a reçu un message de carburant quasiment épuisé d'un vaisseau arrivant sur la station. Services de ravitaillement requis."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "VAISSEAU EN PANNE DE CARBURANT"
   },
   "FLAVOUR_2_FAILUREMSG": {
     "description": "",
@@ -229,7 +237,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "URGENCE MÉDICALE sur le vaisseau à proximité de {starport}."
+    "message": "Un vaisseau proche de {starport} a signalé une urgence médicale. Une ambulance est urgemment requise."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "URGENCE MEDICALE"
   },
   "FLAVOUR_3_FAILUREMSG": {
     "description": "",
@@ -261,7 +273,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "VAISSEAU EN PANNE DE CARBURANT sur {planet}."
+    "message": "Signal de détresse reçu: un vaisseau s'est échoué sans carburant sur la planète {planet}."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "VAISSEAU EN PANNE DE CARBURANT"
   },
   "FLAVOUR_4_FAILUREMSG": {
     "description": "",
@@ -293,7 +309,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "VAISSEAU EN PANNE DE CARBURANT près de {starport}."
+    "message": "Vaisseau échoué demande une opération de ravitaillement près de {starport}."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "VAISSEAU EN PANNE DE CARBURANT"
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
@@ -325,7 +345,11 @@
   },
   "FLAVOUR_6_ADTEXT": {
     "description": "",
-    "message": "VAISSEAU NE RÉPONDANT PAS dans le système {system}."
+    "message": "Urgence: aucune réponse d'un vaisseau de corporation dans le système {system}."
+  },
+  "FLAVOUR_6_ADTITLE": {
+    "description": "",
+    "message": "VAISSEAU NE DONNANT AUCUN SIGNE DE VIE"
   },
   "FLAVOUR_6_FAILUREMSG": {
     "description": "",
@@ -357,7 +381,11 @@
   },
   "FLAVOUR_7_ADTEXT": {
     "description": "",
-    "message": "TRANSPORT DE MEMBRE D'ÉQUIPAGE IMMÉDIAT vers les système {system} requis."
+    "message": "Transport immédiat d'équipage vers un vaisseau à la dérive dans le système {system} requis."
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "TRANPORT D'ÉQUIPAGE URGENT"
   },
   "FLAVOUR_7_FAILUREMSG": {
     "description": "",
@@ -434,10 +462,6 @@
   "LON": {
     "description": "",
     "message": "Lon:"
-  },
-  "LY": {
-    "description": "",
-    "message": "al"
   },
   "MISSING_COMM": {
     "description": "",
@@ -661,7 +685,7 @@
   },
   "SYSTEM": {
     "description": "",
-    "message": "Systeme:"
+    "message": "Système:"
   },
   "TARGET_SHIP_ID": {
     "description": "",

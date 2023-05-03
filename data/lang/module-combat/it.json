@@ -13,23 +13,43 @@
   },
   "ADTEXT_1": {
     "description": "",
-    "message": "RICHIESTO PILOTA AFFIDABILE: Paga {cash}."
+    "message": "Richiesto pilota qualificato per lavoro clandestino: Paga {cash}."
   },
   "ADTEXT_2": {
     "description": "",
-    "message": "SFIDA: Richiesta nave ed equipaggio per una missione di combattimento nel sistema {system}."
+    "message": "Richiesta nave ed equipaggio per una missione di combattimento nel sistema {system}."
   },
   "ADTEXT_3": {
     "description": "",
-    "message": "COMBATTIMENTO: Richiesto mercenario qualificato con nave ben equipaggiata."
+    "message": "Richiesto mercenario qualificato con nave ben equipaggiata. Dettagli sulla missione solo su richiesta."
   },
   "ADTEXT_4": {
     "description": "",
-    "message": "RICHIESTO MERCENARIO IMPAVIDO: Pago {cash} per una missione nel sistema {system}."
+    "message": "{org} cerca un mercenario impavido per una missione nel sistema {system}. Pagherà {cash}."
   },
   "ADTEXT_5": {
     "description": "",
     "message": "Missione {missione}: Salario {cash}."
+  },
+  "ADTITLE_1": {
+    "description": "",
+    "message": "CERCO PILOTA AFFIDABILE"
+  },
+  "ADTITLE_2": {
+    "description": "",
+    "message": "SFIDA"
+  },
+  "ADTITLE_3": {
+    "description": "",
+    "message": "COMBATTIMENTO IN VOLO"
+  },
+  "ADTITLE_4": {
+    "description": "",
+    "message": "CERCO MERCENARI IMPAVIDI"
+  },
+  "ADTITLE_5": {
+    "description": "",
+    "message": "MISSIONE DI COMBATTIMENTO AUTORIZZATA"
   },
   "AGENT": {
     "description": "Secret Service Agent",
@@ -175,10 +195,6 @@
     "description": "",
     "message": "C'è un limite di tempo?"
   },
-  "LY": {
-    "description": "",
-    "message": "AL"
-  },
   "MANAGER": {
     "description": "",
     "message": "Direttore"
@@ -235,6 +251,10 @@
     "description": "Message from the ship computer",
     "message": "Completato obiettivo primario della missione"
   },
+  "MISSION_INFO": {
+    "description": "Message from the ship computer",
+    "message": "Raggiunta l'area dell'obiettivo. Inizio raccolta dati. Previsione durata massima missione {duration}."
+  },
   "MISSION_TYPE_1": {
     "description": "Name of mission type",
     "message": "Ricognizione"
@@ -246,6 +266,10 @@
   "MISSION_TYPE_3": {
     "description": "Name of mission type. Derived from Fighter Sweep. An aggressive mission to hunt down and destroy every enemy fighter in the allotted area.",
     "message": "Pulizia dell'area"
+  },
+  "MISSION_WARNING": {
+    "description": "Message from the ship computer",
+    "message": "Area dell'obiettivo troppo lontana. Impossibile completare raccolta dati."
   },
   "OBJECTIVE_1": {
     "description": "",
@@ -291,6 +315,10 @@
     "description": "",
     "message": "È sufficiente atterrare ad una stazione in cui vi sia un ufficio {org}."
   },
+  "RADAR_NOT_INSTALLED": {
+    "description": "",
+    "message": "Spiacente, ma dubito che possa farcela senza un radar."
+  },
   "RISK_1": {
     "description": "",
     "message": "L'avversario ha risorse limitate. Niente che tu non possa gestire."
@@ -330,6 +358,10 @@
   "SYSTEM": {
     "description": "",
     "message": "Sistema:"
+  },
+  "TARGET_AREA_REACHED": {
+    "description": "",
+    "message": "Raggiunta zona obiettivo. Inizio raccolta dati."
   },
   "TIME_LIMIT": {
     "description": "",

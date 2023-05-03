@@ -1,15 +1,19 @@
 {
   "APPLY_FOR_MEMBERSHIP": {
     "description": "",
-    "message": "Кандидатствайте за членство"
+    "message": "Кандидатстване за членство"
   },
   "BEGIN_TRADE": {
     "description": "",
-    "message": "Започнете търговия"
+    "message": "Започване търговия"
   },
   "FLAVOUR_0_CLUBNAME": {
     "description": "",
-    "message": "Горивната Кооперация на Междузвездните Пилоти"
+    "message": "Горивната кооперация на междузвездните пилоти"
+  },
+  "FLAVOUR_0_DESC": {
+    "description": "",
+    "message": "Свържете се с местния представител на Горивната кооперация на пилотите."
   },
   "FLAVOUR_0_MEMBER_INTRO": {
     "description": "",
@@ -17,7 +21,11 @@
   },
   "FLAVOUR_0_NONMEMBER_INTRO": {
     "description": "",
-    "message": "{clubname} е независима организация, занимаваща се с осигуряването на евтино гориво, на нейните членове. Нейни клонове съществуват в цялата галактика. Ползите от членството включват:"
+    "message": "{clubname} е независима организация, занимаваща се с осигуряването на евтино гориво за нейните членове. Организацията има клонове в цялата галактика. Ползите от членството включват:"
+  },
+  "FLAVOUR_0_TITLE": {
+    "description": "Title of the BBS advertisement",
+    "message": "ГОРИВНА КООПЕРАЦИЯ НА ПИЛОТИТЕ"
   },
   "FLAVOUR_0_WELCOME": {
     "description": "",
@@ -25,43 +33,67 @@
   },
   "FLAVOUR_1_CLUBNAME": {
     "description": "Fuel club for the Federation faction",
-    "message": "Федералната Горивна Фондация"
+    "message": "Федералната горивна фондация"
+  },
+  "FLAVOUR_1_DESC": {
+    "description": "Fuel club for the Federation faction",
+    "message": "Пълномощник на Федералната горивна фондация."
   },
   "FLAVOUR_1_NONMEMBER_INTRO": {
     "description": "For the Solar Federation faction",
-    "message": "{clubname} е лидер в осигуряването на евтино гориво, на нейните членове в Слънчевата Федерация. Членството Ви дава правото на:"
+    "message": "{clubname} е лидер в осигуряването на евтино гориво за нейните членове в Слънчевата федерация. Членството Ви дава право на:"
+  },
+  "FLAVOUR_1_TITLE": {
+    "description": "Title of the BBS advertisement",
+    "message": "ФЕДЕРАЛНА ГОРИВНА ФОНДАЦИЯ"
   },
   "FLAVOUR_2_CLUBNAME": {
     "description": "Fuel club for the CIW (Commonwealth of Independent Worlds) faction",
-    "message": "Съюзът на Горивната Конфедерация"
+    "message": "Съюзът на горивната федерация"
+  },
+  "FLAVOUR_2_DESC": {
+    "description": "Fuel club for the CIW (Commonwealth of Independent Worlds) faction",
+    "message": "Уговорете си среща с представител на Съюзът на горивната федерация."
   },
   "FLAVOUR_2_NONMEMBER_INTRO": {
     "description": "Commonwealth of Independent Worlds is the name of the CIW faction",
-    "message": "В целия Съюз на Независимите Светове, {clubname} е най-добрия осигурител на евтино гориво и управление на отпадъците. За нашите членове, предлагаме:"
+    "message": "В Съюза на независимите светове, {clubname} осигурява най-евтиното гориво и най-доброто управление на отпадъците. За нашите членове, предлагаме:"
+  },
+  "FLAVOUR_2_TITLE": {
+    "description": "Title of the BBS advertisement",
+    "message": "СЪЮЗ НА ГОРИВНАТА ФЕДЕРАЦИЯ"
   },
   "FLAVOUR_2_WELCOME": {
     "description": "",
-    "message": "Здравейте и поздрави от нас! Насладете се на нашите услуги."
+    "message": "Много поздрави! Насладете се на нашите услуги."
   },
   "FLAVOUR_3_CLUBNAME": {
     "description": "Fuel club for the Haber faction",
-    "message": "Хаберска Дивизия за Гориво и Отпадъци"
+    "message": "Хаберската дивизия за гориво и отпадъци"
+  },
+  "FLAVOUR_3_DESC": {
+    "description": "Fuel club for the Haber faction",
+    "message": "Клон на Хаберската дивизия за гориво и отпадъци."
   },
   "FLAVOUR_3_MEMBER_INTRO": {
     "description": "For the greedy Haber faction, very corporate formulated",
-    "message": "Здравейте. Може да презаредите с гориво или да унищожите Вашите отпадъци."
+    "message": "Поздрави. Може да презаредите с гориво или да унищожите Вашите отпадъци."
   },
   "FLAVOUR_3_NONMEMBER_INTRO": {
     "description": "for the Haber faction",
-    "message": "Здравейте. Намирате се в Хаберска Дивизия за Гориво и Отпадъци, ние се занимаваме с доставките на гориво в контролираната от нас територия."
+    "message": "Поздрави. Намирате се в Хаберската дивизия за гориво и отпадъци, ние се занимаваме с доставките на гориво в контролираната от нас територия."
   },
-  "GO_BACK": {
+  "FLAVOUR_3_TITLE": {
+    "description": "Title of the BBS advertisement",
+    "message": "ХАБЕРСКО ГОРИВО"
+  },
+  "FUEL_LEVEL": {
     "description": "",
-    "message": "Назад"
+    "message": "Резервоарът на Вашия кораб е пълен на {level} %."
   },
   "LIST_BENEFITS_DISPOSAL": {
     "description": "",
-    "message": "{radioactives}, безплатно унищожение (според условията)"
+    "message": "Безплатно унищожение на {radioactives} (според условията)"
   },
   "LIST_BENEFITS_FUEL": {
     "description": "",
@@ -73,15 +105,19 @@
   },
   "LIST_BENEFITS_FUEL_TANK": {
     "description": "",
-    "message": "Зареждане с гориво, когато е нужно"
+    "message": "Всекидневно зареждане с гориво"
   },
   "LIST_BENEFITS_JOIN": {
     "description": "",
     "message": "Присъединете се сега! Годишното членство струва само {membership_fee}"
   },
+  "REFUEL_FREE": {
+    "description": "",
+    "message": "Безплатно зареждане с гориво."
+  },
   "WE_WILL_ONLY_DISPOSE_OF": {
     "description": "",
-    "message": "Ще унищожим само толкова тона {radioactives}, колкото тона {military_fuel} е закупено от нас."
+    "message": "Ще унищожим толкова тона {radioactives}, колкото {military_fuel} е закупено от нас."
   },
   "WHAT_CONDITIONS_APPLY": {
     "description": "",
@@ -93,10 +129,10 @@
   },
   "YOU_ARE_NOW_A_MEMBER": {
     "description": "",
-    "message": "Вече сте един от нас. Кандидатурата Ви ще изтече на {expiry_date}."
+    "message": "Вече сте част от нас. Кандидатурата Ви ще изтече на {expiry_date}."
   },
   "YOU_MUST_BUY": {
     "description": "",
-    "message": "Първо, закупете от нашето {military_fuel}, после ще вземем Вашите {radioactives}"
+    "message": "Първо, закупете от {military_fuel}, после ще вземем Вашите {radioactives}"
   }
 }

@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _RENDERER_H
@@ -8,35 +8,36 @@
 #include "Light.h"
 #include "Stats.h"
 #include "Types.h"
+#include "core/StringHash.h"
+#include "graphics/BufferCommon.h"
 #include "libs.h"
+#include "matrix4x4.h"
 #include <map>
 #include <memory>
 
 namespace Graphics {
 
 	/*
- * Renderer base class. A Renderer draws points, lines, triangles.
- * It is also used to create render states, materials and vertex/index buffers.
- */
+	* Renderer base class. A Renderer draws points, lines, triangles.
+	* It is also used to create render states, materials and vertex/index buffers.
+	*/
 
+	class IndexBuffer;
+	class InstanceBuffer;
 	class Material;
 	class MaterialDescriptor;
+	class MeshObject;
 	class RenderState;
 	class RenderTarget;
 	class Texture;
 	class TextureDescriptor;
+	class UniformBuffer;
 	class VertexArray;
 	class VertexBuffer;
-	class IndexBuffer;
-	class InstanceBuffer;
+
 	struct VertexBufferDesc;
 	struct RenderStateDesc;
 	struct RenderTargetDesc;
-
-	enum class MatrixMode {
-		MODELVIEW,
-		PROJECTION
-	};
 
 	// Renderer base, functions return false if
 	// failed/unsupported
@@ -77,29 +78,32 @@ namespace Graphics {
 		//set 0 to render to screen
 		virtual bool SetRenderTarget(RenderTarget *) = 0;
 
+		// Set the scissor extents. This has no effect if not drawing with a renderstate using scissorTest.
+		// In particular, the scissor state will not affect clearing the screen.
+		virtual bool SetScissor(ViewportExtents scissor) = 0;
+
 		//clear color and depth buffer
 		virtual bool ClearScreen() = 0;
 		//clear depth buffer
 		virtual bool ClearDepthBuffer() = 0;
 		virtual bool SetClearColor(const Color &c) = 0;
 
-		virtual bool SetViewport(int x, int y, int width, int height) = 0;
+		virtual bool SetViewport(ViewportExtents vp) = 0;
+		virtual ViewportExtents GetViewport() const = 0;
 
 		//set the model view matrix
-		virtual bool SetTransform(const matrix4x4d &m) = 0;
 		virtual bool SetTransform(const matrix4x4f &m) = 0;
+		virtual matrix4x4f GetTransform() const = 0;
+
 		//set projection matrix
 		virtual bool SetPerspectiveProjection(float fov, float aspect, float near_, float far_) = 0;
 		virtual bool SetOrthographicProjection(float xmin, float xmax, float ymin, float ymax, float zmin, float zmax) = 0;
 		virtual bool SetProjection(const matrix4x4f &m) = 0;
-
-		virtual bool SetRenderState(RenderState *) = 0;
-
-		// XXX maybe GL-specific. maybe should be part of the render state
-		virtual bool SetDepthRange(double znear, double zfar) = 0;
+		virtual matrix4x4f GetProjection() const = 0;
 
 		virtual bool SetWireFrameMode(bool enabled) = 0;
 
+		virtual bool SetLightIntensity(Uint32 numlights, const float *intensity) = 0;
 		virtual bool SetLights(Uint32 numlights, const Light *l) = 0;
 		const Light &GetLight(const Uint32 idx) const
 		{
@@ -110,31 +114,51 @@ namespace Graphics {
 		virtual bool SetAmbientColor(const Color &c) = 0;
 		const Color &GetAmbientColor() const { return m_ambient; }
 
-		virtual bool SetScissor(bool enabled, const vector2f &pos = vector2f(0.0f), const vector2f &size = vector2f(0.0f)) = 0;
-
 		//drawing functions
-		//2d drawing is generally understood to be for gui use (unlit, ortho projection)
-		//unindexed triangle draw
-		virtual bool DrawTriangles(const VertexArray *vertices, RenderState *state, Material *material, PrimitiveType type = TRIANGLES) = 0;
-		//high amount of textured quads for particles etc
-		virtual bool DrawPointSprites(const Uint32 count, const vector3f *positions, RenderState *rs, Material *material, float size) = 0;
-		virtual bool DrawPointSprites(const Uint32 count, const vector3f *positions, const vector2f *offsets, const float *sizes, RenderState *rs, Material *material) = 0;
-		//complex unchanging geometry that is worthwhile to store in VBOs etc.
-		virtual bool DrawBuffer(VertexBuffer *, RenderState *, Material *, PrimitiveType type = TRIANGLES) = 0;
-		virtual bool DrawBufferIndexed(VertexBuffer *, IndexBuffer *, RenderState *, Material *, PrimitiveType = TRIANGLES) = 0;
-		// instanced variations of the above
-		virtual bool DrawBufferInstanced(VertexBuffer *, RenderState *, Material *, InstanceBuffer *, PrimitiveType type = TRIANGLES) = 0;
-		virtual bool DrawBufferIndexedInstanced(VertexBuffer *, IndexBuffer *, RenderState *, Material *, InstanceBuffer *, PrimitiveType = TRIANGLES) = 0;
+		// TODO: placeholder API; here until CommandLists are exposed
+		// and all code can safely deal with async drawing
+		virtual bool FlushCommandBuffers() = 0;
+
+		// All drawing commands are assumed to defer execution of the command
+		// until the next commandlist flush. This is to batch GPU data updates
+		// and ensure state changes are minimal and internally consistent.
+		// If the calling code really needs all pending draw commands to be
+		// executed before making state changes, call FlushCommandBuffers to
+		// manually synchronize.
+
+		// Upload and draw the contents of this VertexArray. Should be used for highly dynamic geometry that changes per-frame.
+		// The contents of the VertexArray will be cached internally by the renderer and uploaded in bulk.
+		virtual bool DrawBuffer(const VertexArray *v, Material *m) = 0;
+		// Draw a subregion from an existing vertex+index buffer. Should be used for drawing aggregated vertex streams
+		// generated by middleware (e.g. UI buffers) that are updated once or twice during the frame.
+		// vtxOffset, idxOffset specify the starting element, not the starting byte offset in the buffer
+		virtual bool DrawBufferDynamic(VertexBuffer *v, uint32_t vtxOffset, IndexBuffer *i, uint32_t idxOffset, uint32_t numElems, Material *m) = 0;
+		// Draw a single mesh object (vertex+index buffer) using the given material.
+		virtual bool DrawMesh(MeshObject *, Material *) = 0;
+		// Draw multiple instances of a mesh object using the given material.
+		virtual bool DrawMeshInstanced(MeshObject *, Material *, InstanceBuffer *) = 0;
 
 		//creates a unique material based on the descriptor. It will not be deleted automatically.
-		virtual Material *CreateMaterial(const MaterialDescriptor &descriptor) = 0;
+		virtual Material *CreateMaterial(const std::string &shader, const MaterialDescriptor &descriptor, const RenderStateDesc &stateDescriptor) = 0;
+		// Make a copy of the given material with a possibly new descriptor or render state.
+		virtual Material *CloneMaterial(const Material *mat, const MaterialDescriptor &descriptor, const RenderStateDesc &stateDescriptor) = 0;
 		virtual Texture *CreateTexture(const TextureDescriptor &descriptor) = 0;
-		virtual RenderState *CreateRenderState(const RenderStateDesc &) = 0;
-		//returns 0 if unsupported
-		virtual RenderTarget *CreateRenderTarget(const RenderTargetDesc &) = 0;
+		virtual RenderTarget *CreateRenderTarget(const RenderTargetDesc &) = 0; //returns nullptr if unsupported
 		virtual VertexBuffer *CreateVertexBuffer(const VertexBufferDesc &) = 0;
-		virtual IndexBuffer *CreateIndexBuffer(Uint32 size, BufferUsage) = 0;
+		virtual IndexBuffer *CreateIndexBuffer(Uint32 size, BufferUsage, IndexBufferSize = INDEX_BUFFER_32BIT) = 0;
 		virtual InstanceBuffer *CreateInstanceBuffer(Uint32 size, BufferUsage) = 0;
+		virtual UniformBuffer *CreateUniformBuffer(Uint32 size, BufferUsage) = 0;
+
+		// Create a new mesh object that wraps the given vertex and index buffers.
+		virtual MeshObject *CreateMeshObject(VertexBuffer *vertexBuffer, IndexBuffer *indexBuffer = nullptr) = 0;
+
+		// Create a new mesh object and vertex buffer, and upload data from the given vertex array. Optionally associate the given index buffer.
+		// This is a convenience function to avoid boilerplate needed to set up a vertex buffer and mesh object from a vertex array.
+		// This function is not suitable for transient geometry; prefer DrawBuffer instead.
+		virtual MeshObject *CreateMeshObjectFromArray(const VertexArray *vertexArray, IndexBuffer *indexBuffer = nullptr, BufferUsage usage = BUFFER_USAGE_STATIC) = 0;
+
+		// Return a reference to the render state desc that is used by the given material.
+		virtual const RenderStateDesc &GetMaterialRenderState(const Material *mat) = 0;
 
 		Texture *GetCachedTexture(const std::string &type, const std::string &name);
 		void AddCachedTexture(const std::string &type, const std::string &name, Texture *texture);
@@ -145,65 +169,72 @@ namespace Graphics {
 
 		virtual bool ReloadShaders() = 0;
 
-		// our own matrix stack
-		// XXX state must die
-		virtual const matrix4x4f &GetCurrentModelView() const = 0;
-		virtual const matrix4x4f &GetCurrentProjection() const = 0;
-		virtual void GetCurrentViewport(Sint32 *vp) const = 0;
-
-		// XXX all quite GL specific. state must die!
-		virtual void SetMatrixMode(MatrixMode mm) = 0;
-		virtual void PushMatrix() = 0;
-		virtual void PopMatrix() = 0;
-		virtual void LoadIdentity() = 0;
-		virtual void LoadMatrix(const matrix4x4f &m) = 0;
-		virtual void Translate(const float x, const float y, const float z) = 0;
-		virtual void Scale(const float x, const float y, const float z) = 0;
-
 		// take a ticket representing the current renderer state. when the ticket
 		// is deleted, the renderer state is restored
 		// XXX state must die
 		class StateTicket {
 		public:
 			StateTicket(Renderer *r) :
-				m_renderer(r) { m_renderer->PushState(); }
-			virtual ~StateTicket() { m_renderer->PopState(); }
+				m_renderer(r)
+			{
+				m_renderer->PushState();
+				m_storedVP = m_renderer->GetViewport();
+				m_storedProj = m_renderer->GetProjection();
+				m_storedMV = m_renderer->GetTransform();
+			}
+
+			virtual ~StateTicket()
+			{
+				m_renderer->PopState();
+				m_renderer->SetViewport(m_storedVP);
+				m_renderer->SetTransform(m_storedMV);
+				m_renderer->SetProjection(m_storedProj);
+			}
+
+			StateTicket(const StateTicket &) = delete;
+			StateTicket &operator=(const StateTicket &) = delete;
 
 		private:
-			StateTicket(const StateTicket &);
-			StateTicket &operator=(const StateTicket &);
 			Renderer *m_renderer;
+			matrix4x4f m_storedProj;
+			matrix4x4f m_storedMV;
+			ViewportExtents m_storedVP;
 		};
 
-		// take a ticket representing a single state matrix. when the ticket is
-		// deleted, the previous matrix state is restored
-		// XXX state must die
+		// Temporarily save the current transform matrix to do non-destructive drawing.
 		class MatrixTicket {
 		public:
-			MatrixTicket(Renderer *r, MatrixMode m) :
-				m_renderer(r),
-				m_matrixMode(m)
+			MatrixTicket(Renderer *r) :
+				MatrixTicket(r, r->GetTransform())
+			{}
+
+			MatrixTicket(Renderer *r, const matrix4x4f &newMat) :
+				m_renderer(r)
 			{
-				m_renderer->SetMatrixMode(m_matrixMode);
-				m_renderer->PushMatrix();
-			}
-			virtual ~MatrixTicket()
-			{
-				m_renderer->SetMatrixMode(m_matrixMode);
-				m_renderer->PopMatrix();
+				m_storedMat = m_renderer->GetTransform();
+				m_renderer->SetTransform(newMat);
 			}
 
+			virtual ~MatrixTicket()
+			{
+				m_renderer->SetTransform(m_storedMat);
+			}
+
+			MatrixTicket(const MatrixTicket &) = delete;
+			MatrixTicket &operator=(const MatrixTicket &) = delete;
+
 		private:
-			MatrixTicket(const MatrixTicket &);
-			MatrixTicket &operator=(const MatrixTicket &);
 			Renderer *m_renderer;
-			MatrixMode m_matrixMode;
+			matrix4x4f m_storedMat;
 		};
 
 		virtual bool Screendump(ScreendumpState &sd) { return false; }
 		virtual bool FrameGrab(ScreendumpState &sd) { return false; }
 
 		Stats &GetStats() { return m_stats; }
+
+		// Returns a hashed name for referring to material constant slots and other constant-size string names
+		static constexpr size_t GetName(std::string_view s) { return hash_64_fnv1a(s.data(), s.size()); }
 
 	protected:
 		int m_width;

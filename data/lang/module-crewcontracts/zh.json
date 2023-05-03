@@ -19,6 +19,14 @@
     "description": "",
     "message": "待雇船员"
   },
+  "CREW_FOR_HIRE_DESC": {
+    "description": "",
+    "message": "在这个星港可以雇用的潜在船员。"
+  },
+  "CREW_FOR_HIRE_TITLE": {
+    "description": "",
+    "message": "出租船员"
+  },
   "GO_BACK": {
     "description": "",
     "message": "返回"

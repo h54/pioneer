@@ -1,9 +1,11 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "BaseLoader.h"
 #include "FileSystem.h"
+#include "graphics/RenderState.h"
 #include "graphics/TextureBuilder.h"
+#include "graphics/Types.h"
 #include "utils.h"
 
 using namespace SceneGraph;
@@ -41,8 +43,16 @@ void BaseLoader::ConvertMaterialDefinition(const MaterialDefinition &mdef)
 	matDesc.normalMap = !normTex.empty();
 	matDesc.quality = Graphics::HAS_HEAT_GRADIENT;
 
+	// FIXME: add render state properties to MaterialDefinition
+	// This is hacky and based off of the code in Loader.cpp
+	Graphics::RenderStateDesc rsd;
+	if (mdef.opacity < 100) {
+		rsd.blendMode = Graphics::BLEND_ALPHA;
+		rsd.depthWrite = false;
+	}
+
 	//Create material and set parameters
-	RefCountedPtr<Graphics::Material> mat(m_renderer->CreateMaterial(matDesc));
+	RefCountedPtr<Graphics::Material> mat(m_renderer->CreateMaterial("multi", matDesc, rsd));
 	mat->diffuse = mdef.diffuse;
 	mat->specular = mdef.specular;
 	mat->emissive = mdef.emissive;
@@ -54,20 +64,31 @@ void BaseLoader::ConvertMaterialDefinition(const MaterialDefinition &mdef)
 	if (mdef.opacity < 100)
 		mat->diffuse.a = (float(mdef.opacity) / 100.f) * 255;
 
+	Graphics::Texture *texture0 = nullptr;
+	Graphics::Texture *texture1 = nullptr;
+	Graphics::Texture *texture2 = nullptr;
+	Graphics::Texture *texture3 = nullptr;
+	Graphics::Texture *texture6 = nullptr;
 	if (!diffTex.empty())
-		mat->texture0 = Graphics::TextureBuilder::Model(diffTex).GetOrCreateTexture(m_renderer, "model");
+		texture0 = Graphics::TextureBuilder::Model(diffTex).GetOrCreateTexture(m_renderer, "model");
 	else
-		mat->texture0 = Graphics::TextureBuilder::GetWhiteTexture(m_renderer);
+		texture0 = Graphics::TextureBuilder::GetWhiteTexture(m_renderer);
 	if (!specTex.empty())
-		mat->texture1 = Graphics::TextureBuilder::Model(specTex).GetOrCreateTexture(m_renderer, "model");
+		texture1 = Graphics::TextureBuilder::Model(specTex).GetOrCreateTexture(m_renderer, "model");
 	if (!glowTex.empty())
-		mat->texture2 = Graphics::TextureBuilder::Model(glowTex).GetOrCreateTexture(m_renderer, "model");
+		texture2 = Graphics::TextureBuilder::Model(glowTex).GetOrCreateTexture(m_renderer, "model");
 	if (!ambiTex.empty())
-		mat->texture3 = Graphics::TextureBuilder::Model(ambiTex).GetOrCreateTexture(m_renderer, "model");
+		texture3 = Graphics::TextureBuilder::Model(ambiTex).GetOrCreateTexture(m_renderer, "model");
 	//texture4 is reserved for pattern
 	//texture5 is reserved for color gradient
 	if (!normTex.empty())
-		mat->texture6 = Graphics::TextureBuilder::Normal(normTex).GetOrCreateTexture(m_renderer, "model");
+		texture6 = Graphics::TextureBuilder::Normal(normTex).GetOrCreateTexture(m_renderer, "model");
+
+	mat->SetTexture("texture0"_hash, texture0);
+	mat->SetTexture("texture1"_hash, texture1);
+	mat->SetTexture("texture2"_hash, texture2);
+	mat->SetTexture("texture3"_hash, texture3);
+	mat->SetTexture("texture6"_hash, texture6);
 
 	m_model->m_materials.push_back(std::make_pair(mdef.name, mat));
 }
@@ -80,8 +101,15 @@ RefCountedPtr<Graphics::Material> BaseLoader::GetDecalMaterial(unsigned int inde
 		Graphics::MaterialDescriptor matDesc;
 		matDesc.textures = 1;
 		matDesc.lighting = true;
-		decMat.Reset(m_renderer->CreateMaterial(matDesc));
-		decMat->texture0 = Graphics::TextureBuilder::GetTransparentTexture(m_renderer);
+
+		Graphics::RenderStateDesc rsd;
+		rsd.depthWrite = false;
+		rsd.blendMode = Graphics::BLEND_ALPHA;
+
+		// XXX add depth bias to render state parameter
+		decMat.Reset(m_renderer->CreateMaterial("multi", matDesc, rsd));
+		decMat->SetTexture("texture0"_hash,
+			Graphics::TextureBuilder::GetTransparentTexture(m_renderer));
 		decMat->specular = Color::BLACK;
 		decMat->diffuse = Color::WHITE;
 	}

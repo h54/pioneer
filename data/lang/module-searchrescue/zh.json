@@ -165,7 +165,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "飞船坠毁于 {planet}. "
+    "message": "Local STC reports ship crash landed on {planet}. Assistance required."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "飞船失事着陆"
   },
   "FLAVOUR_1_FAILUREMSG": {
     "description": "",
@@ -197,7 +201,11 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "在前往{starport}的途中，缺乏燃料。"
+    "message": "{starport} STC received low fuel message from incoming ship. Refueling services requested."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "飞船燃料耗尽"
   },
   "FLAVOUR_2_FAILUREMSG": {
     "description": "",
@@ -229,7 +237,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "在靠近 {starport}的船上发生急需医疗的情况。"
+    "message": "Ship close to {starport} signalled medical emergency. Urgent hospital transport required."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "医疗急救"
   },
   "FLAVOUR_3_FAILUREMSG": {
     "description": "",
@@ -261,7 +273,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "飞船燃料耗尽在{planet}"
+    "message": "Distress signal received: ship is stranded and out of fuel on {planet}."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "飞船燃料耗尽"
   },
   "FLAVOUR_4_FAILUREMSG": {
     "description": "",
@@ -293,7 +309,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "接近 {starport}的船只燃料耗尽。"
+    "message": "Stranded ship is requesting refuelling operation close to {starport}."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "飞船燃料耗尽"
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
@@ -325,7 +345,11 @@
   },
   "FLAVOUR_6_ADTEXT": {
     "description": "",
-    "message": "在{system}星系中失联"
+    "message": "Emergency: corporate vessel unresponsive in the {system} system."
+  },
+  "FLAVOUR_6_ADTITLE": {
+    "description": "",
+    "message": "船舶无反应"
   },
   "FLAVOUR_6_FAILUREMSG": {
     "description": "",
@@ -357,7 +381,11 @@
   },
   "FLAVOUR_7_ADTEXT": {
     "description": "",
-    "message": "要求立即将机组人员运送至 {system}星系。"
+    "message": "请求立即将船员运送至 {system}星系中漂流飞船。"
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "紧急船员运输"
   },
   "FLAVOUR_7_FAILUREMSG": {
     "description": "",
@@ -433,11 +461,7 @@
   },
   "LON": {
     "description": "",
-    "message": "伦敦:"
-  },
-  "LY": {
-    "description": "",
-    "message": "光年"
+    "message": "经度:"
   },
   "MISSING_COMM": {
     "description": "",

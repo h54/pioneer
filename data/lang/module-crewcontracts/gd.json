@@ -19,6 +19,14 @@
     "description": "",
     "message": "Daoine ag iarraidh fastadh"
   },
+  "CREW_FOR_HIRE_DESC": {
+    "description": "",
+    "message": "Potential crew available for hire at this starport."
+  },
+  "CREW_FOR_HIRE_TITLE": {
+    "description": "",
+    "message": "CREW FOR HIRE"
+  },
   "GO_BACK": {
     "description": "",
     "message": "Till"
@@ -41,7 +49,7 @@
   },
   "NO_CREW_AVAILABLE": {
     "description": "",
-    "message": "Duilich ach chan eil duine a' sireadh fastadh aig {station}:"
+    "message": "Duilich ach chan eil duine a’ sireadh fastadh aig {station}"
   },
   "NO_EXPERIENCE": {
     "description": "",
@@ -53,7 +61,7 @@
   },
   "POTENTIAL_CREW_MEMBERS": {
     "description": "",
-    "message": "Clàraich daoine a' sireadh fastadh mar sgioba aig {station}:"
+    "message": "Clàraich daoine a’ sireadh fastadh mar sgioba aig {station}:"
   },
   "SIMULATOR_TRAINING_ONLY": {
     "description": "",
@@ -73,11 +81,11 @@
   },
   "THATS_EXTREMELY_GENEROUS_OF_YOU": {
     "description": "",
-    "message": "Nach tus' a tha fialaidh!"
+    "message": "Nach tus’ a tha fialaidh!"
   },
   "THAT_CERTAINLY_MAKES_THIS_OFFER_LOOK_BETTER": {
     "description": "",
-    "message": "Tha coltas nas fhearr air ur tairgse a-nis!"
+    "message": "Tha coltas nas fheàrr air ur tairgse a-nis!"
   },
   "THERE_DOESNT_SEEM_TO_BE_SPACE_FOR_ME_ON_BOARD": {
     "description": "",

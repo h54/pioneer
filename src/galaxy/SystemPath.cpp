@@ -1,9 +1,10 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "SystemPath.h"
 #include "GameSaveError.h"
 #include "Json.h"
+#include "fmt/format.h"
 #include <cstdlib>
 
 // https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
@@ -91,4 +92,10 @@ SystemPath SystemPath::FromJson(const Json &jsonObj)
 	} catch (Json::type_error &) {
 		throw SavedGameCorruptException();
 	}
+}
+
+std::string to_string(const SystemPath &path)
+{
+	return fmt::format("({},{},{},{},{})",
+		path.sectorX, path.sectorY, path.sectorZ, path.systemIndex, path.bodyIndex);
 }

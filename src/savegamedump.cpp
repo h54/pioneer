@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "FileSystem.h"
@@ -34,7 +34,12 @@ extern "C" int main(int argc, char **argv)
 	const auto compressed_data = file->AsByteRange();
 	Json rootNode;
 	try {
-		const std::string plain_data = gzip::DecompressDeflateOrGZip(reinterpret_cast<const unsigned char *>(compressed_data.begin), compressed_data.Size());
+		std::string plain_data;
+		if (gzip::IsGZipFormat(reinterpret_cast<const uint8_t *>(compressed_data.begin), compressed_data.Size()))
+			plain_data = gzip::DecompressDeflateOrGZip(reinterpret_cast<const uint8_t *>(compressed_data.begin), compressed_data.Size());
+		else
+			plain_data = std::string(compressed_data.begin, compressed_data.Size());
+
 		try {
 			// Allow loading files in JSON format as well as CBOR
 			if (plain_data[0] == '{')
@@ -61,7 +66,7 @@ extern "C" int main(int argc, char **argv)
 		return 1;
 	}
 
-	fputs(rootNode.dump(2).c_str(), outFile);
+	fputs(rootNode.dump().c_str(), outFile);
 	fclose(outFile);
 
 	return 0;

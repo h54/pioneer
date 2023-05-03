@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _NAVLIGHTS_H
@@ -12,7 +12,6 @@
 
 namespace Graphics {
 	class Renderer;
-	class RenderState;
 } // namespace Graphics
 namespace SceneGraph {
 	class Model;
@@ -58,8 +57,6 @@ protected:
 	bool m_enabled;
 
 	Graphics::VertexArray m_billboardTris;
-	RefCountedPtr<Graphics::VertexBuffer> m_billboardVB;
-	Graphics::RenderState *m_billboardRS;
 };
 
 #endif

@@ -1,4 +1,4 @@
--- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Engine = require 'Engine'
@@ -9,9 +9,9 @@ local Event = require 'Event'
 local Character = require 'Character'
 local Format = require 'Format'
 local Serializer = require 'Serializer'
-local Equipment = require 'Equipment'
 local ModalWindow = require 'pigui.libs.modal-win'
 local ui = require 'pigui'
+local Commodities = require 'Commodities'
 
 local rescaleVector = ui.rescaleUI(Vector2(1, 1), Vector2(1600, 900), true)
 local popupSpacer = Vector2(0,0)
@@ -38,9 +38,11 @@ end)
 -- exist on every station in the galaxy.
 
 local l = Lang.GetResource("module-fuelclub")
+local lc = Lang.GetResource("ui-core")
 
 -- Default numeric values --
 ----------------------------
+local oneday = 86400 -- One standard day
 local oneyear = 31557600 -- One standard Julian year
 -- 10, guaranteed random by D16 dice roll.
 -- This is to make the BBS name different from the station welcome character.
@@ -60,7 +62,9 @@ local memberships = {
 
 local flavours = {
 	{    -- Independent club
+		title    = l.FLAVOUR_0_TITLE,
 		clubname = l.FLAVOUR_0_CLUBNAME,
+		desc     = l.FLAVOUR_0_DESC,
 		welcome = l.FLAVOUR_0_WELCOME,
 		nonmember_intro = l.FLAVOUR_0_NONMEMBER_INTRO,
 		member_intro = l.FLAVOUR_0_MEMBER_INTRO,
@@ -68,7 +72,9 @@ local flavours = {
 		availability = {FED = 0.1, CIW = 0.1, HABER = 0, IND = 0.4} -- probability for these factions
 	},
 	{   -- SolFed club (reuse some messages)
+		title    = l.FLAVOUR_1_TITLE,
 		clubname = l.FLAVOUR_1_CLUBNAME,
+		desc     = l.FLAVOUR_1_DESC,
 		welcome = l.FLAVOUR_0_WELCOME,
 		nonmember_intro = l.FLAVOUR_1_NONMEMBER_INTRO,
 		member_intro = l.FLAVOUR_0_MEMBER_INTRO,
@@ -76,7 +82,9 @@ local flavours = {
 		availability = {FED = 0.4, CIW = 0, HABER = 0, IND = 0}
 	},
 	{   -- Confederation club
+		title    = l.FLAVOUR_2_TITLE,
 		clubname = l.FLAVOUR_2_CLUBNAME,
+		desc     = l.FLAVOUR_2_DESC,
 		welcome = l.FLAVOUR_2_WELCOME,
 		nonmember_intro = l.FLAVOUR_2_NONMEMBER_INTRO,
 		member_intro = l.FLAVOUR_0_MEMBER_INTRO,
@@ -84,7 +92,9 @@ local flavours = {
 		availability = {FED = 0, CIW = 0.4, HABER = 0, IND = 0}
 	},
 	{   -- Haber fuel division
+		title    = l.FLAVOUR_3_TITLE,
 		clubname = l.FLAVOUR_3_CLUBNAME,
+		desc     = l.FLAVOUR_3_DESC,
 		welcome = l.FLAVOUR_0_WELCOME,
 		nonmember_intro = l.FLAVOUR_3_NONMEMBER_INTRO,
 		member_intro = l.FLAVOUR_3_MEMBER_INTRO,
@@ -111,52 +121,40 @@ onChat = function (form, ref, option)
 	form:SetTitle(ad.flavour.welcome:interp({clubname = ad.flavour.clubname}))
 	local membership = memberships[ad.flavour.clubname]
 
-	if membership and (membership.joined + membership.expiry > Game.time) then
-		-- members get refuelled, whether or not the station managed to do it
-		Game.player:SetFuelPercent()
+	if option == 0 and membership and (membership.joined + membership.expiry > Game.time) then
+		local saleables = {
+			[Commodities.hydrogen] = 0.5,       -- half price Hydrogen
+			[Commodities.military_fuel] = 0.80, -- 20% off Milfuel
+			[Commodities.radioactives] = 0.0    -- Radioactives go free
+		}
+
 		-- members get the trader interface
-		form:SetMessage(string.interp(ad.flavour.member_intro, {radioactives=Equipment.cargo.radioactives:GetName()}))
+		form:SetMessage(string.interp(ad.flavour.member_intro, {radioactives=Commodities.radioactives:GetName()}))
 		form:AddGoodsTrader({
 			canTrade = function (ref, commodity)
-				return ({
-					[Equipment.cargo.hydrogen] = true,
-					[Equipment.cargo.military_fuel] = true,
-					[Equipment.cargo.radioactives] = true
-				})[commodity]
+				return saleables[commodity] and true or false
 			end,
 			canDisplayItem = function (ref, commodity)
-				return ({
-					[Equipment.cargo.hydrogen] = true,
-					[Equipment.cargo.military_fuel] = true,
-					[Equipment.cargo.radioactives] = true
-				})[commodity]
+				return saleables[commodity] and true or false
 			end,
 			getStock = function (ref, commodity)
-				local prev = ad.stock[commodity]
+				local prev = ad.stock[commodity.name]
 				if prev then
 					return prev
 				end
-				if commodity == Equipment.cargo.radioactives then
-					ad.stock[commodity] = 0
+				if commodity == Commodities.radioactives then
+					ad.stock[commodity.name] = 0
 					return 0
 				end
-				local cur = Engine.rand:Integer(2, (commodity == Equipment.cargo.military_fuel and 25 or 50)) + Engine.rand:Integer(3, 25)
-				ad.stock[commodity] = cur
+				local cur = Engine.rand:Integer(2, (commodity == Commodities.military_fuel and 25 or 50)) + Engine.rand:Integer(3, 25)
+				ad.stock[commodity.name] = cur
 				return cur
 			end,
 			getBuyPrice = function (ref, commodity)
-				return ad.station:GetEquipmentPrice(commodity) * ({
-					[Equipment.cargo.hydrogen] = 0.5, -- half price Hydrogen
-					[Equipment.cargo.military_fuel] = 0.80, -- 20% off Milfuel
-					[Equipment.cargo.radioactives] = 0, -- Radioactives go free
-				})[commodity]
+				return ad.station:GetCommodityPrice(commodity) * saleables[commodity]
 			end,
 			getSellPrice = function (ref, commodity)
-				return ad.station:GetEquipmentPrice(commodity) * ({
-					[Equipment.cargo.hydrogen] = 0.5, -- half price Hydrogen
-					[Equipment.cargo.military_fuel] = 0.80, -- 20% off Milfuel
-					[Equipment.cargo.radioactives] = 0, -- Radioactives go free
-				})[commodity]
+				return ad.station:GetCommodityPrice(commodity) * saleables[commodity]
 			end,
 			-- Next two functions: If your membership is nearly up, you'd better
 			-- trade quickly, because we do check!
@@ -170,10 +168,10 @@ onChat = function (form, ref, option)
 					count = market.tradeAmount
 				end
 
-				if (commodity == Equipment.cargo.radioactives and membership.milrads < count) then
+				if (commodity == Commodities.radioactives and membership.milrads < count) then
 					popupMsg = string.interp(l.YOU_MUST_BUY, {
-						military_fuel = Equipment.cargo.military_fuel:GetName(),
-						radioactives = Equipment.cargo.radioactives:GetName(),
+						military_fuel = Commodities.military_fuel:GetName(),
+						radioactives = Commodities.radioactives:GetName(),
 					})
 					popup:open()
 					return false
@@ -186,8 +184,8 @@ onChat = function (form, ref, option)
 					count = market.tradeAmount
 				end
 
-				ad.stock[commodity] = ad.stock[commodity] - count
-				if commodity == Equipment.cargo.radioactives or commodity == Equipment.cargo.military_fuel then
+				ad.stock[commodity.name] = ad.stock[commodity.name] - count
+				if commodity == Commodities.radioactives or commodity == Commodities.military_fuel then
 					membership.milrads = membership.milrads + count
 				end
 			end,
@@ -197,12 +195,16 @@ onChat = function (form, ref, option)
 					count = market.tradeAmount
 				end
 
-				ad.stock[commodity] = ad.stock[commodity] + count
-				if commodity == Equipment.cargo.radioactives or commodity == Equipment.cargo.military_fuel then
+				ad.stock[commodity.name] = ad.stock[commodity.name] + count
+				if commodity == Commodities.radioactives or commodity == Commodities.military_fuel then
 					membership.milrads = membership.milrads - count
 				end
 			end,
 		})
+		-- members can only refuel once a day
+		if not membership.refueled and (membership.refueling_date + oneday < Game.time) and Game.player.fuel < 100 then
+			form:AddOption(l.REFUEL_FREE,3)
+		end
 
 	elseif option == -1 then
 		-- hang up
@@ -211,10 +213,10 @@ onChat = function (form, ref, option)
 	elseif option == 1 then
 		-- Player asked the question about radioactives
 		form:SetMessage(string.interp(l.WE_WILL_ONLY_DISPOSE_OF, {
-						military_fuel = Equipment.cargo.military_fuel:GetName(),
-						radioactives = Equipment.cargo.radioactives:GetName()}))
+						military_fuel = Commodities.military_fuel:GetName(),
+						radioactives = Commodities.radioactives:GetName()}))
 		form:AddOption(l.APPLY_FOR_MEMBERSHIP,2)
-		form:AddOption(l.GO_BACK,0)
+		form:AddOption(lc.GO_BACK,0)
 
 	elseif option == 2 then
 		-- Player applied for membership
@@ -224,6 +226,8 @@ onChat = function (form, ref, option)
 				joined = Game.time,
 				expiry = oneyear,
 				milrads = 0,
+				refueled = false,
+				refueling_date = 0,
 			}
 			Game.player:AddMoney(0 - ad.flavour.annual_fee)
 			form:SetMessage(l.YOU_ARE_NOW_A_MEMBER:interp({
@@ -235,18 +239,33 @@ onChat = function (form, ref, option)
 			form:SetMessage(l.YOUR_MEMBERSHIP_APPLICATION_HAS_BEEN_DECLINED)
 		end
 
+	elseif option == 3 then
+		form:Clear() -- remove goods trader table
+		form:SetFace(ad.character)
+		form:SetTitle(ad.flavour.welcome:interp({clubname = ad.flavour.clubname}))
+		form:SetMessage(string.interp(l.FUEL_LEVEL, {level = math.floor(Game.player.fuel)}))
+		form:AddOption(lc.REFUEL_FULL,4)
+		form:AddOption(lc.GO_BACK,0)
+
+	elseif option == 4 then
+		Game.player:SetFuelPercent()
+		membership.refueled = true
+		membership.refueling_date = Game.time
+		form:SetMessage(string.interp(l.FUEL_LEVEL, {level = math.floor(Game.player.fuel)}))
+		form:AddOption(lc.GO_BACK,0)
+
 	else
 		-- non-members get offered membership
 		local message = ad.flavour.nonmember_intro:interp({clubname=ad.flavour.clubname}).."\n"..
 			"\n\t* " ..l.LIST_BENEFITS_FUEL_INTRO..
-			"\n\t* "..string.interp(l.LIST_BENEFITS_FUEL, {fuel=Equipment.cargo.hydrogen:GetName()})..
-			"\n\t* "..string.interp(l.LIST_BENEFITS_FUEL, {fuel=Equipment.cargo.military_fuel:GetName()})..
-			"\n\t* "..string.interp(l.LIST_BENEFITS_DISPOSAL, {radioactives=Equipment.cargo.radioactives:GetName()})..
+			"\n\t* "..string.interp(l.LIST_BENEFITS_FUEL, {fuel=Commodities.hydrogen:GetName()})..
+			"\n\t* "..string.interp(l.LIST_BENEFITS_FUEL, {fuel=Commodities.military_fuel:GetName()})..
+			"\n\t* "..string.interp(l.LIST_BENEFITS_DISPOSAL, {radioactives=Commodities.radioactives:GetName()})..
 			"\n\t* "..l.LIST_BENEFITS_FUEL_TANK..
 			"\n\n"  ..string.interp(l.LIST_BENEFITS_JOIN, {membership_fee=Format.Money(ad.flavour.annual_fee)})
 
 		form:SetMessage(message)
-		form:AddOption(l.WHAT_CONDITIONS_APPLY:interp({radioactives = Equipment.cargo.radioactives:GetName()}),1)
+		form:AddOption(l.WHAT_CONDITIONS_APPLY:interp({radioactives = Commodities.radioactives:GetName()}),1)
 		form:AddOption(l.APPLY_FOR_MEMBERSHIP,2)
 	end
 end
@@ -280,11 +299,21 @@ local onCreateBB = function (station)
 					armour = false,
 			})
 			ads[station:AddAdvert({
-						description = ad.flavour.clubname,
-						icon        = "fuel_club",
-						onChat      = onChat,
-						onDelete    = onDelete})] = ad
+				title       = ad.flavour.title,
+				description = ad.flavour.desc,
+				icon        = "fuel_club",
+				onChat      = onChat,
+				onDelete    = onDelete
+			})] = ad
 		end
+	end
+end
+
+local onShipUndocked = function (ship, station)
+	if not ship:IsPlayer() then return end
+
+	for _, membership in pairs(memberships) do
+		membership.refueled = false
 	end
 end
 
@@ -294,10 +323,12 @@ local onGameStart = function ()
 		-- rebuild saved adverts
 		for k,ad in pairs(loaded_data.ads) do
 			ads[ad.station:AddAdvert({
-				description = ad.flavour.clubname,
+				title       = ad.flavour.title,
+				description = ad.flavour.desc,
 				icon        = "fuel_club",
 				onChat      = onChat,
-				onDelete    = onDelete})] = ad
+				onDelete    = onDelete
+			})] = ad
 		end
 		-- load membership info
 		memberships = loaded_data.memberships
@@ -317,6 +348,7 @@ local unserialize = function (data)
 end
 
 Event.Register("onCreateBB", onCreateBB)
+Event.Register("onShipUndocked", onShipUndocked)
 Event.Register("onGameStart", onGameStart)
 
 Serializer:Register("FuelClub", serialize, unserialize)

@@ -3,13 +3,13 @@
 
 #include "ShipCockpit.h"
 
-#include "CameraController.h"
 #include "Easing.h"
 #include "Game.h"
 #include "Pi.h"
 #include "Player.h"
 #include "WorldView.h"
 #include "graphics/Renderer.h"
+#include "ship/CameraController.h"
 
 ShipCockpit::ShipCockpit(const std::string &modelName) :
 	m_shipDir(0.0),
@@ -43,7 +43,7 @@ void ShipCockpit::Render(Graphics::Renderer *renderer, const Camera *camera, con
 
 inline void ShipCockpit::resetInternalCameraController()
 {
-	m_icc = static_cast<InternalCameraController *>(Pi::game->GetWorldView()->shipView.GetCameraController());
+	m_icc = static_cast<InternalCameraController *>(Pi::game->GetWorldView()->shipView->GetCameraController());
 }
 
 void ShipCockpit::Update(const Player *player, float timeStep)
@@ -70,7 +70,7 @@ void ShipCockpit::Update(const Player *player, float timeStep)
 	//---------------------------------------- Acceleration
 	float cur_vel = CalculateSignedForwardVelocity(-cur_dir, player->GetVelocity()); // Forward is -Z
 	float gforce = Clamp(floorf(((fabs(cur_vel) - m_shipVel) / timeStep) / 9.8f), -COCKPIT_MAX_GFORCE, COCKPIT_MAX_GFORCE);
-	if (fabs(cur_vel) > 500000.0f || // Limit gforce measurement so we don't get astronomical fluctuations
+	if (fabs(cur_vel) > 500000.0f ||	   // Limit gforce measurement so we don't get astronomical fluctuations
 		fabs(gforce - m_gForce) > 100.0) { // Smooth out gforce one frame spikes, sometimes happens when hitting max speed due to the thrust limiters
 		gforce = 0.0f;
 	}
@@ -178,6 +178,14 @@ void ShipCockpit::Update(const Player *player, float timeStep)
 		}
 	} else {
 		m_rotInterp = 0.0f;
+	}
+
+	// setup thruster levels
+	if (GetModel()) {
+		Propulsion *prop = player->GetComponent<Propulsion>();
+		vector3f linthrust{ prop->GetLinThrusterState() };
+		vector3f angthrust{ prop->GetAngThrusterState() };
+		GetModel()->SetThrust(linthrust, -angthrust);
 	}
 }
 

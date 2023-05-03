@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "LuaRef.h"
@@ -21,14 +21,12 @@ const LuaRef &LuaRef::operator=(const LuaRef &ref)
 {
 	if (&ref == this)
 		return ref;
-	if (m_id != LUA_NOREF && m_lua) {
-		--(*m_copycount);
-	}
-	CheckCopyCount();
+	Unref();
+
 	m_lua = ref.m_lua;
 	m_id = ref.m_id;
 	m_copycount = ref.m_copycount;
-	if (m_lua && m_id)
+	if (m_lua && m_id != LUA_NOREF)
 		++(*m_copycount);
 	return *this;
 }
@@ -42,7 +40,6 @@ void LuaRef::Unref()
 {
 	if (m_id != LUA_NOREF && m_lua) {
 		--(*m_copycount);
-		m_id = LUA_NOREF;
 		CheckCopyCount();
 	}
 }
@@ -70,19 +67,15 @@ void LuaRef::CheckCopyCount()
 		PushGlobalToStack();
 		luaL_unref(m_lua, -1, m_id);
 		lua_pop(m_lua, 1);
+		m_id = LUA_NOREF;
 	}
 }
 
 LuaRef::LuaRef(lua_State *l, int index) :
 	m_lua(l),
-	m_id(0)
+	m_id(LUA_NOREF)
 {
 	assert(m_lua && index);
-	if (index == LUA_NOREF) {
-		m_copycount = new int(0);
-		return;
-	}
-
 	index = lua_absindex(m_lua, index);
 
 	PushGlobalToStack();
@@ -145,8 +138,8 @@ void LuaRef::LoadFromJson(const Json &jsonObj)
 	if (jsonObj.count("lua_ref_json")) {
 		LuaSerializer::unpickle_json(m_lua, jsonObj["lua_ref_json"]);
 	} else if (jsonObj.count("lua_ref")) {
-		std::string pickled = jsonObj["lua_ref"];
-		LuaSerializer::unpickle(m_lua, pickled.c_str());
+		// old text-based serialization
+		throw SavedGameCorruptException();
 	} else {
 		throw SavedGameCorruptException();
 	}

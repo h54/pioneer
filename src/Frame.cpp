@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Frame.h"
@@ -34,6 +34,10 @@ Frame::Frame(const Dummy &d, FrameId parent, const char *label, unsigned int fla
 
 	s_collisionSpaces.emplace_back();
 	m_collisionSpace = s_collisionSpaces.size() - 1;
+	// TODO: this hacks around TraceRay being called on an uninitialized collision space and crashing
+	// Need to further evaluate the impact of this and whether it should be called in the CollisionSpace constructor instead
+	// FIXME: this causes a crash when resizing the collisionSpace array because a collision space double-frees when move constructing
+	// s_collisionSpaces.back().RebuildObjectTrees();
 
 	if (m_parent.valid())
 		Frame::GetFrame(m_parent)->AddChild(m_thisId);
@@ -188,7 +192,7 @@ FrameId Frame::FromJson(const Json &frameObj, Space *space, FrameId parent, doub
 		f->m_thisId = frameObj["frameId"];
 
 		// Check if frames order in load and save are the same
-		assert(s_frames.size() == 0 || (s_frames.size() - 1) != f->m_thisId.id());
+		assert(s_frames.size() == 0 || (s_frames.size() - 1) == f->m_thisId.id());
 
 		f->m_flags = frameObj["flags"];
 		f->m_radius = frameObj["radius"];
@@ -242,14 +246,12 @@ void Frame::DeleteFrames()
 
 Frame *Frame::GetFrame(FrameId fId)
 {
-	PROFILE_SCOPED()
-
-	if (fId && fId.id() < s_frames.size())
-		return &s_frames[fId];
-	else if (fId)
+#ifndef NDEBUG
+	if (fId && fId.id() >= s_frames.size())
 		Error("In '%s': fId is valid but out of range (%zu)...\n", __func__, fId.id());
+#endif
 
-	return nullptr;
+	return fId.valid() ? &s_frames[fId] : nullptr;
 }
 
 FrameId Frame::CreateCameraFrame(FrameId parent)
@@ -288,6 +290,8 @@ void Frame::PostUnserializeFixup(FrameId fId, Space *space)
 	Frame *f = Frame::GetFrame(fId);
 	f->UpdateRootRelativeVars();
 	f->m_astroBody = space->GetBodyByIndex(f->m_astroBodyIndex);
+	// build the object trees once after loading so they're initialized while paused.
+	f->GetCollisionSpace()->RebuildObjectTrees();
 	for (FrameId kid : f->GetChildren())
 		PostUnserializeFixup(kid, space);
 }
@@ -350,7 +354,7 @@ vector3d Frame::GetPositionRelTo(FrameId relToId) const
 	const Frame *relTo = Frame::GetFrame(relToId);
 
 	if (GetParent() == relToId) return m_pos; // relative to parent
-	if (relTo->GetParent() == m_thisId) { // relative to child
+	if (relTo->GetParent() == m_thisId) {	  // relative to child
 		if (!relTo->IsRotFrame())
 			return -relTo->m_pos;
 		else
@@ -378,7 +382,7 @@ vector3d Frame::GetInterpPositionRelTo(FrameId relToId) const
 	// early-outs for simple cases, required for accuracy in large systems
 	if (m_thisId == relToId) return vector3d(0, 0, 0);
 	if (GetParent() == relTo->GetId()) return m_interpPos; // relative to parent
-	if (relTo->GetParent() == m_thisId) { // relative to child
+	if (relTo->GetParent() == m_thisId) {				   // relative to child
 		if (!relTo->IsRotFrame())
 			return -relTo->m_interpPos;
 		else
@@ -417,13 +421,23 @@ matrix3x3d Frame::GetInterpOrientRelTo(FrameId relToId) const
 */
 }
 
+matrix4x4d Frame::GetTransformRelTo(FrameId relToId) const
+{
+	return matrix4x4d(GetOrientRelTo(relToId), GetPositionRelTo(relToId));
+}
+
+matrix4x4d Frame::GetInterpTransformRelTo(FrameId relToId) const
+{
+	return matrix4x4d(GetInterpOrientRelTo(relToId), GetInterpPositionRelTo(relToId));
+}
+
 void Frame::UpdateInterpTransform(double alpha)
 {
 	PROFILE_SCOPED()
 	m_interpPos = alpha * m_pos + (1.0 - alpha) * m_oldPos;
 
 	double len = m_oldAngDisplacement * (1.0 - alpha);
-	if (!is_zero_exact(len)) { // very small values are normal here
+	if (!is_zero_exact(len)) {					   // very small values are normal here
 		matrix3x3d rot = matrix3x3d::RotateY(len); // RotateY is backwards
 		m_interpOrient = m_orient * rot;
 	} else
@@ -463,6 +477,7 @@ void Frame::ClearMovement()
 
 void Frame::UpdateOrbitRails(double time, double timestep)
 {
+	PROFILE_SCOPED()
 	std::for_each(begin(s_frames), end(s_frames), [&time, &timestep](Frame &frame) {
 		frame.m_oldPos = frame.m_pos;
 		frame.m_oldAngDisplacement = frame.m_angSpeed * timestep;
@@ -479,8 +494,8 @@ void Frame::UpdateOrbitRails(double time, double timestep)
 
 		// update frame rotation
 		double ang = fmod(frame.m_angSpeed * time, 2.0 * M_PI);
-		if (!is_zero_exact(ang)) { // frequently used with e^-10 etc
-			matrix3x3d rot = matrix3x3d::RotateY(-ang); // RotateY is backwards
+		if (!is_zero_exact(ang)) {						  // frequently used with e^-10 etc
+			matrix3x3d rot = matrix3x3d::RotateY(-ang);	  // RotateY is backwards
 			frame.m_orient = frame.m_initialOrient * rot; // angvel always +y
 		}
 		frame.UpdateRootRelativeVars(); // update root-relative pos/vel/orient
@@ -497,9 +512,9 @@ void Frame::SetInitialOrient(const matrix3x3d &m, double time)
 {
 	m_initialOrient = m;
 	double ang = fmod(m_angSpeed * time, 2.0 * M_PI);
-	if (!is_zero_exact(ang)) { // frequently used with e^-10 etc
+	if (!is_zero_exact(ang)) {						// frequently used with e^-10 etc
 		matrix3x3d rot = matrix3x3d::RotateY(-ang); // RotateY is backwards
-		m_orient = m_initialOrient * rot; // angvel always +y
+		m_orient = m_initialOrient * rot;			// angvel always +y
 	} else {
 		m_orient = m_initialOrient;
 	}
@@ -509,9 +524,9 @@ void Frame::SetOrient(const matrix3x3d &m, double time)
 {
 	m_orient = m;
 	double ang = fmod(m_angSpeed * time, 2.0 * M_PI);
-	if (!is_zero_exact(ang)) { // frequently used with e^-10 etc
+	if (!is_zero_exact(ang)) {					   // frequently used with e^-10 etc
 		matrix3x3d rot = matrix3x3d::RotateY(ang); // RotateY is backwards
-		m_initialOrient = m_orient * rot; // angvel always +y
+		m_initialOrient = m_orient * rot;		   // angvel always +y
 	} else {
 		m_initialOrient = m_orient;
 	}

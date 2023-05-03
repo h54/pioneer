@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #pragma once
@@ -76,7 +76,7 @@ namespace Perf {
 	private:
 		struct Counter {
 			Counter(bool reset) :
-				resetOnNewFrame(reset){};
+				ctr(0), resetOnNewFrame(reset){};
 			// mutable because the only thing we're modifying via non-const references is the atomic counters
 			mutable std::atomic<uint32_t> ctr;
 			bool resetOnNewFrame;

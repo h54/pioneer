@@ -19,6 +19,14 @@
     "description": "",
     "message": "Se ofrece tripulación"
   },
+  "CREW_FOR_HIRE_DESC": {
+    "description": "",
+    "message": "Tripulación disponible para contratar en este puerto estelar."
+  },
+  "CREW_FOR_HIRE_TITLE": {
+    "description": "",
+    "message": "TRIPULACIÓN DISPONIBLE"
+  },
   "GO_BACK": {
     "description": "",
     "message": "Atrás"

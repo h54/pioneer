@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _PROJECTILE_H
@@ -31,8 +31,7 @@ class Frame;
 namespace Graphics {
 	class Material;
 	class Renderer;
-	class RenderState;
-	class VertexArray;
+	class MeshObject;
 } // namespace Graphics
 
 class Projectile : public Body {
@@ -76,11 +75,10 @@ private:
 
 	static void BuildModel();
 
-	static std::unique_ptr<Graphics::VertexArray> s_sideVerts;
-	static std::unique_ptr<Graphics::VertexArray> s_glowVerts;
+	static std::unique_ptr<Graphics::MeshObject> s_sideMesh;
+	static std::unique_ptr<Graphics::MeshObject> s_glowMesh;
 	static std::unique_ptr<Graphics::Material> s_sideMat;
 	static std::unique_ptr<Graphics::Material> s_glowMat;
-	static Graphics::RenderState *s_renderState;
 };
 
 #endif /* _PROJECTILE_H */

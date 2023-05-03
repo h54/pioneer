@@ -101,7 +101,11 @@
   },
   "FLAVOUR_0_ADTEXT": {
     "description": "",
-    "message": "RECHERCHÉ: transport d'un petit groupe pour le système {system}. Payons {cash}."
+    "message": "Cherche transport pour un petit groupe vers le système {system}. Paiement cash: {cash}."
+  },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "CHERCHE TRANSPORT"
   },
   "FLAVOUR_0_DANGER": {
     "description": "",
@@ -133,7 +137,11 @@
   },
   "FLAVOUR_10_ADTEXT": {
     "description": "",
-    "message": "VAISSEAU RECHERCHÉ: voyage en vaisseau rapide pour le système {system}."
+    "message": "URGENT: Célébrité cherche transport sur vaisseau rapide vers le système {system}. Discrétion obligatoire."
+  },
+  "FLAVOUR_10_ADTITLE": {
+    "description": "",
+    "message": "CHERCHE VAISSEAU DISCRET"
   },
   "FLAVOUR_10_DANGER": {
     "description": "",
@@ -149,7 +157,7 @@
   },
   "FLAVOUR_10_INTROTEXT": {
     "description": "",
-    "message": "Mon nom est {name}. J'ai besoin de me rendre rapidement au système {system} ({sectorx}, {sectory}, {sectorz}), éloigné de {dist} al. Je paie {cash}."
+    "message": "Mon nom est {name}. J'ai besoin de me rendre rapidement dans le système {system} ({sectorx}, {sectory}, {sectorz}), éloigné de {dist} al. Je paie {cash}."
   },
   "FLAVOUR_10_SUCCESSMSG": {
     "description": "",
@@ -161,11 +169,15 @@
   },
   "FLAVOUR_10_WHYSOMUCH": {
     "description": "",
-    "message": "Je préférerais rester à l'abri d'une certaine personne."
+    "message": "Quelqu'un me recherche. Je n'aimerais pas qu'il me trouve..."
   },
   "FLAVOUR_11_ADTEXT": {
     "description": "",
-    "message": "VAISSEAU RAPIDE: voyage en vaisseau rapide pour le système {system}."
+    "message": "Inspecteur de corporation cherche transport sur un vaisseau rapide vers le système {system}."
+  },
+  "FLAVOUR_11_ADTITLE": {
+    "description": "",
+    "message": "CHERCHE VAISSEAU RAPIDE"
   },
   "FLAVOUR_11_DANGER": {
     "description": "",
@@ -173,7 +185,7 @@
   },
   "FLAVOUR_11_FAILUREMSG": {
     "description": "",
-    "message": "Je vais perdre mon boulot a cause de votre incompétence. Je vais avoir besoin de cet argent plus que vous !"
+    "message": "Je vais perdre mon boulot à cause de votre incompétence. Je vais avoir besoin de cet argent plus que vous !"
   },
   "FLAVOUR_11_HOWMANY": {
     "description": "",
@@ -181,7 +193,7 @@
   },
   "FLAVOUR_11_INTROTEXT": {
     "description": "",
-    "message": "Mon nom est {name}. J'ai besoin de me rendre rapidement au système {system} ({sectorx}, {sectory}, {sectorz}), éloigné de {dist} al. Je paie {cash}."
+    "message": "Mon nom est {name}. J'ai besoin de me rendre rapidement dans le système {system} ({sectorx}, {sectory}, {sectorz}), éloigné de {dist} al. Je paie {cash}."
   },
   "FLAVOUR_11_SUCCESSMSG": {
     "description": "",
@@ -197,7 +209,11 @@
   },
   "FLAVOUR_12_ADTEXT": {
     "description": "",
-    "message": "VAISSEAU REQUIS: voyage pour le système {system}."
+    "message": "Cherche transport urgent pour citoyen en fuite. Transport vers le système {system}."
+  },
+  "FLAVOUR_12_ADTITLE": {
+    "description": "",
+    "message": "VAISSEAU REQUIS"
   },
   "FLAVOUR_12_DANGER": {
     "description": "",
@@ -213,7 +229,7 @@
   },
   "FLAVOUR_12_INTROTEXT": {
     "description": "",
-    "message": "Mon nom est {name}. J'ai besoin de me rendre au système {system} ({sectorx}, {sectory}, {sectorz}), éloigné de {dist} al. Je paie {cash}."
+    "message": "Mon nom est {name}. J'ai besoin de me rendre dans le système {system} ({sectorx}, {sectory}, {sectorz}), éloigné de {dist} al. Je paie {cash}."
   },
   "FLAVOUR_12_SUCCESSMSG": {
     "description": "",
@@ -229,7 +245,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "RECHERCHÉ: transport d'un petit groupe pour le système {system}. Payons {cash}."
+    "message": "Cherche transport pour un petit groupe vers le système {system}. Paiement cash: {cash}."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "CHERCHE TRANSPORT"
   },
   "FLAVOUR_1_DANGER": {
     "description": "",
@@ -261,7 +281,11 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "RECHERCHÉ: transport d'un petit groupe pour le système {system}. Payons {cash}."
+    "message": "Cherche transport pour un petit groupe vers le système {system}. Paiement cash: {cash}."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "TRANSPORT POUR PETIT GROUPE"
   },
   "FLAVOUR_2_DANGER": {
     "description": "",
@@ -293,7 +317,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "VAISSEAU REQUIS: voyage pour le système {system}. Je paie {cash}."
+    "message": "Cherche vaisseau pour transport à haut-risque vers le système {system}. Paiement: {cash}."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "CHERCHE VAISSEAU"
   },
   "FLAVOUR_3_DANGER": {
     "description": "",
@@ -309,7 +337,7 @@
   },
   "FLAVOUR_3_INTROTEXT": {
     "description": "",
-    "message": "Salut, mon nom est {name} et j'ai besoin de me rendre au système {system} ({sectorx}, {sectory}, {sectorz}), éloigné de {dist} al. Je paie {cash}."
+    "message": "Salut, mon nom est {name} et j'ai besoin de me rendre dans le système {system} ({sectorx}, {sectory}, {sectorz}), éloigné de {dist} al. Je paie {cash}."
   },
   "FLAVOUR_3_SUCCESSMSG": {
     "description": "",
@@ -325,7 +353,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "VAISSEAU RECHERCHÉ: voyage pour le système {system}. Je paie {cash}."
+    "message": "Cherche vaisseau pour transport en 1ère classe vers le système {system}. Paiement: {cash}."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "TRANSPORT 1ÈRE CLASSE"
   },
   "FLAVOUR_4_DANGER": {
     "description": "",
@@ -333,7 +365,7 @@
   },
   "FLAVOUR_4_FAILUREMSG": {
     "description": "",
-    "message": "Ne demandez même pas à être payé. Je vous dénonce aux autorités."
+    "message": "Ne demandez même pas à être payé! Je vous dénonce aux autorités."
   },
   "FLAVOUR_4_HOWMANY": {
     "description": "",
@@ -341,7 +373,7 @@
   },
   "FLAVOUR_4_INTROTEXT": {
     "description": "",
-    "message": "Salut, mon nom est {name} et j'ai besoin de me rendre au système {system} ({sectorx}, {sectory}, {sectorz}), éloigné de {dist} al. Je paie {cash}."
+    "message": "Salut, mon nom est {name} et j'ai besoin de me rendre dans le système {system} ({sectorx}, {sectory}, {sectorz}), éloigné de {dist} al. Je paie {cash}."
   },
   "FLAVOUR_4_SUCCESSMSG": {
     "description": "",
@@ -357,11 +389,15 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "VAISSEAU RECHERCHÉ: voyage pour le système {system}. Je paie {cash}."
+    "message": "Cherche transport discret pour personnalité VIP vers le système {system}. Paiement: {cash}."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "TRANSPORT DISCRET"
   },
   "FLAVOUR_5_DANGER": {
     "description": "",
-    "message": "Vous pouvez attirer l'attention de journalistes. Ignorez-les juste."
+    "message": "Vous pourriez attirer l'attention de journalistes. Ignorez-les simplement."
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
@@ -373,7 +409,7 @@
   },
   "FLAVOUR_5_INTROTEXT": {
     "description": "",
-    "message": "Salut, mon nom est {name} et j'ai besoin de me rendre au système {system} ({sectorx}, {sectory}, {sectorz}), éloigné de {dist} al. Je paie {cash}."
+    "message": "Salut, mon nom est {name} et j'ai besoin de me rendre dans le système {system} ({sectorx}, {sectory}, {sectorz}), éloigné de {dist} al. Je paie {cash}."
   },
   "FLAVOUR_5_SUCCESSMSG": {
     "description": "",
@@ -389,7 +425,11 @@
   },
   "FLAVOUR_6_ADTEXT": {
     "description": "",
-    "message": "VAISSEAU RECHERCHÉ: voyage pour le système {system}. Je paie {cash}."
+    "message": "Journaliste cherche a se rapprocher du système {system} pour couvrir des nouvelles en constante évolution. Paiement de {cash}."
+  },
+  "FLAVOUR_6_ADTITLE": {
+    "description": "",
+    "message": "VAISSEAU REQUIS"
   },
   "FLAVOUR_6_DANGER": {
     "description": "",
@@ -405,7 +445,7 @@
   },
   "FLAVOUR_6_INTROTEXT": {
     "description": "",
-    "message": "Salut, mon nom est {name} et j'ai besoin de me rendre au système {system} ({sectorx}, {sectory}, {sectorz}), éloigné de {dist} al. Je paie {cash}."
+    "message": "Salut, mon nom est {name} et j'ai besoin de me rendre dans le système {system} ({sectorx}, {sectory}, {sectorz}), éloigné de {dist} al. Je paie {cash}."
   },
   "FLAVOUR_6_SUCCESSMSG": {
     "description": "",
@@ -421,11 +461,15 @@
   },
   "FLAVOUR_7_ADTEXT": {
     "description": "",
-    "message": "VAISSEAU RECHERCHÉ: voyage en toute sécurité pour le système {system}. Je paie {cash}."
+    "message": "Cherche vaisseau pour passage en toute sécurité vers le système {system}. Transporteur sécurisé requis. Paie {cash}."
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "TRANSPORT SÉCURISÉ REQUIS"
   },
   "FLAVOUR_7_DANGER": {
     "description": "",
-    "message": "La mafia n'apprécie guère les gens qui aident leurs ennemis."
+    "message": "La mafia n'apprécie guère les gens qui aident ses ennemis."
   },
   "FLAVOUR_7_FAILUREMSG": {
     "description": "",
@@ -437,7 +481,7 @@
   },
   "FLAVOUR_7_INTROTEXT": {
     "description": "",
-    "message": "Salut, mon nom est {name} et j'ai besoin de me rendre en toute sécurité au système {system} ({sectorx}, {sectory}, {sectorz}), éloigné de {dist} al. Je paie {cash}."
+    "message": "Salut, mon nom est {name} et j'ai besoin de me rendre en toute sécurité dans le système {system} ({sectorx}, {sectory}, {sectorz}), éloigné de {dist} al. Je paie {cash}."
   },
   "FLAVOUR_7_SUCCESSMSG": {
     "description": "",
@@ -449,11 +493,15 @@
   },
   "FLAVOUR_7_WHYSOMUCH": {
     "description": "",
-    "message": "La mafia veut ma mort."
+    "message": "La mafia veut m'éliminer."
   },
   "FLAVOUR_8_ADTEXT": {
     "description": "",
-    "message": "VAISSEAU RECHERCHÉ: voyage en vaisseau rapide pour le système {system}."
+    "message": "Transport inviduel urgent vers le système {system} requis. Supplément inclu dans le paiement."
+  },
+  "FLAVOUR_8_ADTITLE": {
+    "description": "",
+    "message": "TRANSPORT INDIVIDUEL RAPIDE"
   },
   "FLAVOUR_8_DANGER": {
     "description": "",
@@ -469,7 +517,7 @@
   },
   "FLAVOUR_8_INTROTEXT": {
     "description": "",
-    "message": "Mon nom est {name}. J'ai besoin de me rendre rapidement au système {system} ({sectorx}, {sectory}, {sectorz}), éloigné de {dist} al. Je paie {cash}."
+    "message": "Mon nom est {name}. J'ai besoin de me rendre rapidement dans le système {system} ({sectorx}, {sectory}, {sectorz}), éloigné de {dist} al. Je paie {cash}."
   },
   "FLAVOUR_8_SUCCESSMSG": {
     "description": "",
@@ -485,11 +533,15 @@
   },
   "FLAVOUR_9_ADTEXT": {
     "description": "",
-    "message": "VAISSEAU RECHERCHÉ: voyage en vaisseau rapide pour le système {system}."
+    "message": "Besoin de transport urgent pour citoyen honnête. Transport rapide vers le système {system}."
+  },
+  "FLAVOUR_9_ADTITLE": {
+    "description": "",
+    "message": "TRANSPORT LÉGAL"
   },
   "FLAVOUR_9_DANGER": {
     "description": "",
-    "message": "La police peut essayer de vous arrêter."
+    "message": "La police pourrait tenter de vous arrêter."
   },
   "FLAVOUR_9_FAILUREMSG": {
     "description": "",
@@ -501,7 +553,7 @@
   },
   "FLAVOUR_9_INTROTEXT": {
     "description": "",
-    "message": "Mon nom est {name}. J'ai besoin de me rendre rapidement au système {system} ({sectorx}, {sectory}, {sectorz}), éloigné de {dist} al. Je paie {cash}."
+    "message": "Mon nom est {name}. J'ai besoin de me rendre rapidement dans le système {system} ({sectorx}, {sectory}, {sectorz}), éloigné de {dist} al. Je paie {cash}."
   },
   "FLAVOUR_9_SUCCESSMSG": {
     "description": "",
@@ -513,7 +565,7 @@
   },
   "FLAVOUR_9_WHYSOMUCH": {
     "description": "",
-    "message": "La police veut que je les aide sur leurs enquêtes."
+    "message": "La police veut que je les aide dans leurs enquêtes."
   },
   "FROM": {
     "description": "",
@@ -525,7 +577,7 @@
   },
   "HEY_YOU_ARE_GOING_TO_PAY_FOR_THIS": {
     "description": "",
-    "message": "Hé!?! Vous allez payer pour cela!!!"
+    "message": "Hé!?! Vous allez le payer !!!"
   },
   "HOW_MANY_OF_YOU_ARE_THERE": {
     "description": "",
@@ -537,11 +589,7 @@
   },
   "I_MUST_BE_THERE_BEFORE": {
     "description": "",
-    "message": "Je dois être arrivé avant"
-  },
-  "LY": {
-    "description": "",
-    "message": "al"
+    "message": "Je dois être arrivé avant "
   },
   "OK_AGREED": {
     "description": "",
@@ -561,7 +609,7 @@
   },
   "PIRATE_TAUNTS_3": {
     "description": "",
-    "message": "Vou n'êtes pas prêt de vous arrimer aujourd'hui!"
+    "message": "Vous n'êtes pas prêt de vous arrimer aujourd'hui!"
   },
   "SET_AS_TARGET": {
     "description": "",
@@ -577,7 +625,7 @@
   },
   "WE_WANT_TO_BE_THERE_BEFORE": {
     "description": "",
-    "message": "Nous voulons être arrivés avant"
+    "message": "Nous voulons être arrivés avant "
   },
   "WHY_SO_MUCH_MONEY": {
     "description": "",
@@ -585,7 +633,7 @@
   },
   "WILL_I_BE_IN_ANY_DANGER": {
     "description": "",
-    "message": "Serait-je en danger?"
+    "message": "Serai-je en danger?"
   },
   "WRONG_SYSTEM": {
     "description": "Shown if system name is right, but coordinates are wrong",

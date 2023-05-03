@@ -8,8 +8,8 @@
     "message": "Уходи вовремя"
   },
   "ADVICE_1_BODYTEXT": {
-    "description": "Point made is: the real illegal goods traders are fix to each station, but police's fake illegal goods traders will be random every time.",
-    "message": "As you return to a station, be weary of those alternative market places you do not recognize, and you will stay out of trouble with the law."
+    "description": "Point made is: the real illegal goods traders are fixed to each station, but police's fake illegal goods traders will be random every time.",
+    "message": "Вернувшись на станцию, избегайте неизвестных вам нелегальных рынков, и тогда вы избежите проблем с законом."
   },
   "ADVICE_1_HEADLINE": {
     "description": "",
@@ -82,6 +82,14 @@
   "RUMOUR": {
     "description": "Headline starts with this pre-headline",
     "message": "СЛУХИ"
+  },
+  "RUMOUR_1_BODYTEXT": {
+    "description": "",
+    "message": "От кого-то из федерального флота я слыхал, что однажды один из их корветов случайно прыгнул в систему, где был расположен форпост корпорации \"Хабер\", примерно в 50 световых годах от Солнца, названную Рондел, и почти нарвался на открытый конфликт. Немногие за пределами флота знают о самом инциденте, но поговаривают, что администрация Рондела с тех пор стала более агрессивна к посетителям, поэтому грузовые пилоты начали обходить их стороной."
+  },
+  "RUMOUR_1_HEADLINE": {
+    "description": "",
+    "message": "Инцидент Рондела"
   },
   "TALE_1_BODYTEXT": {
     "description": "",

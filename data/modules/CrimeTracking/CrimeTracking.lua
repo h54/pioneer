@@ -1,4 +1,4 @@
--- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Event = require 'Event'
@@ -72,7 +72,7 @@ end
 
 local onJettison = function(ship, cargo)
 	if ship:IsPlayer() then
-		if cargo.price <= 0 or not Game.system:IsCommodityLegal(cargo) then
+		if cargo.price <= 0 or not Game.system:IsCommodityLegal(cargo.name) then
 			Legal:notifyOfCrime(ship,"DUMPING")
 		end
 	end

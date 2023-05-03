@@ -8,7 +8,7 @@
     "message": "Man sollte wissen, wann es Zeit ist weiterzuziehen"
   },
   "ADVICE_1_BODYTEXT": {
-    "description": "Point made is: the real illegal goods traders are fix to each station, but police's fake illegal goods traders will be random every time.",
+    "description": "Point made is: the real illegal goods traders are fixed to each station, but police's fake illegal goods traders will be random every time.",
     "message": "Wenn du auf einer Station ankommst, sei vorsichtig bei alternativen Marktplätzen, die du nicht kennst. So vermeidest du Ärger mit der Polizei."
   },
   "ADVICE_1_HEADLINE": {
@@ -82,6 +82,14 @@
   "RUMOUR": {
     "description": "Headline starts with this pre-headline",
     "message": "GERÜCHT"
+  },
+  "RUMOUR_1_BODYTEXT": {
+    "description": "",
+    "message": "Eine Freundin in der SolFed-Navy hat mir erzählt, dass einmal eine Korvette aus Versehen in ein System gesprungen ist, das ein Außenposten von Haber ist. Das System heißt Rondel, gut 50 Lichtjahre von Sol entfernt. Die Sache hat damals ziemliche Wellen geschlagen und beinahe einen Krieg ausgelöst. Außerhalb der Navy ist der Zwischenfall eher unbekannt, ich habe aber gehört dass die Verwaltung von Rondel seitdem ziemlich aggressiv auf Besucher reagiert und Frachtpiloten angefangen haben, das System zu umfliegen."
+  },
+  "RUMOUR_1_HEADLINE": {
+    "description": "",
+    "message": "Der Rondel-Zwischenfall"
   },
   "TALE_1_BODYTEXT": {
     "description": "",

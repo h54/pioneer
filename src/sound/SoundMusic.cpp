@@ -1,10 +1,9 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "SoundMusic.h"
 #include "Pi.h"
 #include "libs.h" //for clamp
-#include "lua/LuaEvent.h"
 #include <map>
 
 namespace Sound {
@@ -98,7 +97,7 @@ namespace Sound {
 		if (m_playing) { //expecting report
 			if ((m_eventOnePlaying && !m_eventOne.IsPlaying()) || (!m_eventOnePlaying && !m_eventTwo.IsPlaying())) {
 				m_playing = false;
-				LuaEvent::Queue("onSongFinished");
+				onSongFinished.emit();
 			}
 		}
 	}

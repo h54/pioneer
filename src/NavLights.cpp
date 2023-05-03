@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "NavLights.h"
@@ -48,6 +48,7 @@ NavLights::LightBulb::LightBulb(Uint8 _group, Uint8 _mask, Uint8 _color, SceneGr
 
 void NavLights::Init(Graphics::Renderer *renderer)
 {
+	PROFILE_SCOPED()
 	assert(!g_initted);
 
 	IniConfig cfg;
@@ -64,12 +65,31 @@ void NavLights::Init(Graphics::Renderer *renderer)
 	m_lightColorsUVoffsets[NAVLIGHT_BLUE] = LoadLightColorUVoffset(cfg.String("StaticUVOffset"));
 	m_lightColorsUVoffsets[NAVLIGHT_YELLOW] = LoadLightColorUVoffset(cfg.String("DockingUVOffset"));
 
+	const std::string texPath = cfg.String("NavLightsTexture");
+	texHalos4x4.Reset(Graphics::TextureBuilder::Billboard(texPath).GetOrCreateTexture(renderer, std::string("billboard")));
+
+	Graphics::MaterialDescriptor desc;
+	desc.effect = Graphics::EFFECT_BILLBOARD_ATLAS;
+	desc.textures = 1;
+
+	Graphics::RenderStateDesc rsd;
+	rsd.blendMode = Graphics::BLEND_ADDITIVE;
+	rsd.depthWrite = false;
+	rsd.primitiveType = Graphics::POINTS;
+
+	matHalos4x4.Reset(renderer->CreateMaterial("billboards", desc, rsd));
+	matHalos4x4->SetTexture("texture0"_hash, texHalos4x4.Get());
+	matHalos4x4->SetPushConstant("coordDownScale"_hash, 0.5f);
+
 	g_initted = true;
 }
 
 void NavLights::Uninit()
 {
 	assert(g_initted);
+
+	matHalos4x4.Reset();
+	texHalos4x4.Reset();
 
 	g_initted = false;
 }
@@ -78,8 +98,8 @@ NavLights::NavLights(SceneGraph::Model *model, float period) :
 	m_time(0.f),
 	m_period(period),
 	m_enabled(false),
-	m_billboardTris(Graphics::ATTRIB_POSITION | Graphics::ATTRIB_NORMAL),
-	m_billboardRS(nullptr)
+	// NB - we're (ab)using the normal type to hold (uv coordinate offset value + point size)
+	m_billboardTris(Graphics::ATTRIB_POSITION | Graphics::ATTRIB_NORMAL)
 {
 	PROFILE_SCOPED();
 	assert(g_initted);
@@ -113,7 +133,7 @@ NavLights::NavLights(SceneGraph::Model *model, float period) :
 		} else if (mt->GetName().substr(9, 3) == "pad") {
 			//group by pad number
 			// due to this problem: http://stackoverflow.com/questions/15825254/why-is-scanfhhu-char-overwriting-other-variables-when-they-are-local
-			// where MSVC is still using a C89 compiler the format identifer %hhu is not recognised. Therefore I've switched to Uint32 for group.
+			// where MSVC is still using a C89 compiler the format identifier %hhu is not recognised. Therefore I've switched to Uint32 for group.
 			PiVerify(1 == sscanf(mt->GetName().c_str(), "navlight_pad%u", &group));
 			mask = 0xf8;
 		}
@@ -179,50 +199,17 @@ void NavLights::Update(float time)
 
 void NavLights::Render(Graphics::Renderer *renderer)
 {
-	if (!m_billboardRS) {
-		Graphics::MaterialDescriptor desc;
-		desc.effect = Graphics::EFFECT_BILLBOARD_ATLAS;
-		desc.textures = 1;
-		matHalos4x4.Reset(renderer->CreateMaterial(desc));
-		texHalos4x4.Reset(Graphics::TextureBuilder::Billboard("textures/halo_4x4.dds").GetOrCreateTexture(renderer, std::string("billboard")));
-		matHalos4x4->texture0 = texHalos4x4.Get();
+	if (!m_billboardTris.IsEmpty()) {
+		renderer->SetTransform(matrix4x4f::Identity());
+		renderer->DrawBuffer(&m_billboardTris, matHalos4x4.Get());
+		renderer->GetStats().AddToStatCount(Graphics::Stats::STAT_BILLBOARD, m_billboardTris.GetNumVerts());
 
-		Graphics::RenderStateDesc rsd;
-		rsd.blendMode = Graphics::BLEND_ADDITIVE;
-		rsd.depthWrite = false;
-		m_billboardRS = renderer->CreateRenderState(rsd);
-	}
-
-	const bool isVBValid = m_billboardVB.Valid();
-	const bool hasVerts = !m_billboardTris.IsEmpty();
-	const bool isVertCountEnough = isVBValid && (m_billboardTris.GetNumVerts() <= m_billboardVB->GetCapacity());
-	if (hasVerts && (!isVBValid || !isVertCountEnough)) {
-		//create buffer
-		// NB - we're (ab)using the normal type to hold (uv coordinate offset value + point size)
-		Graphics::VertexBufferDesc vbd;
-		vbd.attrib[0].semantic = Graphics::ATTRIB_POSITION;
-		vbd.attrib[0].format = Graphics::ATTRIB_FORMAT_FLOAT3;
-		vbd.attrib[1].semantic = Graphics::ATTRIB_NORMAL;
-		vbd.attrib[1].format = Graphics::ATTRIB_FORMAT_FLOAT3;
-		vbd.numVertices = m_billboardTris.GetNumVerts();
-		vbd.usage = Graphics::BUFFER_USAGE_DYNAMIC; // we could be updating this per-frame
-		m_billboardVB.Reset(renderer->CreateVertexBuffer(vbd));
-	}
-
-	if (m_billboardVB.Valid()) {
-		if (hasVerts) {
-			m_billboardVB->Populate(m_billboardTris);
-			renderer->SetTransform(matrix4x4f::Identity());
-			renderer->DrawBuffer(m_billboardVB.Get(), m_billboardRS, matHalos4x4.Get(), Graphics::POINTS);
-			renderer->GetStats().AddToStatCount(Graphics::Stats::STAT_BILLBOARD, 1);
-		}
 		m_billboardTris.Clear();
 	}
 }
 
 void NavLights::SetColor(unsigned int group, LightColor c)
 {
-	PROFILE_SCOPED();
 	if (!m_groupLights.count(group)) return;
 	for (LightBulb &light : m_groupLights[group]) {
 		if (light.group != group || light.color == c) continue;
@@ -235,7 +222,6 @@ void NavLights::SetColor(unsigned int group, LightColor c)
 
 void NavLights::SetMask(unsigned int group, uint8_t mask)
 {
-	PROFILE_SCOPED()
 	if (!m_groupLights.count(group)) return;
 	for (LightBulb &light : m_groupLights[group]) {
 		light.mask = mask;

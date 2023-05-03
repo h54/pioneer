@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _MATRIX3X3_H
@@ -7,22 +7,29 @@
 #include "vector3.h"
 #include <math.h>
 #include <stdio.h>
+#include <type_traits>
 
 template <typename T>
 class matrix3x3 {
 private:
 	T cell[9];
+	using other_float_t = typename std::conditional<std::is_same<T, float>::value, double, float>::type;
 
 public:
 	matrix3x3() {}
-	matrix3x3(T val)
+	explicit matrix3x3(T val)
 	{
 		cell[0] = cell[1] = cell[2] = cell[3] = cell[4] = cell[5] = cell[6] =
 			cell[7] = cell[8] = val;
 	}
-	matrix3x3(const T *vals)
+	explicit matrix3x3(const T *vals)
 	{
 		memcpy(cell, vals, sizeof(T) * 9);
+	}
+	explicit matrix3x3(const matrix3x3<other_float_t> &m)
+	{
+		for (int i = 0; i < 9; i++)
+			cell[i] = T(m[i]);
 	}
 
 	T &operator[](const size_t i) { return cell[i]; } // used for serializing
@@ -213,11 +220,15 @@ public:
 		minv[idx2d(2, 2)] = (cell2d(0, 0) * cell2d(1, 1) - cell2d(1, 0) * cell2d(0, 1)) * invdet;
 		return minv;
 	}
-	void Renormalize()
+	matrix3x3 Normalized() const
 	{
 		vector3<T> x = VectorX().Normalized();
 		vector3<T> y = VectorZ().Cross(x).Normalized();
-		*this = FromVectors(x, y);
+		return FromVectors(x, y);
+	}
+	void Renormalize()
+	{
+		*this = Normalized();
 	}
 	void Print() const
 	{
@@ -230,17 +241,6 @@ public:
 
 typedef matrix3x3<float> matrix3x3f;
 typedef matrix3x3<double> matrix3x3d;
-
-static inline void matrix3x3ftod(const matrix3x3f &in, matrix3x3d &out)
-{
-	for (int i = 0; i < 9; i++)
-		out[i] = double(in[i]);
-}
-static inline void matrix3x3dtof(const matrix3x3d &in, matrix3x3f &out)
-{
-	for (int i = 0; i < 9; i++)
-		out[i] = float(in[i]);
-}
 
 static const matrix3x3f matrix3x3fIdentity(matrix3x3f::Identity());
 static const matrix3x3d matrix3x3dIdentity(matrix3x3d::Identity());

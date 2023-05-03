@@ -49,7 +49,11 @@
   },
   "FLAVOUR_0_ADTEXT": {
     "description": "",
-    "message": "ON RECHERCHE: Effacement de {target} du systeme {system}."
+    "message": "Souhaité: élimination de {target} du système {system}."
+  },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "ELIMINATION DÉSIRÉE"
   },
   "FLAVOUR_0_FAILUREMSG": {
     "description": "",
@@ -69,7 +73,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "ON RECHERCHE: Quelqu'un pour tuer {target} du systeme {system}. "
+    "message": "Cherche quelqu'un pour tuer {target} dans le système {system}."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "ÉLIMINATION DE CIBLE"
   },
   "FLAVOUR_1_FAILUREMSG": {
     "description": "",
@@ -89,11 +97,15 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "NETTOYAGE: {target} n'est plus souhaité dans le systeme {system}."
+    "message": "{target} n'est tragiquement plus désiré dans le système {system}. Spécialiste de l'élimination des déchets requis."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "OPÉRATION D'ÉLIMINATION"
   },
   "FLAVOUR_2_FAILUREMSG": {
     "description": "",
-    "message": "Il est très regrettable que {target} soie encore en vie et bien portant. Vous ne recevrez aucun payement puisque vous n'avez pas rempli votre contrat."
+    "message": "Il est très regrettable que la cible {target} soit toujours vivante et en bonne santé. Vous ne recevrez aucun paiement puisque vous n'avez pas respecté votre contrat."
   },
   "FLAVOUR_2_FAILUREMSG2": {
     "description": "",
@@ -109,7 +121,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "EFFACEMENT: : Quelqu'un pour eliminer {target} "
+    "message": "Requis: tueur à gage pour supprimer {target}."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "TERMINAISON"
   },
   "FLAVOUR_3_FAILUREMSG": {
     "description": "",
@@ -117,7 +133,7 @@
   },
   "FLAVOUR_3_FAILUREMSG2": {
     "description": "",
-    "message": "Vous reclamez de l'argent pour un travail fait par un autre ? Allez vous faire voir !"
+    "message": "Vous êtes vraiment en train de demander de l'argent pour un travail accompli par quelqu'un d'autre? Allez vous faire voir."
   },
   "FLAVOUR_3_INTROTEXT": {
     "description": "",
@@ -129,7 +145,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "RETRAITE: Quelqu'un pour mettre à la retraite {target}. "
+    "message": "Opérateur discret requis pour s'assurer de la mise à la retraite fatale de {target}."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "RETRAITE"
   },
   "FLAVOUR_4_FAILUREMSG": {
     "description": "",
@@ -149,7 +169,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "BIOGRAPHIE: Quelques admirateurs souhaiteraient le dècés de  {target}."
+    "message": "Des admirateurs souhaitent la mort de {target}. Si vous êtes experts en liquidation, alors postulez."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "NOTICE BIOGRAPHIQUE"
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
@@ -161,7 +185,7 @@
   },
   "FLAVOUR_5_INTROTEXT": {
     "description": "",
-    "message": "Nous voulons que {target} finisse sa carrière dans le systeme {system} pour {cash}."
+    "message": "Nous voulons que {target} finisse sa carrière dans le système {system} pour {cash}."
   },
   "FLAVOUR_5_SUCCESSMSG": {
     "description": "",
@@ -178,10 +202,6 @@
   "IT_MUST_BE_DONE_AFTER": {
     "description": "",
     "message": "Ce doit etre fait dès que {target} quitteras {spaceport}. Ne loupez pas cette opportunitée."
-  },
-  "LY": {
-    "description": "",
-    "message": "al"
   },
   "OK_AGREED": {
     "description": "",
@@ -213,7 +233,7 @@
   },
   "SYSTEM": {
     "description": "",
-    "message": "Systeme:"
+    "message": "Système:"
   },
   "TARGET_NAME": {
     "description": "",
@@ -329,6 +349,6 @@
   },
   "X_WILL_BE_LEAVING": {
     "description": "",
-    "message": "{target} quittera {spaceport} dans le systeme {system} ({sectorX}, {sectorY}, {sectorZ}),a une distance de {dist} al, en date du {date}. Le transport sera un modèle {shipname} et sera enregistré sous l'ID {shipregid}."
+    "message": "{target} quittera {spaceport} dans le système {system} ({sectorX}, {sectorY}, {sectorZ}), a une distance de {dist} al, en date du {date}. Le transport sera un modèle {shipname} et sera enregistré sous l'ID {shipregid}."
   }
 }

@@ -1,27 +1,39 @@
--- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
+---@class Ship
 local Ship = package.core['Ship']
+
 local Game = package.core['Game']
 local Engine = require 'Engine'
 local Event = require 'Event'
 local Serializer = require 'Serializer'
 local ShipDef = require 'ShipDef'
-local Equipment = require 'Equipment'
 local Timer = require 'Timer'
 local Lang = require 'Lang'
+local CargoManager = require 'CargoManager'
+local CommodityType = require 'CommodityType'
 local Character = require 'Character'
 local Comms = require 'Comms'
 
 local l = Lang.GetResource("ui-core")
-
-local compat = {}
 
 --
 -- Class: Ship
 --
 -- Class representing a ship. Inherits from <Body>.
 --
+
+function Ship:Constructor()
+	self:SetComponent('CargoManager', CargoManager.New(self))
+
+	-- Timers cannot be started in ship constructors before Game is fully set,
+	-- so trigger a lazy event to setup gameplay timers.
+	--
+	-- TODO: this feels a little bit hacky, but it's the best way to decouple
+	-- Ship itself and "game balance" code that drags in a bunch of dependencies
+	Event.Queue('onShipCreated', self)
+end
 
 -- class method
 function Ship.MakeRandomLabel ()
@@ -64,11 +76,6 @@ local CrewRoster = {}
 --  experimental
 --
 function Ship:GetEquipSlotCapacity(slot)
-	local c = compat.slots.old2new[slot]
-	if c then
-		debug.deprecated("Ship:GetEquipSlotCapacity")
-		return self.equipSet:SlotSize(c)
-	end
 	return self.equipSet:SlotSize(slot)
 end
 
@@ -92,15 +99,15 @@ end
 
 -- Method: CountEquip
 --
--- Get the number of a given equipment or cargo item in a given equipment slot
+-- Get the number of a given equipment item in a given equipment slot
 --
 -- > count = ship:CountEquip(item, slot)
 --
 -- Parameters:
 --
---   item - an Equipment type object (e.g., require 'Equipment'.cargo.hydrogen)
+--   item - an Equipment type object (e.g., require 'Equipment'.misc.radar)
 --
---   slot - the slot name (e.g., "cargo")
+--   slot - the slot name (e.g., "radar")
 --
 -- Return:
 --
@@ -114,36 +121,20 @@ end
 --
 --  experimental
 --
-function Ship:GetEquipCount(slot, item)
-	debug.deprecated("Ship:GetEquipCount")
-	return self:CountEquip(item, slot)
-end
-
 function Ship:CountEquip(item, slot)
-	if slot then
-		local c = compat.slots.old2new[slot]
-		if c then
-			debug.deprecated("Ship:CountEquip")
-			slot = c
-		end
-	end
-	if type(item) == "string" then
-		debug.deprecated("Ship:GetEquipCount")
-		item = compat.equip.old2new[item]
-	end
 	return self.equipSet:Count(item, slot)
 end
 
 --
 -- Method: AddEquip
 --
--- Add an equipment or cargo item to its appropriate equipment slot
+-- Add an equipment item to its appropriate equipment slot
 --
 -- > num_added = ship:AddEquip(item, count, slot)
 --
 -- Parameters:
 --
---   item  - an Equipment type object (e.g., require 'Equipment'.cargo.hydrogen)
+--   item  - an Equipment type object (e.g., require 'Equipment'.misc.radar)
 --
 --   count - optional. The number of this item to add. Defaults to 1.
 --
@@ -156,7 +147,7 @@ end
 --
 -- Example:
 --
--- > ship:AddEquip(Equipment.cargo.animal_meat, 10)
+-- > ship:AddEquip(Equipment.misc.cabin, 10)
 -- > ship:AddEquip(Equipment.laser.pulsecannon_dual_1mw, 1, "laser_rear")
 --
 -- Availability:
@@ -168,10 +159,6 @@ end
 --   experimental
 --
 function Ship:AddEquip(item, count, slot)
-	if type(item) == "string" then
-		debug.deprecated("Ship:AddEquip")
-		item = compat.equip.old2new[item]
-	end
 	local ret = self.equipSet:Add(self, item, count, slot)
 	if ret > 0 then
 		Event.Queue("onShipEquipmentChanged", self, item)
@@ -189,7 +176,7 @@ end
 --
 -- Parameters:
 --
---   slot  - a slot name string (e.g., "cargo")
+--   slot  - a slot name string (e.g., "autopilot")
 --
 --   index - optional. The equipment position in the slot to fetch. If
 --           specified the item at that position in the slot will be returned,
@@ -216,32 +203,7 @@ end
 --  experimental
 --
 Ship.GetEquip = function (self, slot, index)
-	local c = compat.slots.old2new[slot]
-	if c then
-		debug.deprecated("Ship:GetEquip")
-		slot = c
-	end
-	local ret = self.equipSet:Get(slot, index)
-	if c then
-		if type(index) == "number" then
-			if ret then
-				ret = compat.equip.new2old[ret]
-			else
-				ret = "NONE"
-			end
-		else
-			local tmp = {}
-			for i=1,self.equipSet:SlotSize(slot),1 do
-				if ret[i] then
-					tmp[i] = compat.equip.new2old[ret[i]]
-				else
-					tmp[i] = "NONE"
-				end
-			end
-			ret = tmp
-		end
-	end
-	return ret
+	return self.equipSet:Get(slot, index)
 end
 
 --
@@ -253,7 +215,7 @@ end
 --
 -- Parameters:
 --
---   slot - a slot name (e.g., "cargo")
+--   slot - a slot name (e.g., "autopilot")
 --
 -- Return:
 --
@@ -268,25 +230,9 @@ end
 --  experimental
 --
 Ship.GetEquipFree = function (self, slot)
-	local c = compat.slots.old2new[slot]
-	if c then
-		debug.deprecated("Ship:GetEquipFree")
-		return self.equipSet:FreeSpace(c)
-	end
 	return self.equipSet:FreeSpace(slot)
 end
 
-compat.slots = {}
-compat.equip = {}
-compat.slots.old2new={
-	CARGO="cargo", ENGINE="engine", LASER="laser_front",
-	MISSILE="missile", ECM="ecm", SCANNER="scanner", RADARMAPPER="radar_mapper",
-	HYPERCLOUD="hypercloud", HULLAUTOREPAIR="hull_autorepair",
-	ENERGYBOOSTER="energy_booster", ATMOSHIELD="atmo_shield", CABIN="cabin",
-	SHIELD="shield", FUELSCOOP="scoop", CARGOSCOOP="scoop",
-	LASERCOOLER="laser_cooler", CARGOLIFESUPPORT="cargo_life_support",
-	AUTOPILOT="autopilot"
-}
 --
 -- Method: SetEquip
 --
@@ -316,10 +262,6 @@ compat.slots.old2new={
 --  experimental
 --
 Ship.SetEquip = function (self, slot, index, item)
-	if type(item) == "string" then
-		debug.deprecated("Ship:SetEquip")
-		item = compat.equip.old2new[item]
-	end
 	self.equipSet:Set(self, slot, index, item)
 	Event.Queue("onShipEquipmentChanged", self)
 end
@@ -327,13 +269,13 @@ end
 --
 -- Method: RemoveEquip
 --
--- Remove one or more of a given equipment type from its appropriate cargo slot
+-- Remove one or more of a given equipment type from its appropriate equipment slot
 --
 -- > num_removed = ship:RemoveEquip(item, count, slot)
 --
 -- Parameters:
 --
---   item - an equipment type object (e.g., Equipment.cargo.hydrogen)
+--   item - an equipment type object (e.g., Equipment.misc.autopilot)
 --
 --   count - optional. The number of this item to remove. Defaults to 1.
 --
@@ -357,17 +299,12 @@ end
 --
 
 Ship.RemoveEquip = function (self, item, count, slot)
-	if type(item) == "string" then
-		debug.deprecated("Ship:RemoveEquip")
-		item = compat.equip.old2new[item]
-	end
 	local ret = self.equipSet:Remove(self, item, count, slot)
 	if ret > 0 then
 		Event.Queue("onShipEquipmentChanged", self, item)
 	end
 	return ret
 end
-
 
 --
 -- Method: IsHyperjumpAllowed
@@ -507,13 +444,18 @@ Ship.GetHyperspaceDetails = function (self, source, destination)
 	elseif source:IsSameSystem(destination) then
 		return "CURRENT_SYSTEM", 0, 0, 0
 	end
+
 	local distance, fuel, duration = engine:CheckJump(self, source, destination)
 	local status = "OK"
+
+	---@type CargoManager
+	local cargoMgr = self:GetComponent('CargoManager')
+
 	if not duration then
 		duration = 0
 		fuel = 0
 		status = "OUT_OF_RANGE"
-	elseif fuel > self:CountEquip(engine.fuel) then
+	elseif fuel > cargoMgr:CountCommodity(engine.fuel) then
 		status = "INSUFFICIENT_FUEL"
 	end
 	return status, distance, fuel, duration
@@ -525,52 +467,6 @@ Ship.GetHyperspaceRange = function (self)
 		return 0, 0
 	end
 	return engine:GetRange(self)
-end
-
-compat.slots.new2old = {}
-for k,v in pairs(compat.slots.old2new) do
-	compat.slots.new2old[v] = k
-end
-
-local cargo = Equipment.cargo
-local hyperspace = Equipment.hyperspace
-local laser = Equipment.laser
-local misc = Equipment.misc
-
-compat.equip.new2old = {
-	[cargo.hydrogen]="HYDROGEN", [cargo.air_processors]="AIR_PROCESSORS", [cargo.animal_meat]="ANIMAL_MEAT",
-	[cargo.battle_weapons]="BATTLE_WEAPONS", [cargo.carbon_ore]="CARBON_ORE", [cargo.computers]="COMPUTERS",
-	[cargo.consumer_goods]="CONSUMER_GOODS", [cargo.farm_machinery]="FARM_MACHINERY", [cargo.fertilizer]="FERTILIZER",
-	[cargo.fruit_and_veg]="FRUIT_AND_VEG", [cargo.grain]="GRAIN", [cargo.hand_weapons]="HAND_WEAPONS",
-	[cargo.industrial_machinery]="INDUSTRIAL_MACHINERY", [cargo.liquid_oxygen]="LIQUID_OXYGEN",
-	[cargo.liquor]="LIQUOR", [cargo.live_animals]="LIVE_ANIMALS", [cargo.medicines]="MEDICINES", [cargo.metal_alloys]="METAL_ALLOYS",
-	[cargo.metal_ore]="METAL_ORE", [cargo.military_fuel]="MILITARY_FUEL", [cargo.mining_machinery]="MINING_MACHINERY",
-	[cargo.narcotics]="NARCOTICS", [cargo.nerve_gas]="NERVE_GAS", [cargo.plastics]="PLASTICS",
-	[cargo.precious_metals]="PRECIOUS_METALS", [cargo.radioactives]="RADIOACTIVES", [cargo.robots]="ROBOTS",
-	[cargo.rubbish]="RUBBISH", [cargo.slaves]="SLAVES", [cargo.textiles]="TEXTILES", [cargo.water]="WATER",
-
-	[misc.missile_unguided]="MISSILE_UNGUIDED", [misc.missile_guided]="MISSILE_GUIDED",
-	[misc.missile_smart]="MISSILE_SMART", [misc.missile_naval]="MISSILE_NAVAL",
-	[misc.atmospheric_shielding]="ATMOSPHERIC_SHIELDING", [misc.ecm_basic]="ECM_BASIC",
-	[misc.ecm_advanced]="ECM_ADVANCED", [misc.radar]="RADAR", [misc.cabin]="CABIN",
-	[misc.shield_generator]="SHIELD_GENERATOR", [misc.laser_cooling_booster]="LASER_COOLING_BOOSTER",
-	[misc.cargo_life_support]="CARGO_LIFE_SUPPORT", [misc.autopilot]="AUTOPILOT",
-	[misc.target_scanner]="TARGET_SCANNER", [misc.fuel_scoop]="FUEL_SCOOP",
-	[misc.cargo_scoop]="CARGO_SCOOP", [misc.hypercloud_analyzer]="HYPERCLOUD_ANALYZER",
-	[misc.shield_energy_booster]="SHIELD_ENERGY_BOOSTER", [misc.hull_autorepair]="HULL_AUTOREPAIR",
-	[hyperspace.hyperdrive_1]="DRIVE_CLASS1", [hyperspace.hyperdrive_2]="DRIVE_CLASS2", [hyperspace.hyperdrive_3]="DRIVE_CLASS3",
-	[hyperspace.hyperdrive_4]="DRIVE_CLASS4", [hyperspace.hyperdrive_5]="DRIVE_CLASS5", [hyperspace.hyperdrive_6]="DRIVE_CLASS6",
-	[hyperspace.hyperdrive_7]="DRIVE_CLASS7", [hyperspace.hyperdrive_8]="DRIVE_CLASS8", [hyperspace.hyperdrive_9]="DRIVE_CLASS9",
-	[hyperspace.hyperdrive_mil1]="DRIVE_MIL1", [hyperspace.hyperdrive_mil2]="DRIVE_MIL2", [hyperspace.hyperdrive_mil3]="DRIVE_MIL3",
-	[hyperspace.hyperdrive_mil4]="DRIVE_MIL4", [laser.pulsecannon_1mw]="PULSECANNON_1MW", [laser.pulsecannon_dual_1mw]="PULSECANNON_DUAL_1MW",
-	[laser.pulsecannon_2mw]="PULSECANNON_2MW", [laser.pulsecannon_rapid_2mw]="PULSECANNON_RAPID_2MW",
-	[laser.pulsecannon_4mw]="PULSECANNON_4MW", [laser.pulsecannon_10mw]="PULSECANNON_10MW",
-	[laser.pulsecannon_20mw]="PULSECANNON_20MW", [laser.miningcannon_17mw]="MININGCANNON_17MW",
-	[laser.small_plasma_accelerator]="SMALL_PLASMA_ACCEL", [laser.large_plasma_accelerator]="LARGE_PLASMA_ACCEL"
-}
-compat.equip.old2new = {}
-for k,v in pairs(compat.equip.new2old) do
-	compat.equip.old2new[v] = k
 end
 
 -- Method: FireMissileAt
@@ -647,48 +543,6 @@ function Ship:FireMissileAt(which_missile, target)
 	return missile_object
 end
 
--- Method: StartSensor
---
--- Starts the equipped sensor
---
--- Parameters:
---   idx - the index of the sensor in the equipment slots
---
--- Availability:
---
---   2015 June
---
--- Status:
---
---   experimental
---
-
-function Ship:StartSensor(idx)
-	local sensor = self:GetEquip("sensor", idx)
-	sensor:BeginAcquisition(function(progress, state) end)
-end
-
--- Method: StopSensor
---
--- Stops the equipped sensor
---
--- Parameters:
---   idx - the index of the sensor in the equipment slots
---
--- Availability:
---
---   2015 June
---
--- Status:
---
---   experimental
---
-
-function Ship:StopSensor(idx)
-	local sensor = self:GetEquip("sensor", idx)
-	sensor:ClearAcquisition()
-end
-
 --
 -- Method: Refuel
 --
@@ -698,7 +552,8 @@ end
 --
 -- Parameters:
 --
---   amount - the amount of fuel (in tons) to take from the cargo
+--   fuelType - the type of fuel to remove from the cargo hold.
+--   amount   - the amount of fuel (in tons) to take from the cargo
 --
 -- Result:
 --
@@ -712,15 +567,19 @@ end
 --
 --   experimental
 --
-Ship.Refuel = function (self,amount)
-	local currentFuel = self.fuel
-	if currentFuel == 100 then
-		Comms.Message(l.FUEL_TANK_FULL) -- XXX don't translate in libs
-		return 0
-	end
+---@param fuelType CommodityType
+---@param amount integer
+function Ship:Refuel(fuelType, amount)
+	if self.fuel == 100 then return 0 end -- tank is completely full
+
+	---@type CargoManager
+	local cargoMgr = self:GetComponent('CargoManager')
+
 	local fuelTankMass = ShipDef[self.shipId].fuelTankMass
 	local needed = math.clamp(math.floor(fuelTankMass - self.fuelMassLeft), 0, amount)
-	local removed = self:RemoveEquip(Equipment.cargo.hydrogen, needed)
+	needed = math.min(needed, cargoMgr:CountCommodity(fuelType))
+
+	local removed = cargoMgr:RemoveCommodity(fuelType, needed)
 	self:SetFuelPercent(math.clamp(self.fuel + removed * 100 / fuelTankMass, 0, 100))
 	return removed
 end
@@ -737,7 +596,7 @@ end
 --
 -- Parameters:
 --
---   item - an equipment type object (e.g., Equipment.cargo.radioactives)
+--   item - a commodity type object (e.g., Commodity.radioactives)
 --          specifying the type of item to jettison.
 --
 -- Result:
@@ -753,21 +612,60 @@ end
 --
 --   experimental
 --
-Ship.Jettison = function (self,equip)
+---@param cargoType CommodityType
+function Ship:Jettison(cargoType)
 	if self.flightState ~= "FLYING" and self.flightState ~= "DOCKED" and self.flightState ~= "LANDED" then
 		return false
 	end
-	if self:RemoveEquip(equip, 1) < 1 then
+
+	---@type CargoManager
+	local cargoMgr = self:GetComponent('CargoManager')
+	if cargoMgr:RemoveCommodity(cargoType, 1) < 1 then
 		return false
 	end
+
 	if self.flightState == "FLYING" then
-		self:SpawnCargo(equip)
-		Event.Queue("onJettison", self, equip)
+		self:SpawnCargo(cargoType)
+		Event.Queue("onJettison", self, cargoType)
 	elseif self.flightState == "DOCKED" then
-		Event.Queue("onCargoUnload", self:GetDockedWith(), equip)
+		Event.Queue("onCargoUnload", self:GetDockedWith(), cargoType)
 	elseif self.flightState == "LANDED" then
-		Event.Queue("onCargoUnload", self.frameBody, equip)
+		Event.Queue("onCargoUnload", self.frameBody, cargoType)
 	end
+end
+
+--
+-- Method: OnScoopCargo
+--
+-- Function triggered from C++ to handle scooping a cargo body.
+--
+-- Triggers the <onShipScoopCargo> event when an attempt is made
+-- to scoop the cargo into the ship's hold.
+--
+-- Returns true if the body was successfully scooped.
+--
+function Ship:OnScoopCargo(cargoType)
+	---@type CargoManager
+	local cargoMgr = self:GetComponent('CargoManager')
+
+	if cargoType:Class() ~= CommodityType then
+		return false
+	end
+
+	-- Rate-limit scooping to avoid triggering hundreds of events
+	-- if the cargo hold is full
+	local lastScoop = self:hasprop('last_scoop_time') and self.last_scoop_time or 0
+	if Game.time - lastScoop < 0.5 then
+		return false
+	else
+		self:setprop('last_scoop_time', Game.time)
+	end
+
+	local success = cargoMgr:AddCommodity(cargoType, 1)
+
+	Event.Queue('onShipScoopCargo', self, success, cargoType)
+
+	return success
 end
 
 --
@@ -920,7 +818,7 @@ end
 --   experimental
 --
 Ship.CrewNumber = function (self)
-	return #CrewRoster[self]
+	return CrewRoster[self] and #CrewRoster[self] or 0
 end
 
 --
@@ -988,7 +886,12 @@ local onGameStart = function ()
 		CrewRoster = loaded_data
 		Event.Queue('crewAvailable') -- Signal any scripts that depend on initialised crew
 	end
+
 	loaded_data = nil
+end
+
+local onGameEnd = function()
+	CrewRoster = {}
 end
 
 local serialize = function ()
@@ -1015,12 +918,9 @@ local onEnterSystem = function (ship)
 			end
 		end
 	end
-end
-
-local onLeaveSystem = function (ship)
 	local engine = ship:GetEquip("engine", 1)
 	if engine then
-		engine:OnEnterHyperspace(ship)
+		engine:OnLeaveHyperspace(ship)
 	end
 end
 
@@ -1035,12 +935,16 @@ local onShipDestroyed = function (ship, attacker)
 	end
 end
 
+-- Reinitialize cargo-related ship properties when changing ship type
+local onShipTypeChanged = function (ship)
+	ship:GetComponent('CargoManager'):OnShipTypeChanged()
+end
+
 Event.Register("onEnterSystem", onEnterSystem)
-Event.Register("onLeaveSystem", onLeaveSystem)
 Event.Register("onShipDestroyed", onShipDestroyed)
 Event.Register("onGameStart", onGameStart)
+Event.Register("onGameEnd", onGameEnd)
+Event.Register("onShipTypeChanged", onShipTypeChanged)
 Serializer:Register("ShipClass", serialize, unserialize)
-
-Ship.equipCompat = compat
 
 return Ship

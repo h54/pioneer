@@ -57,7 +57,11 @@
   },
   "FLAVOUR_0_ADTEXT": {
     "description": "",
-    "message": "{system} sistemine mi GİDİYORSUNUZ? Küçük bir paketin teslimatı için para ödenecek."
+    "message": "{system} sistemine mi gidiyorsunuz? Küçük bir paketin nakliyesi için para ödenecek."
+  },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "YILDIZLARARASI NAKLİYAT"
   },
   "FLAVOUR_0_FAILUREMSG": {
     "description": "",
@@ -77,7 +81,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "ARANIYOR. {system} sistemine paket teslimatı."
+    "message": "Aranıyor: {system} sistemine paket nakliyesi."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "NAKLİYE İSTENİYOR"
   },
   "FLAVOUR_1_FAILUREMSG": {
     "description": "",
@@ -97,7 +105,11 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "ACİL. {system} sistemine paket teslimatı için hızlı bir gemiye ihtiyaç var."
+    "message": "Acil! {system} sistemine acil bir paket nakliyesi için hızlı bir gemi gerekiyor."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "ACİL NAKLİYAT"
   },
   "FLAVOUR_2_FAILUREMSG": {
     "description": "",
@@ -117,7 +129,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "TESLİMAT. {system} sistemine gidecek belgeler. Deneyimli bir pilot için {cash}."
+    "message": "{system} sistemine hassas belgelerin nakliyesi. Tecrübeli bir pilota {cash}."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "BELGE NAKLİYATI"
   },
   "FLAVOUR_3_FAILUREMSG": {
     "description": "",
@@ -137,7 +153,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "POSTA HİZMETİ: {system} sistemine teslimat için bir gemiye ihtiyacımız var."
+    "message": "Yıldızlararası Posta Hizmetleri. {system} sistemine bir nakiye işi için gemi gerekiyor."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "POSTA HİZMETİ"
   },
   "FLAVOUR_4_FAILUREMSG": {
     "description": "",
@@ -157,7 +177,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "TAŞINMA. {starport} limanına depodan donanım taşıması."
+    "message": "Liman depolama tesisinden {starport} limanına eşya taşıyın."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "EV TAŞIMA"
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
@@ -177,7 +201,11 @@
   },
   "FLAVOUR_6_ADTEXT": {
     "description": "",
-    "message": "KISA-MESAFE KURYE. {starport} limanına küçük bir paket teslimatı."
+    "message": "Sistem-içi kurye servisi gerekli. {starport} limanına küçük paket nakliyesi."
+  },
+  "FLAVOUR_6_ADTITLE": {
+    "description": "",
+    "message": "KISA-MENZİL KURYE"
   },
   "FLAVOUR_6_FAILUREMSG": {
     "description": "",
@@ -197,7 +225,11 @@
   },
   "FLAVOUR_7_ADTEXT": {
     "description": "",
-    "message": "GEZEGENLER-ARASI KARGO. {starport} limanına yerel kargo nakliyesi."
+    "message": "Standart gezegenler-arası nakliyat kontratı. Yerel kargonun {starport} limanına taşınması."
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "GEZEGENLER-ARASI KARGO"
   },
   "FLAVOUR_7_FAILUREMSG": {
     "description": "",
@@ -217,7 +249,11 @@
   },
   "FLAVOUR_8_ADTEXT": {
     "description": "",
-    "message": "YAKIN TESLİMAT. {starport} limanına hızlı teslimat gerekiyor."
+    "message": "Acil kişisel nakliyat kontratı. {starport} limanına süratle bir eşya taşınması lazım."
+  },
+  "FLAVOUR_8_ADTITLE": {
+    "description": "",
+    "message": "YAKIN NAKLİYAT"
   },
   "FLAVOUR_8_FAILUREMSG": {
     "description": "",
@@ -237,7 +273,11 @@
   },
   "FLAVOUR_9_ADTEXT": {
     "description": "",
-    "message": "PAKET BIRAKMA: {starport} limanına kolay bozulan malların acil sevkiyatı."
+    "message": "Paket bırakılması gerekiyor. Tüketim mallarının {starport} limanına acil sevkiyatı."
+  },
+  "FLAVOUR_9_ADTITLE": {
+    "description": "",
+    "message": "PAKET BIRAKMA"
   },
   "FLAVOUR_9_FAILUREMSG": {
     "description": "",
@@ -270,10 +310,6 @@
   "I_HIGHLY_DOUBT_IT": {
     "description": "",
     "message": "Hiç sanmıyorum."
-  },
-  "LY": {
-    "description": "",
-    "message": "ıy"
   },
   "NOT_ANY_MORE_THAN_USUAL": {
     "description": "",

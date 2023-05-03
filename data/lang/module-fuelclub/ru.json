@@ -11,6 +11,10 @@
     "description": "",
     "message": "Космическое Топливное Содружество Пилотов"
   },
+  "FLAVOUR_0_DESC": {
+    "description": "",
+    "message": "Свяжитесь с местным представителем топливного кооператива Interstellar Pilots."
+  },
   "FLAVOUR_0_MEMBER_INTRO": {
     "description": "",
     "message": "Здесь вы можете приобрести топливо и сдать {radioactives} на утилизацию."
@@ -18,6 +22,10 @@
   "FLAVOUR_0_NONMEMBER_INTRO": {
     "description": "",
     "message": "{clubname} независимая организация, предоставляющая своим членам хорошие скидки на топливо для кораблей. Вы можете найти филиалы по всей галактике. Преимущества от участия в организации включают:"
+  },
+  "FLAVOUR_0_TITLE": {
+    "description": "Title of the BBS advertisement",
+    "message": "ТОПЛИВНЫЙ КООПЕРАТИВ ПИЛОТА"
   },
   "FLAVOUR_0_WELCOME": {
     "description": "",
@@ -27,17 +35,33 @@
     "description": "Fuel club for the Federation faction",
     "message": "Федеральный Топливный Фонд"
   },
+  "FLAVOUR_1_DESC": {
+    "description": "Fuel club for the Federation faction",
+    "message": "Авторизованный контакт для Федерального топливного фонда."
+  },
   "FLAVOUR_1_NONMEMBER_INTRO": {
     "description": "For the Solar Federation faction",
     "message": "{clubname} является ведущим поставщиком топлива в Солнечной Федерации, предоставляющая своим членам хорошие скидки на топливо для кораблей. Членство даст вам следующие преимущества:"
   },
+  "FLAVOUR_1_TITLE": {
+    "description": "Title of the BBS advertisement",
+    "message": "ФЕДЕРАЛЬНЫЙ ТОПЛИВНЫЙ ФОНД"
+  },
   "FLAVOUR_2_CLUBNAME": {
     "description": "Fuel club for the CIW (Commonwealth of Independent Worlds) faction",
-    "message": "Конфедеративный Топливный Союз"
+    "message": "\"Топливный союз содружества\""
+  },
+  "FLAVOUR_2_DESC": {
+    "description": "Fuel club for the CIW (Commonwealth of Independent Worlds) faction",
+    "message": "Назначьте встречу, чтобы поговорить с Топливным союзом Содружества."
   },
   "FLAVOUR_2_NONMEMBER_INTRO": {
     "description": "Commonwealth of Independent Worlds is the name of the CIW faction",
-    "message": "Throughout the vast reach of the free Commonwealth of Independent Worlds you will find {clubname} as the best provider of discounted fuel and waste management services. For our members, we do:"
+    "message": "На огромном пространстве Содружества Независимых Миров вы найдете {clubname} как лучшего поставщика топлива со скидкой и услуг по утилизации отходов. Для наших членов мы делаем:"
+  },
+  "FLAVOUR_2_TITLE": {
+    "description": "Title of the BBS advertisement",
+    "message": "ТОПЛИВНЫЙ СОЮЗ СОДРУЖЕСТВА"
   },
   "FLAVOUR_2_WELCOME": {
     "description": "",
@@ -45,19 +69,27 @@
   },
   "FLAVOUR_3_CLUBNAME": {
     "description": "Fuel club for the Haber faction",
-    "message": "Haber Propellant and Perishables Division"
+    "message": "Подразделение топлива и скоропортящихся продуктов Haber"
+  },
+  "FLAVOUR_3_DESC": {
+    "description": "Fuel club for the Haber faction",
+    "message": "Филиал подразделения Haber по производству топлива и скоропортящихся продуктов."
   },
   "FLAVOUR_3_MEMBER_INTRO": {
     "description": "For the greedy Haber faction, very corporate formulated",
-    "message": "Greetings pilot. Your refueling and conditional side-product disposal privileges are granted."
+    "message": "Привет пилот. Вам предоставляются права на заправку топливом и условную утилизацию побочных продуктов."
   },
   "FLAVOUR_3_NONMEMBER_INTRO": {
     "description": "for the Haber faction",
-    "message": "Greetings pilot. This is the Haber Propellant and Perishables Division, entrusted with managing the fuel distribution throughout Haber owned space."
+    "message": "Привет пилот. Это подразделение топлива и скоропортящихся продуктов Haber. Нам поручено распространять топливо по всем принадлежащим Haber территориям."
   },
-  "GO_BACK": {
+  "FLAVOUR_3_TITLE": {
+    "description": "Title of the BBS advertisement",
+    "message": "ПРОПЕЛЛЕНТ HABER"
+  },
+  "FUEL_LEVEL": {
     "description": "",
-    "message": "[Назад]"
+    "message": "Ваш текущий уровень топлива равен {level}%."
   },
   "LIST_BENEFITS_DISPOSAL": {
     "description": "",
@@ -73,11 +105,15 @@
   },
   "LIST_BENEFITS_FUEL_TANK": {
     "description": "",
-    "message": "Дозаправка топливом, при необходимости"
+    "message": "Заправка топливного бака один раз в день"
   },
   "LIST_BENEFITS_JOIN": {
     "description": "",
     "message": "Вступайте сейчас! Стоимость годового членства всего {membership_fee}"
+  },
+  "REFUEL_FREE": {
+    "description": "",
+    "message": "Заправьте внутренний топливный бак бесплатно."
   },
   "WE_WILL_ONLY_DISPOSE_OF": {
     "description": "",

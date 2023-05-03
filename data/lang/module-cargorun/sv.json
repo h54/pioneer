@@ -25,39 +25,75 @@
   },
   "ADTEXT_1": {
     "description": "",
-    "message": "TRANSPORT. Leverans av last till {system} systemet."
+    "message": "Skepp behövs för leverans av last till {system}-systemet."
   },
   "ADTEXT_2": {
     "description": "",
-    "message": "TRANSPORT ÖNSKAS. Behöver transport av varor från {system} systemet. Betalar {cash}."
+    "message": "Transport av varor till {system}-systemet behövs. Betalar {cash}."
   },
   "ADTEXT_EXPENSIVE_1": {
     "description": "",
-    "message": "LEVERANS. Värdefull last till {system} systemet. {cash} till en erfaren pilot."
+    "message": "Leverera värdefull last till {system}-systemet. {cash} till en erfaren pilot."
   },
   "ADTEXT_LOCAL_1": {
     "description": "",
-    "message": "LOKAL LEVERANS: Flytt av varor till {starport}."
+    "message": "Åkare sökes för transport inom systemet. Flytt av varor till {starport}."
   },
   "ADTEXT_LOCAL_2": {
     "description": "",
-    "message": "TRANSPORT EFTERSÖKES. Lokalleverans av varor till {starport} "
+    "message": "Behöver lokal leverans av egen last till {starport}."
   },
   "ADTEXT_LOCAL_3": {
     "description": "",
-    "message": "LOKAL VARUTRANSPORT. Leverans av varor till {starport}."
+    "message": "Privat fraktkontrakt. Behöver certifierad leverans av varor till {starport}."
   },
   "ADTEXT_PICKUP_1": {
     "description": "",
-    "message": "HÄMTNING AV LAST. Önskar hämtning av last från {system} systemet."
+    "message": "Upphämtning av last från {system}-systemet önskas. Ytterligare uppgifter på begäran."
   },
   "ADTEXT_PICKUP_LOCAL_1": {
     "description": "",
-    "message": "OMLOKALISERING. Flytt av varor från {starport} önskas."
+    "message": "Transporttjänst behövs. Flytt av last till denna starport från {starport} önskas."
   },
   "ADTEXT_WHOLESALER_1": {
     "description": "",
-    "message": "LASTTJÄNST. Vi behöver ett skepp för leverans till {system} systemet."
+    "message": "Kvalificerad entreprenör behövs för körning. Vi behöver ett skepp för en bulkleverans till {system}-systemet."
+  },
+  "ADTITLE_1": {
+    "description": "",
+    "message": "LEVERANS"
+  },
+  "ADTITLE_2": {
+    "description": "",
+    "message": "VARUTRANSPORT ÖNSKAS"
+  },
+  "ADTITLE_EXPENSIVE_1": {
+    "description": "",
+    "message": "FÖRSÄKRAD LEVERANS"
+  },
+  "ADTITLE_LOCAL_1": {
+    "description": "",
+    "message": "KORTDISTANSFRAKT"
+  },
+  "ADTITLE_LOCAL_2": {
+    "description": "",
+    "message": "LOKAL GODSTRANSPORT"
+  },
+  "ADTITLE_LOCAL_3": {
+    "description": "",
+    "message": "LOKAL VARUTRANSPORT"
+  },
+  "ADTITLE_PICKUP_1": {
+    "description": "",
+    "message": "VARUUPPHÄMTNING"
+  },
+  "ADTITLE_PICKUP_LOCAL_1": {
+    "description": "",
+    "message": "FLYTT INOM SYSTEMET"
+  },
+  "ADTITLE_WHOLESALER_1": {
+    "description": "",
+    "message": "BULKLAST SERVICE"
   },
   "ALUMINIUM_TUBES": {
     "description": "custom cargo",
@@ -97,7 +133,7 @@
   },
   "COULD_YOU_REPEAT_THE_ORIGINAL_REQUEST": {
     "description": "",
-    "message": "Vänligen reppetera din ursprungliga uttalande."
+    "message": "Vänligen repetera din ursprungliga begäran."
   },
   "DANGER": {
     "description": "the risk level",
@@ -134,6 +170,18 @@
   "DENY_6": {
     "description": "",
     "message": "Kom tillbaka när du är mer erfaren."
+  },
+  "DENY_AGAIN_1": {
+    "description": "",
+    "message": "Tyvärr, vi har redan ett avtal. Jag skulle dock gärna göra affärer med dig igen efter en lyckad leverans."
+  },
+  "DENY_AGAIN_2": {
+    "description": "",
+    "message": "Ursäkta mig, vänligen slutför vårt befintliga kontrakt först. Sedan kan vi förhandla om en annan leverans."
+  },
+  "DENY_AGAIN_3": {
+    "description": "",
+    "message": "Sir, snälla leverera min last först. Då kommer jag att göra fler affärer med dig."
   },
   "DIAMONDS": {
     "description": "custom cargo",
@@ -199,6 +247,10 @@
     "description": "custom cargo",
     "message": "Möbler"
   },
+  "GO_BACK": {
+    "description": "Shown on a button in a sub-menu, to move back, to previous menu",
+    "message": "Tillbaka."
+  },
   "GREENHOUSES": {
     "description": "custom cargo",
     "message": "Växthus"
@@ -228,7 +280,7 @@
     "message": "Det är {amount}t."
   },
   "HOWMUCH_SINGULAR_1": {
-    "description": "This string is only used for 1 metric tons (singular)",
+    "description": "This string is only used for 1 metric ton (singular)",
     "message": "Det är bara {amount}t"
   },
   "HOWMUCH_WHOLESALER_1": {
@@ -241,7 +293,7 @@
   },
   "HOW_MUCH_MASS": {
     "description": "",
-    "message": "Hur mycket massa?"
+    "message": "Hur stor massa?"
   },
   "HOW_SOON_MUST_IT_BE_DELIVERED": {
     "description": "",
@@ -249,7 +301,7 @@
   },
   "INTROTEXT_1": {
     "description": "",
-    "message": "Hej! Jag heter {name}. Jag betalar dig {cash} om du levererar {cargoname} till {starport} i {system} ({sectorx},{sectory},{sectorz}) systemet, en sträcka på {dist} lå."
+    "message": "Hej! Jag heter {name}. Jag betalar dig {cash} om du levererar {cargoname} till {starport} i {system} ({sectorx},{sectory},{sectorz}) systemet, en sträcka på {dist} ly."
   },
   "INTROTEXT_2": {
     "description": "{name} is the full name of a person",
@@ -257,7 +309,7 @@
   },
   "INTROTEXT_3": {
     "description": "",
-    "message": "God dag. Jag är {name} Ltd. Jag behöver någon pålitlig som levererar {cargoname} till {starport} i systemet {system} ({sectorx}, {sectory}, {sectorz}). Jag betalar {cash} för det {dist} ly långa flygningen."
+    "message": "God dag. Jag är {name}, grundare av {name} Ltd. Jag behöver någon pålitlig som levererar {cargoname} till {starport} i systemet {system} ({sectorx}, {sectory}, {sectorz}). Jag betalar {cash} för det {dist} ly långa flygningen."
   },
   "INTROTEXT_EXPENSIVE_1": {
     "description": "",
@@ -305,15 +357,19 @@
   },
   "INTROTEXT_WEDDING_1": {
     "description": "",
-    "message": "Hälsningar. Har du hört talas om bröllopssäsongen på {startport} i systemet {system} ({sectorx}, {sectory}, {sectorz})? Vi vill transportera {cargoname} dit. Det är {dist} ly bort. Betalningen är {cash}. Vad säger du?"
+    "message": "Hälsningar. Har du hört talas om bröllopssäsongen på {starport} i systemet {system} ({sectorx}, {sectory}, {sectorz})-systemet? Vi vill transportera {cargoname} dit. Det är {dist} ly bort. Betalningen är {cash}. Vad säger du?"
   },
   "INTROTEXT_WHOLESALER_1": {
     "description": "",
-    "message": "Hej, mitt namn är {name}. Jag är en grossist i systemet {system}. Jag betalar {cash} för leveransen till {starport} i systemet {system} ({sectorx}, {sectory}, {sectorz}), {dist} ly."
+    "message": "Hej, mitt namn är {name}. Jag är en grossist i systemet {system}. Jag betalar {cash} för leverans till {starport} i systemet {system} ({sectorx}, {sectory}, {sectorz}), {dist} ly."
   },
   "INTROTEXT_WHOLESALER_2": {
     "description": "",
     "message": "Hälsningar, mitt namn är {name} och jag jobbar för hamnföretaget. Vi betalar {cash} för en leverans till {starport} i systemet {system} ({sectorx}, {sectory}, {sectorz}), ett avstånd på {dist} ly."
+  },
+  "IS_IT_NEGOTIABLE": {
+    "description": "",
+    "message": "Är mängden last förhandlingsbar?"
   },
   "I_AM_ON_MY_WAY": {
     "description": "",
@@ -327,21 +383,45 @@
     "description": "",
     "message": "Jag är skadad. Jag behöver hjälp."
   },
-  "LY": {
-    "description": "",
-    "message": "ly"
-  },
   "MACHINE_TOOLS": {
     "description": "custom cargo",
     "message": "Maskinverktyg"
+  },
+  "NEGOTIABLE_1": {
+    "description": "regarding mass, always more than 1t",
+    "message": "Jag kan erbjuda följande körningar:"
+  },
+  "NEGOTIABLE_2": {
+    "description": "regarding mass, always more than 1t",
+    "message": "{amount} ton {cargoname} kan delas upp enligt följande:"
+  },
+  "NEGOTIABLE_3": {
+    "description": "regarding mass, always more than 1t",
+    "message": "Ja, vi kan dela upp lasten."
+  },
+  "NEGOTIABLE_NO_1": {
+    "description": "regarding mass, always more than 1t",
+    "message": "Nej, tyvärr. Det är inte möjligt att dela upp lasten. Du måste kunna frakta hela {amount} ton på en gång."
+  },
+  "NEGOTIABLE_SINGULAR_1": {
+    "description": "This string is only used for 1 metric ton (singular)",
+    "message": "Nej det är det inte. Det är bara {amount} ton."
   },
   "NEPTUNIUM": {
     "description": "custom cargo",
     "message": "Neptunium"
   },
+  "OFFER": {
+    "description": "",
+    "message": "Transportera {amount}t för {reward}"
+  },
   "OK_AGREED": {
     "description": "",
     "message": "OK, överenskommet."
+  },
+  "OK_WE_AGREE": {
+    "description": "",
+    "message": "OK, vi är ense om {amount} ton för {reward}."
   },
   "PICKUP_FROM": {
     "description": "from a location",
@@ -502,6 +582,10 @@
   "TITANIUM": {
     "description": "custom cargo",
     "message": "Titan"
+  },
+  "TOO_LATE_TO_PICK_UP": {
+    "description": "",
+    "message": "Du är alldeles för sen! Din prestation är så dålig att jag säger upp mitt kontrakt med dig."
   },
   "TUNGSTEN": {
     "description": "custom cargo",

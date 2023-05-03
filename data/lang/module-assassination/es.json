@@ -49,7 +49,11 @@
   },
   "FLAVOUR_0_ADTEXT": {
     "description": "",
-    "message": "SE BUSCA: Eliminación de {target} en el sistema {system}."
+    "message": "Se Busca: Eliminación de {target} del sistema {system}."
+  },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "SE REQUIERE ELIMINACIÓN"
   },
   "FLAVOUR_0_FAILUREMSG": {
     "description": "",
@@ -69,7 +73,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "SE BUSCA: a quien pueda matar a {target} en el sistema {system}."
+    "message": "Se Busca: Alguien para matar a {target} del sistema {system}."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "ELIMINACIÓN DE OBJETIVO"
   },
   "FLAVOUR_1_FAILUREMSG": {
     "description": "",
@@ -89,11 +97,15 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "ELIMINACION: {target} ya no es grato en el sistema {system}."
+    "message": "Trágicamente ya no se desea a {target} en el sistema {system}. Se necesita un especialista en retiros."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "OPERACIÓN DE ELIMINACIÓN"
   },
   "FLAVOUR_2_FAILUREMSG": {
     "description": "",
-    "message": "Es muy lamentable que {target} aun está vivito y coleando. No recibirá pago alguno puesto que el contrato no ha sido cumplido."
+    "message": "Es muy lamentable que {target} siga vivo y coleando. No recibirá ningún pago ya que no ha completado su contrato."
   },
   "FLAVOUR_2_FAILUREMSG2": {
     "description": "",
@@ -109,7 +121,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "EXTERMINACION: Se necesita a alguien para eliminar a {target}."
+    "message": "Se necesita asesino a sueldo para eliminar a {target}."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "EXTERMINIO"
   },
   "FLAVOUR_3_FAILUREMSG": {
     "description": "",
@@ -117,7 +133,7 @@
   },
   "FLAVOUR_3_FAILUREMSG2": {
     "description": "",
-    "message": "¿Estas pidiendo dinero por un trabajo que ha hecho otro? Piérdete."
+    "message": "¿Está pidiendo dinero por un trabajo cumplido por otro? Piérdase."
   },
   "FLAVOUR_3_INTROTEXT": {
     "description": "",
@@ -129,7 +145,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "RETIRO FORZOSO: Se busca a alguien que retire a {target}."
+    "message": "Se necesita un operario discreto para asegurar el retiro fatal de {target}."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "RETIRO"
   },
   "FLAVOUR_4_FAILUREMSG": {
     "description": "",
@@ -149,7 +169,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "BIOGRAFICA: Ciertos admiradores quieren a {target} muerto."
+    "message": "Ciertos admiradores quieren a muerto {target}. Pensado para expertos en exterminio."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "BIOGRÁFICA"
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
@@ -178,10 +202,6 @@
   "IT_MUST_BE_DONE_AFTER": {
     "description": "",
     "message": "Se debe actuar cuando {target} parta de {spaceport}. No pierda esta oportunidad."
-  },
-  "LY": {
-    "description": "",
-    "message": "AL"
   },
   "OK_AGREED": {
     "description": "",

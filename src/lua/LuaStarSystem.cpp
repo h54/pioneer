@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "EnumStrings.h"
@@ -118,19 +118,20 @@ static int l_starsystem_get_body_paths(lua_State *l)
 /*
  * Method: GetCommodityBasePriceAlterations
  *
- * Get the price alterations for cargo items bought and sold in this system
+ * Get the price alterations for commodities bought and sold in this system
  *
- * > alteration = system:GetCommodityBasePriceAlterations(cargo_item)
+ * > alteration = system:GetCommodityBasePriceAlterations(commodity)
  *
  * Parameters:
  *
- *   cargo_item - The cargo item for which one wants to know the alteration
+ *   commodity	- The commodity name to look up. Should be a valid name returned
+ *                by Economy.GetCommodities()
  * Return:
  *
- *   percentage -  percentage change to the cargo base price. Loosely,
- *                 positive values make the commodity more expensive,
- *                 indicating it is in demand, while negative values make the
- *                 commodity cheaper, indicating a surplus.
+ *   percentage	- percentage change to the cargo base price. Loosely,
+ *                positive values make the commodity more expensive,
+ *                indicating it is in demand, while negative values make the
+ *                commodity cheaper, indicating a surplus.
  *
  * Availability:
  *
@@ -146,24 +147,13 @@ static int l_starsystem_get_commodity_base_price_alterations(lua_State *l)
 	LUA_DEBUG_START(l);
 
 	StarSystem *s = LuaObject<StarSystem>::CheckFromLua(1);
-	if (!lua_istable(l, 2)) {
-		return luaL_error(l, "GetCommodityBasePriceAlterations takes a cargo object as and argument.");
-	}
-	LuaTable equip(l, 2);
+	std::string commodityName = luaL_checkstring(l, 2);
 
-	if (!equip.CallMethod<bool>("IsValidSlot", "cargo")) {
-		luaL_error(l, "GetCommodityBasePriceAlterations takes a valid cargo item as argument.");
-		return 0;
-	}
-	equip.PushValueToStack("l10n_key"); // For now let's just use this poor man's hack.
-	int commId;
-	if (!LuaConstants::CheckConstantFromArg(l, "CommodityType", -1, &commId)) {
-		lua_pop(l, 1);
-		lua_pushnumber(l, 0);
+	GalacticEconomy::CommodityId commId = GalacticEconomy::GetCommodityByName(commodityName);
+	if (commId != GalacticEconomy::InvalidCommodityId) {
+		lua_pushnumber(l, s->GetCommodityBasePriceModPercent(commId));
 	} else {
-		GalacticEconomy::Commodity e = static_cast<GalacticEconomy::Commodity>(commId);
-		lua_pop(l, 1);
-		lua_pushnumber(l, s->GetCommodityBasePriceModPercent(e));
+		lua_pushnumber(l, 0);
 	}
 
 	LUA_DEBUG_END(l, 1);
@@ -173,17 +163,18 @@ static int l_starsystem_get_commodity_base_price_alterations(lua_State *l)
 /*
  * Method: IsCommodityLegal
  *
- * Determine if a given cargo item is legal for trade in this system
+ * Determine if a given commodity is legal for trade in this system
  *
- * > is_legal = system:IsCommodityLegal(cargo)
+ * > is_legal = system:IsCommodityLegal(commodity)
  *
  * Parameters:
  *
- *   cargo - the wanted commodity (for instance, Equipment.cargo.hydrogen)
+ *   commodity - the wanted commodity; should be a commodity name returned by Economy.GetCommodities()
+ *               (for instance, "hydrogen")
  *
  * Return:
  *
- *   is_legal - true if the commodity is legal, otherwise false
+ *   is_legal  - true if the commodity is legal, otherwise false
  *
  * Availability:
  *
@@ -197,16 +188,14 @@ static int l_starsystem_is_commodity_legal(lua_State *l)
 {
 	PROFILE_SCOPED()
 	StarSystem *s = LuaObject<StarSystem>::CheckFromLua(1);
-	// XXX: Don't use the l10n_key hack, this is just UGLY!!
-	luaL_checktype(l, 2, LUA_TTABLE);
-	LuaTable(l, 2).PushValueToStack("l10n_key");
-	int commId;
-	if (!LuaConstants::CheckConstantFromArg(l, "CommodityType", -1, &commId))
+	std::string commName = luaL_checkstring(l, 2);
+
+	GalacticEconomy::CommodityId commId = GalacticEconomy::GetCommodityByName(commName);
+	if (commId != GalacticEconomy::InvalidCommodityId)
+		lua_pushboolean(l, s->IsCommodityLegal(commId));
+	else
 		lua_pushboolean(l, true);
-	else {
-		GalacticEconomy::Commodity e = static_cast<GalacticEconomy::Commodity>(commId);
-		lua_pushboolean(l, s->IsCommodityLegal(e));
-	}
+
 	return 1;
 }
 
@@ -266,6 +255,7 @@ static int l_starsystem_get_nearby_systems(lua_State *l)
 
 	const int diff_sec = int(ceil(dist_ly / Sector::SIZE));
 
+	uint32_t numSystems = 0;
 	for (int x = here_x - diff_sec; x <= here_x + diff_sec; x++) {
 		for (int y = here_y - diff_sec; y <= here_y + diff_sec; y++) {
 			for (int z = here_z - diff_sec; z <= here_z + diff_sec; z++) {
@@ -290,7 +280,7 @@ static int l_starsystem_get_nearby_systems(lua_State *l)
 						lua_pop(l, 1);
 					}
 
-					lua_pushinteger(l, lua_rawlen(l, -1) + 1);
+					lua_pushinteger(l, ++numSystems);
 					LuaObject<StarSystem>::PushToLua(sys.Get());
 					lua_rawset(l, -3);
 				}
@@ -313,6 +303,20 @@ static int l_starsystem_get_stars(lua_State *l)
 		LuaObject<SystemBody>::PushToLua(star);
 		lua_settable(l, -3);
 	}
+	return 1;
+}
+
+static int l_starsystem_get_jumpable(lua_State *l)
+{
+	const StarSystem *s = LuaObject<StarSystem>::CheckFromLua(1);
+	lua_newtable(l);
+	int i = 1;
+	for (RefCountedPtr<SystemBody> sb : s->GetBodies())
+		if (sb->IsJumpable()) {
+			lua_pushnumber(l, i++);
+			LuaObject<SystemBody>::PushToLua(sb.Get());
+			lua_settable(l, -3);
+		}
 	return 1;
 }
 
@@ -578,6 +582,20 @@ static int l_starsystem_attr_number_of_stars(lua_State *l)
 	return 1;
 }
 
+static int l_starsystem_attr_number_of_stations(lua_State *l)
+{
+	StarSystem *s = LuaObject<StarSystem>::CheckFromLua(1);
+	LuaPush(l, s->GetNumSpaceStations());
+	return 1;
+}
+
+static int l_starsystem_attr_number_of_bodies(lua_State *l)
+{
+	StarSystem *s = LuaObject<StarSystem>::CheckFromLua(1);
+	LuaPush(l, s->GetNumBodies());
+	return 1;
+}
+
 static int l_starsystem_attr_root_system_body(lua_State *l)
 {
 	StarSystem *s = LuaObject<StarSystem>::CheckFromLua(1);
@@ -590,6 +608,46 @@ static int l_starsystem_attr_short_description(lua_State *l)
 {
 	StarSystem *s = LuaObject<StarSystem>::CheckFromLua(1);
 	LuaPush(l, s->GetShortDescription());
+	return 1;
+}
+
+/*
+* Attribute: govDescription
+*
+* The translated description of the system's government type.
+*
+* Availability:
+*
+*   November 2020
+*
+* Status:
+*
+*   experimental
+*/
+static int l_starsystem_attr_gov_description(lua_State *l)
+{
+	StarSystem *s = LuaObject<StarSystem>::CheckFromLua(1);
+	LuaPush(l, s->GetSysPolit().GetGovernmentDesc());
+	return 1;
+}
+
+/*
+* Attribute: econDescription
+*
+* The translated description of the system's economy type.
+*
+* Availability:
+*
+*   November 2020
+*
+* Status:
+*
+*   experimental
+*/
+static int l_starsystem_attr_econ_description(lua_State *l)
+{
+	StarSystem *s = LuaObject<StarSystem>::CheckFromLua(1);
+	LuaPush(l, s->GetSysPolit().GetEconomicDesc());
 	return 1;
 }
 
@@ -647,6 +705,7 @@ void LuaObject<StarSystem>::RegisterClass()
 		{ "GetStationPaths", l_starsystem_get_station_paths },
 		{ "GetBodyPaths", l_starsystem_get_body_paths },
 		{ "GetStars", l_starsystem_get_stars },
+		{ "GetJumpable", l_starsystem_get_jumpable },
 
 		{ "GetCommodityBasePriceAlterations", l_starsystem_get_commodity_base_price_alterations },
 		{ "IsCommodityLegal", l_starsystem_is_commodity_legal },
@@ -673,8 +732,12 @@ void LuaObject<StarSystem>::RegisterClass()
 		{ "govtype", l_starsystem_attr_govtype },
 		{ "explored", l_starsystem_attr_explored },
 		{ "numberOfStars", l_starsystem_attr_number_of_stars },
+		{ "numberOfStations", l_starsystem_attr_number_of_stations },
+		{ "numberOfBodies", l_starsystem_attr_number_of_bodies },
 		{ "rootSystemBody", l_starsystem_attr_root_system_body },
 		{ "shortDescription", l_starsystem_attr_short_description },
+		{ "govDescription", l_starsystem_attr_gov_description },
+		{ "econDescription", l_starsystem_attr_econ_description },
 		{ 0, 0 }
 	};
 

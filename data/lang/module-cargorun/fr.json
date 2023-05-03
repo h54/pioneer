@@ -25,39 +25,75 @@
   },
   "ADTEXT_1": {
     "description": "",
-    "message": "LIVRAISON. Livraison d'un chargement vers le système {system}."
+    "message": "Besoin de vaisseau pour la livraison d'une marchandise vers le système {system}."
   },
   "ADTEXT_2": {
     "description": "",
-    "message": "BESOIN DE TRANSPORT. Transport de marchandises vers le système {system} requis. Paye {cash}."
+    "message": "Besoin de transport de produits vers le système {system}. Paie {cash}."
   },
   "ADTEXT_EXPENSIVE_1": {
     "description": "",
-    "message": "LIVRAISON. Chargement de valeur vers le système {system}. {cash} à un pilote expérimenté."
+    "message": "Livraison d'une cargaison de valeur vers le système {system}. {cash} pour un pilote expérimenté."
   },
   "ADTEXT_LOCAL_1": {
     "description": "",
-    "message": "LIVRAISON LOCALE. Déplacement de marchandises vers {starport}."
+    "message": "Transporteurs requis pour un trajet à l'intérieur du système: amener des marchandises vers {starport}."
   },
   "ADTEXT_LOCAL_2": {
     "description": "",
-    "message": "TRANSPORT REQUIS. Livraison de cargaison local vers {starport}."
+    "message": "Besoin de livraison locale pour une cargaison personnelle vers {starport}."
   },
   "ADTEXT_LOCAL_3": {
     "description": "",
-    "message": "LIVRAISON. Livraison de marchandises vers {starport}."
+    "message": "Contrat de livraison de cargaison privée. Besoin de transport certifié de marchandises vers {starport}."
   },
   "ADTEXT_PICKUP_1": {
     "description": "",
-    "message": "RECUPÉRATION CARGAISON. Récupération de cargaison depuis le système {system} requise."
+    "message": "Récupération de cargaison localisée dans le système {system} requise. Détails disponibles sur demandee."
   },
   "ADTEXT_PICKUP_LOCAL_1": {
     "description": "",
-    "message": "DEPLACEMENT. Déplacement de cargaison depuis {starport} requise."
+    "message": "Besoin de transport de cargaison: déplacement de marchandises depuis {starport} vers cette station requis."
   },
   "ADTEXT_WHOLESALER_1": {
     "description": "",
-    "message": "SERVICE LIVRAISON. Nous avons besoin d'un vaisseau pour un livraison vers le système {system}."
+    "message": "Contractuel qualifié requis pour du transport de marchandises. Nous avons besoin d'un vaisseau pour une livraison en vrac vers le système {system}."
+  },
+  "ADTITLE_1": {
+    "description": "",
+    "message": "TRANSPORT DE MARCHANDISES"
+  },
+  "ADTITLE_2": {
+    "description": "",
+    "message": "BESOIN DE TRANSPORT DE MARCHANDISES"
+  },
+  "ADTITLE_EXPENSIVE_1": {
+    "description": "",
+    "message": "LIVRAISON ASSURÉE"
+  },
+  "ADTITLE_LOCAL_1": {
+    "description": "",
+    "message": "FRET COURTE DISTANCE"
+  },
+  "ADTITLE_LOCAL_2": {
+    "description": "",
+    "message": "TRANSPORT DE FRET LOCAL"
+  },
+  "ADTITLE_LOCAL_3": {
+    "description": "",
+    "message": "TRANSPORT DE  MARCHANDISES LOCAL"
+  },
+  "ADTITLE_PICKUP_1": {
+    "description": "",
+    "message": "RÉCUPÉRATION DE CARGAISON"
+  },
+  "ADTITLE_PICKUP_LOCAL_1": {
+    "description": "",
+    "message": "TRANSPORT INTRA-SYSTÈME"
+  },
+  "ADTITLE_WHOLESALER_1": {
+    "description": "",
+    "message": "SERVICE DE TRANSPORT EN VRAC"
   },
   "ALUMINIUM_TUBES": {
     "description": "custom cargo",
@@ -135,6 +171,18 @@
     "description": "",
     "message": "Revenez quand vous serez plus expérimenté."
   },
+  "DENY_AGAIN_1": {
+    "description": "",
+    "message": "Désolé, nous avons déjà un conclu un marché. Cependant, je serais heureux de faire de nouveau affaire avec vous après le succès de cette livraison."
+  },
+  "DENY_AGAIN_2": {
+    "description": "",
+    "message": "Excusez-moi monsieur, veuillez d'abord terminer notre contrat actuel. Nous pourrons alors négocier une autre livraison."
+  },
+  "DENY_AGAIN_3": {
+    "description": "",
+    "message": "Monsieur, veuillez d'abord délivrer ma marchandise. Ensuite, je ferais d'autre affaires avec vous."
+  },
   "DIAMONDS": {
     "description": "custom cargo",
     "message": "Diamants"
@@ -199,6 +247,10 @@
     "description": "custom cargo",
     "message": "Meubles"
   },
+  "GO_BACK": {
+    "description": "Shown on a button in a sub-menu, to move back, to previous menu",
+    "message": "Retour"
+  },
   "GREENHOUSES": {
     "description": "custom cargo",
     "message": "Serres"
@@ -228,7 +280,7 @@
     "message": "Il y a {amount}t."
   },
   "HOWMUCH_SINGULAR_1": {
-    "description": "This string is only used for 1 metric tons (singular)",
+    "description": "This string is only used for 1 metric ton (singular)",
     "message": "C'est seulement {amount}t."
   },
   "HOWMUCH_WHOLESALER_1": {
@@ -315,6 +367,10 @@
     "description": "",
     "message": "Salutation, mon nom est {name} et je travaille pour Haber Corp. Nous payons {cash} pour une course vers {starport} dans le système {system} ({sectorx}, {sectory}, {sectorz}), distant de {dist} al."
   },
+  "IS_IT_NEGOTIABLE": {
+    "description": "",
+    "message": "Le poids de la marchandise est-il négociable ?"
+  },
   "I_AM_ON_MY_WAY": {
     "description": "",
     "message": "Les capteurs montre que vous êtes attaqué et subissez des dégâts. J'arrive."
@@ -327,21 +383,45 @@
     "description": "",
     "message": "Je suis attaqué et subis des dégâts. J'ai besoin d'aide."
   },
-  "LY": {
-    "description": "",
-    "message": "al"
-  },
   "MACHINE_TOOLS": {
     "description": "custom cargo",
     "message": "machines-outils"
+  },
+  "NEGOTIABLE_1": {
+    "description": "regarding mass, always more than 1t",
+    "message": "Je peux vous offrir les courses de transport de marchandises suivantes:"
+  },
+  "NEGOTIABLE_2": {
+    "description": "regarding mass, always more than 1t",
+    "message": "Lest {amount}t de {cargoname} peuvent être divisés comme suit:"
+  },
+  "NEGOTIABLE_3": {
+    "description": "regarding mass, always more than 1t",
+    "message": "Oui, nous pouvons partager la cargaison."
+  },
+  "NEGOTIABLE_NO_1": {
+    "description": "regarding mass, always more than 1t",
+    "message": "Non, désolé. Il n'est pas possible de partager la marchandise. Vous devez transporter la totalité des {amount} tonnes en une fois."
+  },
+  "NEGOTIABLE_SINGULAR_1": {
+    "description": "This string is only used for 1 metric ton (singular)",
+    "message": "Non. C'est seulement {amount}t."
   },
   "NEPTUNIUM": {
     "description": "custom cargo",
     "message": "Neptunium"
   },
+  "OFFER": {
+    "description": "",
+    "message": "Transporter {amount}t pour un montant de {reward}"
+  },
   "OK_AGREED": {
     "description": "",
     "message": "Ok, c'est d'accord."
+  },
+  "OK_WE_AGREE": {
+    "description": "",
+    "message": "Ok, nous sommes d'accord pour {amount}t à {reward}."
   },
   "PICKUP_FROM": {
     "description": "from a location",
@@ -493,7 +573,7 @@
   },
   "SYSTEM": {
     "description": "",
-    "message": "Systeme:"
+    "message": "Système:"
   },
   "TARGET_DESTROYED": {
     "description": "",
@@ -502,6 +582,10 @@
   "TITANIUM": {
     "description": "custom cargo",
     "message": "Titane"
+  },
+  "TOO_LATE_TO_PICK_UP": {
+    "description": "",
+    "message": "Vous êtes bien trop en retard! Votre performance a été si mauvaise que je me dois d'annuler notre contrat."
   },
   "TUNGSTEN": {
     "description": "custom cargo",

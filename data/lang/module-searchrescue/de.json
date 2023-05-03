@@ -165,7 +165,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "SCHIFF ABGESTÜRZT auf {planet}."
+    "message": "Lokale Raumflugsicherung meldet Absturz eines Schiffes auf {planet}. Hilfe benötigt."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "SCHIFF ABGESTÜRZT"
   },
   "FLAVOUR_1_FAILUREMSG": {
     "description": "",
@@ -197,7 +201,11 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "SCHIFF MIT LEEREM TANK auf der Route nach {starport}."
+    "message": "{starport} Raumflugsicherung hat eine Meldung über ein Schiff mit zu wenig Treibstoff erhalten. Tankdienst benötigt."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "SCHIFF OHNE TREIBSTOFF"
   },
   "FLAVOUR_2_FAILUREMSG": {
     "description": "",
@@ -229,7 +237,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "MEDIZINISCHER NOTFALL auf Schiff nahe {starport}."
+    "message": "Schiff in der Nähe von {starport} meldet medizinischen Notfall. Dringende Krankenfahrt benötigt."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "MEDIZINISCHER NOTFALL"
   },
   "FLAVOUR_3_FAILUREMSG": {
     "description": "",
@@ -261,7 +273,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "SCHIFF OHNE TREIBSTOFF auf {planet}."
+    "message": "Notsignal empfangen: Schiff ist ohne Treibstoff auf {planet} gestrandet."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "SCHIFF MIT LEEREM TANK GESTRANDET"
   },
   "FLAVOUR_4_FAILUREMSG": {
     "description": "",
@@ -293,7 +309,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "SCHIFF OHNE TREIBSTOFF in der Nähe von {starport}."
+    "message": "Gestrandetes Schiff benötigt Auftankdienste in der Nähe von {starport}."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "TANK LEER, HILFE GESUCHT"
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
@@ -325,7 +345,11 @@
   },
   "FLAVOUR_6_ADTEXT": {
     "description": "",
-    "message": "SCHIFF UNANSPRECHBAR im System {system}."
+    "message": "Notfall: Dienstraumschiff antwortet nicht im {system} System."
+  },
+  "FLAVOUR_6_ADTITLE": {
+    "description": "",
+    "message": "SCHIFF ANTWORTET NICHT"
   },
   "FLAVOUR_6_FAILUREMSG": {
     "description": "",
@@ -357,7 +381,11 @@
   },
   "FLAVOUR_7_ADTEXT": {
     "description": "",
-    "message": "Bitte um SOFORTIGEN CREWTRANSPORT zum System {system}"
+    "message": "Anfrage für sofortigen Mannschaftstransport zu einem führerlosen Schiff im {system} System."
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "NOTFALLTRANSPORT VON BESATZUNG"
   },
   "FLAVOUR_7_FAILUREMSG": {
     "description": "",
@@ -434,10 +462,6 @@
   "LON": {
     "description": "",
     "message": "L.:"
-  },
-  "LY": {
-    "description": "",
-    "message": "Lj"
   },
   "MISSING_COMM": {
     "description": "",

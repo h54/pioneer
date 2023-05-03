@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Orbit.h"
@@ -85,13 +85,11 @@ static void calc_position_from_mean_anomaly(const double M, const double e, cons
 			double Emin = M - 1.1;
 			double Emax = M + 1.1;
 			double Ymin = Emin - e * sin(Emin) - M;
-			double Ymax = Emax - e * sin(Emax) - M;
 			double Y;
 			for (int i = 0; i < 14; i++) { // 14 iterations for precision 0.00006
 				E = (Emin + Emax) / 2;
 				Y = E - e * sin(E) - M;
 				if ((Ymin * Y) < 0) {
-					Ymax = Y;
 					Emax = E;
 				} else {
 					Ymin = Y;
@@ -168,6 +166,7 @@ double Orbit::MeanAnomalyAtTime(double time) const
 
 vector3d Orbit::OrbitalPosAtTime(double t) const
 {
+	if (is_zero_general(m_semiMajorAxis)) return m_positionForStaticBody;
 	double cos_v, sin_v, r;
 	calc_position_from_mean_anomaly(MeanAnomalyAtTime(t), m_eccentricity, m_semiMajorAxis, cos_v, sin_v, &r);
 	return m_orient * vector3d(-cos_v * r, sin_v * r, 0);
@@ -300,32 +299,47 @@ void Orbit::SetShapeAroundPrimary(double semiMajorAxis, double centralMass, doub
 	m_velocityAreaPerSecond = calc_velocity_area_per_sec(semiMajorAxis, centralMass, eccentricity);
 }
 
-Orbit Orbit::FromBodyState(const vector3d &pos, const vector3d &vel, double centralMass)
+Orbit Orbit::ForStaticBody(const vector3d &position)
 {
 	Orbit ret;
+	// just remember the current position of the body, and we will return it, for any t
+	ret.m_positionForStaticBody = position;
+	return ret;
+}
 
-	const double r_now = pos.Length() + 1e-12;
-	const double v_now = vel.Length() + 1e-12;
+Orbit Orbit::FromBodyState(const vector3d &pos, const vector3d &vel_raw, double centralMass)
+{
+	Orbit ret;
 
 	// standard gravitational parameter
 	const double u = centralMass * G;
 
+	// maybe we will adjust the speed a little now
+	vector3d vel = vel_raw;
 	// angular momentum
-	const vector3d ang = pos.Cross(vel);
+	vector3d ang = pos.Cross(vel);
+	// quite a rare case - the speed is directed strictly to the star or away from the star
+	// let's make a small disturbance to the velocity, so as not to calculate the radial orbit
+	double speed = vel.Length();
+	double dist = pos.Length();
+	bool radial_orbit = is_zero_general(speed) || is_zero_general(dist) || is_zero_general(1.0 - fabs(pos.Dot(vel)) / speed / dist);
+	if (radial_orbit && !is_zero_general(centralMass)) {
+		if (is_zero_general(pos.x) && is_zero_general(pos.y)) // even rarer case, the body lies strictly on the z-axis
+			vel.x += 1e-3 + 1e-6 * speed;
+		else
+			vel.z += 1e-3 + 1e-6 * speed;
+		ang = pos.Cross(vel); // recalculate angular momentum
+	}
+
+	const double r_now = pos.Length();
+
 	const double LLSqr = ang.LengthSqr();
-	const double LL = ang.Length();
 
 	// total energy
 	const double EE = vel.LengthSqr() / 2.0 - u / r_now;
 
-	if (is_zero_general(centralMass) || is_zero_general(r_now) || is_zero_general(v_now) || is_zero_general(EE) || (ang.z * ang.z / LLSqr > 1.0)) {
-		ret.m_eccentricity = 0.0;
-		ret.m_semiMajorAxis = 0.0;
-		ret.m_velocityAreaPerSecond = 0.0;
-		ret.m_orbitalPhaseAtStart = 0.0;
-		ret.m_orient = matrix3x3d::Identity();
-		return ret;
-	}
+	if (is_zero_general(centralMass) || is_zero_general(EE) || (ang.z * ang.z / LLSqr > 1.0))
+		return Orbit::ForStaticBody(pos);
 
 	// http://en.wikipedia.org/wiki/Orbital_eccentricity
 	ret.m_eccentricity = 1 + 2 * EE * LLSqr / (u * u);

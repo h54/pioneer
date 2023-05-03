@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "LuaGame.h"
@@ -9,19 +9,18 @@
 #include "GameSaveError.h"
 #include "Lang.h"
 #include "LuaObject.h"
-#include "LuaPiGui.h"
+#include "LuaTable.h"
 #include "LuaUtils.h"
 #include "Pi.h"
 #include "Player.h"
 #include "SectorView.h"
-#include "ShipCpanel.h"
 #include "Space.h"
 #include "StringF.h"
-#include "SystemInfoView.h"
 #include "SystemView.h"
 #include "WorldView.h"
 #include "core/GZipFormat.h"
 #include "galaxy/Galaxy.h"
+#include "pigui/LuaPiGui.h"
 
 /*
  * Interface: Game
@@ -78,25 +77,25 @@ static int l_game_start_game(lua_State *l)
 }
 
 /*
-* Function: SaveGameStats
-*
-* Return stats about a game.
-*
-* > Game.SaveGameStats(filename)
-*
-* Parameters:
-*
-*   filename - The filename of the save game to retrieve stats for.
-*              Stats will be loaded from the 'savefiles' directory in the user's game directory.
-*
-* Availability:
-*
-*   2018-02-10
-*
-* Status:
-*
-*   experimental
-*/
+ * Function: SaveGameStats
+ *
+ * Return stats about a game.
+ *
+ * > Game.SaveGameStats(filename)
+ *
+ * Parameters:
+ *
+ *   filename - The filename of the save game to retrieve stats for.
+ *              Stats will be loaded from the 'savefiles' directory in the user's game directory.
+ *
+ * Availability:
+ *
+ *   2018-02-10
+ *
+ * Status:
+ *
+ *   experimental
+ */
 static int l_game_savegame_stats(lua_State *l)
 {
 	std::string filename = LuaPull<std::string>(l, 1);
@@ -359,6 +358,28 @@ static int l_game_attr_systemview(lua_State *l)
 }
 
 /*
+ * Attribute: sectorView
+ *
+ * The <SectorView> object for the sector map view class
+ *
+ * Availability:
+ *
+ *  April 2020
+ *
+ * Status:
+ *
+ *  experiment
+ */
+static int l_game_attr_sectorview(lua_State *l)
+{
+	if (!Pi::game)
+		lua_pushnil(l);
+	else
+		LuaObject<SectorView>::PushToLua(Pi::game->GetSectorView());
+	return 1;
+}
+
+/*
  * Attribute: time
  *
  * The current game time, in seconds since 12:00 01-01-3200
@@ -429,29 +450,6 @@ static int l_game_in_hyperspace(lua_State *l)
 }
 
 /*
- * Function: SetRadarVisible
- *
- * Show or hide the traditional radar in ShipCPanel
- *
- * > Game.SetRadarVisible(true)
- *
- * Availability:
- *
- *   2017-04
- *
- * Status:
- *
- *   stable
- */
-
-static int l_game_set_radar_visible(lua_State *l)
-{
-	bool visible = LuaPull<bool>(l, 1);
-	Pi::game->GetCpan()->SetRadarVisible(visible);
-	return 0;
-}
-
-/*
  * Function: CurrentView
  *
  * Return the currently active game view
@@ -460,7 +458,7 @@ static int l_game_set_radar_visible(lua_State *l)
  *
  * Return:
  *
- *   view - a string describing the game view: "world", "space_station", "info", "sector", "system", "system_info", "death", "settings"
+ *   view - a string describing the game view: "world", "space_station", "info", "sector", "system", "death", "settings"
  *
  * Availability:
  *
@@ -484,8 +482,6 @@ static int l_game_current_view(lua_State *l)
 		LuaPush(l, "sector");
 	else if (view == Pi::game->GetSystemView())
 		LuaPush(l, "system");
-	else if (view == Pi::game->GetSystemInfoView())
-		LuaPush(l, "system_info");
 	else if (view == Pi::game->GetDeathView())
 		LuaPush(l, "death");
 	else
@@ -590,8 +586,6 @@ static int l_game_set_view(lua_State *l)
 		Pi::SetView(Pi::game->GetSectorView());
 	} else if (!target.compare("system")) {
 		Pi::SetView(Pi::game->GetSystemView());
-	} else if (!target.compare("system_info")) {
-		Pi::SetView(Pi::game->GetSystemInfoView());
 	} else {
 		// TODO else error
 	}
@@ -600,7 +594,7 @@ static int l_game_set_view(lua_State *l)
 
 static int l_game_get_world_cam_type(lua_State *l)
 {
-	switch (Pi::game->GetWorldView()->shipView.GetCamType()) {
+	switch (Pi::game->GetWorldView()->shipView->GetCamType()) {
 	case ShipViewController::CAM_INTERNAL: lua_pushstring(l, "internal"); break;
 	case ShipViewController::CAM_EXTERNAL: lua_pushstring(l, "external"); break;
 	case ShipViewController::CAM_SIDEREAL: lua_pushstring(l, "sidereal"); break;
@@ -614,13 +608,13 @@ static int l_game_set_world_cam_type(lua_State *l)
 {
 	std::string cam = luaL_checkstring(l, 1);
 	if (!cam.compare("internal"))
-		Pi::game->GetWorldView()->shipView.SetCamType(ShipViewController::CAM_INTERNAL);
+		Pi::game->GetWorldView()->shipView->SetCamType(ShipViewController::CAM_INTERNAL);
 	else if (!cam.compare("external"))
-		Pi::game->GetWorldView()->shipView.SetCamType(ShipViewController::CAM_EXTERNAL);
+		Pi::game->GetWorldView()->shipView->SetCamType(ShipViewController::CAM_EXTERNAL);
 	else if (!cam.compare("sidereal"))
-		Pi::game->GetWorldView()->shipView.SetCamType(ShipViewController::CAM_SIDEREAL);
+		Pi::game->GetWorldView()->shipView->SetCamType(ShipViewController::CAM_SIDEREAL);
 	else if (!cam.compare("flyby"))
-		Pi::game->GetWorldView()->shipView.SetCamType(ShipViewController::CAM_FLYBY);
+		Pi::game->GetWorldView()->shipView->SetCamType(ShipViewController::CAM_FLYBY);
 	else {
 		// TODO else error
 	}
@@ -662,7 +656,6 @@ void LuaGame::Register()
 		{ "SaveGame", l_game_save_game },
 		{ "EndGame", l_game_end_game },
 		{ "InHyperspace", l_game_in_hyperspace },
-		{ "SetRadarVisible", l_game_set_radar_visible },
 		{ "SaveGameStats", l_game_savegame_stats },
 
 		{ "SwitchView", l_game_switch_view },
@@ -685,6 +678,7 @@ void LuaGame::Register()
 		{ "player", l_game_attr_player },
 		{ "system", l_game_attr_system },
 		{ "systemView", l_game_attr_systemview },
+		{ "sectorView", l_game_attr_sectorview },
 		{ "time", l_game_attr_time },
 		{ "paused", l_game_attr_paused },
 		{ 0, 0 }

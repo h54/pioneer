@@ -13,7 +13,7 @@
   },
   "ANIMAL_MEAT_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Det är en stor motsägelse, kött är köttet från djur. Med god tillgång till syntetiska proteiner anser de flesta människorna att djur inte borde bli dödade. Medan kött är illegalt i de flesta kärnsystemen så är levande djur och deras kött en viktig del av liven för människor på de mer traditionella världarna."
+    "message": "Det är en stor motsägelse, kött är köttet från djur. Med god tillgång till syntetiska proteiner anser de flesta människor att djur inte borde bli dödade. Medan kött är illegalt i de flesta kärnsystem så är levande djur och deras kött en viktig del av livet för människor på de mer traditionella världarna."
   },
   "BATTLE_WEAPONS": {
     "description": "",
@@ -29,7 +29,7 @@
   },
   "CARBON_ORE_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Kol är en av de mest brett användbara elementen vi känner till. Det är en billig, men viktig vara som används i allt ifrån plast och legeringar till värme och energi. Tack varde dess breda användningsområden så kan ett krav på kol förvändas vart än det finns industri."
+    "message": "Kol är en av de mest brett användbara elementen vi känner till. Det är en billig, men viktig vara som används i allt ifrån plast och legeringar till värme och energi. Tack vare dess breda användningsområde så kan en efterfråga på kol förväntas vart än det finns industri."
   },
   "COMPUTERS": {
     "description": "",
@@ -37,7 +37,7 @@
   },
   "COMPUTERS_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "För över 1000 år sen med sin Abacus, PDP-11 och Motorola 68k chip till vår moderna HAL 9001 och Multivac produkterna, anses datorerna utgöra gryningen för informationseran. Lika viktiga för att gå in i hyperryden som för att dela videor på gulliga smådjur över UnNet."
+    "message": "För över 1000 år sen med sin Abacus, PDP-11 och Motorola 68k chip till vår moderna HAL 9001 och Multivac produkterna, anses datorerna utgöra gryningen för informationseran. Lika viktiga för att gå in i hyperrymden som för att dela videor på gulliga smådjur över UnNet."
   },
   "CONSUMER_GOODS": {
     "description": "",
@@ -45,7 +45,7 @@
   },
   "CONSUMER_GOODS_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Slutprodukterna som är redo för den konsumenten utan ytterligare bearbetning. Alltifrån tandborstar, köksredskap till svävarbilar."
+    "message": "Slutprodukterna, redo för konsumenten utan någon ytterligare bearbetning. Alltifrån tandborstar och köksredskap till svävarbilar."
   },
   "FARM_MACHINERY": {
     "description": "",
@@ -53,7 +53,7 @@
   },
   "FARM_MACHINERY_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Även om det är ovanligt så går det ibland att se en bonde med en oxdriven plog. Men nästan överallt där det finns jordbruk är det maskiner som används för odling, oavsett om det är vattentillverkning för ett underjordiskt tillhåll eller oändliga fält på en jordbruksplanet."
+    "message": "Även om det är ovanligt så går det ibland att se en bonde med en oxdriven plog. Men nästan överallt där det finns jordbruk är det maskiner som används för odling, oavsett om det är i ett hydroponiskt system för ett underjordiskt tillhåll eller oändliga fält på en jordbruksplanet."
   },
   "FERTILIZER": {
     "description": "",
@@ -61,7 +61,7 @@
   },
   "FERTILIZER_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Gödningsmedel är vitala för odling på en industriell skala. Det tillåter odling av enstaka arter och ger högre avkastning mot vad som är möjligt med vanlig jord. Det kommer oftast med en ekologisk kostnad som inte brukar vara tydlig i början."
+    "message": "Gödningsmedel är vitala för odling på en industriell skala. Det tillåter odling av enstaka arter och ger högre avkastning mot vad som är möjligt med vanlig jord. Det kommer oftast med en kostnad för miljön som inte brukar vara tydlig i början."
   },
   "FRUIT_AND_VEG": {
     "description": "",
@@ -69,7 +69,7 @@
   },
   "FRUIT_AND_VEG_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Även om det finns många syntetiska alternativ så är riktiga frukt och grönsaker fortfarande en viktig del av vår mat och näring. Odlade på jordbruksvärldar eller som en del av de livsuppehållande systemen i olika habitat exporteras dess till system där det saknas möjlighet till odling."
+    "message": "Även om det finns många syntetiska alternativ så är riktiga frukt och grönsaker fortfarande en viktig del av vår mat och näring. Odlade på jordbruksvärldar eller som en del av de livsuppehållande systemen i olika habitat, exporteras dessa till system där det saknas möjlighet till odling."
   },
   "GRAIN": {
     "description": "",
@@ -77,7 +77,7 @@
   },
   "GRAIN_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Basfödan i mångas dieter. Det används i jordbruk för att mata djuren och som ett supplement till syntetisk mat. Säd används också i många andra maträtter som gröt och bakade varor. De flesta kulturer som reser bland stjärnorna odlar och konsumerar i alla var lite säd som blivit anpassade till deras levnadsmiljö."
+    "message": "Basfödan i mångas dieter. Det används i jordbruk för att mata djuren och som ett supplement till syntetisk mat. Säd används också i många andra maträtter som gröt och bakade varor. De flesta kulturer som reser bland stjärnorna odlar och konsumerar i alla fall några sorters säd som blivit anpassade till deras levnadsmiljö."
   },
   "HAND_WEAPONS": {
     "description": "",
@@ -85,7 +85,7 @@
   },
   "HAND_WEAPONS_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Ger en försäkring som sträcker sig utanför lagens långa arm. Handeldvapen är vitala för handlare i de uteliggande systemen.  Däremot ser många regeringar dessa som ett hot mot deras kontroll över populationen och de efterlever strikt kontroll över handel och innehav."
+    "message": "Ger en försäkring som sträcker sig utanför lagens långa arm. Handeldvapen är vitala för handlare i de uteliggande systemen.  Däremot ser många regeringar dessa som ett hot mot deras kontroll över invånarna och de efterlever strikt kontroll över handel och innehav."
   },
   "HYDROGEN": {
     "description": "",
@@ -109,7 +109,7 @@
   },
   "LIQUID_OXYGEN_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Flytande syre har många användningsområden. Vanligast är medicinska och industriella applikationer men används även ibland för sophantering. Det är väldigt billigt eftersom syre är lätt att utvinna ur vatten."
+    "message": "Flytande syre har många användningsområden. Vanligast är medicinska och industriella applikationer men det används även ibland för sophantering. Det är väldigt billigt eftersom syre är lätt att utvinna ur vatten."
   },
   "LIQUOR": {
     "description": "",
@@ -117,7 +117,7 @@
   },
   "LIQUOR_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "De flesta utposterna har en lokal brygd som utomstående brukar ha svårt att få ner. Alkohol kan vara förbjudet i vissa system då det anses fördunkla sinnena. Oavsett lagar så brukar det alltid finnas tillgång till ett glas wiskey på den svarta maknaden. För ett pris."
+    "message": "De flesta utposter har en lokal brygd som utomstående brukar ha svårt att få ner. Alkohol kan vara förbjudet i vissa system då det anses fördunkla sinnena. Oavsett lagar så brukar det alltid gå att få ett glas whisky på den svarta marknaden, men det kostar därefter."
   },
   "LIVE_ANIMALS": {
     "description": "",
@@ -133,7 +133,7 @@
   },
   "MEDICINES_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Oavsett om de är utvunna ur naturliga källor, eller artificiellt syntetiserad så behövs mediciner överallt där människor färdas. Med användningsområden alltifrån att bota vanlig förkylning till att bekämpa de negativa effekterna av en förlängd vistelse i rymden så är mediciner av yttersta vikt för att den intergalaktiska mänskligheten skall frodas.  Mediciner övervakas noga av tullagenter då det inte är ovanligt att dölja narkotika som medicinska preparat."
+    "message": "Oavsett om de är utvunna ur naturliga källor eller är artificiellt syntetiserade så behövs mediciner överallt där människor färdas. Med användningsområden från att bota vanlig förkylning till att bekämpa de negativa effekterna av en förlängd vistelse i rymden så är mediciner av yttersta vikt för att den interstellära mänskligheten skall frodas. Mediciner övervakas noga av tullagenter då det inte är ovanligt att dölja narkotika som medicinska preparat."
   },
   "METAL_ALLOYS": {
     "description": "",
@@ -157,7 +157,7 @@
   },
   "MILITARY_FUEL_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Used as fuel in the more advanced military drives. These drives produce nuclear waste during operation, which must be disposed of. Due to its synthetic nature, military fuel is more expensive and less common than hydrogen, and can not be found occurring naturally."
+    "message": "Används som drivmedel i mer avancerade militära enheter. Dessa ger radioaktivt material som biprodukt vilket måste tas om hand. På grund av sin syntetiska natur, så är militärt drivmedel dyrare och mindre vanligt förekommande än väte och förekommer inte naturligt."
   },
   "MINING_MACHINERY": {
     "description": "",
@@ -165,7 +165,7 @@
   },
   "MINING_MACHINERY_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "The traditionally back breaking work of mining is alleviated by the use of machines that help miners in locating and retrieving various ores, and transporting them to the closest processing facilities."
+    "message": "Det traditionella slitsamma arbetet med gruvdrift lindras genom användning av maskiner som hjälper gruvarbetare att lokalisera och hämta olika malmer och transportera dem till närmaste bearbetningsanläggning."
   },
   "NARCOTICS": {
     "description": "",
@@ -173,7 +173,7 @@
   },
   "NARCOTICS_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Natural or synthetic substances that alter the state of mind and body. Although the use of narcotics, both for recreational and medical purposes, is as old as humanity itself, shipping and trading is commonly outlawed."
+    "message": "Naturliga eller syntetiska ämnen som förändrar sinne och kropp. Även om användningen av narkotika, både för rekreations- och medicinska ändamål, är lika gammal som mänskligheten själv, är frakt och handel vanligtvis förbjudet."
   },
   "NERVE_GAS": {
     "description": "",
@@ -181,7 +181,7 @@
   },
   "NERVE_GAS_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "It is generally accepted to be a weapon of mass destruction, shunned even by the military in most systems, and thus illegal in most systems."
+    "message": "Eftersom dess främsta användningsområde är som massförstörelsevapen, så undviks det till och med av de flesta systems militär, och är således olagligt i de flesta stjärnsystem"
   },
   "PLASTICS": {
     "description": "",
@@ -189,7 +189,7 @@
   },
   "PLASTICS_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Synthetical and semi-synthetical materials used in everything from everyday items to spaceship construction. They are relatively easy to use in manufacture, versatile and cheap to make, thus an important part of human civilization."
+    "message": "Syntetiska och halvsyntetiska material som används i allt från vardagliga föremål till rymdskeppskonstruktion. De är relativt lätta att använda inom tillverkning, mångsidiga och billiga att framställa, och är därför en viktig del av den mänskliga civilisationen."
   },
   "PRECIOUS_METALS": {
     "description": "",
@@ -197,7 +197,7 @@
   },
   "PRECIOUS_METALS_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Precious metals are, generally, less reactive, more difficult to mine, and more scarce, resulting in a considerable economic value. This often includes gold, silver, platinum, and rare earths. Certain elements such as gold and silicon, or rare earths, are crucial for the construction of computers and other electronics."
+    "message": "Ädelmetaller är i allmänhet mindre reaktiva, svårare att bryta och mer sällsynta, vilket resulterar i ett avsevärt ekonomiskt värde. Detta inkluderar ofta guld, silver, platina och sällsynta jordartsmetaller. Vissa element som guld och kisel, eller sällsynta jordartsmetaller, är avgörande för konstruktionen av datorer och annan elektronik."
   },
   "RADIOACTIVES": {
     "description": "",
@@ -205,7 +205,7 @@
   },
   "RADIOACTIVES_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Created by nuclear reactors, and military hyperdrives, nuclear waste is the hardest and most dangerous commodity to transport and dispose of. For this reason, most starports will pay to get rid of excess stockpile. Dumping nuclear waste is a severe offence."
+    "message": "Skapat av kärnreaktorer och militära hyperdrifter är radioaktivt avfall den svåraste och farligaste varan att transportera och bortskaffa. Av denna anledning kommer de flesta rymdhamnar att betala för att bli av med sitt överskottslager. Att dumpa radioaktivt avfall är ett allvarligt brott."
   },
   "ROBOTS": {
     "description": "",
@@ -213,7 +213,7 @@
   },
   "ROBOTS_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Robots are often imported into industrial and mining systems, due to their ability to easily perform tasks that would be too difficult, tedious, or unsafe for human workers. They can also serve as politicians and lawyers."
+    "message": "Robotar importeras ofta till industri- och gruvsystem, på grund av deras förmåga att enkelt utföra uppgifter som skulle vara för svåra, tråkiga eller osäkra för mänskliga arbetare. De kan också fungera som politiker och advokater."
   },
   "RUBBISH": {
     "description": "",
@@ -221,7 +221,7 @@
   },
   "RUBBISH_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "The byproduct of civilization, consisting of industrial waste, household garbage, and worn down equipment. Most waste is reprocessed, recycled or sent to starports for transport off-world. Dumping garbage in inhabited systems is almost always illegal. Starports usually charge a fee for waste disposal, but will also pay you to take it away."
+    "message": "Biprodukt från civilisationen bestående av olika sorters industriavfall, hushållssopor, trasiga maskiner, och nedslitna verktyg. Det mesta avfallet återvinns eller transporteras till långväga världar. Att dumpa avfall i bebodda system är för det mesta olagligt. De flesta marknader tar ut en avgift för att ta emot avfall men erbjuder även pengar för att frakta bort det."
   },
   "SLAVES": {
     "description": "",
@@ -229,7 +229,7 @@
   },
   "SLAVES_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "As machines have replaced slaves as the engine that powers civilization, slavery is now almost universally seen as immoral, and transgression against a ban draws the strictest punishment. However, despite the best efforts of humanitarians, slavery is still prevalent, even in developed worlds."
+    "message": "Eftersom maskiner har ersatt slavar som motorn som driver civilisationen, ses slaveri nu nästan universellt som omoraliskt, och överträdelse mot förbud ger det strängaste straff. Men trots humanitärernas bästa ansträngningar är slaveri fortfarande utbrett, även i utvecklade världar."
   },
   "TEXTILES": {
     "description": "",
@@ -237,7 +237,7 @@
   },
   "TEXTILES_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Textiles are simple fabric, woven from either synthetic, plant or animal derived yarn. Usually produced by robots in large factories, it is still possible to find the occasional weaver who makes their own textiles."
+    "message": "Textilier är enkelt tyg, vävt av antingen syntetiskt garn, växt- eller animaliskt garn. Vanligtvis tillverkad av robotar i stora fabriker, men det går fortfarande att hitta en och annan vävare som gör sina egna tyger."
   },
   "WATER": {
     "description": "",
@@ -245,6 +245,6 @@
   },
   "WATER_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Essential for life as we know it, an often overlooked commodity, water is needed wherever humanity roams. As such, the vast majority of off-world colonies import water from comets or planets like Earth. Water is used on a massive scale for hydrogen and oxygen production."
+    "message": "Grundläggande för livet så som vi känner det, och ofta en förbisedd handelsvara - vatten behövs varhälst människor uppehåller sig. Således, den stora majoriteten av kolonier importerar vatten från kometer eller Jord-lika planeter. Vatten används i stor skala för väte och syreproduktion."
   }
 }

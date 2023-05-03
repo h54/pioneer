@@ -19,6 +19,14 @@
     "description": "",
     "message": "Boşta mürettebat"
   },
+  "CREW_FOR_HIRE_DESC": {
+    "description": "",
+    "message": "Bu yıldız limanında potansiyel mürettebat mevcut."
+  },
+  "CREW_FOR_HIRE_TITLE": {
+    "description": "",
+    "message": "İŞ ARAYAN MÜRETTEBAT"
+  },
   "GO_BACK": {
     "description": "",
     "message": "Geri"

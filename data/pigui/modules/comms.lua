@@ -1,10 +1,9 @@
--- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
-local Engine = require 'Engine'
 local Game = require 'Game'
 local utils = require 'utils'
-local Event = require 'Event'
+local Vector2 = _G.Vector2
 
 local Lang = require 'Lang'
 local lc = Lang.GetResource("core");
@@ -12,16 +11,12 @@ local lui = Lang.GetResource("ui-core");
 
 local ui = require 'pigui'
 
+local gameView = require 'pigui.views.game'
+
 local colors = ui.theme.colors
 local icons = ui.theme.icons
-local commsLogRetainTime = 60 -- how long messages are shown
-local commsLinesToShow = 5 -- how many messages are shown
+local commsLogRetainTime = 120 -- how long before messages are removed from the short display
 
-local mainButtonSize = Vector2(32,32) * (ui.screenHeight / 1200)
-local mainButtonFramePadding = 3
-local fullComms
-
--- local lastLength = 0 -- how long the log was last frame
 local function showItem(item)
 	local color = colors.reticuleCircle
 	if item.priority == 1 then
@@ -29,84 +24,95 @@ local function showItem(item)
 	elseif item.priority == 2 then
 		color = colors.alertRed
 	end
-	ui.textColored(color, item.text)
+	if item.sender and item.sender ~= "" then
+		ui.textColored(color, item.sender .. ": " .. item.text)
+	else
+		ui.textColored(color, item.text)
+	end
 end
 
-local function displayCommsLog()
-	local aux = Vector2(0, 0)
-	local current_view = Game.CurrentView()
-	if current_view == "world" then
-		ui.setNextWindowPos(Vector2(10, 10) , "Always")
-		ui.window("CommsLogButton", {"NoTitleBar", "NoResize", "NoFocusOnAppearing", "NoBringToFrontOnFocus", "NoSavedSettings"},
-							function()
-								if ui.coloredSelectedIconButton(icons.comms, mainButtonSize, nil, mainButtonFramePadding, colors.buttonBlue, colors.white, 'Toggle full comms window') then
-									fullComms = not fullComms
-								end
+-- Iterate through the CommsLog and collapse duplicate messages.
+-- This should probably be done when adding a message to the log...
+local function iterCommsLog(expireTime)
+	local formatLine = function(line, rep)
+		return {
+			sender = line.sender, priority = line.priority,
+			text = line.text .. ((rep > 1) and (' x ' .. rep) or '')
+		}
+	end
+
+	local iter = function(lines, start)
+		local line = nil
+		local rep = 0
+
+		for i, v in utils.reverse(lines, start) do
+			if not line then
+				-- skip processing if the messages are too old
+				if expireTime and v.time < expireTime then
+					return nil
+				end
+
+				-- process the first line
+				line = v
+				rep = 1
+			elseif line.text == v.text and line.sender == v.sender then
+				-- accumulate copies of the current line
+				rep = rep + 1
+				line = v
+			else
+				-- return the accumulated lines and process this index next time
+				return i, formatLine(line, rep)
+			end
+		end
+
+		-- we've reached the end of the list, send the last line if present
+		if line then
+			return 0, formatLine(line, rep)
+		end
+	end
+
+	return iter, Game.GetCommsLines(), nil
+end
+
+gameView.registerSidebarModule("comms", {
+	side = "left",
+	icon = icons.comms,
+	tooltip = lui.TOGGLE_FULL_COMMS_WINDOW,
+	title = lc.COMMS,
+	exclusive = true,
+	drawBody = function()
+		ui.pushTextWrapPos(0.0)
+
+		for _, v in iterCommsLog() do
+			showItem(v)
+		end
+
+		ui.popTextWrapPos()
+	end
+})
+
+local windowFlags = {"NoTitleBar", "NoResize", "NoFocusOnAppearing", "NoBringToFrontOnFocus", "NoSavedSettings", "NoScrollbar"}
+
+gameView.registerHudModule("comms", {
+	side = "left",
+	showInHyperspace = true,
+	priority = 0, -- Comms should be drawn at the top
+	debugReload = function() package.reimport() end,
+	draw = function(_, min, max)
+		local pos, size = ui.rectcut(min, max, ui.screenHeight / 8, ui.sides.top)
+		ui.setNextWindowPos(pos, "Always")
+		ui.setNextWindowSize(size, "Always")
+
+		ui.window("ShortCommsLog", windowFlags, function()
+			ui.withFont(ui.fonts.pionillium.details, function()
+				ui.pushTextWrapPos(0.0)
+				for _, v in iterCommsLog(Game.time - commsLogRetainTime) do
+					showItem(v)
+				end
+				ui.popTextWrapPos()
+			end)
 		end)
-		ui.withFont(ui.fonts.pionillium.medium.name, ui.fonts.pionillium.medium.size, function()
-									if not fullComms then -- not fullComms, show small window
-										aux = Vector2(ui.screenWidth / 4, ui.screenHeight / 8)
-										ui.setNextWindowSize(aux , "Always")
-										aux = Vector2(mainButtonSize.x + 2 * mainButtonFramePadding + 15, 10)
-										ui.setNextWindowPos(aux , "Always")
-										ui.window("ShortCommsLog", {"NoTitleBar", "NoResize", "NoFocusOnAppearing", "NoBringToFrontOnFocus"},
-															function()
-																local last = nil
-																local rep = 0
-																local commsLines = Game.GetCommsLines()
-																local lines = {}
-																for k,v in pairs(commsLines) do
-																	if last and last.text == v.text then
-																		rep = rep + 1
-																		last = v
-																	else
-																		if rep > 0 then
-																			table.insert(lines, 1, { text = last.text .. ((rep > 1) and (' x ' .. rep) or ''), priority = last.priority })
-																			rep = 1
-																			last = nil
-																		end
-																		if v.time > Game.time - commsLogRetainTime then
-																			last = v
-																			rep = 1
-																		end
-																	end
-																end
-																if last and last.time > Game.time - commsLogRetainTime then
-																	table.insert(lines, 1, { text = last.text .. ((rep > 1) and (' x ' .. rep) or ''), priority = last.priority })
-																end
-																ui.pushTextWrapPos(ui.screenWidth/4 - 20)
-																for k,v in pairs(utils.reverse(utils.take(lines, commsLinesToShow))) do
-																	showItem(v)
-																end
-																ui.popTextWrapPos()
-										end)
-									else  -- fullComms, show large window
-										aux = Vector2(ui.screenWidth / 3, ui.screenHeight / 4)
-										ui.setNextWindowSize(aux , "Always")
-										aux = Vector2(mainButtonSize.x + 2 * mainButtonFramePadding + 25, 20)
-										ui.setNextWindowPos(aux , "Always")
-										ui.withStyleColors({ ["WindowBg"] = colors.commsWindowBackground }, function()
-												ui.withStyleVars({ ["WindowRounding"] = 0.0 }, function()
-														ui.window("CommsLog", {"NoResize"},
-																			function()
-																				local lines = Game.GetCommsLines()
-																				ui.pushTextWrapPos(ui.screenWidth/3 - 20)
-																				for k,v in pairs(lines) do
-																					showItem(v)
-																				end
-																				ui.popTextWrapPos()
-																				-- if lastLength ~= #lines then
-																				-- 	ui.setScrollHere()
-																				-- end
-																				-- lastLength = #lines
-														end)
-												end)
-										end)
-									end
-		end) -- withFont
-	end -- current_view == "world"
-end
-
-ui.registerModule("game", displayCommsLog)
+	end
+})
 
 return {}

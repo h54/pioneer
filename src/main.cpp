@@ -1,10 +1,11 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Game.h"
 #include "ModelViewer.h"
 #include "Pi.h"
 #include "buildopts.h"
+#include "core/OS.h"
 #include "galaxy/Galaxy.h"
 #include "galaxy/GalaxyGenerator.h"
 #include "libs.h"
@@ -28,6 +29,8 @@ extern "C" int main(int argc, char **argv)
 #ifdef PIONEER_PROFILER
 	Profiler::detect(argc, argv);
 #endif
+
+	OS::SetDPIAware();
 
 	RunMode mode = MODE_GAME;
 	std::string modeopt;

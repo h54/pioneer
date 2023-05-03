@@ -1,10 +1,13 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Application.h"
 #include "FileSystem.h"
+#include "JobQueue.h"
 #include "OS.h"
 #include "SDL.h"
+#include "StringName.h"
+#include "TaskGraph.h"
 #include "profiler/Profiler.h"
 #include "utils.h"
 
@@ -12,7 +15,12 @@
 
 #include <stdexcept>
 
-void Application::QueueLifecycle(std::shared_ptr<Lifecycle> cycle)
+static constexpr Uint32 SYNC_JOBS_PER_LOOP = 1;
+
+Application::Application() {}
+Application::~Application() {}
+
+void Application::QueueLifecycle(RefCountedPtr<Lifecycle> cycle)
 {
 	if (!cycle)
 		throw std::runtime_error("Invalid Lifecycle object pushed to Application queue!");
@@ -27,6 +35,9 @@ void Application::Startup()
 	OS::EnableBreakpad();
 	OS::NotifyLoadBegin();
 
+	m_taskGraph = std::make_unique<TaskGraph>();
+	m_syncJobQueue = std::make_unique<SyncJobQueue>();
+
 	FileSystem::Init();
 	// ensure the config directory exists
 	FileSystem::userFiles.MakeDirectory("");
@@ -40,8 +51,45 @@ void Application::Startup()
 
 void Application::Shutdown()
 {
+	m_taskGraph.reset();
+	m_syncJobQueue.reset();
+
 	FileSystem::Uninit();
 	SDL_Quit();
+}
+
+void Application::RequestProfileFrame(const std::string &path)
+{
+	// don't do anything if we're building without profiler.
+#ifdef PIONEER_PROFILER
+	if (!path.empty()) {
+		m_tempProfilePath = FileSystem::JoinPathBelow(m_profilerPath, path);
+		FileSystem::userFiles.MakeDirectory(m_tempProfilePath);
+	}
+
+	m_doTempProfile = true;
+#endif
+}
+
+void Application::SetProfilerPath(const std::string &path)
+{
+#ifdef PIONEER_PROFILER
+	if (path.empty())
+		return;
+
+	m_profilerPath = path;
+	FileSystem::userFiles.MakeDirectory(m_profilerPath);
+#endif
+}
+
+JobQueue *Application::GetSyncJobQueue()
+{
+	return m_syncJobQueue.get();
+}
+
+JobQueue *Application::GetAsyncJobQueue()
+{
+	return m_taskGraph->GetJobQueue();
 }
 
 bool Application::StartLifecycle()
@@ -57,7 +105,7 @@ bool Application::StartLifecycle()
 	// Lifecycle objects returned from Lifecycle::End() take priority over queued objects
 	if (m_priorityLifecycle) {
 		m_activeLifecycle = m_priorityLifecycle;
-		m_priorityLifecycle = nullptr;
+		m_priorityLifecycle.Reset();
 	} else {
 		m_activeLifecycle = std::move(m_queuedLifecycles.front());
 		m_queuedLifecycles.pop();
@@ -87,13 +135,24 @@ void Application::EndLifecycle()
 	// wait until we've finished the control flow for the lifecycle;
 	// the lifecycle may decide to set the next lifecycle in End()
 	m_priorityLifecycle = m_activeLifecycle->m_nextLifecycle;
-	m_activeLifecycle = nullptr;
+	m_activeLifecycle.Reset();
 }
 
 void Application::ClearQueuedLifecycles()
 {
 	while (m_queuedLifecycles.size())
 		m_queuedLifecycles.pop();
+}
+
+void Application::HandleJobs()
+{
+	m_taskGraph->RunPinnedTasks();
+	m_syncJobQueue->RunJobs(SYNC_JOBS_PER_LOOP);
+	m_syncJobQueue->FinishJobs();
+	m_taskGraph->GetJobQueue()->FinishJobs();
+
+	// Reclaim StringTable memory periodically
+	StringTable::Get()->Reclaim();
 }
 
 void Application::Run()
@@ -106,11 +165,6 @@ void Application::Run()
 
 	if (!m_queuedLifecycles.size())
 		throw std::runtime_error("Application::Run must have a queued lifecycle object (did you forget to queue one?)");
-
-#ifdef PIONEER_PROFILER
-	// For good measure, reset the profiler at the start of the first frame
-	Profiler::reset();
-#endif
 
 	// SoftStop updates the elapsed time measured by the clock, and continues to run the clock.
 	m_runtime.SoftStop();
@@ -137,25 +191,43 @@ void Application::Run()
 
 		m_activeLifecycle->Update(m_deltaTime);
 
+		HandleJobs();
+
 		// The PostUpdate hook should be used for finalizing per-frame state, rendering, etc.
 		PostUpdate();
 
 		EndFrame();
 
+		const bool profileReset = (m_activeLifecycle && !m_activeLifecycle->m_profilerAccumulate);
+
 		if (m_activeLifecycle->m_endLifecycle || !m_applicationRunning) {
 			EndLifecycle();
 		}
 
-		// TODO: design a better profiling interface, cache results of slow frames so they can be inspected
-		// in pigui, etc.
-		// m_runtime.SoftStop();
-		// thisTime = m_runtime.seconds();
-		// if (thisTime - m_totalTime > 0.100) // profile frames taking longer than 100ms
-		// 	Profiler::dumphtml(FileSystem::JoinPathBelow(FileSystem::GetUserDir(), "profiler");
-
 #ifdef PIONEER_PROFILER
+		// TODO: potential pigui frame profile inspector
+		m_runtime.SoftStop();
+		thisTime = m_runtime.seconds();
+
+		// profile frames taking longer than 100ms
+		bool isSlowProfile = (m_doSlowProfile && thisTime - m_totalTime > 0.100);
+		if (m_doTempProfile || isSlowProfile) {
+			const std::string path = FileSystem::JoinPathBelow(FileSystem::userFiles.GetRoot(),
+				m_tempProfilePath.empty() ? m_profilerPath : m_tempProfilePath);
+			m_tempProfilePath.clear();
+			m_doTempProfile = false;
+
+			Profiler::dumphtml(path.c_str());
+			if (m_profileZones) {
+				if (m_profileTrace)
+					Profiler::dumptrace(path.c_str());
+				else
+					Profiler::dumpzones(path.c_str());
+			}
+		}
+
 		// reset the profiler at the end of the frame
-		if (!m_activeLifecycle || !m_activeLifecycle->m_profilerAccumulate)
+		if (profileReset)
 			Profiler::reset();
 #endif
 	}

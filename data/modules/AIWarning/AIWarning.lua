@@ -1,4 +1,4 @@
--- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Lang = require 'Lang'
@@ -9,6 +9,7 @@ local l = Lang.GetResource("module-aiwarning")
 
 local messages = {
 	GRAV_TOO_HIGH    = l.CANNOT_COMPENSATE_FOR_LOCAL_GRAVITY,
+	PRESS_TOO_HIGH   = l.ATMO_PRESSURE_OVER_LIMIT,
 	REFUSED_PERM     = l.STARPORT_REFUSED_DOCKING_PERMISSION,
 	ORBIT_IMPOSSIBLE = l.CANNOT_COMPUTE_ORBIT_PARAMETERS,
 }

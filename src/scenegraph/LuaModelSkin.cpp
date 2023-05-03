@@ -1,9 +1,11 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "ModelSkin.h"
 #include "Serializer.h"
+#include "lua/LuaColor.h"
 #include "lua/LuaObject.h"
+#include "lua/LuaTable.h"
 
 namespace SceneGraph {
 
@@ -13,6 +15,16 @@ namespace SceneGraph {
 		{
 			ModelSkin skin;
 			LuaObject<ModelSkin>::PushToLua(skin);
+			return 1;
+		}
+
+		static int l_get_colors(lua_State *l)
+		{
+			ModelSkin *skin = LuaObject<ModelSkin>::CheckFromLua(1);
+			std::vector<Color> v = skin->GetColors();
+			LuaTable t = LuaTable(l);
+			t.LoadVector(v.begin(), v.end());
+			LuaPush(l, t);
 			return 1;
 		}
 
@@ -92,48 +104,16 @@ namespace SceneGraph {
 
 } // namespace SceneGraph
 
-static std::string _modelskin_serializer(LuaWrappable *o)
+static bool _modelskin_to_json(lua_State *l, Json &out)
 {
-	static char buf[256];
+	auto *skin = LuaObject<SceneGraph::ModelSkin>::GetFromLua(-1);
+	if (!skin) return false;
 
-	SceneGraph::ModelSkin *skin = static_cast<SceneGraph::ModelSkin *>(o);
-
-	Serializer::Writer wr;
-	skin->Save(wr);
-	const std::string &ser = wr.GetData();
-	snprintf(buf, sizeof(buf), SIZET_FMT "\n", ser.size());
-
-	return std::string(buf) + ser;
-}
-
-static bool _modelskin_deserializer(const char *pos, const char **next)
-{
-	const char *end;
-
-	Uint32 serlen = strtoul(pos, const_cast<char **>(&end), 0);
-	if (pos == end) return false;
-	pos = end + 1; // skip newline
-
-	std::string buf(pos, serlen);
-	const char *bufp = buf.c_str();
-	Serializer::Reader rd(ByteRange(bufp, bufp + buf.size()));
-	SceneGraph::ModelSkin skin;
-	skin.Load(rd);
-
-	LuaObject<SceneGraph::ModelSkin>::PushToLua(skin);
-
-	*next = pos + serlen;
-
+	skin->SaveToJson(out);
 	return true;
 }
 
-static void _modelskin_to_json(Json &out, LuaWrappable *o)
-{
-	SceneGraph::ModelSkin *skin = static_cast<SceneGraph::ModelSkin *>(o);
-	skin->SaveToJson(out);
-}
-
-static bool _modelskin_from_json(const Json &obj)
+static bool _modelskin_from_json(lua_State *l, const Json &obj)
 {
 	SceneGraph::ModelSkin skin;
 	skin.LoadFromJson(obj);
@@ -151,6 +131,7 @@ void LuaObject<SceneGraph::ModelSkin>::RegisterClass()
 {
 	static const luaL_Reg l_methods[] = {
 		{ "New", LuaModelSkin::l_new },
+		{ "GetColors", LuaModelSkin::l_get_colors },
 		{ "SetColors", LuaModelSkin::l_set_colors },
 		{ "SetRandomColors", LuaModelSkin::l_set_random_colors },
 		{ "SetDecal", LuaModelSkin::l_set_decal },
@@ -161,5 +142,5 @@ void LuaObject<SceneGraph::ModelSkin>::RegisterClass()
 	};
 
 	LuaObjectBase::CreateClass(s_type, 0, l_methods, 0, 0);
-	LuaObjectBase::RegisterSerializer(s_type, SerializerPair(_modelskin_serializer, _modelskin_deserializer, _modelskin_to_json, _modelskin_from_json));
+	LuaObjectBase::RegisterSerializer(s_type, SerializerPair(_modelskin_to_json, _modelskin_from_json));
 }

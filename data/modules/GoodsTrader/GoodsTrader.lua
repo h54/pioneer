@@ -1,4 +1,4 @@
--- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Lang = require 'Lang'
@@ -8,13 +8,14 @@ local Event = require 'Event'
 local NameGen = require 'NameGen'
 local Rand = require 'Rand'
 local Serializer = require 'Serializer'
-local Equipment = require 'Equipment'
 local Character = require 'Character'
+local Commodities = require 'Commodities'
 
 local l = Lang.GetResource("module-goodstrader")
 
 local num_names = 6 -- number of GOODS_TRADER_N names
 local num_slogans = 7 -- number of SLOGAN_N entries
+local num_titles = 4 -- number of ADTITLE_N entries
 
 local ads = {}
 
@@ -110,8 +111,8 @@ end
 
 local onCreateBB = function (station)
 	local has_illegal_goods = false
-	for i,e in pairs(Equipment.cargo) do
-		if not Game.system:IsCommodityLegal(e) then
+	for key in pairs(Commodities) do
+		if not Game.system:IsCommodityLegal(key) then
 			has_illegal_goods = true
 		end
 	end
@@ -131,16 +132,15 @@ local onCreateBB = function (station)
 
 		-- if too many fake police, don't place the ad
 		if not ispolice or numPolice < maxPolice then
+			local r = ispolice and rand_police or rand
 
 			if ispolice then
 				numPolice = numPolice + 1
-				r = rand_police
-			else
-				r = rand
 			end
 
-			local flavour = string.interp(l["GOODS_TRADER_"..r:Integer(1, num_names)-1], {name = NameGen.Surname(r)})
-			local slogan = l["SLOGAN_"..r:Integer(1, num_slogans)-1]
+			local title = l["ADTITLE_" .. r:Integer(num_titles - 1)]
+			local flavour = string.interp(l["GOODS_TRADER_"..r:Integer(num_names - 1)], { name = NameGen.Surname(r) })
+			local slogan = l["SLOGAN_"..r:Integer(num_slogans - 1)]
 
 			local ad = {
 				station  = station,
@@ -148,19 +148,21 @@ local onCreateBB = function (station)
 				slogan   = slogan,
 				ispolice = ispolice,
 				trader   = Character.New({title = flavour, armour=false}, r),
+				title    = title
 			}
 
 			ad.stock = {}
 			ad.price = {}
-			for _,e in pairs(Equipment.cargo) do
-				if not Game.system:IsCommodityLegal(e) then
-					ad.stock[e] = Engine.rand:Integer(1,50)
+			for key, comm in pairs(Commodities) do
+				if not Game.system:IsCommodityLegal(key) then
+					ad.stock[comm] = Engine.rand:Integer(1,50)
 					-- going rate on the black market will be twice normal
-					ad.price[e] = ad.station:GetEquipmentPrice(e) * 2
+					ad.price[comm] = ad.station:GetCommodityPrice(comm) * 2
 				end
 			end
 
 			local ref = ad.station:AddAdvert({
+				title       = ad.title,
 				description = ad.flavour,
 				icon        = "goods_trader",
 				onChat      = onChat,
@@ -179,6 +181,7 @@ local onGameStart = function ()
 
 	for k,ad in pairs(loaded_data.ads) do
 		local ref = ad.station:AddAdvert({
+			title       = ad.title,
 			description = ad.flavour,
 			icon        = "goods_trader",
 			onChat      = onChat,

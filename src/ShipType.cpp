@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #define ALLOW_LUA_SHIP_DEF 0
@@ -193,8 +193,7 @@ ShipType::ShipType(const Id &_id, const std::string &path)
 	}
 
 	for (Json::iterator role = data["roles"].begin(); role != data["roles"].end(); ++role) {
-		const std::string rolename = role.key();
-		roles[rolename] = data["roles"].value(rolename, 0);
+		roles[*role] = true;
 	}
 
 	for (int it = 0; it < 4; it++)

@@ -1,4 +1,20 @@
 {
+  "ADTITLE_0": {
+    "description": "",
+    "message": "货运商场"
+  },
+  "ADTITLE_1": {
+    "description": "",
+    "message": "贸易公司"
+  },
+  "ADTITLE_2": {
+    "description": "",
+    "message": "贸易仓库"
+  },
+  "ADTITLE_3": {
+    "description": "",
+    "message": "货物交换"
+  },
   "GOODS_TRADER_0": {
     "description": "",
     "message": "诚信 {name} 百货商场"

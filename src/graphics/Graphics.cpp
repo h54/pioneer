@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Graphics.h"
@@ -6,6 +6,7 @@
 #include "Material.h"
 #include "Renderer.h"
 #include "StringF.h"
+#include "graphics/RenderState.h"
 #include "utils.h"
 #include <iterator>
 #include <sstream>
@@ -62,8 +63,19 @@ namespace Graphics {
 		return g_fovFactor;
 	}
 
+	vector3f ProjectToScreen(const Renderer *r, const vector3f &in)
+	{
+		return ProjectToScreen(r->GetTransform() * in, r->GetProjection(), r->GetViewport());
+	}
+
+	vector3d ProjectToScreen(const Renderer *r, const vector3d &in)
+	{
+		return ProjectToScreen(matrix4x4d(r->GetTransform()) * in, matrix4x4d(r->GetProjection()), r->GetViewport());
+	}
+
 	Renderer *Init(Settings vs)
 	{
+		PROFILE_SCOPED()
 		assert(!initted);
 		if (initted) return 0;
 
@@ -115,10 +127,7 @@ namespace Graphics {
 
 		initted = true;
 
-		MaterialDescriptor desc;
-		desc.effect = EFFECT_VTXCOLOR;
-		desc.vertexColors = true;
-		vtxColorMaterial = renderer->CreateMaterial(desc);
+		vtxColorMaterial = renderer->CreateMaterial("vtxColor", MaterialDescriptor(), RenderStateDesc());
 		vtxColorMaterial->IncRefCount();
 
 		return renderer;

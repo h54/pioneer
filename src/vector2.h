@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #pragma once
@@ -79,10 +79,13 @@ public:
 		return is_equal_exact(a.x, x) && is_equal_exact(a.y, y);
 	}
 
+	inline T &operator[](unsigned int idx) { return (&x)[idx]; }
+
 	friend vector2 operator*(const vector2 &v, const T &a) { return vector2(v.x * a, v.y * a); }
 	friend vector2 operator*(const T &a, const vector2 &v) { return v * a; }
 	friend vector2 operator*(const vector2 &va, const vector2 &vb) { return vector2(va.x * vb.x, va.y * vb.y); }
 	friend vector2 operator/(const vector2 &v, const T &a) { return vector2(v.x / a, v.y / a); }
+	friend vector2 operator/(const vector2 &va, const vector2 &vb) { return vector2(va.x / vb.x, va.y / vb.y); }
 	friend bool operator<(const vector2 &va, const vector2 &vb) { return va.LengthSqr() < vb.LengthSqr(); }
 
 	T Length() const { return sqrt(x * x + y * y); }
@@ -111,9 +114,13 @@ public:
 };
 
 template <>
-inline vector2<float>::vector2() {}
+inline vector2<float>::vector2() :
+	x(0.f),
+	y(0.f) {}
 template <>
-inline vector2<double>::vector2() {}
+inline vector2<double>::vector2() :
+	x(0.),
+	y(0.) {}
 template <>
 inline vector2<float>::vector2(const vector2<double> &v) :
 	x(float(v.x)),

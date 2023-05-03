@@ -1,4 +1,20 @@
 {
+  "ADTITLE_0": {
+    "description": "",
+    "message": "ГРУЗОВОЙ ТОРГОВЫЙ ЦЕНТР"
+  },
+  "ADTITLE_1": {
+    "description": "",
+    "message": "ТОРГОВЫЙ ДОМ"
+  },
+  "ADTITLE_2": {
+    "description": "",
+    "message": "ТОРГОВЫЙ СКЛАД"
+  },
+  "ADTITLE_3": {
+    "description": "",
+    "message": "ОБМЕН ТОВАРОВ"
+  },
   "GOODS_TRADER_0": {
     "description": "",
     "message": "Торговый Центр {name}"
@@ -21,7 +37,7 @@
   },
   "GOODS_TRADER_5": {
     "description": "",
-    "message": "компания {name} и Сыновья"
+    "message": "Компания {name} и сыновья"
   },
   "SLOGAN_0": {
     "description": "",

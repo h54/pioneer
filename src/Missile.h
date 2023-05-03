@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _MISSILE_H
@@ -18,13 +18,16 @@ public:
 	virtual ~Missile();
 	void StaticUpdate(const float timeStep) override;
 	void TimeStepUpdate(const float timeStep) override;
-	virtual bool OnCollision(Object *o, Uint32 flags, double relVel) override;
-	virtual bool OnDamage(Object *attacker, float kgDamage, const CollisionContact &contactData) override;
+	virtual bool OnCollision(Body *o, Uint32 flags, double relVel) override;
+	virtual bool OnDamage(Body *attacker, float kgDamage, const CollisionContact &contactData) override;
 	virtual void NotifyRemoved(const Body *const removedBody) override;
 	virtual void PostLoadFixup(Space *space) override;
 	virtual void Render(Graphics::Renderer *r, const Camera *camera, const vector3d &viewCoords, const matrix4x4d &viewTransform) override;
 	void ECMAttack(int power_val);
+
 	Body *GetOwner() const { return m_owner; }
+	const Body *GetTarget() const;
+
 	bool IsArmed() const { return m_armed; }
 	void Arm();
 	void Disarm();
@@ -35,11 +38,14 @@ protected:
 
 private:
 	void Explode();
+	bool IsValidTarget(const Body *body);
+
 	AICommand *m_curAICmd;
 	int m_power;
 	Body *m_owner;
 	bool m_armed;
 	const ShipType *m_type;
+	Propulsion *m_propulsion;
 
 	int m_ownerIndex; // deserialisation
 };

@@ -14,10 +14,10 @@
 #include "graphics/TextureBuilder.h"
 #include "graphics/Types.h"
 #include "graphics/VertexArray.h"
-#include "graphics/opengl/GenGasGiantColourMaterial.h"
 #include "perlin.h"
-#include "vcacheopt/vcacheopt.h"
+
 #include <algorithm>
+#include <cstddef>
 #include <deque>
 
 namespace GasGiantJobs {
@@ -29,7 +29,7 @@ namespace GasGiantJobs {
 		{ p7, p8, p4, p3 }, // -y
 
 		{ p6, p5, p8, p7 }, // +z - NB: these are actually reversed!
-		{ p1, p2, p3, p4 } // -z
+		{ p1, p2, p3, p4 }	// -z
 	};
 	const vector3d &GetPatchFaces(const Uint32 patch, const Uint32 face) { return s_patchFaces[patch][face]; }
 
@@ -48,13 +48,12 @@ namespace GasGiantJobs {
 	void STextureFaceRequest::OnRun()
 	{
 		PROFILE_SCOPED()
-		//MsgTimer timey;
 
 		assert(corners != nullptr);
 		double fracStep = 1.0 / double(UVDims() - 1);
 		for (Sint32 v = 0; v < UVDims(); v++) {
 			for (Sint32 u = 0; u < UVDims(); u++) {
-				// where in this row & colum are we now.
+				// where in this row & column are we now.
 				const double ustep = double(u) * fracStep;
 				const double vstep = double(v) * fracStep;
 
@@ -71,8 +70,6 @@ namespace GasGiantJobs {
 				col[0].a = 255;
 			}
 		}
-
-		//timey.Mark("SingleTextureFaceCPUJob::OnRun");
 	}
 
 	// ********************************************************************************
@@ -109,43 +106,66 @@ namespace GasGiantJobs {
 	}
 
 	// ********************************************************************************
-	GenFaceQuad::GenFaceQuad(Graphics::Renderer *r, const vector2f &size, Graphics::RenderState *state, const Uint32 GGQuality)
+
+	struct GenFaceDataBlock {
+		alignas(16) vector3f v0;
+		alignas(16) vector3f v1;
+		alignas(16) vector3f v2;
+		alignas(16) vector3f v3;
+		float frequency;
+		float fracStep;
+		float hueAdjust;
+		float time;
+	};
+	static_assert(sizeof(GenFaceDataBlock) == 80);
+	static_assert(offsetof(GenFaceDataBlock, frequency) == 60);
+
+	// ********************************************************************************
+	GenFaceQuad::GenFaceQuad(Graphics::Renderer *r, const vector2f &size, const Uint32 GGQuality)
 	{
 		PROFILE_SCOPED()
-		assert(state);
-		m_renderState = state;
 
 		Graphics::MaterialDescriptor desc;
-		desc.effect = Graphics::EFFECT_GEN_GASGIANT_TEXTURE;
-		desc.quality = GGQuality;
+		desc.quality = Graphics::MaterialQuality::HAS_OCTAVES | (GGQuality & 0xFFFF0000);
 		desc.textures = 3;
-		m_material.reset(r->CreateMaterial(desc));
+
+		Graphics::RenderStateDesc rsd;
+		rsd.depthTest = false;
+		rsd.depthWrite = false;
+		rsd.blendMode = Graphics::BLEND_ALPHA;
+		rsd.primitiveType = Graphics::TRIANGLE_STRIP;
+		m_material.reset(r->CreateMaterial("gen_gas_giant_colour", desc, rsd));
 
 		// setup noise textures
-		m_material->texture0 = Graphics::TextureBuilder::Raw("textures/permTexture.png").GetOrCreateTexture(Pi::renderer, "noise");
-		m_material->texture1 = Graphics::TextureBuilder::Raw("textures/gradTexture.png").GetOrCreateTexture(Pi::renderer, "noise");
+		m_material->SetTexture("permTexture"_hash,
+			Graphics::TextureBuilder::Raw("textures/permTexture.png").GetOrCreateTexture(Pi::renderer, "noise"));
+		m_material->SetTexture("gradTexture"_hash,
+			Graphics::TextureBuilder::Raw("textures/gradTexture.png").GetOrCreateTexture(Pi::renderer, "noise"));
 
+		Graphics::Texture *rampTexture = nullptr;
 		// pick the correct colour basis texture for the planet
 		switch (0x0000FFFF & GGQuality) {
-		case Graphics::OGL::GEN_JUPITER_TEXTURE:
-			m_material->texture2 = Graphics::TextureBuilder::Raw("textures/gasgiants/jupiterramp.png").GetOrCreateTexture(Pi::renderer, "gasgiant");
+		case GasGiantTexture::GEN_JUPITER_TEXTURE:
+			rampTexture = Graphics::TextureBuilder::Raw("textures/gasgiants/jupiterramp.png").GetOrCreateTexture(Pi::renderer, "gasgiant");
 			break;
-		case Graphics::OGL::GEN_SATURN_TEXTURE:
-			m_material->texture2 = Graphics::TextureBuilder::Raw("textures/gasgiants/saturnramp.png").GetOrCreateTexture(Pi::renderer, "gasgiant");
+		case GasGiantTexture::GEN_SATURN_TEXTURE:
+			rampTexture = Graphics::TextureBuilder::Raw("textures/gasgiants/saturnramp.png").GetOrCreateTexture(Pi::renderer, "gasgiant");
 			break;
-		case Graphics::OGL::GEN_SATURN2_TEXTURE:
-			m_material->texture2 = Graphics::TextureBuilder::Raw("textures/gasgiants/saturn2ramp.png").GetOrCreateTexture(Pi::renderer, "gasgiant");
+		case GasGiantTexture::GEN_SATURN2_TEXTURE:
+			rampTexture = Graphics::TextureBuilder::Raw("textures/gasgiants/saturn2ramp.png").GetOrCreateTexture(Pi::renderer, "gasgiant");
 			break;
-		case Graphics::OGL::GEN_NEPTUNE_TEXTURE:
-			m_material->texture2 = Graphics::TextureBuilder::Raw("textures/gasgiants/neptuneramp.png").GetOrCreateTexture(Pi::renderer, "gasgiant");
+		case GasGiantTexture::GEN_NEPTUNE_TEXTURE:
+			rampTexture = Graphics::TextureBuilder::Raw("textures/gasgiants/neptuneramp.png").GetOrCreateTexture(Pi::renderer, "gasgiant");
 			break;
-		case Graphics::OGL::GEN_NEPTUNE2_TEXTURE:
-			m_material->texture2 = Graphics::TextureBuilder::Raw("textures/gasgiants/neptune2ramp.png").GetOrCreateTexture(Pi::renderer, "gasgiant");
+		case GasGiantTexture::GEN_NEPTUNE2_TEXTURE:
+			rampTexture = Graphics::TextureBuilder::Raw("textures/gasgiants/neptune2ramp.png").GetOrCreateTexture(Pi::renderer, "gasgiant");
 			break;
-		case Graphics::OGL::GEN_URANUS_TEXTURE:
-			m_material->texture2 = Graphics::TextureBuilder::Raw("textures/gasgiants/uranusramp.png").GetOrCreateTexture(Pi::renderer, "gasgiant");
+		case GasGiantTexture::GEN_URANUS_TEXTURE:
+			rampTexture = Graphics::TextureBuilder::Raw("textures/gasgiants/uranusramp.png").GetOrCreateTexture(Pi::renderer, "gasgiant");
 			break;
 		}
+
+		m_material->SetTexture("rampTexture"_hash, rampTexture);
 
 		// these might need to be reversed
 		const vector2f &texSize(size);
@@ -157,22 +177,14 @@ namespace GasGiantJobs {
 		vertices.Add(vector3f(size.x, 0.0f, 0.0f), vector2f(texSize.x, texSize.y));
 		vertices.Add(vector3f(size.x, size.y, 0.0f), vector2f(texSize.x, 0.0f));
 
-		//Create vtx & index buffers and copy data
-		Graphics::VertexBufferDesc vbd;
-		vbd.attrib[0].semantic = Graphics::ATTRIB_POSITION;
-		vbd.attrib[0].format = Graphics::ATTRIB_FORMAT_FLOAT3;
-		vbd.attrib[1].semantic = Graphics::ATTRIB_UV0;
-		vbd.attrib[1].format = Graphics::ATTRIB_FORMAT_FLOAT2;
-		vbd.numVertices = vertices.GetNumVerts();
-		vbd.usage = Graphics::BUFFER_USAGE_STATIC;
-		m_vertexBuffer.reset(r->CreateVertexBuffer(vbd));
-		m_vertexBuffer->Populate(vertices);
+		//Create vtx  buffer and copy data
+		m_quadMesh.reset(r->CreateMeshObjectFromArray(&vertices));
 	}
 
 	void GenFaceQuad::Draw(Graphics::Renderer *r)
 	{
 		PROFILE_SCOPED()
-		r->DrawBuffer(m_vertexBuffer.get(), m_renderState, m_material.get(), Graphics::TRIANGLE_STRIP);
+		r->DrawMesh(m_quadMesh.get(), m_material.get());
 	}
 
 	// ********************************************************************************
@@ -192,18 +204,20 @@ namespace GasGiantJobs {
 	void SGPUGenRequest::SetupMaterialParams(const int face)
 	{
 		PROFILE_SCOPED()
-		m_specialParams.v = &GetPatchFaces(face, 0);
-		m_specialParams.fracStep = 1.0f / float(uvDIMs);
-		m_specialParams.planetRadius = planetRadius;
-		m_specialParams.time = 0.0f;
 
-		for (Uint32 i = 0; i < 3; i++) {
-			m_specialParams.frequency[i] = float(pTerrain->GetFracDef(i).frequency);
-		}
+		GenFaceDataBlock dataBlock{};
 
-		m_specialParams.hueAdjust = hueAdjust;
+		dataBlock.v0 = vector3f(GetPatchFaces(face, 0));
+		dataBlock.v1 = vector3f(GetPatchFaces(face, 1));
+		dataBlock.v2 = vector3f(GetPatchFaces(face, 2));
+		dataBlock.v3 = vector3f(GetPatchFaces(face, 3));
 
-		pQuad->GetMaterial()->specialParameter0 = &m_specialParams;
+		dataBlock.frequency = float(pTerrain->GetFracDef(2).frequency);
+		dataBlock.fracStep = 1.0f / float(uvDIMs);
+		dataBlock.hueAdjust = hueAdjust;
+		dataBlock.time = 0;
+
+		pQuad->GetMaterial()->SetBufferDynamic("GenColorData"_hash, &dataBlock);
 	}
 
 	// ********************************************************************************
@@ -241,43 +255,29 @@ namespace GasGiantJobs {
 	void SingleGPUGenJob::OnRun() // Runs in the main thread, may trash the GPU state
 	{
 		PROFILE_SCOPED()
-		//MsgTimer timey;
 
-		Pi::renderer->SetViewport(0, 0, mData->UVDims(), mData->UVDims());
-		Pi::renderer->SetTransform(matrix4x4f::Identity());
+		Graphics::Renderer::StateTicket ticket(Pi::renderer);
 
 		// enter ortho
-		{
-			Pi::renderer->SetMatrixMode(Graphics::MatrixMode::PROJECTION);
-			Pi::renderer->PushMatrix();
-			Pi::renderer->SetOrthographicProjection(0, mData->UVDims(), mData->UVDims(), 0, -1, 1);
-			Pi::renderer->SetMatrixMode(Graphics::MatrixMode::MODELVIEW);
-			Pi::renderer->PushMatrix();
-			Pi::renderer->LoadIdentity();
-		}
+		Pi::renderer->SetOrthographicProjection(0, mData->UVDims(), mData->UVDims(), 0, -1, 1);
+		Pi::renderer->SetTransform(matrix4x4f::Identity());
 
 		GasGiant::BeginRenderTarget();
 		for (Uint32 iFace = 0; iFace < NUM_PATCHES; iFace++) {
 			// render the scene
 			GasGiant::SetRenderTargetCubemap(iFace, mData->Texture());
-			Pi::renderer->BeginFrame();
+			Pi::renderer->SetViewport({ 0, 0, mData->UVDims(), mData->UVDims() });
+			Pi::renderer->ClearScreen();
 
 			// draw to the texture here
 			mData->SetupMaterialParams(iFace);
 			mData->Quad()->Draw(Pi::renderer);
 
-			Pi::renderer->EndFrame();
-			GasGiant::SetRenderTargetCubemap(iFace, nullptr);
+			// force the texture to be rendered before we modify the render target
+			// FIXME: use different render targets for each cubemap face
+			Pi::renderer->FlushCommandBuffers();
 		}
 		GasGiant::EndRenderTarget();
-
-		// leave ortho?
-		{
-			Pi::renderer->SetMatrixMode(Graphics::MatrixMode::PROJECTION);
-			Pi::renderer->PopMatrix();
-			Pi::renderer->SetMatrixMode(Graphics::MatrixMode::MODELVIEW);
-			Pi::renderer->PopMatrix();
-		}
 
 		// add this patches data
 		SGPUGenResult *sr = new SGPUGenResult();
@@ -286,12 +286,13 @@ namespace GasGiantJobs {
 		// store the result
 		mpResults = sr;
 
-		//timey.Mark("SingleGPUGenJob::OnRun");
+		// leave ortho when ticket is destroyed
 	}
 
 	void SingleGPUGenJob::OnFinish() // runs in primary thread of the context
 	{
 		PROFILE_SCOPED()
+
 		GasGiant::OnAddGPUGenResult(mData->SysPath(), mpResults);
 		mpResults = nullptr;
 	}

@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _LIBS_H
@@ -41,11 +41,7 @@
 #endif
 #endif
 
-#ifdef _WIN32 // MSVC doesn't support the %z specifier, but has its own %I specifier
-#define SIZET_FMT "%Iu"
-#else
 #define SIZET_FMT "%zu"
-#endif
 
 #include "fixed.h"
 #include "matrix3x3.h"
@@ -72,10 +68,10 @@
 template <class T>
 inline const T &Clamp(const T &x, const T &min, const T &max) { return x > max ? max : (x < min ? min : x); }
 
-inline double DEG2RAD(double x) { return x * (M_PI / 180.); }
-inline float DEG2RAD(float x) { return x * (float(M_PI) / 180.f); }
-inline double RAD2DEG(double x) { return x * (180. / M_PI); }
-inline float RAD2DEG(float x) { return x * (180.f / float(M_PI)); }
+inline constexpr double DEG2RAD(double x) { return x * (M_PI / 180.); }
+inline constexpr float DEG2RAD(float x) { return x * (float(M_PI) / 180.f); }
+inline constexpr double RAD2DEG(double x) { return x * (180. / M_PI); }
+inline constexpr float RAD2DEG(float x) { return x * (180.f / float(M_PI)); }
 
 // from StackOverflow: http://stackoverflow.com/a/1500517/52251
 // Q: "Compile time sizeof_array without using a macro"

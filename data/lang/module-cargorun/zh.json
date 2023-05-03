@@ -25,39 +25,75 @@
   },
   "ADTEXT_1": {
     "description": "",
-    "message": "货物运输。将货物交付至 {system} 星系。"
+    "message": "飞船需要将货物交付至{system}星系"
   },
   "ADTEXT_2": {
     "description": "",
-    "message": "需要运输。需要将货物运输到{system}星系。付{cash}。"
+    "message": "需要将货物运输到{system}星系。报酬是{cash}。"
   },
   "ADTEXT_EXPENSIVE_1": {
     "description": "",
-    "message": "交付。贵重货物到{system} 星系。{cash}给有经验的飞行员。"
+    "message": "向{system}星系交付贵重货物。{cash}给有经验的飞行员。"
   },
   "ADTEXT_LOCAL_1": {
     "description": "",
-    "message": "本地交货。将货物移至{starport}。"
+    "message": "星系内运输，需要运输工人将货物运往{starport}。"
   },
   "ADTEXT_LOCAL_2": {
     "description": "",
-    "message": "需要运输。当地货物运至{starport}。"
+    "message": "需要在本地将个人货物运送到{starport}。"
   },
   "ADTEXT_LOCAL_3": {
     "description": "",
-    "message": "本地货运。送货到{starport}。"
+    "message": "私人货物交付合同。需要向{starport}交付经认证的货物。"
   },
   "ADTEXT_PICKUP_1": {
     "description": "",
-    "message": "货物提取。需要从 {system}星系取回货物。"
+    "message": "需要从{system}星系提货。详情可按要求提供。"
   },
   "ADTEXT_PICKUP_LOCAL_1": {
     "description": "",
-    "message": "转移。需要从{starport}搬运货物。"
+    "message": "货运任务。需要将货物从{starport}移动到此空间站。"
   },
   "ADTEXT_WHOLESALER_1": {
     "description": "",
-    "message": "货运服务。我们需要一艘船运送货到{system}星系。"
+    "message": "货物运输需要合格承包商。我们需要一艘散装运输到{system}星系的飞船。"
+  },
+  "ADTITLE_1": {
+    "description": "",
+    "message": "货物运输"
+  },
+  "ADTITLE_2": {
+    "description": "",
+    "message": "需要货物运输"
+  },
+  "ADTITLE_EXPENSIVE_1": {
+    "description": "",
+    "message": "投保交付"
+  },
+  "ADTITLE_LOCAL_1": {
+    "description": "",
+    "message": "短程货运"
+  },
+  "ADTITLE_LOCAL_2": {
+    "description": "",
+    "message": "本地货运"
+  },
+  "ADTITLE_LOCAL_3": {
+    "description": "",
+    "message": "本地货物运输"
+  },
+  "ADTITLE_PICKUP_1": {
+    "description": "",
+    "message": "货物提取"
+  },
+  "ADTITLE_PICKUP_LOCAL_1": {
+    "description": "",
+    "message": "星系内重新安置"
+  },
+  "ADTITLE_WHOLESALER_1": {
+    "description": "",
+    "message": "散货运输服务"
   },
   "ALUMINIUM_TUBES": {
     "description": "custom cargo",
@@ -135,6 +171,18 @@
     "description": "",
     "message": "等你更有名气的时候再来。"
   },
+  "DENY_AGAIN_1": {
+    "description": "",
+    "message": "对不起，我们已经有协议了。不过，我很乐意在成功交货后再次与您做生意。"
+  },
+  "DENY_AGAIN_2": {
+    "description": "",
+    "message": "对不起，先生，请先完成我们现有的合同。那我们可以再谈一次交易。"
+  },
+  "DENY_AGAIN_3": {
+    "description": "",
+    "message": "先生，请先把我的货送来。那我就和你做更多的生意。"
+  },
   "DIAMONDS": {
     "description": "custom cargo",
     "message": "钻石"
@@ -199,6 +247,10 @@
     "description": "custom cargo",
     "message": "家具"
   },
+  "GO_BACK": {
+    "description": "Shown on a button in a sub-menu, to move back, to previous menu",
+    "message": "返回。"
+  },
   "GREENHOUSES": {
     "description": "custom cargo",
     "message": "温室"
@@ -228,7 +280,7 @@
     "message": "有 {amount}吨."
   },
   "HOWMUCH_SINGULAR_1": {
-    "description": "This string is only used for 1 metric tons (singular)",
+    "description": "This string is only used for 1 metric ton (singular)",
     "message": "只有 {amount}吨."
   },
   "HOWMUCH_WHOLESALER_1": {
@@ -315,6 +367,10 @@
     "description": "",
     "message": "您好，我的名字是{name}，为哈伯公司工作。我们在{system}星系（{sectorx}，{sectory}，{sectorz}）中为{starport}付款{cash}，距离 {dist} 光年。"
   },
+  "IS_IT_NEGOTIABLE": {
+    "description": "",
+    "message": "货物的数量可以商量吗？"
+  },
   "I_AM_ON_MY_WAY": {
     "description": "",
     "message": "传感器显示您正在受到伤害。 我赶过来了。"
@@ -327,21 +383,45 @@
     "description": "",
     "message": "我受伤了，我需要帮助。"
   },
-  "LY": {
-    "description": "",
-    "message": "光年"
-  },
   "MACHINE_TOOLS": {
     "description": "custom cargo",
     "message": "机床"
+  },
+  "NEGOTIABLE_1": {
+    "description": "regarding mass, always more than 1t",
+    "message": "我可以提供以下货运服务："
+  },
+  "NEGOTIABLE_2": {
+    "description": "regarding mass, always more than 1t",
+    "message": "{amount}吨{cargoname}可分为："
+  },
+  "NEGOTIABLE_3": {
+    "description": "regarding mass, always more than 1t",
+    "message": "是的，我们可以分货。"
+  },
+  "NEGOTIABLE_NO_1": {
+    "description": "regarding mass, always more than 1t",
+    "message": "不，对不起。无法分割货物。你必须一次运输全部{amount}吨。"
+  },
+  "NEGOTIABLE_SINGULAR_1": {
+    "description": "This string is only used for 1 metric ton (singular)",
+    "message": "不，不是。只有{amount}吨。"
   },
   "NEPTUNIUM": {
     "description": "custom cargo",
     "message": "镎"
   },
+  "OFFER": {
+    "description": "",
+    "message": "运输{amount}吨用于{reward}"
+  },
   "OK_AGREED": {
     "description": "",
     "message": "好的，同意。"
+  },
+  "OK_WE_AGREE": {
+    "description": "",
+    "message": "好的，我们同意{amount}吨作为{reward}。"
   },
   "PICKUP_FROM": {
     "description": "from a location",
@@ -502,6 +582,10 @@
   "TITANIUM": {
     "description": "custom cargo",
     "message": "钛"
+  },
+  "TOO_LATE_TO_PICK_UP": {
+    "description": "",
+    "message": "你迟到了！你的表现太差了，我要取消与你的合同。"
   },
   "TUNGSTEN": {
     "description": "custom cargo",

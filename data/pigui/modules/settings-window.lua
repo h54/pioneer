@@ -1,12 +1,12 @@
--- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Engine = require 'Engine'
 local Input = require 'Input'
 local Game = require 'Game'
-local Event = require 'Event'
 local Lang = require 'Lang'
-local utils = require 'utils'
+local Vector2 = _G.Vector2
+local bindManager = require 'bind-manager'
 
 local lc = Lang.GetResource("core")
 local lui = Lang.GetResource("ui-core")
@@ -15,35 +15,30 @@ local linput = Lang.GetResource("input-core")
 local ui = require 'pigui'
 local ModalWindow = require 'pigui.libs.modal-win'
 
--- convert an axis binding style ID to a translation resource identifier
-local function localize_binding_id(str)
-	return linput[str:gsub("([^A-Z0-9_])([A-Z0-9])", "%1_%2"):upper()]
-end
-
-local player = nil
 local colors = ui.theme.colors
 local icons = ui.theme.icons
 local pionillium = ui.fonts.pionillium
 
-local mainButtonSize = Vector2(40,40) * (ui.screenHeight / 1200)
-local optionButtonSize = Vector2(125,40) * (ui.screenHeight / 1200)
-local bindingButtonSize = Vector2(177,25) * (ui.screenHeight / 1200)
-local mainButtonFramePadding = 3
-
-local bindingPageFontSize = 36 * (ui.screenHeight / 1200)
-local bindingGroupFontSize = 26 * (ui.screenHeight / 1200)
+local mainButtonSize = ui.theme.styles.MainButtonSize
+local mainButtonFramePadding = ui.theme.styles.MainButtonPadding
+local optionButtonSize = ui.rescaleUI(Vector2(100, 32))
+local bindingButtonSize = ui.rescaleUI(Vector2(142, 32))
 
 local optionsWinSize = Vector2(ui.screenWidth * 0.4, ui.screenHeight * 0.6)
 
 local showTab = 'video'
 
 local binding_pages
-local keyCaptureId
+local keyCaptureBind
 local keyCaptureNum
+
+local needBackgroundStarRefresh = false
+local starDensity = Engine.GetAmountStars() * 100
+local starFieldStarSizeFactor = Engine.GetStarFieldStarSizeFactor() * 100
 
 local function combo(label, selected, items, tooltip)
 	local color = colors.buttonBlue
-	local changed, ret = 0
+	local changed, ret = 0, nil
 	ui.withStyleColors({["Button"]=color,["ButtonHovered"]=color:tint(0.1),["ButtonActive"]=color:tint(0.2)},function()
 		changed, ret = ui.combo(label, selected, items)
 	end)
@@ -86,11 +81,11 @@ local function keyOf(t, value)
 end
 
 local function bindingTextButton(label, tooltip, enabled, callback)
-	local bgcolor = enabled and colors.buttonBlue or colors.grey
+	local variant = not enabled and ui.theme.buttonColors.disabled
 
 	local button
-	ui.withFont(pionillium.small.name, pionillium.small.size, function()
-		button = ui.coloredSelectedButton(label, bindingButtonSize, false, bgcolor, tooltip, enabled)
+	ui.withFont(pionillium.small, function()
+		button = ui.button(label, bindingButtonSize, variant, tooltip)
 	end)
 	if button then
 		callback(button)
@@ -98,11 +93,11 @@ local function bindingTextButton(label, tooltip, enabled, callback)
 end
 
 local function optionTextButton(label, tooltip, enabled, callback)
-	local bgcolor = enabled and colors.buttonBlue or colors.grey
+	local variant = not enabled and ui.theme.buttonColors.disabled
 
 	local button
-	ui.withFont(pionillium.medium.name, pionillium.medium.size, function()
-		button = ui.coloredSelectedButton(label, optionButtonSize, false, bgcolor, tooltip, enabled)
+	ui.withFont(pionillium.medium, function()
+		button = ui.button(label, optionButtonSize, variant, tooltip)
 	end)
 	if button then
 		callback(button)
@@ -110,7 +105,7 @@ local function optionTextButton(label, tooltip, enabled, callback)
 end --mainButton
 
 local function mainButton(icon, tooltip, selected, callback)
-	local button = ui.coloredSelectedIconButton(icon, mainButtonSize, selected, mainButtonFramePadding, colors.buttonBlue, colors.white, tooltip)
+	local button = ui.mainMenuButton(icon, tooltip, selected)
 	if button then
 		callback()
 	end
@@ -173,7 +168,6 @@ local function showVideoOptions()
 	local displayHudTrails = Engine.GetDisplayHudTrails()
 	local enableCockpit = Engine.GetCockpitEnabled()
 	local enableAutoSave = Engine.GetAutosaveEnabled()
-	local starDensity = Engine.GetAmountStars() * 100
 
 	local c
 	ui.text(lui.VIDEO_CONFIGURATION_RESTART_GAME_TO_APPLY)
@@ -263,7 +257,13 @@ local function showVideoOptions()
 
 	c,starDensity = slider(lui.STAR_FIELD_DENSITY, starDensity, 0, 100)
 	if c then
-		Engine.SetAmountStars(starDensity/100)
+		needBackgroundStarRefresh = true
+	end
+
+	c,starFieldStarSizeFactor = slider(lui.STAR_FIELD_STAR_SIZE_FACTOR, starFieldStarSizeFactor, 0, 100)
+	if c then
+		-- TODO: lua somtimes gets very small slider changes, even though I didn't touch the slider
+		needBackgroundStarRefresh = true
 	end
 
 	ui.separator()
@@ -274,70 +274,62 @@ local function showVideoOptions()
 end
 
 local captureBindingWindow
+local bindState = nil -- state, to capture the key combination
 captureBindingWindow = ModalWindow.New("CaptureBinding", function()
-	local info
+	local info = keyCaptureBind
 
-	for _,page in pairs(binding_pages) do
-		for _,group in pairs(page) do
-			if group.id then
-				for _,i in pairs(group) do
-					if i.id == keyCaptureId then
-						info = i
-					end
-				end
-			end
-		end
-	end
-
-	ui.text(localize_binding_id(info.id))
+	ui.text(bindManager.localizeBindingId(info.id))
 	ui.text(lui.PRESS_A_KEY_OR_CONTROLLER_BUTTON)
 
-	if info.type == 'action' then
-		local desc
-		if keyCaptureNum == 1 then desc = info.bindingDescription1
-		else desc = info.bindingDescription2 end
-		desc = desc or '<None>'
-		ui.text(desc)
+	if info.type == 'Action' then
+		local desc = keyCaptureNum == 1 and info.binding or info.binding2
+		ui.text(desc.enabled and bindManager.getChordDesc(desc) or lc.NONE)
 
-		local bindingKey = Engine.pigui.GetKeyBinding()
-		local setBinding = false
-		if(bindingKey and keyCaptureNum==1 and bindingKey~=info.binding1) or (bindingKey and keyCaptureNum==2 and bindingKey~=info.binding2) then setBinding = true end
-
-		if setBinding and  keyCaptureNum == 1 then Input.SetActionBinding(info.id, bindingKey, info.binding2)
-		elseif setBinding and keyCaptureNum==2 then Input.SetActionBinding(info.id, info.binding1, bindingKey)
+		local set, bindingKey = Engine.pigui.GetKeyBinding(bindState)
+		if set then
+			if keyCaptureNum == 1 then
+				info.binding = bindingKey
+			else
+				info.binding2 = bindingKey
+			end
 		end
-	elseif info.type == 'axis' then
+		bindState = bindingKey
+	elseif info.type == 'Axis' then
 		local desc
-		if keyCaptureNum == 1 then desc = info.axisDescription
-		elseif keyCaptureNum == 2 then desc = info.positiveDescription
-		else desc = info.negativeDescription end
-		desc = desc or '<None>'
+		if keyCaptureNum == 1 then
+			desc = bindManager.getBindingDesc(info.axis) or lc.NONE
+		else
+			desc = keyCaptureNum == 2 and info.positive or info.negative
+			desc = desc.enabled and bindManager.getChordDesc(desc) or lc.NONE
+		end
 		ui.text(desc)
 
 		if keyCaptureNum == 1 then
-			local bindingAxis = Engine.pigui.GetAxisBinding()
-
-			if bindingAxis and bindingAxis~=info.axis then
-				Input.SetAxisBinding(info.id, bindingAxis, info.positive, info.negative)
-			end
-		elseif keyCaptureNum == 2 then
-			local bindingKey = Engine.pigui.GetKeyBinding()
-
-			if bindingKey and bindingKey ~= info.positive then
-				Input.SetAxisBinding(info.id, info.axis, bindingKey, info.negative)
+			local set, bindingAxis = Engine.pigui.GetAxisBinding()
+			if set then
+				info.axis = bindingAxis
 			end
 		else
-			local bindingKey = Engine.pigui.GetKeyBinding()
-			if bindingKey and bindingKey ~= info.negative then
-				Input.SetAxisBinding(info.id, info.axis, info.positive, bindingKey)
+			local set, bindingKey = Engine.pigui.GetKeyBinding(bindState)
+			if set then
+				if keyCaptureNum == 2 then
+					info.positive = bindingKey
+				else
+					info.negative = bindingKey
+				end
 			end
+			bindState = bindingKey
 		end
 	end
 
-	optionTextButton(lui.OK, nil, true, function() captureBindingWindow:close() end)
-end, function (self, drawPopupFn)
+	optionTextButton(lui.OK, nil, true, function()
+		Input.SaveBinding(info)
+		bindManager.updateBinding(info.id)
+		captureBindingWindow:close()
+	end)
+end, function (_, drawPopupFn)
 	ui.setNextWindowPosCenter('Always')
-	ui.withStyleColorsAndVars({["PopupBg"] = Color(20, 20, 80, 230)}, {WindowBorderSize = 1}, drawPopupFn)
+	ui.withStyleColors({ PopupBg = ui.theme.colors.modalBackground }, drawPopupFn)
 end)
 
 local function showSoundOptions()
@@ -372,13 +364,13 @@ end
 local function showLanguageOptions()
 	local langs = Lang.GetAvailableLanguages("core")
 
-	ui.withFont(pionillium.large.name, pionillium.large.size, function()
+	ui.withFont(pionillium.large, function()
 		ui.text(lui.LANGUAGE_RESTART_GAME_TO_APPLY)
 	end)
 
 	local clicked
 	for _,lang in pairs(langs) do
-		ui.withFont(pionillium.large.name, pionillium.large.size, function()
+		ui.withFont(pionillium.large, function()
 			if ui.selectable(Lang.GetResource("core",lang).LANG_NAME, Lang.currentLanguage==lang, {}) then
 				clicked = lang
 			end
@@ -391,22 +383,24 @@ local function showLanguageOptions()
 end
 
 local function actionBinding(info)
-	local bindings = { info.binding1, info.binding2 }
-	local descs = { info.bindingDescription1, info.bindingDescription2 }
+	local descs = {
+		bindManager.getChordDesc(info.binding),
+		bindManager.getChordDesc(info.binding2)
+	}
 
-	if (ui.collapsingHeader(localize_binding_id(info.id), {})) then
+	if (ui.collapsingHeader(bindManager.localizeBindingId(info.id), {})) then
 		ui.columns(3,"##bindings",false)
 		ui.nextColumn()
 		ui.text(linput.TEXT_BINDING)
 		bindingTextButton((descs[1] or '')..'##'..info.id..'1', (descs[1] or ''), true, function()
-			keyCaptureId = info.id
+			keyCaptureBind = info
 			keyCaptureNum = 1
 			captureBindingWindow:open()
 		end)
 		ui.nextColumn()
 		ui.text(linput.TEXT_ALT_BINDING)
 		bindingTextButton((descs[2] or '')..'##'..info.id..'2', (descs[2] or ''), true, function()
-			keyCaptureId = info.id
+			keyCaptureBind = info
 			keyCaptureNum = 2
 			captureBindingWindow:open()
 		end)
@@ -415,51 +409,41 @@ local function actionBinding(info)
 end
 
 local function axisBinding(info)
-	local bindings = { info.axis, info.positive, info.negative }
-	local descs = { info.axisDescription, info.positiveDescription, info.negativeDescription }
-	if (ui.collapsingHeader(localize_binding_id(info.id), {})) then
+	local axis, positive, negative = info.axis, info.positive, info.negative
+	local descs = { bindManager.getBindingDesc(axis), bindManager.getChordDesc(positive), bindManager.getChordDesc(negative) }
+
+	if (ui.collapsingHeader(bindManager.localizeBindingId(info.id), {})) then
 		ui.columns(3,"##axisjoybindings",false)
 		ui.text("Axis:")
 		ui.nextColumn()
 		bindingTextButton((descs[1] or '')..'##'..info.id..'axis', (descs[1] or ''), true, function()
-			keyCaptureId = info.id
+			keyCaptureBind = info
 			keyCaptureNum = 1
 			captureBindingWindow:open()
 		end)
 		ui.nextColumn()
-		if info.axis then
-			local c, inverted, deadzone, sensitivity = nil, info.axis:sub(1,1) == "-",
-				tonumber(info.axis:match"/DZ(%d+%.%d*)" or 0) * 100,
-				tonumber(info.axis:match"/E(%d+%.%d*)" or 1) * 100
-			local axis = info.axis:match("Joy[0-9a-f]+/Axis%d+")
-			local function set_axis()
-				local _ax = (inverted and "-" or "") .. axis .. "/DZ" .. deadzone / 100.0 .. "/E" .. sensitivity / 100.0
-				Input.SetAxisBinding(info.id, _ax, info.positive, info.negative)
-			end
+		if axis then
+			local c, inverted = nil, axis.direction < 0
 			c,inverted = ui.checkbox("Inverted##"..info.id, inverted, linput.TEXT_INVERT_AXIS)
-			set_axis()
-			ui.nextColumn()
-			ui.nextColumn()
-			c, deadzone = slider("Deadzone##"..info.id, deadzone, 0, 100, linput.TEXT_AXIS_DEADZONE)
-			set_axis()
-			ui.nextColumn()
-			c, sensitivity = slider("Sensitivity##"..info.id, sensitivity, 0, 100, linput.TEXT_AXIS_SENSITIVITY)
-			set_axis()
+			if c then
+				axis.direction = inverted and -1 or 1
+				info.axis = axis; Input.SaveBinding(info)
+			end
 		end
+		-- new row
 		ui.nextColumn()
-		ui.columns(3,"##axiskeybindings",false)
 		ui.text(linput.TEXT_KEY_BINDINGS)
 		ui.nextColumn()
 		ui.text(linput.TEXT_KEY_POSITIVE)
 		bindingTextButton((descs[2] or '')..'##'..info.id..'positive', (descs[2] or ''), true, function()
-			keyCaptureId = info.id
+			keyCaptureBind = info
 			keyCaptureNum = 2
 			captureBindingWindow:open()
 		end)
 		ui.nextColumn()
 		ui.text(linput.TEXT_KEY_NEGATIVE)
 		bindingTextButton((descs[3] or '')..'##'..info.id..'negative', (descs[3] or ''), true, function()
-			keyCaptureId = info.id
+			keyCaptureBind = info
 			keyCaptureNum = 3
 			captureBindingWindow:open()
 		end)
@@ -467,12 +451,135 @@ local function axisBinding(info)
 	end
 end
 
+local function drawJoystickAxisInfo(joystick, i)
+	local c, val, enabled
+
+	ui.columns(2, "axis info")
+
+	ui.text(linput.CURRENT_VALUE)
+	ui.sameLine()
+	ui.text(string.format("%0.2f", joystick:GetAxisValue(i)))
+
+	ui.nextColumn()
+
+	c, enabled = ui.checkbox(linput.HALF_AXIS_MODE, joystick:GetAxisZeroToOne(i))
+	if c then
+		joystick:SetAxisZeroToOne(i, enabled)
+	end
+
+	ui.nextColumn()
+
+	val, c = ui.sliderFloat(linput.DEADZONE, joystick:GetAxisDeadzone(i), 0.0, 1.0, "%0.2f")
+	if c then joystick:SetAxisDeadzone(i, val) end
+
+	ui.nextColumn()
+
+	val, c = ui.sliderFloat(linput.CURVE, joystick:GetAxisCurve(i), 0.0, 2.0, "%0.2f")
+	if c then joystick:SetAxisCurve(i, val) end
+
+	ui.columns(1, "")
+end
+
+local selectedJoystick = nil
+local function showJoystickInfo(id)
+	local joystick = Input.GetJoystick(id)
+
+	ui.withFont(pionillium.heading, function()
+		local buttonSize = Vector2(ui.getTextLineHeightWithSpacing())
+
+		if ui.iconButton(icons.time_backward_1x, buttonSize, lui.GO_BACK .. "##" .. id) then
+			Input.SaveJoystickConfig(selectedJoystick)
+			selectedJoystick = nil
+		end
+
+		ui.sameLine()
+		ui.alignTextToLineHeight()
+		ui.text(joystick.name)
+	end)
+
+	ui.spacing()
+
+	ui.text(linput.NUM_BUTTONS)
+	ui.sameLine()
+	ui.text(joystick.numButtons)
+
+	ui.text(linput.NUM_HATS)
+	ui.sameLine()
+	ui.text(joystick.numHats)
+
+	ui.text(linput.NUM_AXES)
+	ui.sameLine()
+	ui.text(joystick.numAxes)
+
+	ui.spacing()
+
+	for i = 0, joystick.numAxes - 1 do
+
+		local width = ui.getContentRegion().x * 0.5
+		local open = ui.collapsingHeader(bindManager.getAxisName(i))
+
+		local isHalfAxis = joystick:GetAxisZeroToOne(i)
+		local value = joystick:GetAxisValue(i)
+
+		-- Draw axis preview indicator
+		ui.sameLine(width)
+
+		local pos = ui.getCursorScreenPos()
+		pos.y = pos.y + ui.getItemSpacing().y * 0.5
+
+		local size = Vector2(width - ui.getItemSpacing().x, ui.getTextLineHeight())
+		ui.addRectFilled(pos, pos + size, colors.darkGrey, 0, 0)
+
+		if isHalfAxis then
+			size.x = size.x * value
+		else
+			pos.x = pos.x + size.x * 0.5
+			size.x = size.x * 0.5 * value
+		end
+
+		ui.addRectFilled(pos, pos + size, colors.primary, 0, 0)
+		ui.newLine()
+
+		-- Draw axis details
+		if open then
+			ui.withID(i, function()
+				drawJoystickAxisInfo(joystick, i)
+			end)
+		end
+
+		ui.spacing()
+
+	end
+
+end
+
+local function showJoystickList(id)
+	local connected = Input.IsJoystickConnected(id)
+	local buttonSize = Vector2(ui.getTextLineHeightWithSpacing())
+
+	if connected then
+		if ui.iconButton(icons.pencil, buttonSize, lui.EDIT .. "##" .. id) then
+			selectedJoystick = id
+		end
+	else
+		ui.dummy(buttonSize)
+	end
+
+	ui.sameLine()
+	ui.alignTextToLineHeight()
+	ui.text(bindManager.joyAcronym(id) .. ":")
+
+	local status = connected and linput.CONNECTED or linput.NOT_CONNECTED
+	ui.sameLine()
+	ui.textColored(ui.theme.colors.grey, Input.GetJoystickName(id) .. ", " .. status)
+end
+
 local function showControlsOptions()
 	ui.text(lui.CONTROL_OPTIONS)
 
 	local mouseYInvert = Input.GetMouseYInverted()
 	local joystickEnabled = Input.GetJoystickEnabled()
-	binding_pages = Input.GetBindings()
+	binding_pages = Input.GetBindingPages()
 	local c
 
 	c,mouseYInvert = checkbox(lui.INVERT_MOUSE_Y, mouseYInvert)
@@ -481,28 +588,50 @@ local function showControlsOptions()
 	c,joystickEnabled = checkbox(lui.ENABLE_JOYSTICK, joystickEnabled)
 	if c then Input.SetJoystickEnabled(joystickEnabled) end
 
-	for _,page in ipairs(binding_pages) do
-		ui.text ''
-		ui.withFont(pionillium.medium.name, bindingPageFontSize, function()
-			ui.text(localize_binding_id("Page" .. page.id))
-		end)
+	-- list all the joysticks
+	local joystick_count = Input.GetJoystickCount()
+	if joystick_count > 0 then
 		ui.separator()
-		for _,group in ipairs(page) do
-			if group.id then
-				if _ > 1 then ui.text '' end
-				ui.withFont(pionillium.medium.name, bindingGroupFontSize, function()
-					ui.text(localize_binding_id("Group" .. group.id))
-				end)
-				ui.separator()
-				for _,info in ipairs(group) do
-					if info.type == 'action' then
-						actionBinding(info)
-					elseif info.type == 'axis' then
-						axisBinding(info)
-					end
+		ui.text(linput.JOYSTICKS .. ":")
+		ui.spacing()
+
+		ui.withFont(pionillium.body, function()
+			if selectedJoystick then
+				showJoystickInfo(selectedJoystick)
+			else
+				for id = 0, joystick_count - 1 do
+					showJoystickList(id)
 				end
 			end
+		end)
+	end
+
+	for _,page in ipairs(binding_pages) do
+		ui.text ''
+		ui.withFont(pionillium.medium, function()
+			ui.text(bindManager.localizeBindingId("Page" .. page.id))
+		end)
+		ui.separator()
+		Engine.pigui.PushID(page.id)
+		for _,group in ipairs(page) do
+			if group.id then
+				Engine.pigui.PushID(group.id)
+				if _ > 1 then ui.text '' end
+				ui.withFont(pionillium.medium, function()
+					ui.text(bindManager.localizeBindingId("Group" .. group.id))
+				end)
+				ui.separator()
+				for _,binding in ipairs(group) do
+					if binding.type == 'Action' then
+						actionBinding(binding)
+					elseif binding.type == 'Axis' then
+						axisBinding(binding)
+					end
+				end
+				Engine.pigui.PopID()
+			end
 		end
+		Engine.pigui.PopID()
 	end
 end
 
@@ -532,7 +661,9 @@ ui.optionsWindow = ModalWindow.New("Options", function()
 
 	ui.separator()
 
-	ui.child("options_tab", Vector2(-1, optionsWinSize.y - mainButtonSize.y*3 - 4), function()
+	-- I count the separator as two item spacings
+	local other_height = mainButtonSize.y + mainButtonFramePadding * 2 + optionButtonSize.y  + ui.getItemSpacing().y * 4 + ui.getWindowPadding().y * 2
+	ui.child("options_tab", Vector2(-1, optionsWinSize.y - other_height), function()
 		optionsTabs[showTab]()
 	end)
 
@@ -544,9 +675,17 @@ ui.optionsWindow = ModalWindow.New("Options", function()
 	ui.sameLine()
 	optionTextButton(lui.CLOSE, nil, true, function()
 		ui.optionsWindow:close()
+		if needBackgroundStarRefresh then
+			Engine.SetAmountStars(starDensity/100)
+			Engine.SetStarFieldStarSizeFactor(starFieldStarSizeFactor/100)
+			needBackgroundStarRefresh = false
+		end
 		if Game.player then
 			Game.SetTimeAcceleration("1x")
 			Input.EnableBindings();
+		end
+		if selectedJoystick then
+			Input.SaveJoystickConfig(selectedJoystick)
 		end
 	end)
 
@@ -564,11 +703,16 @@ ui.optionsWindow = ModalWindow.New("Options", function()
 			Game.EndGame()
 		end)
 	end
-end, function (self, drawPopupFn)
+end, function (_, drawPopupFn)
 	ui.setNextWindowSize(optionsWinSize, 'Always')
 	ui.setNextWindowPosCenter('Always')
-	ui.withStyleColorsAndVars({["PopupBg"] = Color(20, 20, 80, 230)}, {WindowBorderSize = 1}, drawPopupFn)
+	ui.withStyleColors({ PopupBg = ui.theme.colors.modalBackground }, drawPopupFn)
 end)
 
+function ui.optionsWindow:close()
+	if not captureBindingWindow.isOpen then
+		ModalWindow.close(self)
+	end
+end
 
 return {}

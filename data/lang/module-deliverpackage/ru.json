@@ -57,7 +57,11 @@
   },
   "FLAVOUR_0_ADTEXT": {
     "description": "",
-    "message": "ПОСЫЛКА. В систему {system} необходимо доставить небольшую посылку. Оплата {cash}."
+    "message": "Переходите в систему {system}? Деньги, уплаченные за доставку небольшой посылки."
+  },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "МЕЖЗВЕЗДНАЯ ДОСТАВКА"
   },
   "FLAVOUR_0_FAILUREMSG": {
     "description": "",
@@ -77,7 +81,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "ДОСТАВКА. Необходимо доставить пакет в систему {system}.  Оплата {cash}."
+    "message": "Требуется: Доставка посылки в систему {system}."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "ТРЕБУЕТСЯ ДОСТАВКА"
   },
   "FLAVOUR_1_FAILUREMSG": {
     "description": "",
@@ -97,7 +105,11 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "СРОЧНО. Нужен быстрый корабль для доставки посылки в систему {system}. Оплата {cash}."
+    "message": "Срочно! Быстрый корабль, необходимый для доставки посылки в систему {system}."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "СРОЧНАЯ ДОСТАВКА"
   },
   "FLAVOUR_2_FAILUREMSG": {
     "description": "",
@@ -117,7 +129,11 @@
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "ДОСТАВКА. Необходим опытный пилот для доставки документов в систему {system}. Оплата {cash}."
+    "message": "Доставка конфиденциальных документов в систему {system}. {cash} опытному пилоту."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "ДОСТАВКА ДОКУМЕНТОВ"
   },
   "FLAVOUR_3_FAILUREMSG": {
     "description": "",
@@ -137,7 +153,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "КУРЬЕР. Требуется для полёта в систему {system}. Оплата {cash}."
+    "message": "Межзвездные почтовые службы. Нам требуется корабль для доставки в систему {system}."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "ДОСТАВКА ПОЧТЫ"
   },
   "FLAVOUR_4_FAILUREMSG": {
     "description": "",
@@ -157,7 +177,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "ПЕРЕВОЗКА. Необходимо доставить оборудование со склада в космопорт {starport}. Оплата {cash}."
+    "message": "Транспортировка вещей в {starport} из портового хранилища."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "ПЕРЕЕЗД ДОМОЙ"
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
@@ -177,7 +201,11 @@
   },
   "FLAVOUR_6_ADTEXT": {
     "description": "",
-    "message": "МЕЖПЛАНЕТНЫЙ КУРЬЕР. Доставка небольшой посылки в космопорт {starport}. Оплата {cash}."
+    "message": "Требуются внутрисистемные курьерские услуги. Доставка небольшой посылки в {starport}."
+  },
+  "FLAVOUR_6_ADTITLE": {
+    "description": "",
+    "message": "МЕСТНЫЙ КУРЬЕР"
   },
   "FLAVOUR_6_FAILUREMSG": {
     "description": "",
@@ -197,7 +225,11 @@
   },
   "FLAVOUR_7_ADTEXT": {
     "description": "",
-    "message": "МЕЖПЛАНЕТНАЯ ПЕРЕВОЗКА. Нужен транспорт для доставки груза в космопорт {starport}. Оплата {cash}."
+    "message": "Стандартизированный межпланетный транспортный контракт. Перевозка местных грузов в {starport}."
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "МЕЖПЛАНЕТНАЯ ДОСТАВКА ГРУЗА"
   },
   "FLAVOUR_7_FAILUREMSG": {
     "description": "",
@@ -217,7 +249,11 @@
   },
   "FLAVOUR_8_ADTEXT": {
     "description": "",
-    "message": "МЕСТНАЯ ДОСТАВКА. Требуется быстро доставить груз в космопорт {starport}. Оплата {cash}."
+    "message": "Срочный договор персональной поставки. Требуется быстрая доставка товара в {starport}."
+  },
+  "FLAVOUR_8_ADTITLE": {
+    "description": "",
+    "message": "БЛИЖАЙШАЯ ДОСТАВКА"
   },
   "FLAVOUR_8_FAILUREMSG": {
     "description": "",
@@ -237,7 +273,11 @@
   },
   "FLAVOUR_9_ADTEXT": {
     "description": "",
-    "message": "МЕСТНАЯ ДОСТАВКА. Перевозка скоропортящихся продуктов в космопорт {starport}. Оплата {cash}."
+    "message": "Требуется сдача посылки. Срочная отправка скоропортящихся продуктов в {starport}."
+  },
+  "FLAVOUR_9_ADTITLE": {
+    "description": "",
+    "message": "СБРОС УПАКОВКИ"
   },
   "FLAVOUR_9_FAILUREMSG": {
     "description": "",
@@ -270,10 +310,6 @@
   "I_HIGHLY_DOUBT_IT": {
     "description": "",
     "message": "Я сомневаюсь в этом."
-  },
-  "LY": {
-    "description": "",
-    "message": "св.лет"
   },
   "NOT_ANY_MORE_THAN_USUAL": {
     "description": "",

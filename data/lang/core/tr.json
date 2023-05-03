@@ -31,13 +31,21 @@
     "description": "",
     "message": "Hayvan Eti"
   },
+  "AN_AR_ATMOSPHERE": {
+    "description": "",
+    "message": "argon bir atmosfer"
+  },
+  "AN_O2_ATMOSPHERE": {
+    "description": "",
+    "message": "oksijen bir atmosfer"
+  },
   "APOAPSIS_DISTANCE": {
     "description": "",
     "message": "Apoapsis uzaklığı"
   },
   "AR_ATMOSPHERE": {
     "description": "",
-    "message": "\" Argon atmosfer\""
+    "message": "argon atmosfer"
   },
   "ASTEROID": {
     "description": "",
@@ -79,9 +87,37 @@
     "description": "",
     "message": "Eksen eğimi"
   },
+  "A_CH4_ATMOSPHERE": {
+    "description": "",
+    "message": "metan bir atmosfer"
+  },
+  "A_CO2_ATMOSPHERE": {
+    "description": "",
+    "message": "karbondioksit bir atmosfer"
+  },
+  "A_CO_ATMOSPHERE": {
+    "description": "",
+    "message": "karbonmonoksit bir atmosfer"
+  },
   "A_FEW_THOUSAND": {
     "description": "regarding population",
     "message": "Sadece birkaç bin"
+  },
+  "A_HE_ATMOSPHERE": {
+    "description": "",
+    "message": "helyum bir atmosfer"
+  },
+  "A_H_ATMOSPHERE": {
+    "description": "",
+    "message": "hidrojen bir atmosfer"
+  },
+  "A_N_ATMOSPHERE": {
+    "description": "",
+    "message": "azot bir atmosfer"
+  },
+  "A_S_ATMOSPHERE": {
+    "description": "",
+    "message": "sülfürik bir atmosfer"
   },
   "BATTLE_WEAPONS": {
     "description": "",
@@ -102,10 +138,6 @@
   "BROWN_DWARF": {
     "description": "",
     "message": "Kahverengi cüce alt-yıldız cismi"
-  },
-  "BUTTON": {
-    "description": "",
-    "message": "\" Düğme \""
   },
   "CAMERA_BOTTOM_VIEW": {
     "description": "",
@@ -173,27 +205,11 @@
   },
   "CH4_ATMOSPHERE": {
     "description": "",
-    "message": "\" Metan atmosfer\""
-  },
-  "CLEARANCE_ALREADY_GRANTED_BAY_N": {
-    "description": "",
-    "message": "İzin zaten verildi. %bay nolu sabitlenme bölmesine devam edin."
-  },
-  "CLEARANCE_DENIED_NO_BAYS": {
-    "description": "",
-    "message": "İzin reddedildi. Boş sabitlenme bölmesi yok."
-  },
-  "CLEARANCE_DENIED_TOO_FAR": {
-    "description": "Shown if player requests docking too far away from station",
-    "message": "İzin reddedildi. Geminiz kimlik doğrulaması için çok uzakta."
-  },
-  "CLEARANCE_GRANTED_BAY_N": {
-    "description": "",
-    "message": "İzin verildi. %bay nolu kenetlenme bölmesine ilerleyin."
+    "message": "metan atmosfer"
   },
   "CO2_ATMOSPHERE": {
     "description": "",
-    "message": "\" Karbondioksit atmosfer\""
+    "message": "karbondioksit atmosfer"
   },
   "COMMA_HIGHLY_VOLCANIC": {
     "description": "",
@@ -212,7 +228,7 @@
     "message": "#fff%system#fff sisteminin mal ticaret analizi"
   },
   "COMMS": {
-    "description": "",
+    "description": "Title of communications log window, on world view",
     "message": "İletişim"
   },
   "COMMUNIST": {
@@ -289,7 +305,7 @@
   },
   "CO_ATMOSPHERE": {
     "description": "",
-    "message": "\" Karbonmonoksit atmosfer\""
+    "message": "karbonmonoksit atmosfer"
   },
   "CTRL": {
     "description": "Ctrl key on keyboard",
@@ -327,10 +343,6 @@
     "description": "",
     "message": "Hedef"
   },
-  "DIRECTION": {
-    "description": "Direction",
-    "message": "\" Yön \""
-  },
   "DISTANCE_LY": {
     "description": "",
     "message": "Uzaklık: %distance{f.2} Iy"
@@ -342,10 +354,6 @@
   "DOCKING": {
     "description": "",
     "message": "Kenetleniyor"
-  },
-  "DOCKING_CLEARANCE_EXPIRED": {
-    "description": "",
-    "message": "Kenetlenme izin süresi doldu. Eğer kenetlenmek istiyorsanız isteğinizi tekrarlayın."
   },
   "DOWNGRADING_ALERT_STATUS": {
     "description": "",
@@ -363,9 +371,21 @@
     "description": "",
     "message": "Dikey çizgiler çek"
   },
-  "EARTH": {
+  "DWARF_PLANET_CONTAINING_LIQUID_WATER": {
     "description": "",
-    "message": "Dünya"
+    "message": "Sıvı su barındıran cüce gezegen"
+  },
+  "DWARF_PLANET_CONTAINING_SOME_LIQUIDS": {
+    "description": "",
+    "message": "Bir miktar sıvı barındıran cüce gezegen,"
+  },
+  "DWARF_PLANET_MOSTLY_COVERED_IN_ICE": {
+    "description": "",
+    "message": "Çoğunluğu buzla kaplı cüce gezegen"
+  },
+  "DWARF_PLANET_TERRESTRIAL": {
+    "description": "",
+    "message": "Cüce gezegen"
   },
   "EARTH_FEDERATION_COLONIAL_RULE": {
     "description": "",
@@ -495,10 +515,6 @@
     "description": "",
     "message": "Tamamen Kapitalist - yönetim mal varlığını düzenlemiyor"
   },
-  "HAT": {
-    "description": "Hat switch: Is the top button on a joystick",
-    "message": "\" Üst düğme\""
-  },
   "HEADING_LOCK_ANTINORMAL": {
     "description": "Autopilot direction (perpendicular, down), relative to plane of orbit",
     "message": "Ters-dikey yönelimde {target} sabitle"
@@ -533,7 +549,7 @@
   },
   "HE_ATMOSPHERE": {
     "description": "",
-    "message": "\" Helyum atmosfer\""
+    "message": "helyum atmosfer"
   },
   "HIGHLY_VOLCANIC": {
     "description": "",
@@ -597,7 +613,15 @@
   },
   "H_ATMOSPHERE": {
     "description": "",
-    "message": "\" Hidrojen atmosfer\""
+    "message": "hidrojen atmosfer"
+  },
+  "ICE_DWARF_PLANET": {
+    "description": "",
+    "message": "Buzlu cüce gezegen"
+  },
+  "ICE_MOON": {
+    "description": "",
+    "message": "\" buz uydu\""
   },
   "ICE_WORLD": {
     "description": "",
@@ -650,10 +674,6 @@
   "JOYSTICK_INPUT": {
     "description": "",
     "message": "Joystick"
-  },
-  "JOY_AXIS": {
-    "description": "Regarding joystick",
-    "message": "%{sign}%joyname %axis Ekseni"
   },
   "L4L5_DISPLAY_MODE_TOGGLE": {
     "description": "Either show L4/L5 points or don't",
@@ -749,78 +769,14 @@
   },
   "MANUAL_CONTROL_MODE": {
     "description": "",
-    "message": "Elle kontrol"
-  },
-  "MAP_LOCK_HYPERSPACE_TARGET": {
-    "description": "",
-    "message": "Üstuzay Hedefini Kilitle"
-  },
-  "MAP_TOGGLE_INFO_PANEL": {
-    "description": "",
-    "message": "Bilgi panelini aç/kapa"
-  },
-  "MAP_TOGGLE_SELECTION_FOLLOW_VIEW": {
-    "description": "",
-    "message": "Seçim Takip Görünümü Aç/Kapa"
-  },
-  "MAP_VIEW_ROTATE_DOWN": {
-    "description": "",
-    "message": "Görünümü Aşağı Döndür"
-  },
-  "MAP_VIEW_ROTATE_LEFT": {
-    "description": "",
-    "message": "Görünümü Sola Döndür"
-  },
-  "MAP_VIEW_ROTATE_RIGHT": {
-    "description": "",
-    "message": "Görünümü Sağa Döndür"
-  },
-  "MAP_VIEW_ROTATE_UP": {
-    "description": "",
-    "message": "Görünümü Yukarı Döndür"
-  },
-  "MAP_VIEW_SHIFT_BACKWARD": {
-    "description": "",
-    "message": "Görünümü Geriye Kaydır"
-  },
-  "MAP_VIEW_SHIFT_DOWN": {
-    "description": "",
-    "message": "Görünümü Aşağı Kaydır"
-  },
-  "MAP_VIEW_SHIFT_FORWARD": {
-    "description": "",
-    "message": "Görünümü İleri Kaydır"
-  },
-  "MAP_VIEW_SHIFT_LEFT": {
-    "description": "",
-    "message": "Görünümü Sola Kaydır"
-  },
-  "MAP_VIEW_SHIFT_RIGHT": {
-    "description": "",
-    "message": "Görünümü Sağa Kaydır"
-  },
-  "MAP_VIEW_SHIFT_UP": {
-    "description": "",
-    "message": "Görünümü Yukarı Kaydır"
-  },
-  "MAP_WARP_TO_CURRENT_SYSTEM": {
-    "description": "",
-    "message": "Mevcut Sisteme Sıçra"
-  },
-  "MAP_WARP_TO_HYPERSPACE_TARGET": {
-    "description": "",
-    "message": "Üstuzay Hedefine Sıçra"
-  },
-  "MAP_WARP_TO_SELECTED_SYSTEM": {
-    "description": "",
-    "message": "Seçilen Sisteme Sıçra"
+    "message": "Elle kontrol modu"
   },
   "MASS": {
     "description": "",
     "message": "Kütle"
   },
   "MASSIVE": {
-    "description": "",
+    "description": "Adjective used to describe the size of an object.",
     "message": "Devasa"
   },
   "MASS_N_TONNES": {
@@ -830,6 +786,10 @@
   "MEDICINES": {
     "description": "",
     "message": "İlaçlar"
+  },
+  "MEDIUM": {
+    "description": "Adjective used to describe the size of an object.",
+    "message": "Orta"
   },
   "MEDIUM_GAS_GIANT": {
     "description": "",
@@ -947,6 +907,14 @@
     "description": "",
     "message": "Eyl"
   },
+  "MOON_CONTAINING_LIQUID_WATER": {
+    "description": "",
+    "message": "\" sıvı su barındıran uydu\""
+  },
+  "MOON_WITH_SOME_ICE": {
+    "description": "",
+    "message": "\" biraz buzlu bir uydu\""
+  },
   "NAME_OBJECT": {
     "description": "For an item or object",
     "message": "İsim"
@@ -970,6 +938,10 @@
   "NERVE_GAS": {
     "description": "",
     "message": "Sinir Gazı"
+  },
+  "NONE": {
+    "description": "To indicate the absence of something",
+    "message": "<None>"
   },
   "NOT_FOUND": {
     "description": "searching star system in sector view",
@@ -1049,7 +1021,7 @@
   },
   "N_ATMOSPHERE": {
     "description": "",
-    "message": "\" Azot atmosfer\""
+    "message": "azot atmosfer"
   },
   "N_CELSIUS": {
     "description": "",
@@ -1065,15 +1037,23 @@
   },
   "N_EARTH_DAYS": {
     "description": "",
-    "message": "%days{f.1} dünya günü"
+    "message": "%days{f.1} Dünya günü"
   },
-  "N_WHATEVER_MASSES": {
+  "N_EARTH_MASSES": {
     "description": "",
-    "message": "%mass{f.3} %units kütle"
+    "message": "%mass{f.3} Dünya kütlesi"
   },
-  "N_WHATEVER_RADII": {
+  "N_EARTH_RADII": {
+    "description": "Used in system info view. E.g.: \"0.17 Earth radii (118235 km)\"",
+    "message": "%radius{f.3} Dünya yarıçapı (%radkm{f.0} km)"
+  },
+  "N_SOLAR_MASSES": {
+    "description": "",
+    "message": "%mass{f.3} Güneş kütlesi"
+  },
+  "N_SOLAR_RADII": {
     "description": "Used in system info view. E.g. for Barnard's star: \"0.17 Solar radii (118235 km)\"",
-    "message": "%radius{f.3} %units yarıçap (%radkm{f.0} km)"
+    "message": "%radius{f.3} Güneş yarıçapı (%radkm{f.0} km)"
   },
   "N_YEARS": {
     "description": "",
@@ -1081,7 +1061,15 @@
   },
   "O2_ATMOSPHERE": {
     "description": "",
-    "message": "\" Oksijen atmosfer\""
+    "message": "oksijen atmosfer"
+  },
+  "OBJECT_INFO": {
+    "description": "Originally for use as a window title and a button tooltip in the system map",
+    "message": "Cisim bilgisi"
+  },
+  "OCEANICMOON": {
+    "description": "",
+    "message": "\" okyanus uydusu\""
   },
   "OCEANICWORLD": {
     "description": "",
@@ -1227,13 +1215,17 @@
     "description": "",
     "message": "Yeniden başlat"
   },
-  "RESET_ORIENTATION_AND_ZOOM": {
-    "description": "",
-    "message": "Yönelim ve Yakınlaştırmayı Sıfırla"
-  },
   "ROBOTS": {
     "description": "",
     "message": "Robotlar"
+  },
+  "ROCKY_MOON": {
+    "description": "",
+    "message": "\" kayalık uydu\""
+  },
+  "ROCKY_MOON_CONTAINING_SOME_LIQUIDS": {
+    "description": "",
+    "message": "\" biraz sıvı barındıran kayalık bir uydu,\""
   },
   "ROCKY_PLANET": {
     "description": "",
@@ -1351,6 +1343,10 @@
     "description": "",
     "message": "Düşük itiş güç seviyesini %%%power olarak ayarlayın"
   },
+  "SET_MAXIMUM_SPEED_LIMIT": {
+    "description": "Speed limiter tooltip.",
+    "message": "Maksimum hız limitini ayarla"
+  },
   "SET_NAVTARGET_TO": {
     "description": "",
     "message": "Navigasyon hedefini seç:"
@@ -1416,7 +1412,7 @@
     "message": "Köleler"
   },
   "SMALL": {
-    "description": "",
+    "description": "Adjective used to describe the size of an object.",
     "message": "Küçük"
   },
   "SMALL_GAS_GIANT": {
@@ -1435,10 +1431,6 @@
     "description": "",
     "message": "Sosyal demokrasi"
   },
-  "SOLAR": {
-    "description": "",
-    "message": "Güneş"
-  },
   "SOME_ESTABLISHED_MINING": {
     "description": "",
     "message": "Bazı organize madencilik çalışmaları."
@@ -1449,7 +1441,7 @@
   },
   "SPEED_CONTROL_MODE": {
     "description": "",
-    "message": "Hız kontrol"
+    "message": "Hız kontrol modu"
   },
   "STABLE_SYSTEM_WITH_N_MAJOR_BODIES_STARPORTS": {
     "description": "",
@@ -1633,7 +1625,7 @@
   },
   "S_ATMOSPHERE": {
     "description": "",
-    "message": "\" Sülfürik atmosfer\""
+    "message": "sülfürik atmosfer"
   },
   "TAKEOFF": {
     "description": "",
@@ -1645,7 +1637,7 @@
   },
   "TENUOUS": {
     "description": "atmosphere thickness",
-    "message": "zayıf"
+    "message": "incecik bir "
   },
   "TEXTILES": {
     "description": "",
@@ -1653,11 +1645,11 @@
   },
   "THICK": {
     "description": "",
-    "message": "kalın"
+    "message": "\"kalın \""
   },
   "THIN": {
     "description": "",
-    "message": "ince"
+    "message": "\"ince \""
   },
   "THRIVING_OUTDOOR_WORLD": {
     "description": "",
@@ -1692,7 +1684,7 @@
     "message": "Zaman noktası:"
   },
   "TINY": {
-    "description": "",
+    "description": "Adjective used to describe the size of an object.",
     "message": "Minik"
   },
   "TOGGLE_EQUIPMENT_VIEW": {
@@ -1702,10 +1694,6 @@
   "TOGGLE_HUD_MODE": {
     "description": "",
     "message": "HUD biçimini değiştir"
-  },
-  "TOGGLE_LUA_CONSOLE": {
-    "description": "",
-    "message": "Lua konsolunu aç/kapa"
   },
   "TOGGLE_RADAR_MODE": {
     "description": "",
@@ -1755,9 +1743,21 @@
     "description": "Duration unit: one 24-hour day",
     "message": "g"
   },
+  "UNIT_EARTH_GRAVITY": {
+    "description": "Acceleration unit: one earth gravity (g)",
+    "message": "g"
+  },
+  "UNIT_GIGATONNES": {
+    "description": "Mass unit: one gigatonne",
+    "message": "Gt"
+  },
   "UNIT_HOURS": {
     "description": "Duration unit: one 60-minute hour",
     "message": "s"
+  },
+  "UNIT_KILOGRAMS": {
+    "description": "Mass unit: one kilogram",
+    "message": "kg"
   },
   "UNIT_KILOMETERS": {
     "description": "Distance unit: one kilometer",
@@ -1767,9 +1767,17 @@
     "description": "Speed unit: one kilometer per second",
     "message": "km/s"
   },
+  "UNIT_KILOTONNES": {
+    "description": "Mass unit: one kilotonne",
+    "message": "kt"
+  },
   "UNIT_LY": {
     "description": "Distance unit: a light year",
     "message": "ıy"
+  },
+  "UNIT_MEGATONNES": {
+    "description": "Mass unit: one megatonne",
+    "message": "Mt"
   },
   "UNIT_METERS": {
     "description": "Distance unit: one meter",
@@ -1791,9 +1799,21 @@
     "description": "Duration unit: one 60-second minute",
     "message": "dk"
   },
+  "UNIT_PETATONNES": {
+    "description": "Mass unit: one petatonne",
+    "message": "Pt"
+  },
+  "UNIT_PRESSURE_ATMOSPHERES": {
+    "description": "Pressure unit: one earth atmosphere (atm)",
+    "message": "atm"
+  },
   "UNIT_SECONDS": {
     "description": "Duration unit: one second",
     "message": "sn"
+  },
+  "UNIT_TERATONNES": {
+    "description": "Mass unit: one teratonne",
+    "message": "Tt"
   },
   "UNIT_TONNES": {
     "description": "Mass unit: one tonne (t)",
@@ -1821,7 +1841,7 @@
   },
   "VERY_DENSE": {
     "description": "",
-    "message": "çok yoğun"
+    "message": "\"çok yoğun \""
   },
   "VERY_LARGE_GAS_GIANT": {
     "description": "",
@@ -1859,21 +1879,13 @@
     "description": "",
     "message": "Beyaz cüce yıldız kalıntısı"
   },
-  "WITH_A": {
+  "WITH": {
     "description": "",
     "message": "\" ile \""
   },
   "WITH_NO_SIGNIFICANT_ATMOSPHERE": {
     "description": "",
     "message": "\" belli bir atmosferi yok\""
-  },
-  "X": {
-    "description": "keybinding: x axis",
-    "message": "X"
-  },
-  "Y": {
-    "description": "keybinding: y axis",
-    "message": "Y"
   },
   "YAW": {
     "description": "",
@@ -1890,10 +1902,6 @@
   "YOUNG_FARMING_COLONY": {
     "description": "",
     "message": "Genç tarım kolonisi."
-  },
-  "Z": {
-    "description": "keybinding: z axis",
-    "message": "Z"
   },
   "ZOOM_IN": {
     "description": "",

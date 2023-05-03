@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _UTILS_H
@@ -61,24 +61,6 @@ inline void DebugMsg(const char *message, Args... args)
 	Log::LogOld(Log::Severity::Debug, fmt::sprintf(message, args...));
 }
 
-// Helper for timing functions with multiple stages
-// Used on a branch to help time loading.
-struct MsgTimer {
-	MsgTimer() { mTimer.Start(); }
-	~MsgTimer() {}
-
-	void Mark(const char *identifier)
-	{
-		mTimer.SoftStop();
-		const double lastTiming = mTimer.avgms();
-		mTimer.SoftReset();
-		Output("(%lf) avgms in %s\n", lastTiming, identifier);
-	}
-
-protected:
-	Profiler::Timer mTimer;
-};
-
 std::string string_join(std::vector<std::string> &v, std::string sep);
 std::string format_date(double time);
 std::string format_date_only(double time);
@@ -109,78 +91,97 @@ static inline Sint64 isqrt(fixed v)
 	return ret;
 }
 
-namespace Graphics {
-	struct ScreendumpState;
-}
-
-void write_screenshot(const Graphics::ScreendumpState &sd, const char *destFile);
-
 // find string in bigger string, ignoring case
 const char *pi_strcasestr(const char *haystack, const char *needle);
 
-inline bool starts_with(const char *s, const char *t)
+inline bool starts_with(const std::string_view s, const std::string_view t)
 {
-	assert(s && t);
-	while ((*s == *t) && *t) {
-		++s;
-		++t;
-	}
-	return (*t == '\0');
+	if (s.size() < t.size())
+		return false;
+	return memcmp(s.data(), t.data(), t.size()) == 0;
 }
 
-inline bool starts_with(const std::string &s, const char *t)
+inline bool ends_with(const std::string_view s, const std::string_view t)
 {
-	assert(t);
-	return starts_with(s.c_str(), t);
+	if (s.size() < t.size())
+		return false;
+
+	return memcmp(s.data() + (s.size() - t.size()), t.data(), t.size()) == 0;
 }
 
-inline bool starts_with(const std::string &s, const std::string &t)
+inline bool starts_with_ci(const std::string_view s, const std::string_view t)
 {
-	return starts_with(s.c_str(), t.c_str());
-}
+	if (s.size() < t.size())
+		return false;
 
-inline bool ends_with(const char *s, size_t ns, const char *t, size_t nt)
-{
-	return (ns >= nt) && (memcmp(s + (ns - nt), t, nt) == 0);
-}
+	for (size_t i = 0; i < t.size(); i++)
+		if (tolower(s.data()[i]) != tolower(t.data()[i]))
+			return false;
 
-inline bool ends_with(const char *s, const char *t)
-{
-	return ends_with(s, strlen(s), t, strlen(t));
-}
-
-inline bool ends_with(const std::string &s, const char *t)
-{
-	return ends_with(s.c_str(), s.size(), t, strlen(t));
-}
-
-inline bool ends_with(const std::string &s, const std::string &t)
-{
-	return ends_with(s.c_str(), s.size(), t.c_str(), t.size());
-}
-
-inline bool ends_with_ci(const char *s, size_t ns, const char *t, size_t nt)
-{
-	if (ns < nt) return false;
-	s += (ns - nt);
-	for (size_t i = 0; i < nt; i++)
-		if (tolower(*s++) != tolower(*t++)) return false;
 	return true;
 }
 
-inline bool ends_with_ci(const char *s, const char *t)
+inline bool ends_with_ci(const std::string_view s, const std::string_view t)
 {
-	return ends_with_ci(s, strlen(s), t, strlen(t));
+	if (s.size() < t.size())
+		return false;
+
+	for (int64_t i = t.size(); i > 0; i--)
+		if (tolower(s.data()[s.size() - i]) != tolower(t.data()[t.size() - i]))
+			return false;
+
+	return true;
 }
 
-inline bool ends_with_ci(const std::string &s, const char *t)
+inline bool compare_ci(const std::string_view s, const std::string_view t)
 {
-	return ends_with_ci(s.c_str(), s.size(), t, strlen(t));
+	if (s.size() != t.size())
+		return false;
+
+	for (size_t i = 0; i < s.size(); i++)
+		if (tolower(s.data()[i]) != tolower(t.data()[i]))
+			return false;
+
+	return true;
 }
 
-inline bool ends_with_ci(const std::string &s, const std::string &t)
+inline std::string_view read_line(std::string_view &s)
 {
-	return ends_with_ci(s.c_str(), s.size(), t.c_str(), t.size());
+	if (s.empty())
+		return {};
+
+	std::string_view out = s;
+
+	size_t end = s.find_first_of("\r\n");
+	if (end == std::string_view::npos) {
+		s = {};
+		return out;
+	}
+
+	out = { s.data(), end };
+
+	size_t start = s.find_first_not_of("\r\n", end);
+	if (start == std::string_view::npos) {
+		s = {};
+		return out;
+	}
+
+	s.remove_prefix(start);
+	return out;
+}
+
+inline std::string_view strip_spaces(std::string_view &s)
+{
+	if (s.empty())
+		return s;
+
+	size_t start = s.find_first_not_of(" \t\r\n\v");
+	if (start == std::string::npos)
+		return {};
+
+	size_t end = s.find_last_not_of(" \t\r\n\v");
+
+	return s.substr(start, end);
 }
 
 static inline size_t SplitSpec(const std::string &spec, std::vector<int> &output)
@@ -292,6 +293,35 @@ static inline Uint32 ceil_pow2(Uint32 v)
 	v++;
 	return v;
 }
+
+// An adaptor for automagic reverse range-for iteration of containers
+// One might be able to specialize this for raw arrays, but that's beyond the
+// point of its use-case.
+// One might also point out that this is surely more work to code than simply
+// writing an explicit iterator loop, to which I say: bah humbug!
+template <typename T>
+struct reverse_container_t {
+	using iterator = typename T::reverse_iterator;
+	using const_iterator = typename T::const_reverse_iterator;
+
+	using value_type = typename std::remove_reference<T>::type;
+
+	reverse_container_t(value_type &ref) :
+		ref(ref) {}
+
+	iterator begin() { return ref.rbegin(); }
+	const_iterator begin() const { return ref.crbegin(); }
+
+	iterator end() { return ref.rend(); }
+	const_iterator end() const { return ref.crend(); }
+
+private:
+	value_type &ref;
+};
+
+// Use this function for automatic template parameter deduction
+template <typename T>
+reverse_container_t<T> reverse_container(T &ref) { return reverse_container_t<T>(ref); }
 
 void hexdump(const unsigned char *buf, int bufsz);
 

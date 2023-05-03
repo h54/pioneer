@@ -13,6 +13,7 @@ The Pioneer Developers are:
 * Alexander Noack
 * Andrew Cook
 * Andrew Copland
+* Andrzej Zięba
 * Anton Korzun
 * Antti Salonen
 * Arda Güler
@@ -45,10 +46,13 @@ The Pioneer Developers are:
 * Enric Morales
 * Florian Schmidt
 * Fran Morton
+* Francesco Corrado
 * Frank Klippenberg
 * Gareth Allnutt
 * Gaz Davidson
+* Georgi Georgiev
 * Gernot
+* Gliese852
 * HeadHunter
 * Jan Olsina
 * jmf
@@ -78,6 +82,7 @@ The Pioneer Developers are:
 * Nic
 * Nick Wanstall
 * Oleg Ovcharenko
+* Oskar Wallgren aka zonkmachine
 * Paul Cercueil
 * Paul Mahol
 * Paul Roberts
@@ -121,7 +126,7 @@ The Pioneer Developers are:
 Licensing
 =========
 
-Copyright © 2008-2020 Pioneer Developers
+Copyright © 2008-2023 Pioneer Developers
 Portions copyright © 2013-2014 Meteoric Games Ltd.
 
 Pioneer's core code and extension modules are licensed under the terms of the
@@ -135,13 +140,17 @@ Pioneer includes the following third-party software:
 
   Lua 5.2.1 by R. Ierusalimschy, L. H. de Figueiredo & W. Celes,
   Copyright (C) 1994-2012 Lua.org, PUC-Rio
-  Licensed under the MIT licence (see contrib/lua/lua.h)
+  Licensed under the MIT licence (see contrib/lua/src/lua.h)
 
   GLEW: The OpenGL Extension Wrangler
   Copyright (C) 2002-2008, Milan Ikits <milan ikits[]ieee org>
   Copyright (C) 2002-2008, Marcelo E. Magallon <mmagallo[]debian org>
   Copyright (C) 2002, Lev Povalahev
   Licensed under the Modified BSD licence (see licenses/GLEW.txt)
+
+  atomic_queue - C++ lockless queue
+  Copyright (c) 2019 Maxim Egorushkin
+  Licensed under the MIT license (see contrib/atomic_queue/LICENSE)
 
   argh
   Copyright (C) 2016, Adi Shavit
@@ -184,6 +193,14 @@ Pioneer includes the following third-party software:
 
   fmt - open-source formatting library for C++
   Copyright (c) 2012 - present, Victor Zverovich
+  Licensed under the MIT license
+
+  doctest - The fastest feature-rich C++11/14/17/20 single-header testing framework
+  Copyright (c) 2016-2021 Viktor Kirilov
+  Licensed under the MIT license
+
+  nanosockets - Lightweight UDP sockets abstraction for rapid implementation of message-oriented protocols
+  Copyright (c) 2019 Stanislav Denisov
   Licensed under the MIT license
 
   High Performance C++ Profiler
@@ -230,6 +247,15 @@ Pioneer includes the following third-party software:
   http://www.spitzer.caltech.edu/images/2353-sig05-010a-Milky-Way-Bar
   Credit: NASA/JPL-Caltech/R. Hurt (SSC)
   See licenses/Image Use Policy - NASA Spitzer Space Telescope.html
+
+  Milky Way panorama ("The star map in galactic coordinates")
+  Modified version (dimmed stars, converted to cube map dds)
+  https://svs.gsfc.nasa.gov/4851
+  Credit:
+    Ernie Wright (USRA): Lead Animator
+    Laurence Schuler (ADNET): Technical Support
+    Ian Jones (ADNET): Technical Support
+  Public domain: https://svs.gsfc.nasa.gov/help/ under "Copyright and Credit Information"
 
 Acknowledgements
 ================

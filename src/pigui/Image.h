@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef PIGUI_IMAGE_H
@@ -8,13 +8,13 @@
 #include "SmartPtr.h"
 #include "graphics/TextureBuilder.h"
 
-namespace PiGUI {
+namespace PiGui {
 
 	class Image : public RefCounted {
 	public:
 		explicit Image(const std::string &filename);
 
-		Uint32 GetId();
+		void *GetImTextureID();
 		vector2f GetSize();
 		vector2f GetUv();
 
@@ -22,6 +22,6 @@ namespace PiGUI {
 		RefCountedPtr<Graphics::Texture> m_texture;
 	};
 
-} // namespace PiGUI
+} // namespace PiGui
 
 #endif

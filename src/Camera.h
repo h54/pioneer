@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _CAMERA_H
@@ -13,7 +13,6 @@
 
 class Body;
 class Frame;
-class ShipCockpit;
 
 namespace Graphics {
 	class Material;
@@ -32,14 +31,23 @@ public:
 	float GetZNear() const { return m_zNear; }
 	float GetZFar() const { return m_zFar; }
 
+	// Set the field of view of this camera context.
+	// Should be called before ApplyDrawTransforms.
+	void SetFovAng(float newAng);
+
 	// frame to position the camera relative to
 	void SetCameraFrame(FrameId frame) { m_frame = frame; }
+	// return the parent frame of this camera
+	FrameId GetCameraFrame() const { return m_frame; }
 
 	// camera position relative to the frame origin
 	void SetCameraPosition(const vector3d &pos) { m_pos = pos; }
 
 	// camera orientation relative to the frame origin
 	void SetCameraOrient(const matrix3x3d &orient) { m_orient = orient; }
+
+	const vector3d GetCameraPos() const { return m_pos; }
+	const matrix3x3d &GetCameraOrient() const { return m_orient; }
 
 	// get the frustum. use for projection
 	const Graphics::Frustum &GetFrustum() const { return m_frustum; }
@@ -48,11 +56,7 @@ public:
 	void BeginFrame();
 	void EndFrame();
 
-	// only returns a valid frameID between BeginFrame and EndFrame
-	FrameId GetCamFrame() const
-	{
-		return m_camFrame;
-	}
+	FrameId GetTempFrame() const { return m_camFrame; }
 
 	// apply projection and modelview transforms to the renderer
 	void ApplyDrawTransforms(Graphics::Renderer *r);
@@ -80,7 +84,7 @@ public:
 	const CameraContext *GetContext() const { return m_context.Get(); }
 
 	void Update();
-	void Draw(const Body *excludeBody = nullptr, ShipCockpit *cockpit = nullptr);
+	void Draw(const Body *excludeBody = nullptr);
 
 	// camera-specific light with attached source body
 	class LightSource {

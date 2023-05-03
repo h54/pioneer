@@ -31,13 +31,21 @@
     "description": "",
     "message": "Állati hús"
   },
+  "AN_AR_ATMOSPHERE": {
+    "description": "",
+    "message": "argon légkörrel"
+  },
+  "AN_O2_ATMOSPHERE": {
+    "description": "",
+    "message": "oxigén légkörrel"
+  },
   "APOAPSIS_DISTANCE": {
     "description": "",
     "message": "Apoapszis"
   },
   "AR_ATMOSPHERE": {
     "description": "",
-    "message": "\" argon\""
+    "message": "argon légkörrel"
   },
   "ASTEROID": {
     "description": "",
@@ -79,9 +87,37 @@
     "description": "",
     "message": "Tengelydőlés"
   },
+  "A_CH4_ATMOSPHERE": {
+    "description": "",
+    "message": "metán légkörrel"
+  },
+  "A_CO2_ATMOSPHERE": {
+    "description": "",
+    "message": "széndioxid légkörrel"
+  },
+  "A_CO_ATMOSPHERE": {
+    "description": "",
+    "message": "szénmonoxid légkörrel"
+  },
   "A_FEW_THOUSAND": {
     "description": "regarding population",
     "message": "Csak pár ezer"
+  },
+  "A_HE_ATMOSPHERE": {
+    "description": "",
+    "message": "hélium légkörrel"
+  },
+  "A_H_ATMOSPHERE": {
+    "description": "",
+    "message": "hidrogén légkörrel"
+  },
+  "A_N_ATMOSPHERE": {
+    "description": "",
+    "message": "nitrogén légkörrel"
+  },
+  "A_S_ATMOSPHERE": {
+    "description": "",
+    "message": "kénes légkörrel"
   },
   "BATTLE_WEAPONS": {
     "description": "",
@@ -102,10 +138,6 @@
   "BROWN_DWARF": {
     "description": "",
     "message": "Barna törpe objektum"
-  },
-  "BUTTON": {
-    "description": "",
-    "message": "\" Gomb \""
   },
   "CAMERA_BOTTOM_VIEW": {
     "description": "",
@@ -173,27 +205,11 @@
   },
   "CH4_ATMOSPHERE": {
     "description": "",
-    "message": "\" metán\""
-  },
-  "CLEARANCE_ALREADY_GRANTED_BAY_N": {
-    "description": "",
-    "message": "Engedély már megadva. Haladj a(z) %bay leszállóöböl felé."
-  },
-  "CLEARANCE_DENIED_NO_BAYS": {
-    "description": "",
-    "message": "Kérés elutasítva. Nincs szabad leszállóhelyünk."
-  },
-  "CLEARANCE_DENIED_TOO_FAR": {
-    "description": "Shown if player requests docking too far away from station",
-    "message": "Engedély megtagadva. Hajó túl távol van az azonosításhoz."
-  },
-  "CLEARANCE_GRANTED_BAY_N": {
-    "description": "",
-    "message": "Engedély megadva. Haladj a(z) %bay leszállóöböl felé."
+    "message": "metán légkörrel"
   },
   "CO2_ATMOSPHERE": {
     "description": "",
-    "message": "\" szén-dioxid\""
+    "message": "szénmonoxid légkörrel"
   },
   "COMMA_HIGHLY_VOLCANIC": {
     "description": "",
@@ -212,7 +228,7 @@
     "message": "#fff%system#fff rendszer kereskedelmi elemzése"
   },
   "COMMS": {
-    "description": "",
+    "description": "Title of communications log window, on world view",
     "message": "Kommunikáció"
   },
   "COMMUNIST": {
@@ -289,7 +305,7 @@
   },
   "CO_ATMOSPHERE": {
     "description": "",
-    "message": "\" szén-monoxid\""
+    "message": "szénmonoxid légkörrel"
   },
   "CTRL": {
     "description": "Ctrl key on keyboard",
@@ -327,10 +343,6 @@
     "description": "",
     "message": "Célállomás"
   },
-  "DIRECTION": {
-    "description": "Direction",
-    "message": "\" Irány \""
-  },
   "DISTANCE_LY": {
     "description": "",
     "message": "Távolság: %distance{f.2} fényév"
@@ -342,10 +354,6 @@
   "DOCKING": {
     "description": "",
     "message": "Dokkol"
-  },
-  "DOCKING_CLEARANCE_EXPIRED": {
-    "description": "",
-    "message": "Dokkolási engedély lejárt. Ha dokkolni akarsz, újra engedélyt kell kérned."
   },
   "DOWNGRADING_ALERT_STATUS": {
     "description": "",
@@ -363,9 +371,21 @@
     "description": "",
     "message": "Függőleges vonalak rajzolása"
   },
-  "EARTH": {
+  "DWARF_PLANET_CONTAINING_LIQUID_WATER": {
     "description": "",
-    "message": "Föld"
+    "message": "Folyékony vízzel rendelkező törpebolygó"
+  },
+  "DWARF_PLANET_CONTAINING_SOME_LIQUIDS": {
+    "description": "",
+    "message": "Sziklás kisbolygó felszínén némi folyadékkal, "
+  },
+  "DWARF_PLANET_MOSTLY_COVERED_IN_ICE": {
+    "description": "",
+    "message": "Nagyrészt jéggel borított kisbolygó"
+  },
+  "DWARF_PLANET_TERRESTRIAL": {
+    "description": "",
+    "message": "Kisbolygó"
   },
   "EARTH_FEDERATION_COLONIAL_RULE": {
     "description": "",
@@ -495,10 +515,6 @@
     "description": "",
     "message": "Teljesen kapitalista - kormányintézkedések nélkül"
   },
-  "HAT": {
-    "description": "Hat switch: Is the top button on a joystick",
-    "message": "\" Hat\""
-  },
   "HEADING_LOCK_ANTINORMAL": {
     "description": "Autopilot direction (perpendicular, down), relative to plane of orbit",
     "message": "Antinormál irány tartása"
@@ -533,7 +549,7 @@
   },
   "HE_ATMOSPHERE": {
     "description": "",
-    "message": "\" hélium\""
+    "message": "hélium légkörrel"
   },
   "HIGHLY_VOLCANIC": {
     "description": "",
@@ -597,7 +613,15 @@
   },
   "H_ATMOSPHERE": {
     "description": "",
-    "message": "\" hidrogén\""
+    "message": "hidrogén légkörrel"
+  },
+  "ICE_DWARF_PLANET": {
+    "description": "",
+    "message": "Jeges kisbolygó"
+  },
+  "ICE_MOON": {
+    "description": "",
+    "message": "\" jég hold\""
   },
   "ICE_WORLD": {
     "description": "",
@@ -650,10 +674,6 @@
   "JOYSTICK_INPUT": {
     "description": "",
     "message": "Joystick bevitel"
-  },
-  "JOY_AXIS": {
-    "description": "Regarding joystick",
-    "message": "%{sign}%joyname %axis tengely"
   },
   "L4L5_DISPLAY_MODE_TOGGLE": {
     "description": "Either show L4/L5 points or don't",
@@ -751,76 +771,12 @@
     "description": "",
     "message": "Manuális irányítás"
   },
-  "MAP_LOCK_HYPERSPACE_TARGET": {
-    "description": "",
-    "message": "Hiperűr cél rögzítése"
-  },
-  "MAP_TOGGLE_INFO_PANEL": {
-    "description": "",
-    "message": "Info panel "
-  },
-  "MAP_TOGGLE_SELECTION_FOLLOW_VIEW": {
-    "description": "",
-    "message": "Kijelölés követi a nézetet"
-  },
-  "MAP_VIEW_ROTATE_DOWN": {
-    "description": "",
-    "message": "Nézet forgatása le"
-  },
-  "MAP_VIEW_ROTATE_LEFT": {
-    "description": "",
-    "message": "Nézet forgatása balra"
-  },
-  "MAP_VIEW_ROTATE_RIGHT": {
-    "description": "",
-    "message": "Nézet forgatása jobbra"
-  },
-  "MAP_VIEW_ROTATE_UP": {
-    "description": "",
-    "message": "Nézet forgatása fel"
-  },
-  "MAP_VIEW_SHIFT_BACKWARD": {
-    "description": "",
-    "message": "Hátsó nézet"
-  },
-  "MAP_VIEW_SHIFT_DOWN": {
-    "description": "",
-    "message": "Le nézet"
-  },
-  "MAP_VIEW_SHIFT_FORWARD": {
-    "description": "",
-    "message": "Előre nézet"
-  },
-  "MAP_VIEW_SHIFT_LEFT": {
-    "description": "",
-    "message": "Bal nézet"
-  },
-  "MAP_VIEW_SHIFT_RIGHT": {
-    "description": "",
-    "message": "Jobb nézet"
-  },
-  "MAP_VIEW_SHIFT_UP": {
-    "description": "",
-    "message": "Fel nézet"
-  },
-  "MAP_WARP_TO_CURRENT_SYSTEM": {
-    "description": "",
-    "message": "Ugrás a jelenlegi rendszerbe"
-  },
-  "MAP_WARP_TO_HYPERSPACE_TARGET": {
-    "description": "",
-    "message": "Ugrás hiperűr célponthoz"
-  },
-  "MAP_WARP_TO_SELECTED_SYSTEM": {
-    "description": "",
-    "message": "Ugrás a kiválasztott rendszerbe"
-  },
   "MASS": {
     "description": "",
     "message": "Tömeg"
   },
   "MASSIVE": {
-    "description": "",
+    "description": "Adjective used to describe the size of an object.",
     "message": "Óriási"
   },
   "MASS_N_TONNES": {
@@ -830,6 +786,10 @@
   "MEDICINES": {
     "description": "",
     "message": "Gyógyszerek"
+  },
+  "MEDIUM": {
+    "description": "Adjective used to describe the size of an object.",
+    "message": "Közepes"
   },
   "MEDIUM_GAS_GIANT": {
     "description": "",
@@ -947,6 +907,14 @@
     "description": "",
     "message": "Szep"
   },
+  "MOON_CONTAINING_LIQUID_WATER": {
+    "description": "",
+    "message": "\" vízzel rendelkező hold\""
+  },
+  "MOON_WITH_SOME_ICE": {
+    "description": "",
+    "message": "\" némi jéggel borított hold\""
+  },
   "NAME_OBJECT": {
     "description": "For an item or object",
     "message": "Név"
@@ -970,6 +938,10 @@
   "NERVE_GAS": {
     "description": "",
     "message": "Ideggáz"
+  },
+  "NONE": {
+    "description": "To indicate the absence of something",
+    "message": "<semmi>"
   },
   "NOT_FOUND": {
     "description": "searching star system in sector view",
@@ -1049,7 +1021,7 @@
   },
   "N_ATMOSPHERE": {
     "description": "",
-    "message": "\" nitrogén\""
+    "message": "nitrogén légkörrel"
   },
   "N_CELSIUS": {
     "description": "",
@@ -1067,13 +1039,21 @@
     "description": "",
     "message": "%days{f.1} földi nap"
   },
-  "N_WHATEVER_MASSES": {
+  "N_EARTH_MASSES": {
     "description": "",
-    "message": "%mass{f.3} %units tömeg"
+    "message": "%mass{f.3} Föld-tömeg"
   },
-  "N_WHATEVER_RADII": {
+  "N_EARTH_RADII": {
+    "description": "Used in system info view. E.g.: \"0.17 Earth radii (118235 km)\"",
+    "message": "%radius{f.3} Föld-sugár (%radkm{f.0} km)"
+  },
+  "N_SOLAR_MASSES": {
+    "description": "",
+    "message": "%mass{f.3} Nap-tömeg"
+  },
+  "N_SOLAR_RADII": {
     "description": "Used in system info view. E.g. for Barnard's star: \"0.17 Solar radii (118235 km)\"",
-    "message": "%radius{f.3} %units sugár (%radkm{f.0} km)"
+    "message": "%radius{f.3} Nap-sugár (%radkm{f.0} km)"
   },
   "N_YEARS": {
     "description": "",
@@ -1081,7 +1061,15 @@
   },
   "O2_ATMOSPHERE": {
     "description": "",
-    "message": "\" oxigén\""
+    "message": "oxigén légkörrel"
+  },
+  "OBJECT_INFO": {
+    "description": "Originally for use as a window title and a button tooltip in the system map",
+    "message": "Objektum információ"
+  },
+  "OCEANICMOON": {
+    "description": "",
+    "message": "\" óceáni hold\""
   },
   "OCEANICWORLD": {
     "description": "",
@@ -1227,13 +1215,17 @@
     "description": "",
     "message": "Alaphelyzet"
   },
-  "RESET_ORIENTATION_AND_ZOOM": {
-    "description": "",
-    "message": "Nézet alaphelyzetbe"
-  },
   "ROBOTS": {
     "description": "",
     "message": "Robotok"
+  },
+  "ROCKY_MOON": {
+    "description": "",
+    "message": "\" sziklás hold\""
+  },
+  "ROCKY_MOON_CONTAINING_SOME_LIQUIDS": {
+    "description": "",
+    "message": "\" sziklás hold felszínén némi folyadékkal,\""
   },
   "ROCKY_PLANET": {
     "description": "",
@@ -1351,6 +1343,10 @@
     "description": "",
     "message": "Tolóerő korlátozása %power%%-ra."
   },
+  "SET_MAXIMUM_SPEED_LIMIT": {
+    "description": "Speed limiter tooltip.",
+    "message": "Maximális sebesség korlátozása"
+  },
   "SET_NAVTARGET_TO": {
     "description": "",
     "message": "Navigációs cél:"
@@ -1416,7 +1412,7 @@
     "message": "Rabszolgák"
   },
   "SMALL": {
-    "description": "",
+    "description": "Adjective used to describe the size of an object.",
     "message": "Kicsi"
   },
   "SMALL_GAS_GIANT": {
@@ -1434,10 +1430,6 @@
   "SOCIAL_DEMOCRACY": {
     "description": "",
     "message": "Szociális demokrácia"
-  },
-  "SOLAR": {
-    "description": "",
-    "message": "Nap"
   },
   "SOME_ESTABLISHED_MINING": {
     "description": "",
@@ -1633,7 +1625,7 @@
   },
   "S_ATMOSPHERE": {
     "description": "",
-    "message": "\" kén\""
+    "message": "kénes légkörrel"
   },
   "TAKEOFF": {
     "description": "",
@@ -1645,7 +1637,7 @@
   },
   "TENUOUS": {
     "description": "atmosphere thickness",
-    "message": "ritkás"
+    "message": "\"minimális \""
   },
   "TEXTILES": {
     "description": "",
@@ -1653,11 +1645,11 @@
   },
   "THICK": {
     "description": "",
-    "message": "vastag"
+    "message": "\"vastag \""
   },
   "THIN": {
     "description": "",
-    "message": "vékony"
+    "message": "\"vékony \""
   },
   "THRIVING_OUTDOOR_WORLD": {
     "description": "",
@@ -1692,7 +1684,7 @@
     "message": "Időpont:"
   },
   "TINY": {
-    "description": "",
+    "description": "Adjective used to describe the size of an object.",
     "message": "Apró"
   },
   "TOGGLE_EQUIPMENT_VIEW": {
@@ -1702,10 +1694,6 @@
   "TOGGLE_HUD_MODE": {
     "description": "",
     "message": "HUD mód váltás"
-  },
-  "TOGGLE_LUA_CONSOLE": {
-    "description": "",
-    "message": "Lua konzol"
   },
   "TOGGLE_RADAR_MODE": {
     "description": "",
@@ -1755,9 +1743,21 @@
     "description": "Duration unit: one 24-hour day",
     "message": "n"
   },
+  "UNIT_EARTH_GRAVITY": {
+    "description": "Acceleration unit: one earth gravity (g)",
+    "message": "g"
+  },
+  "UNIT_GIGATONNES": {
+    "description": "Mass unit: one gigatonne",
+    "message": "Gt"
+  },
   "UNIT_HOURS": {
     "description": "Duration unit: one 60-minute hour",
     "message": "ó"
+  },
+  "UNIT_KILOGRAMS": {
+    "description": "Mass unit: one kilogram",
+    "message": "kg"
   },
   "UNIT_KILOMETERS": {
     "description": "Distance unit: one kilometer",
@@ -1767,9 +1767,17 @@
     "description": "Speed unit: one kilometer per second",
     "message": "km/s"
   },
+  "UNIT_KILOTONNES": {
+    "description": "Mass unit: one kilotonne",
+    "message": "kt"
+  },
   "UNIT_LY": {
     "description": "Distance unit: a light year",
     "message": "fé"
+  },
+  "UNIT_MEGATONNES": {
+    "description": "Mass unit: one megatonne",
+    "message": "Mt"
   },
   "UNIT_METERS": {
     "description": "Distance unit: one meter",
@@ -1791,9 +1799,21 @@
     "description": "Duration unit: one 60-second minute",
     "message": "p"
   },
+  "UNIT_PETATONNES": {
+    "description": "Mass unit: one petatonne",
+    "message": "Pt"
+  },
+  "UNIT_PRESSURE_ATMOSPHERES": {
+    "description": "Pressure unit: one earth atmosphere (atm)",
+    "message": "atm"
+  },
   "UNIT_SECONDS": {
     "description": "Duration unit: one second",
     "message": "mp"
+  },
+  "UNIT_TERATONNES": {
+    "description": "Mass unit: one teratonne",
+    "message": "Tt"
   },
   "UNIT_TONNES": {
     "description": "Mass unit: one tonne (t)",
@@ -1821,7 +1841,7 @@
   },
   "VERY_DENSE": {
     "description": "",
-    "message": "nagyon sürü"
+    "message": "\"nagyon sűrű \""
   },
   "VERY_LARGE_GAS_GIANT": {
     "description": "",
@@ -1859,21 +1879,13 @@
     "description": "",
     "message": "Fehértörpe csillagmaradvány"
   },
-  "WITH_A": {
+  "WITH": {
     "description": "",
-    "message": "\", amelynek légköre: \""
+    "message": "\" \""
   },
   "WITH_NO_SIGNIFICANT_ATMOSPHERE": {
     "description": "",
     "message": "\" számottevő atmoszféra nélkül\""
-  },
-  "X": {
-    "description": "keybinding: x axis",
-    "message": "X"
-  },
-  "Y": {
-    "description": "keybinding: y axis",
-    "message": "Y"
   },
   "YAW": {
     "description": "",
@@ -1890,10 +1902,6 @@
   "YOUNG_FARMING_COLONY": {
     "description": "",
     "message": "Fiatal farmkolónia"
-  },
-  "Z": {
-    "description": "keybinding: z axis",
-    "message": "Z"
   },
   "ZOOM_IN": {
     "description": "",

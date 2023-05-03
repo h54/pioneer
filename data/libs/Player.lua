@@ -1,4 +1,4 @@
--- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 --
@@ -7,7 +7,9 @@
 -- Functions for interacting with the Player.
 --
 
+---@class Player
 local Player = package.core["Player"]
+
 local Serializer = require 'Serializer'
 local Event = require 'Event'
 local Game = require 'Game'
@@ -75,7 +77,7 @@ end
 
 
 function CrimeRecord.Unserialize(data)
-	obj = CrimeRecord.Super().Unserialize(data)
+	local obj = CrimeRecord.Super().Unserialize(data)
 	setmetatable(obj, CrimeRecord.meta)
 	return obj
 end
@@ -279,6 +281,35 @@ end
 function Player:ClearCrimeRecordHistory (faction)
 	local forFaction = (faction and faction.id) or Game.system.faction.id
 	self.record_old[forFaction] = nil
+end
+
+--
+-- Method: GetLegalStatus
+--
+-- > local legal_status = Game.player:GetLegalStatus(faction)
+--
+-- Parameters:
+--
+--   faction - optional argument, defaults to the faction player is in.
+--
+--   legal_status - one of strings "CLEAN", "OFFENDER", "CRIMINAL", "OUTLAW",
+--	                or "FUGITIVE", mapping to translated strings in lang/ui-core
+--
+function Player:GetLegalStatus (faction)
+	local crimes, fine = self:GetCrimeOutstanding()
+	self:setprop("fine", fine)
+
+	if fine < 1 then
+		return('CLEAN')
+	elseif fine < 5500 then
+		return('OFFENDER')
+	elseif fine < 20000 then
+		return('CRIMINAL')
+	elseif fine < 100000 then
+		return('OUTLAW')
+	else
+		return('FUGITIVE')
+	end
 end
 
 --

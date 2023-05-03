@@ -12,13 +12,13 @@ AppSupportURL="{#AppUrl}"
 AppUpdatesURL="{#AppUrl}"
 AppCopyright="Copyright 2008-@BUILD_YEAR@ {#AppName} developers"
 CreateAppDir=yes
-LicenseFile="C:\projects\pioneer\licenses\GPL-3.txt"
-OutputBaseFilename=pioneer-setup
-OutputDir="C:\projects\pioneer"
+LicenseFile="@PROJECT_SOURCE_DIR@\licenses\GPL-3.txt"
+OutputBaseFilename=pioneer-@PROJECT_VERSION@-win
+OutputDir="@PROJECT_SOURCE_DIR@"
 Compression=lzma
 SolidCompression=yes
 ArchitecturesInstallIn64BitMode=x64
-DefaultDirName="@CMAKE_INSTALL_PREFIX@"
+DefaultDirName={autopf}\Pioneer
 DefaultGroupName=Pioneer
 
 [Languages]
@@ -32,18 +32,13 @@ Name: "dutch"; MessagesFile: "compiler:Languages\Dutch.isl"
 Name: "finnish"; MessagesFile: "compiler:Languages\Finnish.isl"
 Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 Name: "german"; MessagesFile: "compiler:Languages\German.isl"
-Name: "greek"; MessagesFile: "compiler:Languages\Greek.isl"
 Name: "hebrew"; MessagesFile: "compiler:Languages\Hebrew.isl"
-Name: "hungarian"; MessagesFile: "compiler:Languages\Hungarian.isl"
 Name: "italian"; MessagesFile: "compiler:Languages\Italian.isl"
 Name: "japanese"; MessagesFile: "compiler:Languages\Japanese.isl"
 Name: "norwegian"; MessagesFile: "compiler:Languages\Norwegian.isl"
 Name: "polish"; MessagesFile: "compiler:Languages\Polish.isl"
 Name: "portuguese"; MessagesFile: "compiler:Languages\Portuguese.isl"
 Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
-Name: "scottishgaelic"; MessagesFile: "compiler:Languages\ScottishGaelic.isl"
-Name: "serbiancyrillic"; MessagesFile: "compiler:Languages\SerbianCyrillic.isl"
-Name: "serbianlatin"; MessagesFile: "compiler:Languages\SerbianLatin.isl"
 Name: "slovenian"; MessagesFile: "compiler:Languages\Slovenian.isl"
 Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
 Name: "turkish"; MessagesFile: "compiler:Languages\Turkish.isl"

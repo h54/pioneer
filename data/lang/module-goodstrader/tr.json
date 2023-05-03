@@ -1,4 +1,20 @@
 {
+  "ADTITLE_0": {
+    "description": "",
+    "message": "KARGO PAZARI"
+  },
+  "ADTITLE_1": {
+    "description": "",
+    "message": "TİCARET EVİ"
+  },
+  "ADTITLE_2": {
+    "description": "",
+    "message": "TİCARET AMBARI"
+  },
+  "ADTITLE_3": {
+    "description": "",
+    "message": "MAL BORSASI"
+  },
   "GOODS_TRADER_0": {
     "description": "",
     "message": "Dürüst {name} Ürün Pazarı"

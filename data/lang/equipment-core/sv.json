@@ -59,6 +59,10 @@
     "description": "",
     "message": "Tillåter upphämtning av lastbehållare från rymden."
   },
+  "DAMAGE_PER_SHOT": {
+    "description": "Tooltip explaining weapon damage per shot",
+    "message": "Skada per skott"
+  },
   "DRIVE_CLASS1": {
     "description": "",
     "message": "Klass 1 hypermotor"
@@ -147,6 +151,18 @@
     "description": "",
     "message": "Ett elektroniskt anti-missilsystem som klarar av att förstöra vissa målsökande missiler."
   },
+  "EMPTY_SLOT": {
+    "description": "Text indicating an empty equipment slot.",
+    "message": "TOMT"
+  },
+  "EQUIPMENT_INTEGRITY": {
+    "description": "Tooltip explaining remaining equipment integrity",
+    "message": "Utrustning, skick"
+  },
+  "EQUIPMENT_WEIGHT": {
+    "description": "Tooltip explaining equipment weight",
+    "message": "Utrustning Vikt"
+  },
   "FUEL_SCOOP": {
     "description": "",
     "message": "Bränsleskopa"
@@ -191,6 +207,18 @@
     "description": "",
     "message": "Används för att spränga sönder mineralrika asteroider."
   },
+  "MININGCANNON_5MW": {
+    "description": "",
+    "message": "5MW explosiv gruvkanon"
+  },
+  "MININGCANNON_5MW_DESCRIPTION": {
+    "description": "",
+    "message": "Används för att spränga sönder mineralrika asteroider."
+  },
+  "MISSILES": {
+    "description": "Category name of missile-related equipment",
+    "message": "Missiler"
+  },
   "MISSILE_GUIDED": {
     "description": "",
     "message": "Guidad missil"
@@ -201,19 +229,35 @@
   },
   "MISSILE_SMART": {
     "description": "",
-    "message": "Smartmissil"
+    "message": "Smart missil"
   },
   "MISSILE_UNGUIDED": {
     "description": "",
-    "message": "R40 ostyrd raket"
+    "message": "R40 oguidad raket"
   },
   "MULTI_SCOOP": {
-    "description": "A ship equipment: a cargo scoop and fuel scoop combined to one",
+    "description": "A ship equipment: a cargo scoop and fuel scoop combined into one",
     "message": "Multiskopa"
   },
   "MULTI_SCOOP_DESCRIPTION": {
     "description": "",
-    "message": "Skopar både last containrar och bränsle, dock mindre effektiv än vanlig bränsleskopa"
+    "message": "Skopar både lastbehållare och bränsle, dock mindre effektiv än vanlig bränsleskopa"
+  },
+  "ORBIT_SCANNER": {
+    "description": "A ship equipment that records data of terrain, for cartography mapping/geological survey. Note: Scout Mission module reference and distinguishes between 'orbital' and 'surface' scanner types, the former scans planet from orbit, the latter from low altitude.",
+    "message": "Orbital scanner XKM-650"
+  },
+  "ORBIT_SCANNER_DESCRIPTION": {
+    "description": "tooltip",
+    "message": "Söker av planet från omloppsbana för vetenskapliga data"
+  },
+  "ORBIT_SCANNER_GOOD": {
+    "description": "A sensor used to scan planets from high altitude / orbit + model number (that's minimum km altitude)",
+    "message": "Orbital scanner XKM-1750"
+  },
+  "ORBIT_SCANNER_GOOD_DESCRIPTION": {
+    "description": "tooltip",
+    "message": "Skannar planet från omloppsbana, för vetenskapliga data, med hög upplösning och bred bländare"
   },
   "OUT_OF_SCANRANGE": {
     "description": "",
@@ -223,13 +267,9 @@
     "description": "",
     "message": "Passagerarhytt"
   },
-  "PLANETSCANNER": {
-    "description": "Scans the nearest body for resources",
-    "message": "Kropp-scan"
-  },
-  "PLANETSCANNER_DESCRIPTION": {
-    "description": "",
-    "message": "Scannar närmast kropp efter resurser"
+  "PROPULSION": {
+    "description": "Category name of propulsion-related equipment",
+    "message": "Framdrivning"
   },
   "PULSECANNON_10MW": {
     "description": "",
@@ -275,6 +315,26 @@
     "description": "",
     "message": "Återupptar scan"
   },
+  "SCOOPS": {
+    "description": "Category name of scoop-related equipment",
+    "message": "Skopor"
+  },
+  "SENSORS": {
+    "description": "Category name of sensor-related equipment",
+    "message": "Sensorer"
+  },
+  "SENSOR_MIN_ALTITUDE": {
+    "description": "",
+    "message": "Sensor min höjd"
+  },
+  "SENSOR_RESOLUTION": {
+    "description": "Resolution of e.g. optical sensor",
+    "message": "Sensorupplösning"
+  },
+  "SHIELDS": {
+    "description": "Category name of shield-related equipment",
+    "message": "Sköldar"
+  },
   "SHIELD_ENERGY_BOOSTER": {
     "description": "",
     "message": "Sköldenergiförstärkare"
@@ -289,15 +349,35 @@
   },
   "SHIELD_GENERATOR_DESCRIPTION": {
     "description": "",
-    "message": "Ger skrovet med mer skydd för varje enhet som monteras."
+    "message": "Ger skrovet mer skydd för varje enhet som monteras."
+  },
+  "SHOTS_PER_MINUTE": {
+    "description": "Tooltip explaining weapon fire rate / RPM counter",
+    "message": "Avfyringshastighet / minut"
   },
   "SMALL_PLASMA_ACCEL": {
     "description": "",
-    "message": "Liten plasmaaccellerator"
+    "message": "Liten plasmaaccelerator"
   },
   "STARTING_SCAN": {
     "description": "",
     "message": "Påbörjar scan, målavstånd är"
+  },
+  "SURFACE_SCANNER": {
+    "description": "A ship equipment that records data of terrain, for cartography mapping/geological survey. Note: Scout Mission module reference and distinguishes between 'orbital' and 'surface' scanner types, the former scans planet from orbit, the latter from low altitude. Model manufacturer name is meant to sound like a cheap brand.",
+    "message": "Surface scanner Nadir-150"
+  },
+  "SURFACE_SCANNER_DESCRIPTION": {
+    "description": "tooltip",
+    "message": "Kartografi, kartering och geologisk undersökningslogger"
+  },
+  "SURFACE_SCANNER_GOOD": {
+    "description": "A ship equipment that records data of terrain, for cartography mapping/geological survey. Note: Scout Mission module reference and distinguishes between 'orbital' and 'surface' scanner types. Model manufacturer name is meant to be associated with high quality.",
+    "message": "Surface scanner Xeiss-250"
+  },
+  "SURFACE_SCANNER_GOOD_DESCRIPTION": {
+    "description": "tooltip",
+    "message": "Högupplöst kartografi, kartering och geologisk undersökningslogger"
   },
   "TARGET_SCANNER": {
     "description": "ship equipment showing target information/stats",
@@ -331,6 +411,14 @@
     "description": "",
     "message": "Styrraketer som har blivit optimerade till att reducera effektbortfall och öka kraftutslag."
   },
+  "TOTAL_MODULE_CAPACITY": {
+    "description": "Tooltip explaining module capacity of specific slot",
+    "message": "Total Kapacitet"
+  },
+  "TOTAL_MODULE_WEIGHT": {
+    "description": "Tooltip explaining total equipped weight of specific slot",
+    "message": "Total Vikt"
+  },
   "TRADE_COMPUTER": {
     "description": "Ship equipment computing profitable commodities to trade between two systems",
     "message": "Handelsdator"
@@ -346,5 +434,13 @@
   "UNOCCUPIED_CABIN_DESCRIPTION": {
     "description": "",
     "message": "Krävs för transport av en ensam passagerare"
+  },
+  "UTILITY": {
+    "description": "Category name of utility equipment",
+    "message": "Verktyg"
+  },
+  "WEAPONS": {
+    "description": "Category name of weapon-related equipment",
+    "message": "Vapen"
   }
 }

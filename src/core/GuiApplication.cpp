@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "GuiApplication.h"
@@ -13,6 +13,7 @@
 #include "graphics/Renderer.h"
 #include "graphics/Texture.h"
 #include "pigui/PiGui.h"
+#include "profiler/Profiler.h"
 #include "utils.h"
 #include "versioningInfo.h"
 
@@ -21,11 +22,12 @@
 
 void GuiApplication::BeginFrame()
 {
+	PROFILE_SCOPED()
 #if RTT
 	m_renderer->SetRenderTarget(m_renderTarget);
 #endif
 	// TODO: render target size
-	m_renderer->SetViewport(0, 0, Graphics::GetScreenWidth(), Graphics::GetScreenHeight());
+	m_renderer->SetViewport({ 0, 0, Graphics::GetScreenWidth(), Graphics::GetScreenHeight() });
 	m_renderer->BeginFrame();
 }
 
@@ -61,10 +63,12 @@ void GuiApplication::DrawRenderTarget()
 
 void GuiApplication::EndFrame()
 {
+	PROFILE_SCOPED()
 #if RTT
 	DrawRenderTarget();
 #endif
 
+	m_renderer->FlushCommandBuffers();
 	m_renderer->EndFrame();
 	m_renderer->SwapBuffers();
 }
@@ -102,7 +106,7 @@ Graphics::RenderTarget *GuiApplication::CreateRenderTarget(const Graphics::Setti
 	return nullptr;
 }
 
-void GuiApplication::HandleEvents()
+void GuiApplication::PollEvents()
 {
 	PROFILE_SCOPED()
 	SDL_Event event;
@@ -142,22 +146,32 @@ void GuiApplication::HandleEvents()
 			}
 		}
 
-		// TODO: virtual method dispatch for each event isn't great. Let's find a better solution
-		if (HandleEvent(event))
-			continue;
-
 		m_input->HandleSDLEvent(event);
 	}
+}
+
+void GuiApplication::DispatchEvents()
+{
+	m_input->DispatchEvents();
+}
+
+void GuiApplication::HandleEvents()
+{
+	PollEvents();
+	DispatchEvents();
 }
 
 Graphics::Renderer *GuiApplication::StartupRenderer(IniConfig *config, bool hidden)
 {
 	PROFILE_SCOPED()
+
 	// Initialize SDL
+	PROFILE_START_DESC("SDL_Init")
 	Uint32 sdlInitFlags = SDL_INIT_VIDEO | SDL_INIT_JOYSTICK;
 	if (SDL_Init(sdlInitFlags) < 0) {
 		Error("SDL initialization failed: %s\n", SDL_GetError());
 	}
+	PROFILE_STOP()
 
 	OutputVersioningInfo();
 
@@ -189,27 +203,30 @@ Graphics::Renderer *GuiApplication::StartupRenderer(IniConfig *config, bool hidd
 
 void GuiApplication::ShutdownRenderer()
 {
+	PROFILE_SCOPED()
 	m_renderTarget.reset();
-	m_renderState.reset();
 	m_renderer.reset();
 
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 
-Input *GuiApplication::StartupInput(IniConfig *config)
+Input::Manager *GuiApplication::StartupInput(IniConfig *config)
 {
-	m_input.reset(new Input(config));
+	PROFILE_SCOPED()
+	m_input.reset(new Input::Manager(config, m_renderer->GetSDLWindow()));
 
 	return m_input.get();
 }
 
 void GuiApplication::ShutdownInput()
 {
+	PROFILE_SCOPED()
 	m_input.reset();
 }
 
 PiGui::Instance *GuiApplication::StartupPiGui()
 {
+	PROFILE_SCOPED()
 	m_pigui.Reset(new PiGui::Instance());
 	m_pigui->Init(GetRenderer());
 	return m_pigui.Get();
@@ -217,6 +234,7 @@ PiGui::Instance *GuiApplication::StartupPiGui()
 
 void GuiApplication::ShutdownPiGui()
 {
+	PROFILE_SCOPED()
 	m_pigui->Uninit();
 	m_pigui.Reset();
 }

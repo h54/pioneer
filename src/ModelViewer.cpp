@@ -1,12 +1,12 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "ModelViewer.h"
 #include "FileSystem.h"
 #include "GameConfig.h"
 #include "GameSaveError.h"
-#include "KeyBindings.h"
 #include "ModManager.h"
+#include "PngWriter.h"
 #include "SDL_keycode.h"
 #include "StringF.h"
 #include "core/Log.h"
@@ -14,9 +14,12 @@
 #include "graphics/Drawables.h"
 #include "graphics/Graphics.h"
 #include "graphics/Light.h"
+#include "graphics/Material.h"
 #include "graphics/TextureBuilder.h"
+#include "graphics/Types.h"
 #include "graphics/VertexArray.h"
 #include "graphics/opengl/RendererGL.h"
+#include "lua/Lua.h"
 #include "scenegraph/Animation.h"
 #include "scenegraph/BinaryConverter.h"
 #include "scenegraph/DumpVisitor.h"
@@ -28,6 +31,7 @@
 #include <iterator>
 
 #include "Pi.h"
+#include "scenegraph/Node.h"
 
 //default options
 ModelViewer::Options::Options() :
@@ -36,15 +40,18 @@ ModelViewer::Options::Options() :
 	showDockingLocators(false),
 	showCollMesh(false),
 	showAabb(false),
+	showGeomBBox(false),
 	showShields(false),
 	showGrid(false),
+	showVerticalGrids(false),
 	showLandingPad(false),
 	showUI(true),
 	wireframe(false),
 	mouselookEnabled(false),
 	gridInterval(10.f),
 	lightPreset(0),
-	orthoView(false)
+	orthoView(false),
+	metricsWindow(false)
 {
 }
 
@@ -67,35 +74,6 @@ namespace {
 	}
 } // namespace
 
-// An adaptor for automagic reverse range-for iteration of containers
-// One might be able to specialize this for raw arrays, but that's beyond the
-// point of its use-case.
-// One might also point out that this is surely more work to code than simply
-// writing an explicit iterator loop, to which I say: bah humbug!
-template <typename T>
-struct reverse_container_t {
-	using iterator = std::reverse_iterator<typename T::iterator>;
-	using const_iterator = std::reverse_iterator<typename T::const_iterator>;
-
-	using value_type = typename std::remove_reference<T>::type;
-
-	reverse_container_t(value_type &ref) :
-		ref(ref) {}
-
-	iterator begin() { return iterator(ref.end()); }
-	const_iterator begin() const { return const_iterator(ref.cend()); }
-
-	iterator end() { return iterator(ref.begin()); }
-	const_iterator end() const { return const_iterator(ref.cbegin()); }
-
-private:
-	value_type &ref;
-};
-
-// Use this function for automatic template parameter deduction
-template <typename T>
-reverse_container_t<T> reverse_container(T &ref) { return reverse_container_t<T>(ref); }
-
 namespace ImGui {
 	bool ColorEdit3(const char *label, Color &color)
 	{
@@ -111,7 +89,11 @@ void ModelViewerApp::Startup()
 	Application::Startup();
 	Log::GetLog()->SetLogFile("output.txt");
 
-	std::unique_ptr<GameConfig> config(new GameConfig);
+	std::unique_ptr<IniConfig> config(new IniConfig);
+	config->SetInt("ScrWidth", 1600);
+	config->SetInt("ScrHeight", 900);
+	config->SetInt("VSync", 1);
+	config->SetInt("AntiAliasingMode", 4);
 
 	Lua::Init();
 
@@ -120,20 +102,18 @@ void ModelViewerApp::Startup()
 	Graphics::RendererOGL::RegisterRenderer();
 
 	auto *renderer = StartupRenderer(config.get());
-
-	// FIXME MAJOR FIXME: Action / Axis bindings depend on Pi::input to get their data.
-	// This is OBVIOUSLY suboptimal, and *must* be redesigned.
-	// Either make Input a singleton (lots of function overhead when polling axes)
-	// or cache input state on the binding itself (probably the best option)
-
-	Pi::input = StartupInput(config.get());
+	StartupInput(config.get());
 	StartupPiGui();
+
+	GetPiGui()->SetDebugStyle();
+	// precache the editor font
+	GetPiGui()->GetFont("pionillium", 13);
 
 	NavLights::Init(renderer);
 	Shields::Init(renderer);
 
 	//run main loop until quit
-	m_modelViewer = std::make_shared<ModelViewer>(this, Lua::manager);
+	m_modelViewer.Reset(new ModelViewer(this, Lua::manager));
 	if (!m_modelName.empty())
 		m_modelViewer->SetModel(m_modelName);
 
@@ -145,13 +125,15 @@ void ModelViewerApp::Startup()
 void ModelViewerApp::Shutdown()
 {
 	//uninit components
-	m_modelViewer.reset();
+	m_modelViewer.Reset();
 	Lua::Uninit();
 	Shields::Uninit();
 	NavLights::Uninit();
 	Graphics::Uninit();
 
+	ShutdownPiGui();
 	ShutdownRenderer();
+	ShutdownInput();
 	Application::Shutdown();
 }
 
@@ -165,11 +147,17 @@ void ModelViewerApp::PostUpdate()
 {
 	GetRenderer()->ClearDepthBuffer();
 	GetPiGui()->Render();
+
+	if (GetInput()->IsKeyReleased(SDLK_F12)) {
+		GetRenderer()->FlushCommandBuffers();
+		GetRenderer()->ReloadShaders();
+	}
 }
 
 ModelViewer::ModelViewer(ModelViewerApp *app, LuaManager *lm) :
 	m_input(app->GetInput()),
 	m_pigui(app->GetPiGui()),
+	m_bindings(m_input),
 	m_logWindowSize(350.0f, 500.0f),
 	m_animWindowSize(0.0f, 150.0f),
 	m_colors({ Color(255, 0, 0),
@@ -192,11 +180,16 @@ ModelViewer::ModelViewer(ModelViewerApp *app, LuaManager *lm) :
 	onModelChanged.connect(sigc::mem_fun(*this, &ModelViewer::OnModelChanged));
 	SetupAxes();
 
+	Graphics::MaterialDescriptor desc;
+
 	//for grid, background
 	Graphics::RenderStateDesc rsd;
 	rsd.depthWrite = false;
 	rsd.cullMode = Graphics::CULL_NONE;
-	m_bgState = m_renderer->CreateRenderState(rsd);
+	rsd.primitiveType = Graphics::TRIANGLES;
+	m_bgMaterial.reset(m_renderer->CreateMaterial("vtxColor", desc, rsd));
+
+	m_gridLines.reset(new Graphics::Drawables::GridLines(m_renderer));
 }
 
 void ModelViewer::Start()
@@ -213,37 +206,8 @@ void ModelViewer::End()
 void ModelViewer::ReloadModel()
 {
 	AddLog(stringf("Reloading model %0", m_modelName));
-	//camera is not reset, it would be annoying when
-	//tweaking materials
-	SetModel(m_modelName);
+	m_requestedModelName = m_modelName;
 	m_resetLogScroll = true;
-}
-
-void ModelViewer::ToggleCollMesh()
-{
-	m_options.showDockingLocators = !m_options.showDockingLocators;
-	m_options.showCollMesh = !m_options.showCollMesh;
-	m_options.showAabb = m_options.showCollMesh;
-}
-
-void ModelViewer::ToggleShowShields()
-{
-	m_options.showShields = !m_options.showShields;
-}
-
-void ModelViewer::ToggleGrid()
-{
-	if (!m_options.showGrid) {
-		m_options.showGrid = true;
-		m_options.gridInterval = 1.0f;
-	} else {
-		m_options.gridInterval = powf(10, ceilf(log10f(m_options.gridInterval)) + 1);
-		if (m_options.gridInterval >= 10000.0f) {
-			m_options.showGrid = false;
-			m_options.gridInterval = 0.0f;
-		}
-	}
-	AddLog(m_options.showGrid ? stringf("Grid: %0{d}", int(m_options.gridInterval)) : "Grid: off");
 }
 
 void ModelViewer::ToggleGuns()
@@ -260,6 +224,7 @@ void ModelViewer::ToggleGuns()
 	m_options.attachGuns = !m_options.attachGuns;
 	SceneGraph::Model::TVecMT tags;
 	m_model->FindTagsByStartOfName("tag_gun_", tags);
+	m_model->FindTagsByStartOfName("tag_gunmount_", tags);
 	if (tags.empty()) {
 		AddLog("Missing tags \"tag_gun_XXX\" in model");
 		return;
@@ -383,6 +348,7 @@ void ModelViewer::ClearModel()
 {
 	m_model.reset();
 
+	m_selectedTag = nullptr;
 	m_animations.clear();
 	m_currentAnimation = nullptr;
 	m_patterns.clear();
@@ -392,6 +358,7 @@ void ModelViewer::ClearModel()
 	m_gunModel.reset();
 	m_scaleModel.reset();
 
+	m_options.attachGuns = false;
 	m_options.mouselookEnabled = false;
 	m_input->SetCapturingMouse(false);
 	m_viewPos = vector3f(0.0f, 0.0f, 10.0f);
@@ -415,12 +382,12 @@ void ModelViewer::CreateTestResources()
 
 void ModelViewer::DrawBackground()
 {
-	m_renderer->SetOrthographicProjection(0.f, 1.f, 0.f, 1.f, -1.f, 1.f);
+	m_renderer->SetOrthographicProjection(0.f, 1.f, 0.f, 1.f, 0.f, 1.f);
 	m_renderer->SetTransform(matrix4x4f::Identity());
 
-	if (!m_bgBuffer.Valid()) {
+	if (!m_bgMesh) {
 		const Color top = Color::BLACK;
-		const Color bottom = Color(77, 77, 77);
+		const Color bottom = Color(28, 31, 36);
 		Graphics::VertexArray bgArr(Graphics::ATTRIB_POSITION | Graphics::ATTRIB_DIFFUSE, 6);
 		// triangle 1
 		bgArr.Add(vector3f(0.f, 0.f, 0.f), bottom);
@@ -431,20 +398,10 @@ void ModelViewer::DrawBackground()
 		bgArr.Add(vector3f(1.f, 1.f, 0.f), top);
 		bgArr.Add(vector3f(0.f, 1.f, 0.f), top);
 
-		Graphics::VertexBufferDesc vbd;
-		vbd.attrib[0].semantic = Graphics::ATTRIB_POSITION;
-		vbd.attrib[0].format = Graphics::ATTRIB_FORMAT_FLOAT3;
-		vbd.attrib[1].semantic = Graphics::ATTRIB_DIFFUSE;
-		vbd.attrib[1].format = Graphics::ATTRIB_FORMAT_UBYTE4;
-		vbd.numVertices = 6;
-		vbd.usage = Graphics::BUFFER_USAGE_STATIC;
-
-		// VertexBuffer
-		m_bgBuffer.Reset(m_renderer->CreateVertexBuffer(vbd));
-		m_bgBuffer->Populate(bgArr);
+		m_bgMesh.reset(m_renderer->CreateMeshObjectFromArray(&bgArr));
 	}
 
-	m_renderer->DrawBuffer(m_bgBuffer.Get(), m_bgState, Graphics::vtxColorMaterial, Graphics::TRIANGLES);
+	m_renderer->DrawMesh(m_bgMesh.get(), m_bgMaterial.get());
 }
 
 //Draw grid and axes
@@ -452,35 +409,22 @@ void ModelViewer::DrawGrid(const matrix4x4f &trans, float radius)
 {
 	assert(m_options.showGrid);
 
-	const float dist = zoom_distance(m_baseDistance, m_zoom);
+	// const float dist = zoom_distance(m_baseDistance, m_zoom);
 
-	const float max = std::min(powf(10, ceilf(log10f(dist))), ceilf(radius / m_options.gridInterval) * m_options.gridInterval);
-
-	static std::vector<vector3f> points;
-	points.clear();
-
-	for (float x = -max; x <= max; x += m_options.gridInterval) {
-		points.push_back(vector3f(x, 0, -max));
-		points.push_back(vector3f(x, 0, max));
-		points.push_back(vector3f(0, x, -max));
-		points.push_back(vector3f(0, x, max));
-
-		points.push_back(vector3f(x, -max, 0));
-		points.push_back(vector3f(x, max, 0));
-		points.push_back(vector3f(0, -max, x));
-		points.push_back(vector3f(0, max, x));
-
-		points.push_back(vector3f(-max, x, 0));
-		points.push_back(vector3f(max, x, 0));
-		points.push_back(vector3f(-max, 0, x));
-		points.push_back(vector3f(max, 0, x));
-	}
+	const float max = powf(10, ceilf(log10f(radius * 1.1)));
 
 	m_renderer->SetTransform(trans);
-	m_gridLines.SetData(points.size(), &points[0], Color(128, 128, 128));
-	m_gridLines.Draw(m_renderer, m_bgState);
+	m_gridLines->Draw(m_renderer, { max, max }, m_options.gridInterval);
 
-	// industry-standard red/green/blue XYZ axis indiactor
+	if (m_options.showVerticalGrids) {
+		m_renderer->SetTransform(trans * matrix4x4f::RotateXMatrix(M_PI * 0.5));
+		m_gridLines->Draw(m_renderer, { max, max }, m_options.gridInterval);
+
+		m_renderer->SetTransform(trans * matrix4x4f::RotateZMatrix(M_PI * 0.5));
+		m_gridLines->Draw(m_renderer, { max, max }, m_options.gridInterval);
+	}
+
+	// industry-standard red/green/blue XYZ axis indicator
 	m_renderer->SetTransform(trans * matrix4x4f::ScaleMatrix(radius));
 	Graphics::Drawables::GetAxes3DDrawable(m_renderer)->Draw(m_renderer);
 }
@@ -491,11 +435,14 @@ void ModelViewer::DrawModel(const matrix4x4f &mv)
 
 	m_model->UpdateAnimations();
 
+	// this causes all debug visuals to be re-generated each frame, useful when scrubbing animations
+	// also a good incentive to make your debug visuals *fast*
 	m_model->SetDebugFlags(
 		(m_options.showAabb ? SceneGraph::Model::DEBUG_BBOX : 0x0) |
 		(m_options.showCollMesh ? SceneGraph::Model::DEBUG_COLLMESH : 0x0) |
 		(m_options.showTags ? SceneGraph::Model::DEBUG_TAGS : 0x0) |
 		(m_options.showDockingLocators ? SceneGraph::Model::DEBUG_DOCKING : 0x0) |
+		(m_options.showGeomBBox ? SceneGraph::Model::DEBUG_GEOMBBOX : 0x0) |
 		(m_options.wireframe ? SceneGraph::Model::DEBUG_WIREFRAME : 0x0));
 
 	m_model->Render(mv);
@@ -504,6 +451,12 @@ void ModelViewer::DrawModel(const matrix4x4f &mv)
 
 void ModelViewer::Update(float deltaTime)
 {
+	// if we've requested a different model then switch too it
+	if (!m_requestedModelName.empty()) {
+		SetModel(m_requestedModelName);
+		m_requestedModelName.clear();
+	}
+
 	HandleInput();
 
 	UpdateLights();
@@ -518,7 +471,7 @@ void ModelViewer::Update(float deltaTime)
 		m_navLights->Update(deltaTime);
 		m_shields->SetEnabled(m_options.showShields || m_shieldIsHit);
 
-		//Calculate the impact's radius dependant on time
+		//Calculate the impact's radius dependent on time
 		const float dif1 = 0.34 - (-1.48f);
 		const float dif2 = m_shieldHitPan - (-1.48f);
 		//Range from start (0.0) to end (1.0)
@@ -537,18 +490,16 @@ void ModelViewer::Update(float deltaTime)
 			if (m_zoom <= 0.0) m_zoom = 0.01;
 			float screenW = Graphics::GetScreenWidth() * m_zoom / 10;
 			float screenH = Graphics::GetScreenHeight() * m_zoom / 10;
-			matrix4x4f orthoMat = matrix4x4f::OrthoFrustum(-screenW, screenW, -screenH, screenH, 0.1f, 100000.0f);
-			orthoMat.ClearToRotOnly();
+			matrix4x4f orthoMat = matrix4x4f::OrthoMatrix(screenW, screenH, 0.1f, 100000.0f);
 			m_renderer->SetProjection(orthoMat);
 		}
 
 		m_renderer->SetTransform(matrix4x4f::Identity());
 
 		// calc camera info
-		matrix4x4f mv;
 		float zd = 0;
 		if (m_options.mouselookEnabled) {
-			mv = m_viewRot.Transpose() * matrix4x4f::Translation(-m_viewPos);
+			m_modelViewMat = m_viewRot.Transpose() * matrix4x4f::Translation(-m_viewPos);
 		} else {
 			m_rotX = Clamp(m_rotX, -90.0f, 90.0f);
 			matrix4x4f rot = matrix4x4f::Identity();
@@ -558,20 +509,20 @@ void ModelViewer::Update(float deltaTime)
 				zd = -m_baseDistance;
 			else
 				zd = -zoom_distance(m_baseDistance, m_zoom);
-			mv = matrix4x4f::Translation(0.0f, 0.0f, zd) * rot;
+			m_modelViewMat = matrix4x4f::Translation(0.0f, 0.0f, zd) * rot;
 		}
 
 		// draw the model itself
-		DrawModel(mv);
+		DrawModel(m_modelViewMat);
 
 		// helper rendering
 		if (m_options.showLandingPad) {
 			if (!m_scaleModel) CreateTestResources();
-			m_scaleModel->Render(mv * matrix4x4f::Translation(0.f, m_landingMinOffset, 0.f));
+			m_scaleModel->Render(m_modelViewMat * matrix4x4f::Translation(0.f, m_landingMinOffset, 0.f));
 		}
 
 		if (m_options.showGrid) {
-			DrawGrid(mv, m_model->GetDrawClipRadius());
+			DrawGrid(m_modelViewMat, m_model->GetDrawClipRadius());
 		}
 	}
 
@@ -581,13 +532,6 @@ void ModelViewer::Update(float deltaTime)
 	if (m_screenshotQueued) {
 		m_screenshotQueued = false;
 		Screenshot();
-	}
-
-	// if we've requested a different model then switch too it
-	if (!m_requestedModelName.empty()) {
-		SetModel(m_requestedModelName);
-		ResetCamera();
-		m_requestedModelName.clear();
 	}
 }
 
@@ -608,14 +552,20 @@ void ModelViewer::SetupAxes()
 	auto *page = m_input->GetBindingPage("ModelViewer");
 	auto *group = page->GetBindingGroup("View");
 
-#define AXIS(name, axis, positive, negative) m_input->AddAxisBinding(name, group, KeyBindings::AxisBinding(axis, positive, negative))
-#define ACTION(name, b1, b2) m_input->AddActionBinding(name, group, KeyBindings::ActionBinding(b1, b2))
+	// Don't add this to REGISTER_INPUT_BINDING because these bindings aren't used by the game
+#define AXIS(val, name, axis, positive, negative)                                                \
+	m_input->AddAxisBinding(name, group, InputBindings::Axis(axis, { positive }, { negative })); \
+	m_bindings.val = m_bindings.AddAxis(name)
 
-	m_zoomAxis = AXIS("BindZoomAxis", {}, SDLK_EQUALS, SDLK_MINUS);
+#define ACTION(val, name, b1, b2)                                                  \
+	m_input->AddActionBinding(name, group, InputBindings::Action({ b1 }, { b2 })); \
+	m_bindings.val = m_bindings.AddAction(name)
 
-	m_moveForward = AXIS("BindMoveForward", {}, SDLK_w, SDLK_s);
-	m_moveLeft = AXIS("BindMoveLeft", {}, SDLK_a, SDLK_d);
-	m_moveUp = AXIS("BindMoveUp", {}, SDLK_q, SDLK_e);
+	AXIS(zoomAxis, "BindZoomAxis", {}, SDLK_EQUALS, SDLK_MINUS);
+
+	AXIS(moveForward, "BindMoveForward", {}, SDLK_w, SDLK_s);
+	AXIS(moveLeft, "BindMoveLeft", {}, SDLK_a, SDLK_d);
+	AXIS(moveUp, "BindMoveUp", {}, SDLK_q, SDLK_e);
 
 	// Like Blender, but a bit different because we like that
 	// 1 - front (+ctrl back)
@@ -623,23 +573,28 @@ void ModelViewer::SetupAxes()
 	// 3 - left (+ctrl right)
 	// 2,4,6,8 incrementally rotate
 
-	m_viewFront = ACTION("BindViewFront", SDLK_KP_1, SDLK_m);
-	m_viewFront->onPress.connect([=]() {
+	ACTION(viewFront, "BindViewFront", SDLK_KP_1, SDLK_m);
+	m_bindings.viewFront->onPressed.connect([=]() {
 		this->ChangeCameraPreset(m_input->KeyModState() & KMOD_CTRL ? CameraPreset::Back : CameraPreset::Front);
 	});
 
-	m_viewLeft = ACTION("BindViewLeft", SDLK_KP_3, SDLK_PERIOD);
-	m_viewLeft->onPress.connect([=]() {
+	ACTION(viewLeft, "BindViewLeft", SDLK_KP_3, SDLK_PERIOD);
+	m_bindings.viewLeft->onPressed.connect([=]() {
 		this->ChangeCameraPreset(m_input->KeyModState() & KMOD_CTRL ? CameraPreset::Right : CameraPreset::Left);
 	});
 
-	m_viewTop = ACTION("BindViewTop", SDLK_KP_7, SDLK_u);
-	m_viewTop->onPress.connect([=]() {
+	ACTION(viewTop, "BindViewTop", SDLK_KP_7, SDLK_u);
+	m_bindings.viewTop->onPressed.connect([=]() {
 		this->ChangeCameraPreset(m_input->KeyModState() & KMOD_CTRL ? CameraPreset::Bottom : CameraPreset::Top);
 	});
 
-	m_rotateViewLeft = AXIS("BindRotateViewLeft", {}, SDLK_KP_6, SDLK_KP_4);
-	m_rotateViewUp = AXIS("BindRotateViewUp", {}, SDLK_KP_8, SDLK_KP_2);
+	AXIS(rotateViewLeft, "BindRotateViewLeft", {}, SDLK_KP_6, SDLK_KP_4);
+	AXIS(rotateViewUp, "BindRotateViewUp", {}, SDLK_KP_8, SDLK_KP_2);
+
+#undef AXIS
+#undef ACTION
+
+	m_input->AddInputFrame(&m_bindings);
 }
 
 void ModelViewer::HandleInput()
@@ -663,6 +618,7 @@ void ModelViewer::HandleInput()
 	if (m_input->IsKeyPressed(SDLK_ESCAPE)) {
 		if (m_model) {
 			ClearModel();
+			ResetCamera();
 			UpdateModelList();
 			UpdateDecalList();
 		} else {
@@ -684,9 +640,6 @@ void ModelViewer::HandleInput()
 	if (m_input->IsKeyPressed(SDLK_PRINTSCREEN))
 		m_screenshotQueued = true;
 
-	if (m_input->IsKeyPressed(SDLK_g))
-		ToggleGrid();
-
 	if (m_input->IsKeyPressed(SDLK_o))
 		m_options.orthoView = !m_options.orthoView;
 
@@ -706,6 +659,10 @@ void ModelViewer::HandleInput()
 	if (m_input->IsKeyPressed(SDLK_p)) {
 		m_options.showLandingPad = !m_options.showLandingPad;
 		AddLog(stringf("Scale/landing pad test %0", m_options.showLandingPad ? "on" : "off"));
+	}
+
+	if (m_input->IsKeyPressed(SDLK_i)) {
+		m_options.metricsWindow = !m_options.metricsWindow;
 	}
 
 	// random colors, eastereggish
@@ -805,11 +762,6 @@ void ModelViewer::SaveModelToBinary()
 	}
 }
 
-void ModelViewer::SetAnimation(SceneGraph::Animation *anim)
-{
-	m_currentAnimation = anim;
-}
-
 void ModelViewer::SetModel(const std::string &filename)
 {
 	AddLog(stringf("Loading model %0...", filename));
@@ -827,7 +779,7 @@ void ModelViewer::SetModel(const std::string &filename)
 			m_model.reset(bc.Load(m_modelName));
 		} else {
 			m_modelName = filename;
-			SceneGraph::Loader loader(m_renderer, true);
+			SceneGraph::Loader loader(m_renderer, true, false);
 			m_model.reset(loader.LoadModel(filename));
 
 			//dump warnings
@@ -875,6 +827,7 @@ void ModelViewer::SetModel(const std::string &filename)
 
 void ModelViewer::OnModelChanged()
 {
+	ResetCamera();
 	ResetThrusters();
 	m_model->SetColors(m_colors);
 
@@ -886,7 +839,9 @@ void ModelViewer::OnModelChanged()
 	m_modelHasShields = m_shields.get() && m_shields->GetFirstShieldMesh();
 
 	m_animations = m_model->GetAnimations();
-	m_currentAnimation = nullptr;
+	m_currentAnimation = m_animations.size() ? m_animations.front() : nullptr;
+	if (m_currentAnimation)
+		m_model->SetAnimationActive(0, true);
 
 	m_patterns.clear();
 	m_currentPattern = 0;
@@ -908,12 +863,18 @@ void ModelViewer::DrawModelSelector()
 	auto flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
 	bool b_open = true; // Use the window close button to quit the modelviewer
 	if (ImGui::Begin("Select Model", &b_open, flags)) {
-		if (ImGui::BeginChild("FileList", ImVec2(0.0, -ImGui::GetFrameHeightWithSpacing()))) {
+		if (ImGui::BeginChild("FileList", ImVec2(0.0, -ImGui::GetFrameHeightWithSpacing() * 10.0f))) {
 			for (const auto &name : m_fileNames) {
 				if (ImGui::Selectable(name.c_str())) {
 					m_requestedModelName = name;
 				}
 			}
+		}
+		ImGui::EndChild();
+		ImGui::Spacing();
+		ImGui::Text("Log:");
+		if (ImGui::BeginChild("Log")) {
+			DrawLog();
 		}
 		ImGui::EndChild();
 	}
@@ -924,19 +885,102 @@ void ModelViewer::DrawModelSelector()
 	}
 }
 
+void ModelViewer::DrawModelTags()
+{
+	const uint32_t numTags = m_model->GetNumTags();
+	if (!numTags) return;
+
+	for (uint32_t i = 0; i < numTags; i++) {
+		auto *tag = m_model->GetTagByIndex(i);
+		if (ImGui::Selectable(tag->GetName().c_str(), tag == m_selectedTag)) {
+			m_selectedTag = tag;
+		}
+	}
+}
+
+void ModelViewer::DrawTagNames()
+{
+	if (!m_selectedTag) return;
+	auto size = ImGui::GetWindowSize();
+	m_renderer->SetTransform(matrix4x4f::Identity());
+
+	vector3f point = m_modelViewMat * m_selectedTag->GetTransform().GetTranslate();
+	point = Graphics::ProjectToScreen(m_renderer, point);
+	ImGui::SetCursorPos({ point.x + 8.0f, size.y - point.y });
+	ImGui::TextUnformatted(m_selectedTag->GetName().c_str());
+
+	// ImGui::SetCursorPos({ 0.5f * size.x, 0.5f * size.y });
+	// ImGui::Text("%f %f %f", point.x, point.y, point.z);
+}
+
+struct NodeHierarchyVisitor : SceneGraph::NodeVisitor {
+	void DisplayNode(SceneGraph::Node &node, std::string_view nodeType)
+	{
+		const ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+
+		if (nodeType.empty()) {
+			ImGui::TreeNodeEx(node.GetName().c_str(), flags);
+		} else {
+			std::string name = fmt::format("[{}] {}", nodeType, node.GetName());
+			ImGui::TreeNodeEx(name.c_str(), flags);
+		}
+	}
+
+	void DisplayGroup(SceneGraph::Group &node, std::string_view nodeType)
+	{
+		std::string name = fmt::format("[{}] {}", nodeType, node.GetName());
+		if (ImGui::TreeNodeEx(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			node.Traverse(*this);
+
+			ImGui::TreePop();
+		}
+	}
+
+	void ApplyNode(SceneGraph::Node &node) override
+	{
+		DisplayNode(node, "");
+	}
+
+	void ApplyGroup(SceneGraph::Group &node) override
+	{
+		DisplayGroup(node, "Group");
+	}
+
+	void ApplyMatrixTransform(SceneGraph::MatrixTransform &m) override
+	{
+		DisplayGroup(m, "MT");
+	}
+
+	void ApplyLOD(SceneGraph::LOD &l) override
+	{
+		DisplayGroup(l, "LOD");
+	}
+
+	void ApplyCollisionGeometry(SceneGraph::CollisionGeometry &cg) override
+	{
+		DisplayNode(cg, "CG");
+	}
+};
+
+void ModelViewer::DrawModelHierarchy()
+{
+	NodeHierarchyVisitor v = {};
+	m_model->GetRoot()->Accept(v);
+}
+
 void ModelViewer::DrawShipControls()
 {
+	bool valuesChanged = false;
 	if (m_modelIsShip) {
-		ImGui::Columns(3, nullptr, false);
 		ImGui::TextUnformatted("Linear Thrust");
 		ImGui::Spacing();
 
-		bool valuesChanged = false;
 		valuesChanged |= ImGui::SliderFloat("X", &m_linearThrust.x, -1.0, 1.0);
 		valuesChanged |= ImGui::SliderFloat("Y", &m_linearThrust.y, -1.0, 1.0);
 		valuesChanged |= ImGui::SliderFloat("Z", &m_linearThrust.z, -1.0, 1.0);
 
-		ImGui::NextColumn();
+		ImGui::Spacing();
 		ImGui::TextUnformatted("Angular Thrust");
 		ImGui::Spacing();
 
@@ -947,55 +991,84 @@ void ModelViewer::DrawShipControls()
 		if (valuesChanged)
 			m_model->SetThrust(m_linearThrust, m_angularThrust);
 
-		ImGui::NextColumn();
-		ImGui::TextUnformatted("Pattern Colors");
 		ImGui::Spacing();
-
-		valuesChanged = false;
-		valuesChanged |= ImGui::ColorEdit3("Color 1", m_colors[0]);
-		valuesChanged |= ImGui::ColorEdit3("Color 2", m_colors[1]);
-		valuesChanged |= ImGui::ColorEdit3("Color 3", m_colors[2]);
-
-		if (valuesChanged)
-			m_model->SetColors(m_colors);
-
-		ImGui::Columns(1);
 	}
+
+	ImGui::TextUnformatted("Pattern Colors");
+	ImGui::Spacing();
+
+	if (ImGui::Button("Set Random Colors", ImVec2(-1.f, 0.f)))
+		SetRandomColor();
+
+	valuesChanged = false;
+	valuesChanged |= ImGui::ColorEdit3("Color 1", m_colors[0]);
+	valuesChanged |= ImGui::ColorEdit3("Color 2", m_colors[1]);
+	valuesChanged |= ImGui::ColorEdit3("Color 3", m_colors[2]);
+
+	if (valuesChanged)
+		m_model->SetColors(m_colors);
 
 	if (m_currentAnimation) {
 		ImGui::Spacing();
+		ImGui::TextUnformatted("Animation Progress");
 		float progress = m_currentAnimation->GetProgress();
-		bool changed = ImGui::SliderFloat("Animation Progress", &progress, 0.0, m_currentAnimation->GetDuration());
-		if (changed) {
+		ImGui::SetNextItemWidth(-1.0f);
+		if (ImGui::SliderFloat("##anim-progress", &progress, 0.0, 1.0))
 			m_currentAnimation->SetProgress(progress);
-		}
 	}
 }
 
 void ModelViewer::DrawModelOptions()
 {
-	ImGui::TextUnformatted(m_modelName.c_str());
+	float itmWidth = ImGui::CalcItemWidth();
 
+	ImGui::PushFont(m_pigui->GetFont("pionillium", 14));
+	ImGui::AlignTextToFramePadding();
+	ImGui::TextUnformatted(m_modelName.c_str());
+	ImGui::PopFont();
+
+	ImGui::SameLine();
 	if (ImGui::Button("Reload Model"))
 		ReloadModel();
 
-	ImGui::NewLine();
+	ImGui::Checkbox("Show Scale Model", &m_options.showLandingPad);
+	ImGui::Checkbox("Show Collision Mesh", &m_options.showCollMesh);
+	m_options.showAabb = m_options.showCollMesh;
+	ImGui::Checkbox("Show Geometry Bounds", &m_options.showGeomBBox);
+	ImGui::Checkbox("Show Tags", &m_options.showTags);
+	m_options.showDockingLocators = m_options.showTags;
 
-	if (ImGui::Button("Show Collision Mesh"))
-		ToggleCollMesh();
+	ImGui::Spacing();
 
-	if (ImGui::Button("Toggle Grid Mode"))
-		ToggleGrid();
+	ImGui::Checkbox("##ToggleGrid", &m_options.showGrid);
+	ImGui::SameLine(0.0, 4.0f);
+	ImGui::SetNextItemWidth(itmWidth - 4.0f - ImGui::GetFrameHeight());
 
-	if (ImGui::Button("Set Random Colors"))
-		SetRandomColor();
+	std::string currentGridMode = std::to_string(int(m_options.gridInterval)) + "x";
+	if (ImGui::BeginCombo("Grid Mode", currentGridMode.c_str())) {
+		if (ImGui::Selectable("1m"))
+			m_options.gridInterval = 1.0f;
+
+		if (ImGui::Selectable("10m"))
+			m_options.gridInterval = 10.0f;
+
+		if (ImGui::Selectable("100m"))
+			m_options.gridInterval = 100.0f;
+
+		if (ImGui::Selectable("1000m"))
+			m_options.gridInterval = 1000.0f;
+
+		ImGui::EndCombo();
+	}
+
+	if (m_options.showGrid) {
+		ImGui::Checkbox("Show Vertical Grids", &m_options.showVerticalGrids);
+	}
 
 	if (m_modelHasShields) {
-		ImGui::NewLine();
+		ImGui::Spacing();
 
-		if (ImGui::Button("Show Shields"))
-			ToggleShowShields();
-
+		ImGui::Checkbox("Show Shields", &m_options.showShields);
 		if (ImGui::Button("Test Shield Hit"))
 			HitIt();
 	}
@@ -1005,7 +1078,7 @@ void ModelViewer::DrawModelOptions()
 			ToggleGuns();
 	}
 
-	ImGui::NewLine();
+	ImGui::Spacing();
 
 	if (m_modelSupportsPatterns) {
 		const char *preview_name = m_patterns[m_currentPattern].c_str();
@@ -1037,22 +1110,20 @@ void ModelViewer::DrawModelOptions()
 		}
 	}
 
-	const char *anim_name = m_currentAnimation ? m_currentAnimation->GetName().c_str() : "None";
-	if (ImGui::BeginCombo("Animation", anim_name)) {
-		for (const auto anim : m_animations) {
-			const bool selected = m_currentAnimation == anim;
-			if (ImGui::Selectable(anim->GetName().c_str(), selected) && !selected) {
-				// selected a new animation entry
-				SetAnimation(anim);
+	if (!m_animations.empty()) {
+		if (ImGui::BeginCombo("Animation", m_currentAnimation->GetName().c_str())) {
+			for (const auto anim : m_animations) {
+				const bool selected = m_currentAnimation == anim;
+				if (ImGui::Selectable(anim->GetName().c_str(), selected) && !selected) {
+					// selected a new animation entry
+					m_model->SetAnimationActive(m_model->FindAnimationIndex(m_currentAnimation), false);
+					m_model->SetAnimationActive(m_model->FindAnimationIndex(anim), true);
+					m_currentAnimation = anim;
+				}
 			}
-		}
 
-		if (ImGui::Selectable("None", !m_currentAnimation) && m_currentAnimation) {
-			// Changed to no animation
-			SetAnimation(nullptr);
+			ImGui::EndCombo();
 		}
-
-		ImGui::EndCombo();
 	}
 
 	static std::vector<std::string> lightSetups = {
@@ -1074,59 +1145,89 @@ void ModelViewer::DrawModelOptions()
 
 void ModelViewer::DrawLog()
 {
-	ImGui::SetNextWindowPos(ImVec2(m_windowSize.x - m_logWindowSize.x, m_windowSize.y - m_logWindowSize.y));
-	ImGui::SetNextWindowSize(ImVec2(m_logWindowSize.x, m_logWindowSize.y));
-	const auto flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings;
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0);
-	if (ImGui::Begin("LogWindow", nullptr, flags)) {
-		if (ImGui::BeginChild("ScrollArea")) {
-			for (const auto &message : m_log) {
-				ImGui::TextUnformatted(message.c_str());
-			}
-
-			if (m_resetLogScroll || ImGui::GetScrollY() >= ImGui::GetScrollMaxY()) {
-				ImGui::SetScrollHereY(1.0f);
-				m_resetLogScroll = false;
-			}
+	if (ImGui::BeginChild("ScrollArea")) {
+		for (const auto &message : m_log) {
+			ImGui::TextWrapped("%s", message.c_str());
 		}
-		ImGui::EndChild();
+
+		if (m_resetLogScroll || ImGui::GetScrollY() >= ImGui::GetScrollMaxY()) {
+			ImGui::SetScrollHereY(1.0f);
+			m_resetLogScroll = false;
+		}
 	}
-	ImGui::End();
-	ImGui::PopStyleVar(1);
+	ImGui::EndChild();
 }
+
+constexpr ImGuiWindowFlags fullscreenFlags = ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoBringToFrontOnFocus;
+constexpr ImGuiWindowFlags tabWindowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings;
 
 void ModelViewer::DrawPiGui()
 {
 	m_windowSize = vector2f(Graphics::GetScreenWidth(), Graphics::GetScreenHeight());
+	float leftWidth = m_windowSize.x / 5.0;
+	float rightWidth = m_windowSize.x / 5.0;
+	float leftDiv = m_windowSize.y / 1.8;
+	float rightDiv = m_windowSize.y / 1.6;
 
-	if (m_model) {
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0);
-		{
-			const auto flags = ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
-			ImGui::SetNextWindowPos({ 0, 0 });
-			ImGui::SetNextWindowSize({ m_windowSize.x / 4.0f, m_windowSize.y - m_animWindowSize.y });
-			if (ImGui::Begin("Model Options", nullptr, flags)) {
-				DrawModelOptions();
-			}
-			ImGui::End();
-		}
-
-		if (m_modelIsShip) {
-			const auto flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
-			ImGui::SetNextWindowPos({ 0, m_windowSize.y - m_animWindowSize.y });
-			ImGui::SetNextWindowSize({ m_windowSize.x - m_logWindowSize.x, m_animWindowSize.y });
-			if (ImGui::Begin("Model Controls", nullptr, flags)) {
-				DrawShipControls();
-			}
-			ImGui::End();
-		}
-		ImGui::PopStyleVar(1);
-
-	} else {
+	if (!m_model) {
 		DrawModelSelector();
+		return;
 	}
 
-	DrawLog();
+	ImGui::PushFont(m_pigui->GetFont("pionillium", 13));
+
+	ImGui::SetNextWindowPos({ 0, 0 });
+	ImGui::SetNextWindowSize({ m_windowSize.x, m_windowSize.y });
+	ImGui::Begin("##background-display", nullptr, fullscreenFlags);
+	DrawTagNames();
+	ImGui::End();
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0);
+	ImGui::SetNextWindowPos({ 0, 0 });
+	ImGui::SetNextWindowSize({ leftWidth, leftDiv });
+	if (ImGui::Begin("##window-topleft", nullptr, tabWindowFlags)) {
+		DrawModelOptions();
+	}
+	ImGui::End();
+
+	ImGui::SetNextWindowPos({ 0, leftDiv });
+	ImGui::SetNextWindowSize({ leftWidth, m_windowSize.y - leftDiv });
+	if (ImGui::Begin("##window-bottomleft", nullptr, tabWindowFlags)) {
+		DrawShipControls();
+	}
+	ImGui::End();
+
+	ImGui::SetNextWindowPos({ m_windowSize.x - rightWidth, 0 });
+	ImGui::SetNextWindowSize({ rightWidth, rightDiv });
+	if (ImGui::Begin("##window-topright", nullptr, tabWindowFlags)) {
+		if (ImGui::BeginTabBar("##tabbar-topright")) {
+			if (ImGui::BeginTabItem("Tags")) {
+				DrawModelTags();
+				ImGui::EndTabItem();
+			}
+
+			if (ImGui::BeginTabItem("Hierarchy")) {
+				DrawModelHierarchy();
+				ImGui::EndTabItem();
+			}
+
+			ImGui::EndTabBar();
+		}
+	}
+	ImGui::End();
+
+	ImGui::SetNextWindowPos({ m_windowSize.x - rightWidth, rightDiv });
+	ImGui::SetNextWindowSize({ rightWidth, m_windowSize.y - rightDiv });
+	if (ImGui::Begin("##window-bottomright", nullptr, tabWindowFlags)) {
+		DrawLog();
+	}
+	ImGui::End();
+	ImGui::PopStyleVar(1);
+
+	if (m_options.metricsWindow)
+		ImGui::ShowDemoWindow();
+
+	ImGui::PopFont();
 }
 
 void ModelViewer::UpdateCamera(float deltaTime)
@@ -1164,14 +1265,14 @@ void ModelViewer::UpdateCamera(float deltaTime)
 		}
 
 		vector3f motion(
-			m_moveLeft->GetValue(),
-			m_moveUp->GetValue(),
-			m_moveForward->GetValue());
+			m_bindings.moveLeft->GetValue(),
+			m_bindings.moveUp->GetValue(),
+			m_bindings.moveForward->GetValue());
 
 		m_viewPos += m_viewRot * motion;
 	} else {
 		//zoom
-		m_zoom += m_zoomAxis->GetValue() * BASE_ZOOM_RATE;
+		m_zoom += m_bindings.zoomAxis->GetValue() * BASE_ZOOM_RATE;
 
 		//zoom with mouse wheel
 		int mouseWheel = m_input->GetMouseWheel();
@@ -1186,8 +1287,8 @@ void ModelViewer::UpdateCamera(float deltaTime)
 		if (m_input->IsKeyDown(SDLK_LEFT)) m_rotY += rotateRate;
 		if (m_input->IsKeyDown(SDLK_RIGHT)) m_rotY -= rotateRate;
 
-		m_rotX += rotateRate * m_rotateViewLeft->GetValue();
-		m_rotY += rotateRate * -m_rotateViewUp->GetValue();
+		m_rotX += rotateRate * m_bindings.rotateViewLeft->GetValue();
+		m_rotY += rotateRate * -m_bindings.rotateViewUp->GetValue();
 
 		//mouse rotate when right button held
 		if (rightMouseDown) {

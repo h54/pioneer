@@ -1,9 +1,10 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _BACKGROUND_H
 #define _BACKGROUND_H
 
+#include "galaxy/SystemPath.h"
 #include "graphics/Drawables.h"
 
 class Random;
@@ -45,13 +46,13 @@ namespace Background {
 		UniverseBox(Graphics::Renderer *r);
 		~UniverseBox();
 
-		void Draw(Graphics::RenderState *);
+		void Draw();
 		void LoadCubeMap(Random &rand);
 
 	private:
 		void Init();
 
-		std::unique_ptr<Graphics::VertexBuffer> m_vertexBuffer;
+		std::unique_ptr<Graphics::MeshObject> m_universeBox;
 		RefCountedPtr<Graphics::Texture> m_cubemap;
 
 		Uint32 m_numCubemaps;
@@ -60,38 +61,29 @@ namespace Background {
 	class Starfield : public BackgroundElement {
 	public:
 		//does not Fill the starfield
-		Starfield(Graphics::Renderer *r, Random &rand, const Space *space, RefCountedPtr<Galaxy> galaxy);
-		void Draw(Graphics::RenderState *);
+		Starfield(Graphics::Renderer *r, Random &rand, const SystemPath *const systemPath, RefCountedPtr<Galaxy> galaxy);
+		void Draw();
 		//create or recreate the starfield
-		void Fill(Random &rand, const Space *space, RefCountedPtr<Galaxy> galaxy);
+		void Fill(Random &rand, const SystemPath *const systemPath, RefCountedPtr<Galaxy> galaxy);
 
 	private:
 		void Init();
 
 		std::unique_ptr<Graphics::Drawables::PointSprites> m_pointSprites;
-		Graphics::RenderState *m_renderState; // NB: we don't own RenderState pointers, just borrow them
 
 		//hyperspace animation vertex data
 		std::unique_ptr<vector3f[]> m_hyperVtx; // BG_STAR_MAX * 3
 		std::unique_ptr<Color[]> m_hyperCol;	// BG_STAR_MAX * 3
-		std::unique_ptr<Graphics::VertexBuffer> m_animBuffer;
-
-		float m_visibleRadiusLy;
-		float m_medianPosition;
-		float m_brightnessPower;
-		float m_brightnessApparentSizeOffset;
-		float m_brightnessApparentSizeFactor;
-		float m_brightnessColorFactor;
-		float m_brightnessColorOffset;
+		std::unique_ptr<Graphics::MeshObject> m_animMesh;
 	};
 
 	class MilkyWay : public BackgroundElement {
 	public:
 		MilkyWay(Graphics::Renderer *);
-		void Draw(Graphics::RenderState *);
+		void Draw();
 
 	private:
-		std::unique_ptr<Graphics::VertexBuffer> m_vertexBuffer;
+		std::unique_ptr<Graphics::MeshObject> m_meshObject;
 	};
 
 	// contains starfield, milkyway, possibly other Background elements
@@ -103,11 +95,12 @@ namespace Background {
 			DRAW_SKYBOX = 1 << 2
 		};
 
-		Container(Graphics::Renderer *, Random &rand, const Space *space, RefCountedPtr<Galaxy> galaxy);
+		Container(Graphics::Renderer *, Random &rand, const Space *space, RefCountedPtr<Galaxy> galaxy, const SystemPath *const systemPath = nullptr);
 		void Draw(const matrix4x4d &transform);
 
 		void SetIntensity(float intensity);
 		void SetDrawFlags(const Uint32 flags);
+		Uint32 GetDrawFlags() const { return m_drawFlags; }
 
 	private:
 		Graphics::Renderer *m_renderer;
@@ -115,7 +108,6 @@ namespace Background {
 		Starfield m_starField;
 		UniverseBox m_universeBox;
 		Uint32 m_drawFlags;
-		Graphics::RenderState *m_renderState;
 	};
 
 } //namespace Background

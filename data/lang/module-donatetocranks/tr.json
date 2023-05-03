@@ -1,51 +1,127 @@
 {
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "BAĞIŞ YAP!"
+  },
+  "FLAVOUR_0_DESC": {
+    "description": "",
+    "message": "Uçan Spagetti Canavarı Kilisesinin tanrının sözlerini yaymak için SİZİN paranıza ihtiyacı var."
+  },
   "FLAVOUR_0_MESSAGE": {
     "description": "",
     "message": "Lütfen İlahi Uçan Spagetti Canavarı Kilisesine yapmak istediğiniz bağışın miktarını seçiniz"
   },
-  "FLAVOUR_0_TITLE": {
+  "FLAVOUR_1_ADTITLE": {
     "description": "",
-    "message": "BAĞIŞ YAPIN! İlahi Uçan Spagetti Canavarı Kilisesinin tanrının kelimelerini yaymak için SİZİN paranıza ihtiyacı var."
+    "message": "BAĞIŞ YAP"
+  },
+  "FLAVOUR_1_DESC": {
+    "description": "",
+    "message": "Özgür Ruhun Muhafızları manastırlarımıza destek olmak için alçakgönüllülükle sadakanızı istiyor."
   },
   "FLAVOUR_1_MESSAGE": {
     "description": "",
     "message": "Barış seninle olsun, kardeşim. Lütfen Özgür Ruhun Koruyucularına yapmak istediğiniz bağış miktarını seçiniz."
   },
-  "FLAVOUR_1_TITLE": {
+  "FLAVOUR_2_ADTITLE": {
     "description": "",
-    "message": "BAĞIŞ YAPIN. Özgür Ruhun Koruyucuları manastırlarımızı korumak için sizin desteğinizi rica ediyor."
+    "message": "CÖMERT Mİ HİSSEDİYORSUNUZ?"
+  },
+  "FLAVOUR_2_DESC": {
+    "description": "",
+    "message": "Savaş Yetimlerinin Desteği vazgeçilmez görevini sürdürmek için yardımınıza ihtiyaç duyuyor."
   },
   "FLAVOUR_2_MESSAGE": {
     "description": "",
     "message": "Lütfen Savaş Yetimleri Vakfına yapmak istediğiniz bağış miktarını seçiniz ve tüm galaksideki çocukların çektikleri acılara son verin."
   },
-  "FLAVOUR_2_TITLE": {
+  "FLAVOUR_3_ADTITLE": {
     "description": "",
-    "message": "CÖMERT Mİ HİSSEDİYORSUNUZ? Savaş Yetimleri Vakfı vazgeçilmez görevini yerine getirmek için sizin yardımınıza ihtiyacı var."
+    "message": "KATKI SAĞLA"
+  },
+  "FLAVOUR_3_DESC": {
+    "description": "",
+    "message": "Galaksinin Dostları 'Askeri Sürücüleri Yasaklayın' kampanyası için paranıza ihtiyaç duyuyor."
   },
   "FLAVOUR_3_MESSAGE": {
     "description": "",
     "message": "Lütfen YeşilGözlem'e yapmak istediğiniz bağış miktarını seçiniz ve galaksimizdeki kirliliğe son verin."
   },
-  "FLAVOUR_3_TITLE": {
+  "FLAVOUR_4_ADTITLE": {
     "description": "",
-    "message": "YARDIM EDİN. Galaktik 'Askeri Sürücüleri Yasaklayın' Dostları kampanyasının sizin paranıza ihtiyacı var."
+    "message": "BAĞIŞ YAP!"
+  },
+  "FLAVOUR_4_DESC": {
+    "description": "",
+    "message": "Türlerimizi koruyun. Yeni yerleşilen dünyalardaki katliamı durdurun."
   },
   "FLAVOUR_4_MESSAGE": {
     "description": "",
     "message": "Lütfen bağış yapılacak miktarı seçin."
   },
-  "FLAVOUR_4_TITLE": {
+  "FLAVOUR_5_ADTITLE": {
     "description": "",
-    "message": "BAĞIŞ YAPIN! Türümüzü kurtarın. Yeni yerleşilen dünyalardaki katliamları durdurun."
+    "message": "ÖZGÜRLÜĞÜ DESTEKLE!"
+  },
+  "FLAVOUR_5_DESC": {
+    "description": "",
+    "message": "Geminizi kontrol eden mülki yazılımların adaletsizliğine son verin."
   },
   "FLAVOUR_5_MESSAGE": {
     "description": "",
     "message": "Geminizi özgür kılın! Lütfen bağış yapılacak miktarı seçin. Mutlu kırmalar."
   },
-  "FLAVOUR_5_TITLE": {
+  "FLAVOUR_6_ADTITLE": {
     "description": "",
-    "message": "ÖZGÜRLÜĞÜ DESTEKLEYİN! Geminizi kontrol eden ticari yazılımların büyük adaletsizliğine son verin."
+    "message": "GAZİLER GÜNÜ!"
+  },
+  "FLAVOUR_6_DESC": {
+    "description": "",
+    "message": "{MILITARY} gazilerini destekleyin."
+  },
+  "FLAVOUR_6_MESSAGE": {
+    "description": "",
+    "message": "{MILITARY}. Her zaman güven verir.\nPeki onlar size güvenebilir mi?"
+  },
+  "FLAVOUR_7_ADTITLE": {
+    "description": "",
+    "message": "ARKALARINDA DURUYOR MUSUNUZ?"
+  },
+  "FLAVOUR_7_DESC": {
+    "description": "",
+    "message": "{POLICE} gazilerini destekleyin."
+  },
+  "FLAVOUR_7_MESSAGE": {
+    "description": "",
+    "message": "Hayatlarını {SYSTEM} sistemini korumaya adayan cesur {POLICE} ekibinin yardımınıza ihtiyacı var!"
+  },
+  "FLAVOUR_8_ADTITLE": {
+    "description": "",
+    "message": "GAZİLERİMİZİ DESTEKLEYİN!"
+  },
+  "FLAVOUR_8_DESC": {
+    "description": "",
+    "message": "Silahlı güçlerimizin gazilerini destekleyin."
+  },
+  "FLAVOUR_8_MESSAGE": {
+    "description": "",
+    "message": "{MILITARY} mensubu cesur askerler sizi korumak için kendilerini feda ediyor!"
+  },
+  "FLAVOUR_9_ADTITLE": {
+    "description": "",
+    "message": "FAKİRLİĞE SON VERİN!"
+  },
+  "FLAVOUR_9_DESC": {
+    "description": "",
+    "message": "{FACTION} topraklarında fakirliği yok etme mücadelesine destek verin."
+  },
+  "FLAVOUR_9_MESSAGE": {
+    "description": "",
+    "message": "Hepimize güzel bir gelecek yaratmak için {FACTION} ailelerini güçlendiriyoruz!"
+  },
+  "SALES_PITCH": {
+    "description": "",
+    "message": "Bize {cash} bağışlamanız itibarınızı arttırabilir, ama her türlü yardıma açığız."
   },
   "THANK_YOU_ALL_DONATIONS_ARE_WELCOME": {
     "description": "",

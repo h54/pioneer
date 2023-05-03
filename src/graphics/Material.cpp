@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Material.h"
@@ -6,19 +6,10 @@
 namespace Graphics {
 
 	Material::Material() :
-		texture0(nullptr),
-		texture1(nullptr),
-		texture2(nullptr),
-		texture3(nullptr),
-		texture4(nullptr),
-		texture5(nullptr),
-		texture6(nullptr),
-		heatGradient(nullptr),
 		diffuse(Color::WHITE),
 		specular(Color::BLACK),
 		emissive(Color::BLACK),
-		shininess(100), //somewhat sharp
-		specialParameter0(nullptr)
+		shininess(100.f) //somewhat sharp
 	{
 	}
 
@@ -35,8 +26,7 @@ namespace Graphics {
 		instanced(false),
 		textures(0),
 		dirLights(0),
-		quality(0),
-		numShadows(0)
+		quality(0)
 	{
 	}
 
@@ -55,8 +45,7 @@ namespace Graphics {
 			a.instanced == b.instanced &&
 			a.textures == b.textures &&
 			a.dirLights == b.dirLights &&
-			a.quality == b.quality &&
-			a.numShadows == b.numShadows);
+			a.quality == b.quality);
 	}
 
 } // namespace Graphics

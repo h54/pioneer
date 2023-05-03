@@ -19,6 +19,14 @@
     "description": "",
     "message": "Найм экипажа"
   },
+  "CREW_FOR_HIRE_DESC": {
+    "description": "",
+    "message": "Команда, потенциально доступная для найма в этом космопорте."
+  },
+  "CREW_FOR_HIRE_TITLE": {
+    "description": "",
+    "message": "КОМАНДА ДЛЯ НАЙМА"
+  },
   "GO_BACK": {
     "description": "",
     "message": "[Назад]"

@@ -1,18 +1,17 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "utils.h"
 #include "DateTime.h"
 #include "FileSystem.h"
 #include "Lang.h"
-#include "PngWriter.h"
 #include "StringF.h"
 #include "gameconsts.h"
 #include "graphics/Graphics.h"
-#include "gui/Gui.h"
 #include "libs.h"
 #include <cmath>
 #include <cstdio>
+#include <fstream>
 #include <sstream>
 
 std::string format_money(double cents, bool showCents)
@@ -152,17 +151,6 @@ std::string format_distance(double dist, int precision)
 	return ss.str();
 }
 
-void write_screenshot(const Graphics::ScreendumpState &sd, const char *destFile)
-{
-	const std::string dir = "screenshots";
-	FileSystem::userFiles.MakeDirectory(dir);
-	const std::string fname = FileSystem::JoinPathBelow(dir, destFile);
-
-	write_png(FileSystem::userFiles, fname, sd.pixels.get(), sd.width, sd.height, sd.stride, sd.bpp);
-
-	Output("Screenshot %s saved\n", fname.c_str());
-}
-
 // strcasestr() adapted from gnulib
 // (c) 2005 FSF. GPL2+
 
@@ -290,12 +278,14 @@ void Vector3fToStr(const vector3f &val, char *out, size_t size)
 #ifdef USE_HEX_FLOATS
 	const int amt = std::sprintf(out, "%a,%a,%a", val.x, val.y, val.z);
 	assert(static_cast<size_t>(amt) <= size);
+	(void)amt;
 #else
 	fu32 a(val.x);
 	fu32 b(val.y);
 	fu32 c(val.z);
 	const int amt = sprintf(out, "(%" PRIu32 ",%" PRIu32 ",%" PRIu32 ")", a.u, b.u, c.u);
 	assert(static_cast<size_t>(amt) <= size);
+	(void)amt;
 #endif
 }
 
@@ -306,12 +296,14 @@ void Vector3dToStr(const vector3d &val, char *out, size_t size)
 #ifdef USE_HEX_FLOATS
 	const int amt = std::sprintf(out, "%la,%la,%la", val.x, val.y, val.z);
 	assert(static_cast<size_t>(amt) <= size);
+	(void)amt;
 #else
 	fu64 a(val.x);
 	fu64 b(val.y);
 	fu64 c(val.z);
 	const int amt = sprintf(out, "(%" PRIu64 ",%" PRIu64 ",%" PRIu64 ")", a.u, b.u, c.u);
 	assert(static_cast<size_t>(amt) <= size);
+	(void)amt;
 #endif
 }
 
@@ -322,6 +314,7 @@ void Matrix3x3fToStr(const matrix3x3f &val, char *out, size_t size)
 #ifdef USE_HEX_FLOATS
 	const int amt = std::sprintf(out, "%a,%a,%a,%a,%a,%a,%a,%a,%a", val[0], val[1], val[2], val[3], val[4], val[5], val[6], val[7], val[8]);
 	assert(static_cast<size_t>(amt) <= size);
+	(void)amt;
 #else
 	fu32 fuvals[9];
 	for (int i = 0; i < 9; i++)
@@ -334,6 +327,7 @@ void Matrix3x3fToStr(const matrix3x3f &val, char *out, size_t size)
 		fuvals[3].u, fuvals[4].u, fuvals[5].u,
 		fuvals[6].u, fuvals[7].u, fuvals[8].u);
 	assert(static_cast<size_t>(amt) <= size);
+	(void)amt;
 #endif
 }
 
@@ -344,6 +338,7 @@ void Matrix3x3dToStr(const matrix3x3d &val, char *out, size_t size)
 #ifdef USE_HEX_FLOATS
 	const int amt = std::sprintf(out, "%a,%a,%a,%a,%a,%a,%a,%a,%a", val[0], val[1], val[2], val[3], val[4], val[5], val[6], val[7], val[8]);
 	assert(static_cast<size_t>(amt) <= size);
+	(void)amt;
 #else
 	fu64 fuvals[9];
 	for (int i = 0; i < 9; i++)
@@ -356,6 +351,7 @@ void Matrix3x3dToStr(const matrix3x3d &val, char *out, size_t size)
 		fuvals[3].u, fuvals[4].u, fuvals[5].u,
 		fuvals[6].u, fuvals[7].u, fuvals[8].u);
 	assert(static_cast<size_t>(amt) <= size);
+	(void)amt;
 #endif
 }
 
@@ -366,6 +362,7 @@ void Matrix4x4fToStr(const matrix4x4f &val, char *out, size_t size)
 #ifdef USE_HEX_FLOATS
 	const int amt = std::sprintf(out, "%a,%a,%a,%a,%a,%a,%a,%a,%a,%a,%a,%a,%a,%a,%a,%a", val[0], val[1], val[2], val[3], val[4], val[5], val[6], val[7], val[8], val[9], val[10], val[11], val[12], val[13], val[14], val[15]);
 	assert(static_cast<size_t>(amt) <= size);
+	(void)amt;
 #else
 	fu32 fuvals[16];
 	for (int i = 0; i < 16; i++)
@@ -380,6 +377,7 @@ void Matrix4x4fToStr(const matrix4x4f &val, char *out, size_t size)
 		fuvals[8].u, fuvals[9].u, fuvals[10].u, fuvals[11].u,
 		fuvals[12].u, fuvals[13].u, fuvals[14].u, fuvals[15].u);
 	assert(static_cast<size_t>(amt) <= size);
+	(void)amt;
 #endif
 }
 
@@ -390,6 +388,7 @@ void Matrix4x4dToStr(const matrix4x4d &val, char *out, size_t size)
 #ifdef USE_HEX_FLOATS
 	const int amt = std::sprintf(out, "%a,%a,%a,%a,%a,%a,%a,%a,%a,%a,%a,%a,%a,%a,%a,%a", val[0], val[1], val[2], val[3], val[4], val[5], val[6], val[7], val[8], val[9], val[10], val[11], val[12], val[13], val[14], val[15]);
 	assert(static_cast<size_t>(amt) <= size);
+	(void)amt;
 #else
 	fu64 fuvals[16];
 	for (int i = 0; i < 16; i++)
@@ -404,6 +403,7 @@ void Matrix4x4dToStr(const matrix4x4d &val, char *out, size_t size)
 		fuvals[8].u, fuvals[9].u, fuvals[10].u, fuvals[11].u,
 		fuvals[12].u, fuvals[13].u, fuvals[14].u, fuvals[15].u);
 	assert(static_cast<size_t>(amt) <= size);
+	(void)amt;
 #endif
 }
 
@@ -458,6 +458,7 @@ float StrToFloat(const std::string &str)
 	fu32 uval;
 	const int amt = sscanf(str.c_str(), "%" SCNu32, &uval.u);
 	assert(amt == 1);
+	(void)amt;
 	return uval.f;
 #endif
 }
@@ -475,6 +476,7 @@ double StrToDouble(const std::string &str)
 	static_assert(sizeof(long long) == sizeof(uint64_t), "long long isn't equal in size to uint64_t");
 	fu64 uval;
 	const int amt = sscanf(str.c_str(), "%" SCNu64, &uval.u);
+	(void)amt;
 	assert(amt == 1);
 	return uval.d;
 #endif
@@ -506,10 +508,12 @@ void StrToVector3f(const char *str, vector3f &val)
 #ifdef USE_HEX_FLOATS
 	const int amt = std::sscanf(str, "%a,%a,%a", &val.x, &val.y, &val.z);
 	assert(amt == 3);
+	(void)amt;
 #else
 	fu32 a, b, c;
 	const int amt = std::sscanf(str, "(%" SCNu32 ",%" SCNu32 ",%" SCNu32 ")", &a.u, &b.u, &c.u);
 	assert(amt == 3);
+	(void)amt;
 	val.x = a.f;
 	val.y = b.f;
 	val.z = c.f;
@@ -522,10 +526,12 @@ void StrToVector3d(const char *str, vector3d &val)
 #ifdef USE_HEX_FLOATS
 	const int amt = std::sscanf(str, "%la,%la,%la", &val.x, &val.y, &val.z);
 	assert(amt == 3);
+	(void)amt;
 #else
 	fu64 a, b, c;
 	const int amt = std::sscanf(str, "(%" SCNu64 ",%" SCNu64 ",%" SCNu64 ")", &a.u, &b.u, &c.u);
 	assert(amt == 3);
+	(void)amt;
 	val.x = a.d;
 	val.y = b.d;
 	val.z = c.d;
@@ -538,6 +544,7 @@ void StrToMatrix3x3f(const char *str, matrix3x3f &val)
 #ifdef USE_HEX_FLOATS
 	const int amt = std::sscanf(str, "%a,%a,%a,%a,%a,%a,%a,%a,%a", &val[0], &val[1], &val[2], &val[3], &val[4], &val[5], &val[6], &val[7], &val[8]);
 	assert(amt == 9);
+	(void)amt;
 #else
 	fu32 fu[9];
 	const int amt = std::sscanf(str, "(%" SCNu32 ",%" SCNu32 ",%" SCNu32 ",%" SCNu32 ",%" SCNu32 ",%" SCNu32 ",%" SCNu32 ",%" SCNu32 ",%" SCNu32 ")",
@@ -545,6 +552,7 @@ void StrToMatrix3x3f(const char *str, matrix3x3f &val)
 		&fu[3].u, &fu[4].u, &fu[5].u,
 		&fu[6].u, &fu[7].u, &fu[8].u);
 	assert(amt == 9);
+	(void)amt;
 	for (int i = 0; i < 9; i++)
 		val[i] = fu[i].f;
 #endif
@@ -556,6 +564,7 @@ void StrToMatrix3x3d(const char *str, matrix3x3d &val)
 #ifdef USE_HEX_FLOATS
 	const int amt = std::sscanf(str, "%la,%la,%la,%la,%la,%la,%la,%la,%la", &val[0], &val[1], &val[2], &val[3], &val[4], &val[5], &val[6], &val[7], &val[8]);
 	assert(amt == 9);
+	(void)amt;
 #else
 	fu64 fu[9];
 	const int amt = std::sscanf(str, "(%" SCNu64 ",%" SCNu64 ",%" SCNu64 ",%" SCNu64 ",%" SCNu64 ",%" SCNu64 ",%" SCNu64 ",%" SCNu64 ",%" SCNu64 ")",
@@ -563,6 +572,7 @@ void StrToMatrix3x3d(const char *str, matrix3x3d &val)
 		&fu[3].u, &fu[4].u, &fu[5].u,
 		&fu[6].u, &fu[7].u, &fu[8].u);
 	assert(amt == 9);
+	(void)amt;
 	for (int i = 0; i < 9; i++)
 		val[i] = fu[i].d;
 #endif
@@ -582,6 +592,7 @@ void StrToMatrix4x4f(const char *str, matrix4x4f &val)
 		&fu[8].u, &fu[9].u, &fu[10].u, &fu[11].u,
 		&fu[12].u, &fu[13].u, &fu[14].u, &fu[15].u);
 	assert(amt == 16);
+	(void)amt;
 	for (int i = 0; i < 16; i++)
 		val[i] = fu[i].f;
 #endif
@@ -601,6 +612,7 @@ void StrToMatrix4x4d(const char *str, matrix4x4d &val)
 		&fu[8].u, &fu[9].u, &fu[10].u, &fu[11].u,
 		&fu[12].u, &fu[13].u, &fu[14].u, &fu[15].u);
 	assert(amt == 16);
+	(void)amt;
 	for (int i = 0; i < 16; i++)
 		val[i] = fu[i].d;
 #endif

@@ -1,4 +1,4 @@
--- Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 --
@@ -751,7 +751,7 @@ Character = {
 		if type(modifier) ~= 'number' then error('SafeRoll(): modifier must be numeric') end
 		if self.dead then return false end -- dead characters fail all tests
 		if self[attribute] and (type(self[attribute])=='number') then
-			local result = Self.DiceRoll()
+			local result = self.DiceRoll()
 			return (result < (self[attribute] + modifier) and result)
 		else
 			return false

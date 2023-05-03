@@ -13,7 +13,7 @@
   },
   "DENY_1": {
     "description": "",
-    "message": "Kom tillbaka när du har fått lite kompetens."
+    "message": "Kom tillbaka när du har lite mer erfarenhet."
   },
   "DENY_2": {
     "description": "",
@@ -25,11 +25,11 @@
   },
   "DENY_4": {
     "description": "",
-    "message": "Du är helt klart inte personen för det här jobbet."
+    "message": "Du är helt klart inte rätt person för det här jobbet."
   },
   "DENY_5": {
     "description": "",
-    "message": "Du ser ut att vara allt för oerfaren för att hantera ett kontrakt av denna betydelse."
+    "message": "Du ser ut att vara allt för oerfaren för att hantera ett kontrakt av den här betydelsen."
   },
   "DENY_6": {
     "description": "",
@@ -49,15 +49,19 @@
   },
   "FLAVOUR_0_ADTEXT": {
     "description": "",
-    "message": "ÖNSKAS: Avlägsnande av {target} från {system} systemet."
+    "message": "Önskas: Avlägsnande av {target} från {system} systemet."
+  },
+  "FLAVOUR_0_ADTITLE": {
+    "description": "",
+    "message": "AVLÄGSNING ÖNSKAS"
   },
   "FLAVOUR_0_FAILUREMSG": {
     "description": "",
-    "message": "Jag är mycket missnöjd att {target} fortfarande lever. Det behöver inte ens sägas att du inte kommer att få betalt."
+    "message": "Jag är mycket missnöjd att {target} fortfarande lever. Det behöver inte nämnas att du inte kommer att få betalt."
   },
   "FLAVOUR_0_FAILUREMSG2": {
     "description": "",
-    "message": "{target}s undanröjning var inte utfört av dig. Ingen betalning den här gången."
+    "message": "{target}s undanröjning utfördes inte av dig. Ingen betalning den här gången."
   },
   "FLAVOUR_0_INTROTEXT": {
     "description": "",
@@ -69,7 +73,11 @@
   },
   "FLAVOUR_1_ADTEXT": {
     "description": "",
-    "message": "ÖNSKAS: Någon som dödar {target} från {system} systemet."
+    "message": "Önskas: Någon som dödar {target} från {system} systemet."
+  },
+  "FLAVOUR_1_ADTITLE": {
+    "description": "",
+    "message": "ELIMINERING AV MÅL"
   },
   "FLAVOUR_1_FAILUREMSG": {
     "description": "",
@@ -89,11 +97,15 @@
   },
   "FLAVOUR_2_ADTEXT": {
     "description": "",
-    "message": "AVLÄGSNANDE: {target} är inte längre önskvärd i {system} systemet."
+    "message": "{target} är tragiskt nog inte längre önskvärd i {system}-systemet. Flyttspecialist efterfrågas."
+  },
+  "FLAVOUR_2_ADTITLE": {
+    "description": "",
+    "message": "ELIMINERING"
   },
   "FLAVOUR_2_FAILUREMSG": {
     "description": "",
-    "message": "Det är mycket synd att {target} fortfarande lever och mår bra. Du kommer inte att få någon betalning då du inte slutförde ditt kontrakt."
+    "message": "Det är beklagligt att {target} fortfarande är vid god vigör. Du får ingen betalning eftersom du inte uppfyllde ditt kontrakt."
   },
   "FLAVOUR_2_FAILUREMSG2": {
     "description": "",
@@ -105,19 +117,23 @@
   },
   "FLAVOUR_2_SUCCESSMSG": {
     "description": "",
-    "message": "Du har fått full betalning för utförande av det viktiga kontraktet."
+    "message": "Du har fått full betalning för utförande av det här viktiga kontraktet."
   },
   "FLAVOUR_3_ADTEXT": {
     "description": "",
-    "message": "AVSLUTNING: Någon som eliminerar {target}."
+    "message": "Yrkesmördare önskas för att eliminera {target}."
+  },
+  "FLAVOUR_3_ADTITLE": {
+    "description": "",
+    "message": "UPPSÄGNING"
   },
   "FLAVOUR_3_FAILUREMSG": {
     "description": "",
-    "message": "Du kommer att få betala för att du inte eliminerade {target}"
+    "message": "Du kommer att få betala för att du inte eliminerade {target}!"
   },
   "FLAVOUR_3_FAILUREMSG2": {
     "description": "",
-    "message": "Ber du om pengar för ett jobb som utförts av någon annan? Försvinn."
+    "message": "Kräver du pengar för ett jobb någon annan gjort? Försvinn."
   },
   "FLAVOUR_3_INTROTEXT": {
     "description": "",
@@ -129,7 +145,11 @@
   },
   "FLAVOUR_4_ADTEXT": {
     "description": "",
-    "message": "PENSIONERING: Någon som kan pensionera {target}."
+    "message": "Diskret operatör behövs för att säkerställa en dödlig pension för {target}."
+  },
+  "FLAVOUR_4_ADTITLE": {
+    "description": "",
+    "message": "PENSIONERING"
   },
   "FLAVOUR_4_FAILUREMSG": {
     "description": "",
@@ -149,7 +169,11 @@
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "BIOGRAFI: Några beundrare önskar se {target} död."
+    "message": "Vissa beundrare önskar {target} död. Kvalificerade uppsägningsexperter ansöker här."
+  },
+  "FLAVOUR_5_ADTITLE": {
+    "description": "",
+    "message": "BIOGRAPHICAL"
   },
   "FLAVOUR_5_FAILUREMSG": {
     "description": "",
@@ -177,11 +201,7 @@
   },
   "IT_MUST_BE_DONE_AFTER": {
     "description": "",
-    "message": "Det måste göras efter {target} lämnar {spaceport}. Missa inte detta tillfälle."
-  },
-  "LY": {
-    "description": "",
-    "message": "ly"
+    "message": "Det måste göras efter att {target} har lämnat {spaceport}. Missa inte detta tillfälle."
   },
   "OK_AGREED": {
     "description": "",
@@ -293,7 +313,7 @@
   },
   "TITLE_24": {
     "description": "",
-    "message": "Sergant"
+    "message": "Sergeant"
   },
   "TITLE_3": {
     "description": "",
@@ -329,6 +349,6 @@
   },
   "X_WILL_BE_LEAVING": {
     "description": "",
-    "message": "{target} kommer att lämna {spaceport} i {system} systemet ({sectorX}, {sectorY}, {sectorZ}), avstånd {dist} ly, vid {date}.\nSkeppets namn är {shipname} och har regisrerings id {shipregid}."
+    "message": "{target} kommer att lämna {spaceport} i {system} systemet ({sectorX}, {sectorY}, {sectorZ}), avstånd {dist} ly, vid {date}.\nSkeppets namn är {shipname} och har registrerings id {shipregid}."
   }
 }

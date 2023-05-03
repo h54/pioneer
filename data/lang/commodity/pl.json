@@ -29,7 +29,7 @@
   },
   "CARBON_ORE_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Węgiel to jeden z najpowszechniejszych znanych nam pierwiastków. Używany jest w niemal wszystkim, od plastiku po stopy a nawet produkcję energii. Jest drogim, ale ważnym towarem. Jako taki, jest importowany przez niemal wszyskie osady przemysłowe."
+    "message": "Węgiel to jeden z najpowszechniejszych znanych nam pierwiastków. Używany jest w niemal wszystkim, od plastiku po stopy a nawet produkcję energii. Jest niedrogim, ale ważnym towarem. Jako taki, jest importowany przez niemal wszystkie osady przemysłowe."
   },
   "COMPUTERS": {
     "description": "",
@@ -157,7 +157,7 @@
   },
   "MILITARY_FUEL_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Używane jako paliwo w bardziej zaawansowanych napędach wojskowych. Napędy te powodują zanieczyszczenia, które trzeba utylizować. Ze względu na syntetyczną naturę, paliwo wojskowe jest droższe i trudniej dostępne, niż wodór, nie występuje też naturalnie."
+    "message": "Używany jako paliwo dla bardziej zaawansowanych napędów wojskowych. Napędy te w trakcie pracy wytwarzają radioaktywne zanieczyszczenia, które należy utylizować. Ze względu na jego syntetyczną naturę, paliwo wojskowe jest droższe i rzadsze niż wodór, nie występuje też w naturze."
   },
   "MINING_MACHINERY": {
     "description": "",
@@ -205,7 +205,7 @@
   },
   "RADIOACTIVES_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Wytwarzane przez reaktory jądrowe i wojskowe hipernapędy, odpadki nuklearne są najtrudniejszymi i najniebezpieczniejszymi towarami do transportu i przechowywania. S tego powodu, większość portów gwiezdnych płaci za ich wywóz. Wyrzucanie ich gdzie popadnie jet poważnym wykroczeniem."
+    "message": "Wytwarzane przez reaktory atomowe oraz napędy wojskowe, odpady atomowe są najtrudniejszymi i najbardziej niebezpiecznymi do transportu i magazynowania ładunkami. Z tego powodu większość stacji gwiezdnych płaci za ich wywóz. Wyrzucanie odpadów atomowych jest poważnym przestępstwem."
   },
   "ROBOTS": {
     "description": "",
@@ -213,7 +213,7 @@
   },
   "ROBOTS_DESCRIPTION": {
     "description": "This is an artistic description of the commodity. Translate as you deem appropriate or come up with your own description, long or short, its up to you.",
-    "message": "Roboty są często importowane do układów przemysłowychi górniczych, ze względu na swoje zdolności łatwego wykonywania zadań zbyt trudnych, nudnych lub niebezpiecznych dla ludzi. Mogą również służyć za policjantów i prawników."
+    "message": "Roboty są często importowane do układów przemysłowych i górniczych, ze względu na swoje zdolności łatwego wykonywania zadań zbyt trudnych, nudnych lub niebezpiecznych dla ludzi. Mogą również służyć za policjantów i prawników."
   },
   "RUBBISH": {
     "description": "",

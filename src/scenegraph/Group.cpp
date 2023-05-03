@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Group.h"
@@ -112,7 +112,6 @@ namespace SceneGraph {
 
 	void Group::Render(const matrix4x4f &trans, const RenderData *rd)
 	{
-		PROFILE_SCOPED()
 		RenderChildren(trans, rd);
 	}
 
@@ -127,7 +126,6 @@ namespace SceneGraph {
 
 	void Group::Render(const std::vector<matrix4x4f> &trans, const RenderData *rd)
 	{
-		PROFILE_SCOPED()
 		RenderChildren(trans, rd);
 	}
 

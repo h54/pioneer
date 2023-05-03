@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "HudTrail.h"
@@ -6,8 +6,10 @@
 #include "Body.h"
 #include "Frame.h"
 #include "Pi.h"
+#include "graphics/Material.h"
 #include "graphics/RenderState.h"
 #include "graphics/Renderer.h"
+#include "graphics/Types.h"
 
 const float UPDATE_INTERVAL = 0.1f;
 const Uint16 MAX_POINTS = 100;
@@ -19,10 +21,13 @@ HudTrail::HudTrail(Body *b, const Color &c) :
 {
 	m_currentFrame = b->GetFrame();
 
+	Graphics::MaterialDescriptor desc;
+
 	Graphics::RenderStateDesc rsd;
 	rsd.blendMode = Graphics::BLEND_ALPHA_ONE;
 	rsd.depthWrite = false;
-	m_renderState = Pi::renderer->CreateRenderState(rsd);
+	rsd.primitiveType = Graphics::LINE_STRIP;
+	m_lineMat.reset(Pi::renderer->CreateMaterial("vtxColor", desc, rsd));
 }
 
 void HudTrail::Update(float time)
@@ -33,7 +38,6 @@ void HudTrail::Update(float time)
 	if (m_updateTime > UPDATE_INTERVAL) {
 		m_updateTime = 0.f;
 		FrameId bodyFrameId = m_body->GetFrame();
-		const Frame *bodyFrame = Frame::GetFrame(bodyFrameId);
 
 		if (!m_currentFrame) {
 			m_currentFrame = bodyFrameId;
@@ -66,6 +70,7 @@ void HudTrail::Render(Graphics::Renderer *r)
 		const vector3d curpos = m_body->GetInterpPosition();
 		tvts.reserve(MAX_POINTS);
 		colors.reserve(MAX_POINTS);
+
 		tvts.push_back(vector3f(0.f));
 		colors.push_back(Color::BLANK);
 		float alpha = 1.f;
@@ -78,9 +83,9 @@ void HudTrail::Render(Graphics::Renderer *r)
 			colors.back().a = Uint8(alpha * 255);
 		}
 
-		r->SetTransform(m_transform);
+		r->SetTransform(matrix4x4f(m_transform));
 		m_lines.SetData(tvts.size(), &tvts[0], &colors[0]);
-		m_lines.Draw(r, m_renderState, Graphics::LINE_STRIP);
+		m_lines.Draw(r, m_lineMat.get());
 	}
 }
 

@@ -25,39 +25,75 @@
   },
   "ADTEXT_1": {
     "description": "",
-    "message": "TRANSPORT TOWARÓW. Dostarcz ładunek do systemu {system}"
+    "message": "Statek potrzebny, żeby dostarczyć towar do systemu {system}."
   },
   "ADTEXT_2": {
     "description": "",
-    "message": "POTRZEBNY TRANSPORT. Transport do systemu {system}. Płacę {cash}"
+    "message": "Potrzebny transport dóbr do systemu {system}. Płacę {cash}."
   },
   "ADTEXT_EXPENSIVE_1": {
     "description": "",
-    "message": "DOSTAWA. Cenny ładunek do sytemu {system}. {cash} dla doświadczonego pilota."
+    "message": "Dostawa drogiego towaru do systemu {system}. Płacę {cash} dla doświadczonego pilota."
   },
   "ADTEXT_LOCAL_1": {
     "description": "",
-    "message": "LOKALNA DOSTAWA. Przewieź towary do {starport}"
+    "message": "Przewoźnicy potrzebni do transportu w tym systemie. Trzeba dostarczyć towar do {starport}."
   },
   "ADTEXT_LOCAL_2": {
     "description": "",
-    "message": "POTRZEBNY TRANSPORT. Dostarcz lokalny ładunek do {starport}"
+    "message": "Potrzeba lokalnej dostawy personalnych rzeczy do {starport}."
   },
   "ADTEXT_LOCAL_3": {
     "description": "",
-    "message": "LOKALNA DOSTAWA TOWARÓW. Dostarcz ładunek do {starport}"
+    "message": "Prywatny kontrakt na dostawę towaru. Potrzebny certyfikowany dostawca towaru do {starport}."
   },
   "ADTEXT_PICKUP_1": {
     "description": "",
-    "message": "ODBIÓR TOWARU. Potrzeba odebrać ładunek z układu {system}."
+    "message": "Potrzebny odbiór towaru z systemu {system}. Szczegóły w ogłoszeniu."
   },
   "ADTEXT_PICKUP_LOCAL_1": {
     "description": "",
-    "message": "PRZEPROWADZKA. Potrzeba przenieść ładunek z {starport}."
+    "message": "Potrzebna usługa przeniesienia towaru. Potrzeba odebrać towar ze stacji {starport}."
   },
   "ADTEXT_WHOLESALER_1": {
     "description": "",
-    "message": "USŁUGA TRANSPORTOWA. Potrzebujemy statku do dostarczenia przesyłki do układu {system}."
+    "message": "Kwalifikowany kontrahent potrzebny do wykonania zlecenia. Potrzebujemy statku ktory dostarczy towar hurtowy do systemu {system}."
+  },
+  "ADTITLE_1": {
+    "description": "",
+    "message": "DOSTAWA TOWARU"
+  },
+  "ADTITLE_2": {
+    "description": "",
+    "message": "POTRZEBNY TRANSPORT TOWARU"
+  },
+  "ADTITLE_EXPENSIVE_1": {
+    "description": "",
+    "message": "ZABEZPIECZONA DOSTAWA"
+  },
+  "ADTITLE_LOCAL_1": {
+    "description": "",
+    "message": "FRACHT KRÓTKODYSTANSOWY"
+  },
+  "ADTITLE_LOCAL_2": {
+    "description": "",
+    "message": "LOKALNY FRACHT TOWARÓW"
+  },
+  "ADTITLE_LOCAL_3": {
+    "description": "",
+    "message": "LOKALNA DOSTAWA TOWARU"
+  },
+  "ADTITLE_PICKUP_1": {
+    "description": "",
+    "message": "ODBIÓR TOWARU"
+  },
+  "ADTITLE_PICKUP_LOCAL_1": {
+    "description": "",
+    "message": "PRZENOSINY W SYSTEMIE"
+  },
+  "ADTITLE_WHOLESALER_1": {
+    "description": "",
+    "message": "HURTOWA DOSTAWA TOWARÓW"
   },
   "ALUMINIUM_TUBES": {
     "description": "custom cargo",
@@ -135,6 +171,18 @@
     "description": "",
     "message": "Wróć, gdy będziesz bardziej doświadczony."
   },
+  "DENY_AGAIN_1": {
+    "description": "",
+    "message": "Przykro mi, ale już jesteśmy umówieni. Jednakże, chętnie będę robić z Tobą interesy po udanej dostawie."
+  },
+  "DENY_AGAIN_2": {
+    "description": "",
+    "message": "Proszę najpierw wykonać aktualne zlecenie. Potem możemy negocjować kolejne dostawy."
+  },
+  "DENY_AGAIN_3": {
+    "description": "",
+    "message": "Proszę pana, proszę najpierw dostarczyć mój towar, potem możemy planować kolejne zlecenia."
+  },
   "DIAMONDS": {
     "description": "custom cargo",
     "message": "Diamenty"
@@ -199,6 +247,10 @@
     "description": "custom cargo",
     "message": "Wyposarzenie"
   },
+  "GO_BACK": {
+    "description": "Shown on a button in a sub-menu, to move back, to previous menu",
+    "message": "Powrót."
+  },
   "GREENHOUSES": {
     "description": "custom cargo",
     "message": "Szklarnie"
@@ -228,7 +280,7 @@
     "message": "Jest tego {amount}t."
   },
   "HOWMUCH_SINGULAR_1": {
-    "description": "This string is only used for 1 metric tons (singular)",
+    "description": "This string is only used for 1 metric ton (singular)",
     "message": " To tylko {amount}t."
   },
   "HOWMUCH_WHOLESALER_1": {
@@ -315,6 +367,10 @@
     "description": "",
     "message": "Pozdrowienia, nazywam się {name} i pracuję dla Haber Corp. Zapłacimy {cash} za przelot do {starport} w układzie {system} ({sectorx}, {sectory}, {sectorz}), {dist} lś stąd."
   },
+  "IS_IT_NEGOTIABLE": {
+    "description": "",
+    "message": "Czy można negocjować ilość towaru?"
+  },
   "I_AM_ON_MY_WAY": {
     "description": "",
     "message": "Czujniki wskazują, że masz uszkodzenia. Jestem w drodze."
@@ -327,21 +383,45 @@
     "description": "",
     "message": "Odniosłem uszkodzenia. Potrzebuję pomocy."
   },
-  "LY": {
-    "description": "",
-    "message": "lś"
-  },
   "MACHINE_TOOLS": {
     "description": "custom cargo",
     "message": "Maszyneria"
+  },
+  "NEGOTIABLE_1": {
+    "description": "regarding mass, always more than 1t",
+    "message": "Mogę zaproponować:"
+  },
+  "NEGOTIABLE_2": {
+    "description": "regarding mass, always more than 1t",
+    "message": "{amount}t {cargoname} może zostać podzielone w taki sposób:"
+  },
+  "NEGOTIABLE_3": {
+    "description": "regarding mass, always more than 1t",
+    "message": "Tak, możemy zmienić ilość"
+  },
+  "NEGOTIABLE_NO_1": {
+    "description": "regarding mass, always more than 1t",
+    "message": "Niestety, nie możemy zmienić ilości towaru. Musisz dostarczyć {amount} ton jednocześnie."
+  },
+  "NEGOTIABLE_SINGULAR_1": {
+    "description": "This string is only used for 1 metric ton (singular)",
+    "message": "Nie, to tylko {amount} tona."
   },
   "NEPTUNIUM": {
     "description": "custom cargo",
     "message": "Neptun"
   },
+  "OFFER": {
+    "description": "",
+    "message": "Transport {amount}t za {amount}"
+  },
   "OK_AGREED": {
     "description": "",
     "message": "Ok, zgoda."
+  },
+  "OK_WE_AGREE": {
+    "description": "",
+    "message": "OK, zgadzamy się dla {amount}t za {reward}."
   },
   "PICKUP_FROM": {
     "description": "from a location",
@@ -469,7 +549,7 @@
   },
   "STEM_BOLTS": {
     "description": "custom cargo, used in Star Trek DS9 as something with unclear usefulness",
-    "message": "Self-sealing stem bolts"
+    "message": "Samodociskające się śruby"
   },
   "SUCCESSMSG_1": {
     "description": "",
@@ -502,6 +582,10 @@
   "TITANIUM": {
     "description": "custom cargo",
     "message": "Tytan"
+  },
+  "TOO_LATE_TO_PICK_UP": {
+    "description": "",
+    "message": "Jesteś bardzo spóźniony. Twoje usługi są tak beznadziejne, że zrywam kontrakt z Tobą."
   },
   "TUNGSTEN": {
     "description": "custom cargo",

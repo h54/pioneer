@@ -1,4 +1,4 @@
-// Copyright © 2008-2020 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #pragma once
@@ -80,6 +80,8 @@ namespace PiGui {
 		int m_pixelsize;
 	};
 
+	class InstanceRenderer;
+
 	/* Class to wrap ImGui. */
 	class Instance : public RefCounted {
 	public:
@@ -87,6 +89,8 @@ namespace PiGui {
 
 		void Init(Graphics::Renderer *renderer);
 		void Uninit();
+
+		InstanceRenderer *GetRenderer() { return m_instanceRenderer.get(); }
 
 		// Call at the start of every frame. Calls ImGui::NewFrame() internally.
 		void NewFrame();
@@ -96,6 +100,12 @@ namespace PiGui {
 
 		// Calls ImGui::EndFrame() internally and does book-keeping before rendering.
 		void Render();
+
+		// Sets the ImGui Style object to use the predefined development tooling style
+		void SetDebugStyle();
+
+		// Sets the ImGui Style object to use the game UI style object as modified by Lua
+		void SetNormalStyle();
 
 		ImFont *AddFont(const std::string &name, int size);
 		ImFont *GetFont(const std::string &name, int size);
@@ -108,6 +118,11 @@ namespace PiGui {
 
 	private:
 		Graphics::Renderer *m_renderer;
+		std::unique_ptr<InstanceRenderer> m_instanceRenderer;
+
+		// Stores the pointer to the ini file name given to ImGui,
+		// so we can delete[] the memory again when uninitializing.
+		char *m_ioIniFilename;
 
 		std::map<std::pair<std::string, int>, ImFont *> m_fonts;
 		std::map<ImFont *, std::pair<std::string, int>> m_im_fonts;
@@ -116,19 +131,24 @@ namespace PiGui {
 
 		std::map<std::string, PiFont> m_font_definitions;
 
+		ImGuiStyle m_debugStyle;
+		bool m_debugStyleActive;
+
 		void BakeFonts();
 		void BakeFont(PiFont &font);
 		void AddFontDefinition(const PiFont &font) { m_font_definitions[font.name()] = font; }
 		void ClearFonts();
 	};
 
-	int RadialPopupSelectMenu(const ImVec2 &center, std::string popup_id, int mouse_button, std::vector<ImTextureID> tex_ids, std::vector<std::pair<ImVec2, ImVec2>> uvs, unsigned int size, std::vector<std::string> tooltips);
+	int RadialPopupSelectMenu(const ImVec2 center, const char *popup_id, int mouse_button, const std::vector<ImTextureID> &tex_ids, const std::vector<std::pair<ImVec2, ImVec2>> &uvs, const std::vector<ImU32> &colors, const std::vector<const char *> &tooltips, unsigned int size, unsigned int padding);
 	bool CircularSlider(const ImVec2 &center, float *v, float v_min, float v_max);
 
 	bool LowThrustButton(const char *label, const ImVec2 &size_arg, int thrust_level, const ImVec4 &bg_col, int frame_padding, ImColor gauge_fg, ImColor gauge_bg);
 	bool ButtonImageSized(ImTextureID user_texture_id, const ImVec2 &size, const ImVec2 &imgSize, const ImVec2 &uv0, const ImVec2 &uv1, int frame_padding, const ImVec4 &bg_col, const ImVec4 &tint_col);
 
 	void ThrustIndicator(const std::string &id_string, const ImVec2 &size, const ImVec4 &thrust, const ImVec4 &velocity, const ImVec4 &bg_col, int frame_padding, ImColor vel_fg, ImColor vel_bg, ImColor thrust_fg, ImColor thrust_bg);
+
+	void IncrementDrag(const std::string &label, int &v, const int v_min, const int v_max, const std::string &format);
 
 	inline bool WantCaptureMouse()
 	{
