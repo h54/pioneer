@@ -1,7 +1,8 @@
--- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 ---@class SpaceStation : ModelBody
+---@field techLevel integer
 local SpaceStation = package.core['SpaceStation']
 
 local Economy     = require 'Economy'
@@ -417,9 +418,11 @@ function SpaceStation:AddCommodityStock(itemType, amount)
 	local market = self:GetCommodityMarket(itemType)
 
 	if amount < 0 then
-		market[1] = market[1] + amount
+		-- Buying from market - reduce commodity stock
+		market[1] = math.max(market[1] + amount, 0)
 	else
-		market[2] = market[2] - amount
+		-- Selling to market - reduce commodity demand
+		market[2] = math.max(market[2] - amount, 0)
 	end
 
 	Economy.UpdateCommodityPriceMod(assert(self:GetSystemBody()), itemType.name, market)
@@ -941,7 +944,7 @@ function SpaceStation:UnlockAdvert (ref)
 end
 
 local function updateSystem ()
-	local stations = Space.GetBodies(function (b) return b.superType == "STARPORT" end)
+	local stations = Space.GetBodies("SpaceStation")
 	for i, station in ipairs(stations) do
 		-- updateStationMarket(station)
 		Economy.UpdateStationMarket(station:GetSystemBody())
@@ -1009,6 +1012,10 @@ Event.Register("onGameStart", function ()
 		visited = loaded_data.visited or {}
 		police = loaded_data.police
 
+		for station,_ in pairs(visited) do
+			createCommodityStock(station)
+		end
+
 		for station,list in pairs(loaded_data.shipsOnSale) do
 			shipsOnSale[station] = {}
 			for i,entry in pairs(loaded_data.shipsOnSale[station]) do
@@ -1025,6 +1032,12 @@ Event.Register("onGameStart", function ()
 		end
 
 		loaded_data = nil
+	end
+
+	local station = Game.player:GetDockedWith()
+
+	if station and station:isa("SpaceStation") and not visited[station] then
+		createStationData(station)
 	end
 
 	Timer:CallEvery(3600, updateSystem)

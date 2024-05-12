@@ -131,6 +131,10 @@
     "description": "Distance in space, between two locations",
     "message": "Távolság:"
   },
+  "DO_I_NEED_SPECIAL_EQUIPMENT": {
+    "description": "",
+    "message": "Szükséges bármilyen különleges felszerelés?"
+  },
   "FAILUREMSG_1": {
     "description": "",
     "message": "Szégyelheti magát. Tűnjön a szemem elől."
@@ -374,5 +378,9 @@
   "WILL_I_BE_IN_TROUBLE": {
     "description": "",
     "message": "Számíthatok veszélyre?"
+  },
+  "YOU_NEED_A_RADAR": {
+    "description": "",
+    "message": "Igen, szükséged lesz radarra! Ha elfogadod a megbízást, beprogramozom a hajód számítógépét a szükséges adatok rögzítésére. Mikor visszaérkezel, letöltöm az adatokat."
   }
 }

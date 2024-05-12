@@ -305,7 +305,7 @@
   },
   "FLAVOUR_4_TYPEOFHELPTEXT": {
     "description": "",
-    "message": "Пилотът иска {unit} тона {cargo}."
+    "message": "Пилотът иска {unit} тона {cargo}. {high_gravity}"
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
@@ -426,6 +426,22 @@
   "FULL_PASSENGERS": {
     "description": "",
     "message": "Корабът е пълен. Няма повече места за пасажерите."
+  },
+  "HIGHGRAVITY_0": {
+    "description": "",
+    "message": "Моля, имайте предвид, че повърхностната гравитация на {planet} е {gravity} g."
+  },
+  "HIGHGRAVITY_1": {
+    "description": "",
+    "message": "Трябва да знаете, че повърхностната гравитация на {planet} е {gravity} g."
+  },
+  "HIGHGRAVITY_2": {
+    "description": "",
+    "message": "Ще се приземите и излетите при повърхностна гравитация от {gravity} g."
+  },
+  "HIGHGRAVITY_3": {
+    "description": "",
+    "message": "Повърхностната гравитация на {planet} е {gravity} g."
   },
   "HOW_FAR": {
     "description": "",

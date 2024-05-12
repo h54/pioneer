@@ -1,4 +1,4 @@
--- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local ui = require 'pigui'
@@ -56,7 +56,10 @@ local function drawModals(idx)
 		win:outerHandler(function ()
 			if ui.beginPopupModal(win.name, win.flags) then
 				win:innerHandler()
-				drawModals(idx+1)
+				-- modal could close in handler
+				if win.isOpen then
+					drawModals(idx+1)
+				end
 				ui.endPopup()
 			end
 		end)

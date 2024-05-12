@@ -1,4 +1,4 @@
--- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local ui = require 'pigui'
@@ -128,7 +128,8 @@ local refuelInternalTank = function (delta)
 	end
 
 	Game.player:AddMoney(-total)
-	station:AddCommodityStock(Commodities.hydrogen, -math.ceil(mass))
+	local commodityChangeAmount = mass < 0 and math.floor(mass) or math.ceil(mass)
+	station:AddCommodityStock(Commodities.hydrogen, -commodityChangeAmount)
 	Game.player:SetFuelPercent(fuel)
 end
 

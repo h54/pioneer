@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _BODY_H
@@ -9,6 +9,7 @@
 #include "FrameId.h"
 #include "lua/PropertiedObject.h"
 #include "matrix3x3.h"
+#include "matrix4x4.h"
 #include "vector3.h"
 #include <string>
 
@@ -40,6 +41,13 @@ enum class ObjectType { // <enum name=PhysicsObjectType scope='ObjectType' publi
 	PROJECTILE, // <enum skip>
 	MISSILE,
 	HYPERSPACECLOUD // <enum skip>
+};
+
+enum class AltitudeType { // <enum name=AltitudeType scope='AltitudeType' public>
+	//SEA_LEVEL if distant, ABOVE_TERRAIN otherwise
+	DEFAULT,
+	SEA_LEVEL,
+	ABOVE_TERRAIN
 };
 
 #define OBJDEF(__thisClass, __parentClass, __TYPE)                                  \
@@ -174,6 +182,7 @@ public:
 	vector3d GetInterpPositionRelTo(FrameId relToId) const;
 	vector3d GetInterpPositionRelTo(const Body *relTo) const;
 	matrix3x3d GetInterpOrientRelTo(FrameId relToId) const;
+	double GetAltitudeRelTo(const Body* relTo, AltitudeType altType = AltitudeType::DEFAULT);
 
 	// should set m_interpolatedTransform to the smoothly interpolated value
 	// (interpolated by 0 <= alpha <=1) between the previous and current physics tick

@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "LuaConstants.h"
@@ -6,6 +6,8 @@
 
 #include "EnumStrings.h"
 #include "enum_table.h"
+
+#include <cassert>
 
 /*
  * Namespace: Constants

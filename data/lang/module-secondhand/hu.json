@@ -87,6 +87,18 @@
     "description": "Regarding installing a component on the ship",
     "message": "Hogyan szerelem be?"
   },
+  "NO_LONGER_AVAILABLE_0": {
+    "description": "If the sentence is hard to translate, just make up an excuse why the item is no longer available.",
+    "message": "Sajnálom, de pont eladtam!"
+  },
+  "NO_LONGER_AVAILABLE_1": {
+    "description": "If the sentence is hard to translate, just make up an excuse why the item is no longer available.",
+    "message": "Úgy tűnik a kollégám pont eladta másvalakinek. Sajnálom!"
+  },
+  "NO_LONGER_AVAILABLE_2": {
+    "description": "If the sentence is hard to translate, just make up an excuse why the item is no longer available.",
+    "message": "Meggondoltam magam, nem akarom eladni."
+  },
   "REPEAT_OFFER": {
     "description": "",
     "message": "Megismételnéd az ajánlatot?"

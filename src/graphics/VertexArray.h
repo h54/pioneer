@@ -1,11 +1,14 @@
-// Copyright Â© 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright Â© 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _VERTEXARRAY_H
 #define _VERTEXARRAY_H
 
 #include "Types.h"
-#include "libs.h"
+#include "Color.h"
+#include "vector3.h"
+
+#include <vector>
 
 namespace Graphics {
 

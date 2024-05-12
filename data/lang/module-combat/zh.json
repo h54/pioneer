@@ -131,6 +131,10 @@
     "description": "Distance in space, between two locations",
     "message": "距离:"
   },
+  "DO_I_NEED_SPECIAL_EQUIPMENT": {
+    "description": "",
+    "message": "我需要什么特殊设备吗?"
+  },
   "FAILUREMSG_1": {
     "description": "",
     "message": "你真差劲。离开我的视线。"
@@ -361,7 +365,7 @@
   },
   "TARGET_AREA_REACHED": {
     "description": "",
-    "message": "Target area reached. Start data logging."
+    "message": "已到达目标区域. 开始记录数据日志."
   },
   "TIME_LIMIT": {
     "description": "",
@@ -374,5 +378,9 @@
   "WILL_I_BE_IN_TROUBLE": {
     "description": "",
     "message": "我会有麻烦吗？"
+  },
+  "YOU_NEED_A_RADAR": {
+    "description": "",
+    "message": "是的, 你需要一台雷达! 若你同意, 我将给你的飞船电脑编写程序, 让它记录咱们需要的雷达数据. 这些数据将在你归来后传输给我."
   }
 }

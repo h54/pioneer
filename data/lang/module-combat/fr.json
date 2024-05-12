@@ -21,11 +21,11 @@
   },
   "ADTEXT_3": {
     "description": "",
-    "message": "Besoin de mercenaire qualifiés avec vaisseau bien équipé. Détails de la mission disponibles sur demande."
+    "message": "Besoin d'un mercenaire qualifié avec vaisseau bien équipé. Détails de la mission disponibles sur demande."
   },
   "ADTEXT_4": {
     "description": "",
-    "message": "{org} recherche des mercenaire pour une mission dans le système {system}. Rémunération de {cash}."
+    "message": "{org} recherche un mercenaire sans peur pour une mission dans le système {system}. Rémunération de {cash}."
   },
   "ADTEXT_5": {
     "description": "",
@@ -130,6 +130,10 @@
   "DISTANCE": {
     "description": "Distance in space, between two locations",
     "message": "Distance:"
+  },
+  "DO_I_NEED_SPECIAL_EQUIPMENT": {
+    "description": "",
+    "message": "Ai-je besoin d'un équipement particulier ?"
   },
   "FAILUREMSG_1": {
     "description": "",
@@ -374,5 +378,9 @@
   "WILL_I_BE_IN_TROUBLE": {
     "description": "",
     "message": "Faut-il s'attendre à des ennuis ?"
+  },
+  "YOU_NEED_A_RADAR": {
+    "description": "",
+    "message": "Oui, il vous faut un radar! Si vous êtes d'accord, je programmerai l'ordinateur de votre vaisseau afin d'enregistrer les données radar dont nous avons besoin. Ces données me seront transférées la prochaine fois que vous reviendrez."
   }
 }

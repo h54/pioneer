@@ -87,6 +87,18 @@
     "description": "Regarding installing a component on the ship",
     "message": "Wie baue ich es ein?"
   },
+  "NO_LONGER_AVAILABLE_0": {
+    "description": "If the sentence is hard to translate, just make up an excuse why the item is no longer available.",
+    "message": "Tut mir Leid, ist gerade ausverkauft."
+  },
+  "NO_LONGER_AVAILABLE_1": {
+    "description": "If the sentence is hard to translate, just make up an excuse why the item is no longer available.",
+    "message": "Es sieht so aus als hätte mein Kollege es gerade an jemand anderen verkauft. Tut mir Leid."
+  },
+  "NO_LONGER_AVAILABLE_2": {
+    "description": "If the sentence is hard to translate, just make up an excuse why the item is no longer available.",
+    "message": "Ich habe mich umentschieden. Ich verkaufe nicht mehr."
+  },
   "REPEAT_OFFER": {
     "description": "",
     "message": "Angebot wiederholen"

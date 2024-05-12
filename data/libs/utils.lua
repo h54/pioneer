@@ -1,4 +1,4 @@
--- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Engine = require 'Engine' -- rand
@@ -171,6 +171,7 @@ function utils.filter_table(table, predicate)
 	end
 	return t
 end
+
 --
 -- Function: filter_array
 --
@@ -185,10 +186,26 @@ end
 ---@param predicate fun(v: T): boolean
 function utils.filter_array(array, predicate)
 	local t = {}
-	for i, v in ipairs(array) do
+	for _, v in ipairs(array) do
 		if predicate(v) then table.insert(t, v) end
 	end
 	return t
+end
+
+-- Function: to_array
+--
+-- Filters the values of the given table and converts them to an array.
+-- Key iteration order is undefined (uses pairs() internally).
+---@generic K, V
+---@param t table<K, V>
+---@param predicate fun(v: V): boolean
+---@return V[]
+utils.to_array = function(t, predicate)
+	local out = {}
+	for _, v in pairs(t) do
+		if predicate(v) then table.insert(out, v) end
+	end
+	return out
 end
 
 --
@@ -354,8 +371,8 @@ utils.inherits = function (baseClass, name)
 	new_class.meta = { __index = new_class, class=name }
 
 	-- generic constructor
-	function new_class.New(args)
-		local newinst = base_class.New(args)
+	function new_class.New(...)
+		local newinst = base_class.New(...)
 		setmetatable( newinst, new_class.meta )
 		return newinst
 	end
@@ -387,20 +404,72 @@ end
 -- Wrapper for utils.inherits that manages creating new class instances and
 -- calling the constructor.
 --
-utils.class = function (name, baseClass)
-	local new_class = utils.inherits(baseClass, name)
+utils.class = function (name, base_class)
+	base_class = base_class or object
+	local new_class = utils.inherits(base_class, name)
 
 	new_class.New = function(...)
 		local instance = setmetatable( {}, new_class.meta )
 
-		if new_class.Constructor then
-			new_class.Constructor(instance, ...)
-		end
+		new_class.Constructor(instance, ...)
 
 		return instance
 	end
 
+	new_class.Constructor = function(self, ...)
+		if base_class.Constructor then
+			base_class.Constructor(self, ...)
+		end
+	end
+
 	return new_class
+end
+
+local _proto = {}
+
+_proto.__clone = function(self) end
+
+function _proto:clone(mixin)
+	local new = { __index = self }
+	setmetatable(new, new)
+
+	new:__clone()
+
+	if mixin then
+		table.merge(new, mixin)
+	end
+
+	return new
+end
+
+-- Simple Self/iolang style prototype chains
+-- Can be used with lua serialization as long as no functions are set anywhere
+-- but on the base prototype returned from utils.proto
+utils.proto = function(classname)
+	local newProto = _proto:clone()
+
+	newProto.class = classname
+
+	function newProto:Serialize()
+		local out = table.copy(self)
+
+		-- Cannot serialize functions, so references to the base prototype are
+		-- not serialized
+		if out.__index == newProto then
+			out.__index = nil
+		end
+
+		return out
+	end
+
+	-- If a prototype doesn't have a serialized __index field, it referred to
+	-- this base prototype originally
+	function newProto:Unserialize()
+		self.__index = self.__index or newProto
+		return setmetatable(self, self)
+	end
+
+	return newProto
 end
 
 --
@@ -425,17 +494,20 @@ utils.print_r = function(t)
 			if type(t) == "table" then
 				for key, val in pairs(t) do
 					local string_key = tostring(key)
+					local string_val = tostring(val)
 
-					if type(val) == "table" then
-						write(indent, '[%s] => %s {', string_key, tostring(t))
+					if type(val) == "table" and not print_r_cache[string_val] then
+						write(indent, '[%s] => %s {', string_key, string_val)
 
 						sub_print_r(val, indent + string.len(string_key) + 8)
 
 						write(indent + string.len(string_key) + 6, "}")
+					elseif type(val) == "table" then
+						write(indent, "[%s] => *%s", string_key, string_val)
 					elseif (type(val)=="string") then
-						write(indent, "[%s] => '%s'", string_key, val)
+						write(indent, "[%s] => '%s'", string_key, string_val)
 					else
-						write(indent, "[%s] => %s", string_key, tostring(val))
+						write(indent, "[%s] => %s", string_key, string_val)
 					end
 				end
 			else
@@ -482,14 +554,46 @@ utils.contains = function(t, val)
 end
 
 --
+-- Function: utils.indexOf
+--
+-- looking for the first counter index of an element in an array.
+--
+-- Example:
+--
+-- > local index = utils.indexOf(ShipType.shipIDs, shipID)
+--
+-- Parameters:
+--
+--   array
+--
+--   value - searched array element
+--
+-- Return:
+--
+--   value - any, array item
+--
+utils.indexOf = function(array, value)
+	for i, v in ipairs(array) do
+		if v == value then
+			return i
+		end
+	end
+end
+
+--
 -- Function: remove_elem
 --
 -- Remove the given value element from the passed array table
 --
+-- Returns the index that the element was removed from or nil if it wasn't removed
 utils.remove_elem = function(t, val)
 	for i = #t, 1, -1 do
-		if t[i] == val then table.remove(t, i) end
+		if t[i] == val then
+			table.remove(t, i)
+			return i
+		end
 	end
+	return nil
 end
 
 --
@@ -682,6 +786,75 @@ end
 utils.chooseEqual = function(array, rand)
 	if not rand then rand = Engine.rand end
 	return array[rand:Integer(1, #array)]
+end
+
+--
+-- Function: utils.getIndexFromIntervals
+--
+-- Searches for the index of an element from an array of intervals. Each array
+-- element is itself an array of two elements, the first is the return value
+-- and the second is the interval. The value lies in the interval from its
+-- number and above.
+--
+-- Example:
+--
+-- >    reputations = {
+-- >        { 'INCOMPETENT'        },
+-- >        { 'UNRELIABLE',     -8 },
+-- >        { 'NOBODY',          0 },
+-- >        { 'INEXPERIENCED',   4 },
+-- >        { 'EXPERIENCED',     8 },
+-- >        { 'CREDIBLE',       16 },
+-- >        { 'RELIABLE',       32 },
+-- >        { 'TRUSTWORTHY',    64 },
+-- >        { 'PROFESSIONAL',  128 },
+-- >        { 'EXPERT',        256 },
+-- >        { 'MASTER',        512 }
+-- >    },
+-- >
+-- > reputation = utils.getIndexFromIntervals(reputations, 42)
+-- > assert(reputation == 7)
+--
+-- Parameters:
+--
+--   array - sorted array of intervals
+--   number - some value in intervals,
+--
+-- Returns:
+--
+--  number - index
+--
+utils.getIndexFromIntervals = function(array, value)
+	for i = #array, 1, -1 do
+		if not array[i][2] or value >= array[i][2] then
+			return i
+		end
+	end
+	assert(false, "array of intervals is not valid!")
+end
+
+--
+-- Function: utils.getFromIntervals
+--
+-- Searches for the  element from an array of intervals. Similar to
+-- getIndexFromIntervals but returns the value at the index.
+--
+-- Example:
+--
+-- > reputation = utils.getFromIntervals(reputations, 42) -- see getIndexFromIntervals
+-- > assert(reputation == 'RELIABLE')
+--
+-- Parameters:
+--
+--   array - sorted array of intervals
+--   number - some value in intervals
+--
+-- Returns:
+--
+--  value - any, what is contained in the array (without a number-interval)
+--
+utils.getFromIntervals = function(array, value)
+	return array[utils.getIndexFromIntervals(array, value)][1]
 end
 
 return utils

@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Galaxy.h"
@@ -8,7 +8,10 @@
 #include "GameSaveError.h"
 #include "Json.h"
 #include "Sector.h"
-#include "utils.h"
+#include "core/Log.h"
+
+// FIXME(sturnclaw): don't need to be pulling in SDL_image here
+#include <SDL_image.h>
 
 Galaxy::Galaxy(RefCountedPtr<GalaxyGenerator> galaxyGenerator, float radius, float sol_offset_x, float sol_offset_y,
 	const std::string &factionsDir, const std::string &customSysDir) :
@@ -120,6 +123,7 @@ DensityMapGalaxy::DensityMapGalaxy(RefCountedPtr<GalaxyGenerator> galaxyGenerato
 	m_mapWidth(0),
 	m_mapHeight(0)
 {
+	// FIXME(sturnclaw): why are we using raw SDL ops here - use an image loader!
 	RefCountedPtr<FileSystem::FileData> filedata = FileSystem::gameDataFiles.ReadFile(mapfile);
 	if (!filedata) {
 		Error("Galaxy: couldn't load '%s'\n", mapfile.c_str());

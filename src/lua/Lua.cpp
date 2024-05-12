@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Lua.h"
@@ -66,6 +66,8 @@ namespace Lua {
 		LuaColor::Register(manager->GetLuaState());
 
 		LuaEngine::Register();
+
+		pi_lua_dofile(manager->GetLuaState(), "libs/autoload.lua");
 	}
 
 	void InitModules()
@@ -90,14 +92,18 @@ namespace Lua {
 		LuaObject<SystemPath>::RegisterClass();
 		LuaObject<SystemView>::RegisterClass();
 		LuaObject<SectorView>::RegisterClass();
+		LuaObject<SectorMap>::RegisterClass();
 		LuaObject<SystemBody>::RegisterClass();
 		LuaObject<Faction>::RegisterClass();
+		LuaObject<Galaxy>::RegisterClass();
 
 		Pi::luaSerializer = new LuaSerializer();
 		Pi::luaTimer = new LuaTimer();
 
 		LuaObject<LuaSerializer>::RegisterClass();
 		LuaObject<LuaTimer>::RegisterClass();
+
+		LuaEvent::Init();
 
 		LuaConstants::Register(Lua::manager->GetLuaState());
 		LuaLang::Register();
@@ -120,7 +126,7 @@ namespace Lua {
 		SceneGraph::Lua::Init();
 
 		// XXX load everything. for now, just modules
-		pi_lua_dofile(l, "libs/autoload.lua");
+		// pi_lua_dofile(l, "libs/autoload.lua");
 		lua_pop(l, 1);
 
 		pi_lua_import(l, "pigui", true);
@@ -135,6 +141,8 @@ namespace Lua {
 
 	void UninitModules()
 	{
+		LuaEvent::Uninit();
+
 		delete Pi::luaNameGen;
 
 		delete Pi::luaSerializer;

@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "MatrixTransform.h"
@@ -6,7 +6,9 @@
 #include "NodeCopyCache.h"
 #include "NodeVisitor.h"
 #include "Serializer.h"
+
 #include "graphics/Renderer.h"
+
 namespace SceneGraph {
 
 	MatrixTransform::MatrixTransform(Graphics::Renderer *r, const matrix4x4f &m) :
@@ -29,6 +31,11 @@ namespace SceneGraph {
 	void MatrixTransform::Accept(NodeVisitor &nv)
 	{
 		nv.ApplyMatrixTransform(*this);
+	}
+
+	matrix4x4f MatrixTransform::CalcGlobalTransform() const
+	{
+		return GetParent() ? GetParent()->CalcGlobalTransform() * m_transform : m_transform;
 	}
 
 	void MatrixTransform::Render(const matrix4x4f &trans, const RenderData *rd)

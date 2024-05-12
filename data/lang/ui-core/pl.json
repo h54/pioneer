@@ -19,6 +19,10 @@
     "description": "",
     "message": "Przynależność:"
   },
+  "ALL_PARAMETERS_WERE_RECOVERED_SUCCESSFULLY": {
+    "description": "Message when restoring savegame",
+    "message": "Wszystkie parametry poprawnie przywrócone"
+  },
   "ALL_UP_WEIGHT": {
     "description": "",
     "message": "Masa całkowita"
@@ -46,6 +50,10 @@
   "ATMO_PRESS_LIMIT": {
     "description": "Base external pressure limit of a ship (without atmo shield)",
     "message": "Limit ciśnienia atm."
+  },
+  "ATTEMPTING_TO_RECOVER_GAME_PROGRESS_FROM_SAVE_X": {
+    "description": "Message when restoring savegame",
+    "message": "Próba odzyskania postępu z pliku zapisu: {save}"
   },
   "ATTEMPT_TO_REPAIR_HULL": {
     "description": "",
@@ -99,6 +107,14 @@
     "description": "",
     "message": "Nie można tego kupić"
   },
+  "CANT_FIND_PATH": {
+    "description": "Message when restoring savegame, file path",
+    "message": "Nie można odnaleźć scieżki: %s"
+  },
+  "CANT_FIND_PLAYERS_SHIP_IN_SPACE": {
+    "description": "Message when restoring savegame",
+    "message": "Nie można znaleźć statku gracza w przestrzeni"
+  },
   "CAPACITY": {
     "description": "Capacity of ship to fit more equipment",
     "message": "Udźwig"
@@ -131,6 +147,10 @@
     "description": "t for tonne",
     "message": "{amount}t użyte"
   },
+  "CASE_SENSITIVE": {
+    "description": "",
+    "message": "Uwzględniaj wielkość znaków"
+  },
   "CASH": {
     "description": "",
     "message": "Pieniądze"
@@ -158,6 +178,14 @@
   "CHANGE_PATTERN": {
     "description": "Paintshop button",
     "message": "Zmień wzór"
+  },
+  "CHARACTER": {
+    "description": "",
+    "message": "Postać"
+  },
+  "CHARISMA": {
+    "description": "Character parameter",
+    "message": "Charyzma"
   },
   "CHIEF_MECHANIC": {
     "description": "",
@@ -251,9 +279,21 @@
     "description": "",
     "message": "Opcje sterowania"
   },
+  "COULD_NOT_DELETE_SAVE": {
+    "description": "",
+    "message": "Nie można było usunąć zapisu gry"
+  },
+  "COULD_NOT_FIND_SYSTEM_BODY_FOR_FRAME": {
+    "description": "Message when restoring savegame",
+    "message": "Could not find system body for frame"
+  },
   "COULD_NOT_LOAD_GAME": {
     "description": "",
     "message": "Nie można wczytać gry: "
+  },
+  "COULD_NOT_READ_THE_SAVE_VERSION": {
+    "description": "Message when restoring savegame",
+    "message": "Could not read the save version"
   },
   "CREDIBLE": {
     "description": "For player reputation",
@@ -262,6 +302,10 @@
   "CREDITS": {
     "description": "in game currency",
     "message": "Uznania"
+  },
+  "CREW": {
+    "description": "Tab item in the start game menu",
+    "message": "Załoga"
   },
   "CREW_CABINS": {
     "description": "",
@@ -283,6 +327,14 @@
     "description": "For hyperjump planner",
     "message": "Stan paliwa:"
   },
+  "CURRENT_SAVEGAME_VERSION": {
+    "description": "Message when restoring savegame",
+    "message": "Current savegame version: %s"
+  },
+  "CURRENT_SHIP": {
+    "description": "For tooltip comparing current ship specs to one in the shipyard",
+    "message": "Aktualny statek"
+  },
   "CURRENT_SYSTEM": {
     "description": "For hyperjump planner",
     "message": "Aktualny system"
@@ -302,6 +354,14 @@
   "DECREASE": {
     "description": "Decrease something.",
     "message": "Zmniejsz"
+  },
+  "DELETE": {
+    "description": "",
+    "message": "Usuń"
+  },
+  "DELETE_SAVE_CONFIRMATION": {
+    "description": "",
+    "message": "Czy na pewno chcesz usunąć ten zapis gry?"
   },
   "DELTA_V": {
     "description": "",
@@ -327,6 +387,10 @@
     "description": "Time of departure, used in flight log",
     "message": "Czas odlotu"
   },
+  "DESCRIPTION": {
+    "description": "Start game parameter, e.g. 'This is an easy start from Cydonia'",
+    "message": "Opis"
+  },
   "DESTROY_ENEMY_SHIP": {
     "description": "",
     "message": "Zniszczyć wrogi statek"
@@ -344,7 +408,7 @@
     "message": "Ukryj wszystkie wyświetlane informacje, włącznie z współrzędnymi systemu, podczas trybu zrzutu ekranu (przełącz tryb interfejsu)"
   },
   "DISMISS": {
-    "description": "Terminate crew memeber's contract",
+    "description": "Terminate crew member's contract",
     "message": "Zwolnij"
   },
   "DISPLAY_HUD_TRAILS": {
@@ -374,6 +438,10 @@
   "DOCKED_AT": {
     "description": "",
     "message": "Zadokowany w"
+  },
+  "DOCKED_TO_A_BODY_THAT_IS_NOT_A_STATION": {
+    "description": "Message when restoring savegame",
+    "message": "Docked to a body that is not a station"
   },
   "DOCK_AT_CURRENT_TARGET": {
     "description": "",
@@ -445,7 +513,7 @@
   },
   "ENGINEERING": {
     "description": "Engineering skills of crew",
-    "message": "Naprawa:"
+    "message": "Inżynieria"
   },
   "ENTRY": {
     "description": "A note/entry/record into the flight log",
@@ -467,6 +535,10 @@
     "description": "",
     "message": "Błąd"
   },
+  "ERROR_APPLYING_PATCH": {
+    "description": "Message when restoring savegame",
+    "message": "Error applying patch"
+  },
   "ERROR_LANDING_GEAR_DOWN": {
     "description": "",
     "message": "Nie można inicjować hiperskoku: wysunięte podwozie!"
@@ -482,6 +554,10 @@
   "EXPERIENCED": {
     "description": "For player reputation",
     "message": "Doświadczony"
+  },
+  "EXPERIMENTAL": {
+    "description": "Indicates feature/option is experimental",
+    "message": "Eksperymentalne"
   },
   "EXPERT": {
     "description": "For player reputation",
@@ -542,6 +618,10 @@
   "FEMALE": {
     "description": "",
     "message": "Kobieta"
+  },
+  "FILE_SAVEGAME_VERSION": {
+    "description": "Message when restoring savegame",
+    "message": "File savegame version: %s"
   },
   "FINAL_TARGET": {
     "description": "Hyperjump planner, referring to star system target",
@@ -1155,6 +1235,10 @@
     "description": "",
     "message": "Za mało pieniędzy."
   },
+  "INTELLIGENCE": {
+    "description": "Character parameter",
+    "message": "Inteligencja"
+  },
   "INTERSTELLAR_TRADE_AVG": {
     "description": "Label displaying commodity flow at a per-system level",
     "message": "Handel międzygwiezdny:"
@@ -1231,6 +1315,10 @@
     "description": "",
     "message": "Udzielono pozwolenia. Uważaj na ruch podczas odlotu."
   },
+  "LAWFULNESS": {
+    "description": "Character parameter",
+    "message": "Praworządność"
+  },
   "LEGAL_STATUS": {
     "description": "",
     "message": "Stan prawny"
@@ -1287,6 +1375,18 @@
     "description": "Label tab for showing custom logged events",
     "message": "Dziennik własny"
   },
+  "LOG_EARLIEST_FIRST": {
+    "description": "Show the log entries in chronological order, earliest first",
+    "message": "Według najstarszego"
+  },
+  "LOG_EXPORT": {
+    "description": "Export the log",
+    "message": "Eksportuj"
+  },
+  "LOG_HTML": {
+    "description": "Export the log as HTML or not",
+    "message": "HTML"
+  },
   "LOG_NEW": {
     "description": "Indicate to make an entry into flight log system",
     "message": "Nowy wpis"
@@ -1302,6 +1402,10 @@
   "LOW": {
     "description": "",
     "message": "Mała"
+  },
+  "LUCK": {
+    "description": "Character parameter",
+    "message": "Szczęście"
   },
   "LY": {
     "description": "Light year",
@@ -1415,9 +1519,21 @@
     "description": "",
     "message": "Szczegóły misji"
   },
+  "MODEL": {
+    "description": "3d model of the ship",
+    "message": "Model"
+  },
+  "MONEY": {
+    "description": "",
+    "message": "Pieniądze"
+  },
   "MORE_INFO": {
     "description": "",
     "message": "Więcej..."
+  },
+  "MORE_THAN_ONE_PLAYERS_SHIP_FOUND_IN_SPACE": {
+    "description": "Message when restoring savegame",
+    "message": "More than one player's ship found in space"
   },
   "MOSTLY_HARMLESS": {
     "description": "",
@@ -1460,8 +1576,8 @@
     "message": "Nazwisko"
   },
   "NAVIGATION": {
-    "description": "",
-    "message": "Nawigacja:"
+    "description": "Crew skill",
+    "message": "Nawigacja"
   },
   "NAVIGATOR": {
     "description": "",
@@ -1470,6 +1586,10 @@
   "NEGOTIATE": {
     "description": "",
     "message": "Negocjacje"
+  },
+  "NEW_GAME": {
+    "description": "Main menu item",
+    "message": "Nowa gra"
   },
   "NEW_PAINTJOB_APPLIED": {
     "description": "Paintshop popup",
@@ -1506,6 +1626,10 @@
   "NOTES": {
     "description": "",
     "message": "Uwagi:"
+  },
+  "NOTORIETY": {
+    "description": "Character parameter",
+    "message": "Zła sława"
   },
   "NOT_ENOUGH_ALLOY_TO_ATTEMPT_A_REPAIR": {
     "description": "",
@@ -1647,6 +1771,10 @@
     "description": "Entry for ship info",
     "message": "Pojemność kabiny pasażerskie"
   },
+  "PATH_FOUND_BUT_VERIFICATION_FAILED": {
+    "description": "Message when restoring savegame",
+    "message": "Path found but verification failed: %s"
+  },
   "PATTERN": {
     "description": "Ship painting pattern.",
     "message": "Wzór"
@@ -1672,8 +1800,8 @@
     "message": "Pilot"
   },
   "PILOTING": {
-    "description": "",
-    "message": "Pilotaż:"
+    "description": "Crew skill",
+    "message": "Pilotaż"
   },
   "PILOT_SEAT_IS_NOW_OCCUPIED_BY_NAME": {
     "description": "",
@@ -1763,9 +1891,37 @@
     "description": "",
     "message": "Klasyfikacja:"
   },
+  "RAYLEIGH_ACCURATE": {
+    "description": "",
+    "message": "Rayleigh/Mie (accurate, per-pixel)"
+  },
+  "RAYLEIGH_FAST": {
+    "description": "",
+    "message": "Rayleigh/Mie (fast, per-vertex)"
+  },
+  "REALISTIC_SCATTERING": {
+    "description": "",
+    "message": "Scattering"
+  },
+  "REALISTIC_SCATTERING_DESC": {
+    "description": "",
+    "message": "Select scattering when rendering atmospheres. (Rayleigh/Mie is not recommended for low-end PCs)"
+  },
   "REAR_WEAPON": {
     "description": "",
     "message": "Tylna broń"
+  },
+  "RECOVER": {
+    "description": "Saveload menu button",
+    "message": "Recover"
+  },
+  "RECOVERED_BUT_NOT_VALID": {
+    "description": "Message when restoring savegame",
+    "message": "Recovered but not valid"
+  },
+  "RECOVER_SAVEGAME": {
+    "description": "",
+    "message": "Recover savegame"
   },
   "REFUEL": {
     "description": "",
@@ -1871,6 +2027,14 @@
     "description": "",
     "message": "Zapisz"
   },
+  "SAVE_DELETED_SUCCESSFULLY": {
+    "description": "",
+    "message": "Zapis gry usunięty pomyślnie"
+  },
+  "SCATTERING_OLD": {
+    "description": "",
+    "message": "Spadek"
+  },
   "SCOOP_MOUNTS": {
     "description": "How many slots or mounts exist on the ship for fitting SCOOPS (e.g. cargo scoop, fuel scoop, multi-scoop) ",
     "message": "Mocowania czerpaków"
@@ -1882,6 +2046,14 @@
   "SELECT": {
     "description": "",
     "message": "Wybierz"
+  },
+  "SELECTED_SAVE_DOESNT_EXISTS": {
+    "description": "",
+    "message": "Wybrany zapis gry nie istnieje"
+  },
+  "SELECTED_SAVE_IS_NOT_A_VALID_SAVE": {
+    "description": "",
+    "message": "Wybrany zapis gry nie jest nieprawidłowym zapisem gry"
   },
   "SELECT_A_FILE_TO_SAVE_TO_OR_ENTER_A_NEW_FILENAME": {
     "description": "",
@@ -1895,6 +2067,10 @@
     "description": "",
     "message": "Wybierz zapis do wczytania..."
   },
+  "SELECT_START_PROFILE": {
+    "description": "Combo box for selecting the starting position",
+    "message": "Wybierz profil startowy:"
+  },
   "SELL": {
     "description": "Commodities and equipment prices",
     "message": "Sprzedaż"
@@ -1904,8 +2080,8 @@
     "message": "Sprzedaj posiadany"
   },
   "SENSORS": {
-    "description": "",
-    "message": "Sensory:"
+    "description": "Crew skill",
+    "message": "Sensory"
   },
   "SENSORS_AND_DEFENCE": {
     "description": "",
@@ -1963,6 +2139,14 @@
     "description": "",
     "message": "Giełda statków"
   },
+  "SHIP_NAME": {
+    "description": "",
+    "message": "Nazwa statku"
+  },
+  "SHIP_PARAMETERS": {
+    "description": "",
+    "message": "Parametry statku"
+  },
   "SHIP_REPAIRS": {
     "description": "Station tab name",
     "message": "Warsztat i lakiernia"
@@ -1975,9 +2159,17 @@
     "description": "",
     "message": "Symulacja ewolucji wszechświata: {age} miliardów lat ;-)"
   },
+  "SOME_PARAMETERS_ARE_NOT_OK": {
+    "description": "Diagnostics at game start",
+    "message": "Niektóre parametry są niewłaściwe:"
+  },
   "SOUND": {
     "description": "",
     "message": "Dźwięk"
+  },
+  "STANDARD_GAME_START_TIME": {
+    "description": "Standard game start time, current moment + 1200 years",
+    "message": "Standardowy czas rozpoczęcia gry"
   },
   "START_AT_BARNARDS_STAR": {
     "description": "",
@@ -2002,6 +2194,10 @@
   "START_AT_NEW_HOPE_DESC": {
     "description": "",
     "message": "Jest to umiarkowany start z Itzalean na New Hope w układzie Epsilon Eridani."
+  },
+  "START_GAME": {
+    "description": "Button",
+    "message": "Start gry"
   },
   "START_LOG_ENTRY_1": {
     "description": "First custom log message when starting a new game, giving backstory to the character. Importantly we here hint at what actions the player is best to take: buy fuel, get reputation, ask for take off clearance.",
@@ -2055,6 +2251,14 @@
     "description": "",
     "message": "Status"
   },
+  "SUMMARY": {
+    "description": "Tab item in the start game menu",
+    "message": "Podsumowanie"
+  },
+  "SYSTEM_BODY_INDEX_IS_OUT_OF_RANGE": {
+    "description": "Message when restoring savegame",
+    "message": "System body index is out of range"
+  },
   "TECH_CERTIFIED": {
     "description": "Lobby screen shows the tech level (an integer number) of the station",
     "message": "Ta stacja posiada certyfikat technologiczny {tech_level}. poziomu."
@@ -2078,6 +2282,10 @@
   "THERE_IS_NOBODY_ELSE_ON_BOARD_ABLE_TO_FLY_THIS_SHIP": {
     "description": "",
     "message": "Na pokładzie nie ma już nikogo zdolnego do pilotowania tego statku."
+  },
+  "THERE_WERE_ERRORS_IN_RECOVERY": {
+    "description": "Message when restoring savegame",
+    "message": "There were errors in recovery:"
   },
   "THE_SHIP_IS_UNDER_STATION_CONTROL_COMMANDER": {
     "description": "",
@@ -2171,6 +2379,26 @@
     "description": "",
     "message": "Typ"
   },
+  "UNKNOWN_CUSTOM_LOG_ENTRY_FORMAT": {
+    "description": "Message when restoring savegame",
+    "message": "Unknown custom log entry format"
+  },
+  "UNKNOWN_FACTION": {
+    "description": "For entry in the flight log",
+    "message": "Unknown faction"
+  },
+  "UNKNOWN_LOCATION_IN_SECTOR_X": {
+    "description": "For entry in the flight log",
+    "message": "Unknown location in sector {sector}"
+  },
+  "UNKNOWN_STATION_LOG_ENTRY_FORMAT": {
+    "description": "Message when restoring savegame",
+    "message": "Unknown station log entry format"
+  },
+  "UNKNOWN_SYSTEM_LOG_ENTRY_FORMAT": {
+    "description": "Message when restoring savegame",
+    "message": "Unknown system log entry format"
+  },
   "UNLAWFUL_WEAPONS_DISCHARGE": {
     "description": "",
     "message": "Bezprawne użycie broni"
@@ -2186,6 +2414,10 @@
   "UNRELIABLE": {
     "description": "",
     "message": "Nierzetelny"
+  },
+  "UNSUCCESSFULLY_RECOVERED_PARAMETERS_ARE_NOW_UNLOCKED_PLEASE_SET_THEM_MANUALLY": {
+    "description": "Message when restoring savegame",
+    "message": "Unsuccessfully recovered parameters are now unlocked, please set them manually."
   },
   "UP_ACCEL": {
     "description": "",

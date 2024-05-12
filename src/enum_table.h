@@ -1,4 +1,4 @@
-/* Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details */
+/* Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details */
 /* Licensed under the terms of the GPL v3. See licenses/GPL-3.txt        */
 
 #ifndef HX_GEN_ENUM_TABLES
@@ -17,6 +17,7 @@ struct EnumTable {
 };
 
 extern const struct EnumItem ENUM_PhysicsObjectType[];
+extern const struct EnumItem ENUM_AltitudeType[];
 extern const struct EnumItem ENUM_ShipAIError[];
 extern const struct EnumItem ENUM_ShipFlightState[];
 extern const struct EnumItem ENUM_ShipJumpStatus[];
@@ -25,6 +26,7 @@ extern const struct EnumItem ENUM_ShipAICmdName[];
 extern const struct EnumItem ENUM_DualLaserOrientation[];
 extern const struct EnumItem ENUM_ShipTypeTag[];
 extern const struct EnumItem ENUM_DockingRefusedReason[];
+extern const struct EnumItem ENUM_DockStage[];
 extern const struct EnumItem ENUM_ProjectableTypes[];
 extern const struct EnumItem ENUM_ProjectableBases[];
 extern const struct EnumItem ENUM_SystemViewMode[];
@@ -34,7 +36,6 @@ extern const struct EnumItem ENUM_PolitGovType[];
 extern const struct EnumItem ENUM_BodyType[];
 extern const struct EnumItem ENUM_BodySuperType[];
 extern const struct EnumItem ENUM_DetailLevel[];
-extern const struct EnumItem ENUM_FileSystemRoot[];
 extern const struct EnumItem ENUM_PiGuiFaceFlags[];
 extern const struct EnumItem ENUM_ModelDebugFlags[];
 extern const struct EnumItem ENUM_CruiseDirection[];

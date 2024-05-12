@@ -1,13 +1,16 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "PerfInfo.h"
 #include "Frame.h"
 #include "Game.h"
+#include "Input.h"
 #include "LuaPiGui.h"
 #include "Pi.h"
 #include "Player.h"
+#include "SectorView.h"
 #include "Space.h"
+#include "core/Log.h"
 #include "graphics/Renderer.h"
 #include "graphics/Stats.h"
 #include "graphics/Texture.h"
@@ -15,6 +18,7 @@
 #include "lua/LuaManager.h"
 #include "scenegraph/Model.h"
 
+#include <fmt/core.h>
 #include <imgui/imgui.h>
 #include <algorithm>
 #include <cstddef>
@@ -35,6 +39,7 @@ struct PerfInfo::ImGuiState {
 	bool perfWindowOpen = true;
 	bool updatePause = false;
 	bool metricsWindowOpen = false;
+	bool stackToolOpen = false;
 	uint32_t playerModelDebugFlags = 0;
 
 	bool textureCacheViewerOpen = false;
@@ -111,6 +116,8 @@ PerfInfo::CounterInfo &PerfInfo::GetCounter(CounterType ct)
 	case COUNTER_FPS: return m_fpsCounter;
 	case COUNTER_PHYS: return m_physCounter;
 	case COUNTER_PIGUI: return m_piguiCounter;
+	// default value is never reached, calm down -Werror=return-type
+	default: return m_fpsCounter;
 	}
 }
 
@@ -200,6 +207,9 @@ void PerfInfo::Draw()
 
 	if (m_state->metricsWindowOpen)
 		ImGui::ShowMetricsWindow(&m_state->metricsWindowOpen);
+
+	if (m_state->stackToolOpen)
+		ImGui::ShowStackToolWindow(&m_state->stackToolOpen);
 }
 
 void PerfInfo::DrawPerfWindow()
@@ -386,6 +396,17 @@ void PerfInfo::DrawWorldViewStats()
 		const auto *sbody = Pi::player->GetNavTarget()->GetSystemBody();
 		ImGui::TextUnformatted(fmt::format("Name: {}, Population: {}", sbody->GetName(), sbody->GetPopulation() * 1e9).c_str());
 	}
+
+	if (Pi::GetView() == Pi::game->GetSectorView()) {
+		if (ImGui::Button("Dump Selected System")) {
+			SystemPath path = Pi::game->GetSectorView()->GetSelected();
+			RefCountedPtr<StarSystem> system = Pi::game->GetGalaxy()->GetStarSystem(path);
+
+			if (system)
+				system->Dump(Log::GetLog()->GetLogFileHandle());
+		}
+	}
+
 }
 
 void PerfInfo::DrawInputDebug()
@@ -453,6 +474,10 @@ void PerfInfo::DrawImGuiStats()
 	if (ImGui::Button("Toggle Metrics Window")) {
 		m_state->metricsWindowOpen = !m_state->metricsWindowOpen;
 	}
+
+	if (ImGui::Button("Toggle Stack Tool")) {
+		m_state->stackToolOpen = !m_state->stackToolOpen;
+	}
 }
 
 void PerfInfo::DrawStatList(const Perf::Stats::FrameInfo &fi)
@@ -518,7 +543,8 @@ void PerfInfo::DrawTextureCache()
 					continue;
 
 				if (ImGui::BeginChild("##Texture List Scroll")) {
-					const int num_columns = std::max(int(ImGui::GetWindowContentRegionWidth()) / item_width, 1);
+					const int window_width = ImGui::GetWindowContentRegionMax().x - ImGui::GetWindowContentRegionMin().x;
+					const int num_columns = std::max(int(window_width) / item_width, 1);
 					ImGui::Columns(num_columns);
 					if (num_columns > 1) {
 						for (int idx = 0; idx < num_columns; idx++)

@@ -19,6 +19,10 @@
     "description": "",
     "message": "Bağlılık:"
   },
+  "ALL_PARAMETERS_WERE_RECOVERED_SUCCESSFULLY": {
+    "description": "Message when restoring savegame",
+    "message": "Tüm parametreler başarıyla kurtarıldı."
+  },
   "ALL_UP_WEIGHT": {
     "description": "",
     "message": "Tam yüklü ağırlık"
@@ -46,6 +50,10 @@
   "ATMO_PRESS_LIMIT": {
     "description": "Base external pressure limit of a ship (without atmo shield)",
     "message": "Atmo. basınç limiti"
+  },
+  "ATTEMPTING_TO_RECOVER_GAME_PROGRESS_FROM_SAVE_X": {
+    "description": "Message when restoring savegame",
+    "message": "Kayıtlı oyun kurtarılmaya çalışılıyor: {save}"
   },
   "ATTEMPT_TO_REPAIR_HULL": {
     "description": "",
@@ -99,6 +107,14 @@
     "description": "",
     "message": "Bu öge satılamıyor"
   },
+  "CANT_FIND_PATH": {
+    "description": "Message when restoring savegame, file path",
+    "message": "Yol bulunamıyor: %s"
+  },
+  "CANT_FIND_PLAYERS_SHIP_IN_SPACE": {
+    "description": "Message when restoring savegame",
+    "message": "Oyuncunun gemisi uzayda bulunamadı"
+  },
   "CAPACITY": {
     "description": "Capacity of ship to fit more equipment",
     "message": "Kapasite"
@@ -131,6 +147,10 @@
     "description": "t for tonne",
     "message": "{amount}T kullanılan"
   },
+  "CASE_SENSITIVE": {
+    "description": "",
+    "message": "Büyük-küçük harf duyarlı"
+  },
   "CASH": {
     "description": "",
     "message": "Nakit"
@@ -158,6 +178,14 @@
   "CHANGE_PATTERN": {
     "description": "Paintshop button",
     "message": "Desen Değiştir"
+  },
+  "CHARACTER": {
+    "description": "",
+    "message": "Karakter"
+  },
+  "CHARISMA": {
+    "description": "Character parameter",
+    "message": "Karizma"
   },
   "CHIEF_MECHANIC": {
     "description": "",
@@ -251,9 +279,21 @@
     "description": "",
     "message": "Kontrol Seçenekleri"
   },
+  "COULD_NOT_DELETE_SAVE": {
+    "description": "",
+    "message": "Kayıt silinemedi"
+  },
+  "COULD_NOT_FIND_SYSTEM_BODY_FOR_FRAME": {
+    "description": "Message when restoring savegame",
+    "message": "Referans çerçevesi için sistem cismi bulunamadı"
+  },
   "COULD_NOT_LOAD_GAME": {
     "description": "",
     "message": "Oyun yüklenemiyor:"
+  },
+  "COULD_NOT_READ_THE_SAVE_VERSION": {
+    "description": "Message when restoring savegame",
+    "message": "Kayıt sürümü okunamadı"
   },
   "CREDIBLE": {
     "description": "For player reputation",
@@ -262,6 +302,10 @@
   "CREDITS": {
     "description": "in game currency",
     "message": "Kredi"
+  },
+  "CREW": {
+    "description": "Tab item in the start game menu",
+    "message": "Mürettebat"
   },
   "CREW_CABINS": {
     "description": "",
@@ -283,6 +327,14 @@
     "description": "For hyperjump planner",
     "message": "Mevcut Yakıt:"
   },
+  "CURRENT_SAVEGAME_VERSION": {
+    "description": "Message when restoring savegame",
+    "message": "Şu anki oyun kayıt sürümü: %s"
+  },
+  "CURRENT_SHIP": {
+    "description": "For tooltip comparing current ship specs to one in the shipyard",
+    "message": "Şu Anki Gemi"
+  },
   "CURRENT_SYSTEM": {
     "description": "For hyperjump planner",
     "message": "Mevcut sistem"
@@ -302,6 +354,14 @@
   "DECREASE": {
     "description": "Decrease something.",
     "message": "Azalt"
+  },
+  "DELETE": {
+    "description": "",
+    "message": "Sil"
+  },
+  "DELETE_SAVE_CONFIRMATION": {
+    "description": "",
+    "message": "Bu kaydı silmek istediğinizden emin misiniz?"
   },
   "DELTA_V": {
     "description": "",
@@ -327,6 +387,10 @@
     "description": "Time of departure, used in flight log",
     "message": "Ayrılış tarihi"
   },
+  "DESCRIPTION": {
+    "description": "Start game parameter, e.g. 'This is an easy start from Cydonia'",
+    "message": "Açıklama"
+  },
   "DESTROY_ENEMY_SHIP": {
     "description": "",
     "message": "Düşman gemisini yok et"
@@ -344,7 +408,7 @@
     "message": "Ekran görüntüsü modunda (HUD modu kapatıldığında), sistem koordinatları da dahil bütün gösterilen bilgiyi gizle."
   },
   "DISMISS": {
-    "description": "Terminate crew memeber's contract",
+    "description": "Terminate crew member's contract",
     "message": "Gidebilirsin"
   },
   "DISPLAY_HUD_TRAILS": {
@@ -374,6 +438,10 @@
   "DOCKED_AT": {
     "description": "",
     "message": "Kenetli"
+  },
+  "DOCKED_TO_A_BODY_THAT_IS_NOT_A_STATION": {
+    "description": "Message when restoring savegame",
+    "message": "İstasyon olmayan bir cisme kenetli"
   },
   "DOCK_AT_CURRENT_TARGET": {
     "description": "",
@@ -445,7 +513,7 @@
   },
   "ENGINEERING": {
     "description": "Engineering skills of crew",
-    "message": "Mühendislik:"
+    "message": "Mühendislik"
   },
   "ENTRY": {
     "description": "A note/entry/record into the flight log",
@@ -467,6 +535,10 @@
     "description": "",
     "message": "Hata"
   },
+  "ERROR_APPLYING_PATCH": {
+    "description": "Message when restoring savegame",
+    "message": "Düzeltme uygulanırken hata"
+  },
   "ERROR_LANDING_GEAR_DOWN": {
     "description": "",
     "message": "Üstuzay sıçraması yapılamıyor; iniş takımı kapatılmalı!"
@@ -482,6 +554,10 @@
   "EXPERIENCED": {
     "description": "For player reputation",
     "message": "Deneyimli"
+  },
+  "EXPERIMENTAL": {
+    "description": "Indicates feature/option is experimental",
+    "message": "Deneysel"
   },
   "EXPERT": {
     "description": "For player reputation",
@@ -542,6 +618,10 @@
   "FEMALE": {
     "description": "",
     "message": "Kadın"
+  },
+  "FILE_SAVEGAME_VERSION": {
+    "description": "Message when restoring savegame",
+    "message": "Dosyadaki oyun kayıt sürümü: %s"
   },
   "FINAL_TARGET": {
     "description": "Hyperjump planner, referring to star system target",
@@ -1155,6 +1235,10 @@
     "description": "",
     "message": "Yeteriz para."
   },
+  "INTELLIGENCE": {
+    "description": "Character parameter",
+    "message": "Zeka"
+  },
   "INTERSTELLAR_TRADE_AVG": {
     "description": "Label displaying commodity flow at a per-system level",
     "message": "Yıldızlararası Ticaret"
@@ -1231,6 +1315,10 @@
     "description": "",
     "message": "İzin verildi. Lütfen ayrılırken trafiğe dikkat edin."
   },
+  "LAWFULNESS": {
+    "description": "Character parameter",
+    "message": "Yasaya Uyum"
+  },
   "LEGAL_STATUS": {
     "description": "",
     "message": "Yasal durum"
@@ -1287,6 +1375,18 @@
     "description": "Label tab for showing custom logged events",
     "message": "Özel Günlük"
   },
+  "LOG_EARLIEST_FIRST": {
+    "description": "Show the log entries in chronological order, earliest first",
+    "message": "Eskiden yeniye sırala"
+  },
+  "LOG_EXPORT": {
+    "description": "Export the log",
+    "message": "Dışarı aktar"
+  },
+  "LOG_HTML": {
+    "description": "Export the log as HTML or not",
+    "message": "HTML"
+  },
   "LOG_NEW": {
     "description": "Indicate to make an entry into flight log system",
     "message": "Yeni Girdi"
@@ -1302,6 +1402,10 @@
   "LOW": {
     "description": "",
     "message": "Düşük"
+  },
+  "LUCK": {
+    "description": "Character parameter",
+    "message": "Şans"
   },
   "LY": {
     "description": "Light year",
@@ -1415,9 +1519,21 @@
     "description": "",
     "message": "Görev Detayları"
   },
+  "MODEL": {
+    "description": "3d model of the ship",
+    "message": "Model"
+  },
+  "MONEY": {
+    "description": "",
+    "message": "Para"
+  },
   "MORE_INFO": {
     "description": "",
     "message": "Detay..."
+  },
+  "MORE_THAN_ONE_PLAYERS_SHIP_FOUND_IN_SPACE": {
+    "description": "Message when restoring savegame",
+    "message": "Uzayda birden çok oyuncu gemisi bulundu"
   },
   "MOSTLY_HARMLESS": {
     "description": "",
@@ -1460,8 +1576,8 @@
     "message": "İsim"
   },
   "NAVIGATION": {
-    "description": "",
-    "message": "Navigasyon:"
+    "description": "Crew skill",
+    "message": "Navigasyon"
   },
   "NAVIGATOR": {
     "description": "",
@@ -1470,6 +1586,10 @@
   "NEGOTIATE": {
     "description": "",
     "message": "Uzlaş"
+  },
+  "NEW_GAME": {
+    "description": "Main menu item",
+    "message": "Yeni oyun"
   },
   "NEW_PAINTJOB_APPLIED": {
     "description": "Paintshop popup",
@@ -1506,6 +1626,10 @@
   "NOTES": {
     "description": "",
     "message": "Notlar:"
+  },
+  "NOTORIETY": {
+    "description": "Character parameter",
+    "message": "Şöhret"
   },
   "NOT_ENOUGH_ALLOY_TO_ATTEMPT_A_REPAIR": {
     "description": "",
@@ -1647,6 +1771,10 @@
     "description": "Entry for ship info",
     "message": "Yolcu kabini kapasitesi"
   },
+  "PATH_FOUND_BUT_VERIFICATION_FAILED": {
+    "description": "Message when restoring savegame",
+    "message": "Dosya yolu bulundu ama doğrulama başarısız oldu: %s"
+  },
   "PATTERN": {
     "description": "Ship painting pattern.",
     "message": "Desen"
@@ -1672,8 +1800,8 @@
     "message": "Pilot"
   },
   "PILOTING": {
-    "description": "",
-    "message": "Pilotluk:"
+    "description": "Crew skill",
+    "message": "Pilotaj"
   },
   "PILOT_SEAT_IS_NOW_OCCUPIED_BY_NAME": {
     "description": "",
@@ -1763,9 +1891,37 @@
     "description": "",
     "message": "Derece:"
   },
+  "RAYLEIGH_ACCURATE": {
+    "description": "",
+    "message": "Rayleigh/Mie (gerçekçi, pixel-başına)"
+  },
+  "RAYLEIGH_FAST": {
+    "description": "",
+    "message": "Rayleigh/Mie (hızlı, vertex-başına)"
+  },
+  "REALISTIC_SCATTERING": {
+    "description": "",
+    "message": "Dağılma"
+  },
+  "REALISTIC_SCATTERING_DESC": {
+    "description": "",
+    "message": "Atmosferleri görselleştirirken kullanılacak dağılma modelini seçin. (Rayleigh/Mie düşük performanslı bilgisayarlar için önerilmez)"
+  },
   "REAR_WEAPON": {
     "description": "",
     "message": "Arka silah"
+  },
+  "RECOVER": {
+    "description": "Saveload menu button",
+    "message": "Kurtar"
+  },
+  "RECOVERED_BUT_NOT_VALID": {
+    "description": "Message when restoring savegame",
+    "message": "Kurtarıldı ama geçersiz"
+  },
+  "RECOVER_SAVEGAME": {
+    "description": "",
+    "message": "Oyun kaydını kurtar"
   },
   "REFUEL": {
     "description": "",
@@ -1871,6 +2027,14 @@
     "description": "",
     "message": "Kaydet"
   },
+  "SAVE_DELETED_SUCCESSFULLY": {
+    "description": "",
+    "message": "Kayıt başarıyla silindi"
+  },
+  "SCATTERING_OLD": {
+    "description": "",
+    "message": "Eski"
+  },
   "SCOOP_MOUNTS": {
     "description": "How many slots or mounts exist on the ship for fitting SCOOPS (e.g. cargo scoop, fuel scoop, multi-scoop) ",
     "message": "Toplayıcı bağlantıları"
@@ -1882,6 +2046,14 @@
   "SELECT": {
     "description": "",
     "message": "Seç"
+  },
+  "SELECTED_SAVE_DOESNT_EXISTS": {
+    "description": "",
+    "message": "Seçilen kayıt mevcut değil"
+  },
+  "SELECTED_SAVE_IS_NOT_A_VALID_SAVE": {
+    "description": "",
+    "message": "Seçilen kayıt geçerli bir kayıt değil"
   },
   "SELECT_A_FILE_TO_SAVE_TO_OR_ENTER_A_NEW_FILENAME": {
     "description": "",
@@ -1895,6 +2067,10 @@
     "description": "",
     "message": "Yüklenecek oyunu seçin..."
   },
+  "SELECT_START_PROFILE": {
+    "description": "Combo box for selecting the starting position",
+    "message": "Başlangıç profili seç:"
+  },
   "SELL": {
     "description": "Commodities and equipment prices",
     "message": "Sat"
@@ -1904,8 +2080,8 @@
     "message": "Ekipmanı Sat"
   },
   "SENSORS": {
-    "description": "",
-    "message": "Algılayıcılar:"
+    "description": "Crew skill",
+    "message": "Sensörler"
   },
   "SENSORS_AND_DEFENCE": {
     "description": "",
@@ -1963,6 +2139,14 @@
     "description": "",
     "message": "Gemi Pazarı"
   },
+  "SHIP_NAME": {
+    "description": "",
+    "message": "Gemi adı"
+  },
+  "SHIP_PARAMETERS": {
+    "description": "",
+    "message": "Gemi parametreleri"
+  },
   "SHIP_REPAIRS": {
     "description": "Station tab name",
     "message": "Gemi Tamiri & Boya Atölyesi"
@@ -1975,9 +2159,17 @@
     "description": "",
     "message": "Evrenin evrimi hesaplanıyor: {age} milyar yıl ;-)"
   },
+  "SOME_PARAMETERS_ARE_NOT_OK": {
+    "description": "Diagnostics at game start",
+    "message": "Bazı parametreler uygun değil:"
+  },
   "SOUND": {
     "description": "",
     "message": "Ses"
+  },
+  "STANDARD_GAME_START_TIME": {
+    "description": "Standard game start time, current moment + 1200 years",
+    "message": "Standart oyun başlama zamanı"
   },
   "START_AT_BARNARDS_STAR": {
     "description": "",
@@ -2002,6 +2194,10 @@
   "START_AT_NEW_HOPE_DESC": {
     "description": "",
     "message": "Bu, Epsilon Eridani sistemindeki New Hope'ta bulunan Itzaelan'dan yapılan orta zorluktaki başlangıç."
+  },
+  "START_GAME": {
+    "description": "Button",
+    "message": "Oyunu başlat"
   },
   "START_LOG_ENTRY_1": {
     "description": "First custom log message when starting a new game, giving backstory to the character. Importantly we here hint at what actions the player is best to take: buy fuel, get reputation, ask for take off clearance.",
@@ -2055,6 +2251,14 @@
     "description": "",
     "message": "Durum"
   },
+  "SUMMARY": {
+    "description": "Tab item in the start game menu",
+    "message": "Özet"
+  },
+  "SYSTEM_BODY_INDEX_IS_OUT_OF_RANGE": {
+    "description": "Message when restoring savegame",
+    "message": "Sistem cismi indisi sınır dışında"
+  },
   "TECH_CERTIFIED": {
     "description": "Lobby screen shows the tech level (an integer number) of the station",
     "message": "Bu istasyon {tech_level} seviye teknoloji sertifikasına sahip."
@@ -2078,6 +2282,10 @@
   "THERE_IS_NOBODY_ELSE_ON_BOARD_ABLE_TO_FLY_THIS_SHIP": {
     "description": "",
     "message": "Güvertede gemiyi uçurabilecek başka hiç kimse yok."
+  },
+  "THERE_WERE_ERRORS_IN_RECOVERY": {
+    "description": "Message when restoring savegame",
+    "message": "Kurtarma sırasında hatalar oluştu:"
   },
   "THE_SHIP_IS_UNDER_STATION_CONTROL_COMMANDER": {
     "description": "",
@@ -2171,6 +2379,26 @@
     "description": "",
     "message": "Tür"
   },
+  "UNKNOWN_CUSTOM_LOG_ENTRY_FORMAT": {
+    "description": "Message when restoring savegame",
+    "message": "Bilnimeyen özel kayıt girdisi türü"
+  },
+  "UNKNOWN_FACTION": {
+    "description": "For entry in the flight log",
+    "message": "Bilinmeyen egemenlik"
+  },
+  "UNKNOWN_LOCATION_IN_SECTOR_X": {
+    "description": "For entry in the flight log",
+    "message": "{sector} sektöründe bilinmeyen konum"
+  },
+  "UNKNOWN_STATION_LOG_ENTRY_FORMAT": {
+    "description": "Message when restoring savegame",
+    "message": "Bilinmeyen istasyon kaydı girdisi türü"
+  },
+  "UNKNOWN_SYSTEM_LOG_ENTRY_FORMAT": {
+    "description": "Message when restoring savegame",
+    "message": "Bilinmeyen sistem kaydı girdisi türü"
+  },
   "UNLAWFUL_WEAPONS_DISCHARGE": {
     "description": "",
     "message": "Kanun dışı silah kullanımı"
@@ -2186,6 +2414,10 @@
   "UNRELIABLE": {
     "description": "",
     "message": "Güvenilmez"
+  },
+  "UNSUCCESSFULLY_RECOVERED_PARAMETERS_ARE_NOW_UNLOCKED_PLEASE_SET_THEM_MANUALLY": {
+    "description": "Message when restoring savegame",
+    "message": "Başarıyla kurtarılamayan parametreler artık düzenlemeye açık, lütfen değerleri elle giriniz."
   },
   "UP_ACCEL": {
     "description": "",

@@ -1,15 +1,16 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "FixedGuns.h"
 #include "Beam.h"
 #include "DynamicBody.h"
 #include "GameSaveError.h"
+#include "JsonUtils.h"
+#include "MathUtil.h"
 #include "Projectile.h"
 #include "Quaternion.h"
 #include "StringF.h"
-#include "libs.h"
-#include "scenegraph/MatrixTransform.h"
+#include "scenegraph/Tag.h"
 #include "vector3.h"
 
 REGISTER_COMPONENT_TYPE(FixedGuns) {
@@ -106,10 +107,10 @@ void FixedGuns::InitGuns(SceneGraph::Model *m)
 		// 32 is a crazy number...
 		for (int gun = 0; gun < 32; gun++) {
 			const std::string tag = stringf("tag_gunmount_%0{d}_multi_%1{d}", num, gun); //"gunmount_0_multi_0";
-			const SceneGraph::MatrixTransform *mt = m->FindTagByName(tag);
-			if (mt) {
+			const SceneGraph::Tag *tagNode = m->FindTagByName(tag);
+			if (tagNode) {
 				++found;
-				const matrix4x4f &trans = mt->GetTransform();
+				const matrix4x4f &trans = tagNode->GetGlobalTransform();
 				GunData::GunLoc loc;
 				loc.pos = vector3d(trans.GetTranslate());
 				loc.dir = vector3d(trans.GetOrient().VectorZ());
@@ -117,10 +118,10 @@ void FixedGuns::InitGuns(SceneGraph::Model *m)
 			} else if (found == 0) {
 				// look for legacy "tag_gunmount_0" or "tag_gunmount_1" tags
 				const std::string tag = stringf("tag_gunmount_%0{d}", num); //"gunmount_0";
-				const SceneGraph::MatrixTransform *mt = m->FindTagByName(tag);
-				if (mt) {
+				const SceneGraph::Tag *tagNode = m->FindTagByName(tag);
+				if (tagNode) {
 					++found;
-					const matrix4x4f &trans = mt->GetTransform();
+					const matrix4x4f &trans = tagNode->GetGlobalTransform();
 					GunData::GunLoc loc;
 					loc.pos = vector3d(trans.GetTranslate());
 					loc.dir = vector3d(trans.GetOrient().VectorZ());

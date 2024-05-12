@@ -13,7 +13,7 @@
   },
   "FLAVOUR_0_TEXT": {
     "description": "Selling second hand ship equipment",
-    "message": "Specialerbjudande. Selling one {equipment}."
+    "message": "Specialerbjudande. {equipment} säljes."
   },
   "FLAVOUR_0_TITLE": {
     "description": "Selling second hand ship equipment",
@@ -37,7 +37,7 @@
   },
   "FLAVOUR_2_TEXT": {
     "description": "Selling second hand ship equipment",
-    "message": "Säljer en {equipment}, till ett humant pris!"
+    "message": "{equipment} säljes till ett humant pris!"
   },
   "FLAVOUR_2_TITLE": {
     "description": "Selling second hand ship equipment",
@@ -86,6 +86,18 @@
   "HOW_DO_I_FITT_IT": {
     "description": "Regarding installing a component on the ship",
     "message": "Hur installerar jag den?"
+  },
+  "NO_LONGER_AVAILABLE_0": {
+    "description": "If the sentence is hard to translate, just make up an excuse why the item is no longer available.",
+    "message": "Tyvärr, den har precis sålts!"
+  },
+  "NO_LONGER_AVAILABLE_1": {
+    "description": "If the sentence is hard to translate, just make up an excuse why the item is no longer available.",
+    "message": "Det verkar som att min kollega precis sålt den till en annan kund. Förlåt!"
+  },
+  "NO_LONGER_AVAILABLE_2": {
+    "description": "If the sentence is hard to translate, just make up an excuse why the item is no longer available.",
+    "message": "Jag har ändrat mig, den är inte längre till salu."
   },
   "REPEAT_OFFER": {
     "description": "",

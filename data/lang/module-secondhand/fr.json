@@ -87,6 +87,18 @@
     "description": "Regarding installing a component on the ship",
     "message": "Comment je l'installe ?"
   },
+  "NO_LONGER_AVAILABLE_0": {
+    "description": "If the sentence is hard to translate, just make up an excuse why the item is no longer available.",
+    "message": "Désolé, c'est déjà vendu !"
+  },
+  "NO_LONGER_AVAILABLE_1": {
+    "description": "If the sentence is hard to translate, just make up an excuse why the item is no longer available.",
+    "message": "Il semblerait que mes collègues l'ont déjà vendu à un autre client. Désolé !"
+  },
+  "NO_LONGER_AVAILABLE_2": {
+    "description": "If the sentence is hard to translate, just make up an excuse why the item is no longer available.",
+    "message": "J'ai changé d'avis, ce n'est plus à vendre."
+  },
   "REPEAT_OFFER": {
     "description": "",
     "message": "Répéter l'offre"

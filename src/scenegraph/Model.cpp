@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Model.h"
@@ -7,6 +7,7 @@
 #include "FindNodeVisitor.h"
 #include "GameSaveError.h"
 #include "JsonUtils.h"
+#include "MathUtil.h"
 #include "NodeCopyCache.h"
 #include "StringF.h"
 #include "Thruster.h"
@@ -21,6 +22,7 @@
 #include "scenegraph/MatrixTransform.h"
 #include "scenegraph/NodeVisitor.h"
 #include "scenegraph/StaticGeometry.h"
+#include "scenegraph/Tag.h"
 #include "utils.h"
 
 namespace SceneGraph {
@@ -90,11 +92,13 @@ namespace SceneGraph {
 		}
 
 		//m_tags needs to be updated
-		for (TagContainer::const_iterator it = model.m_tags.begin(); it != model.m_tags.end(); ++it) {
-			MatrixTransform *t = dynamic_cast<MatrixTransform *>(m_root->FindNode((*it)->GetName()));
-			assert(t != 0);
-			m_tags.push_back(t);
+		for (const Tag *tag : model.m_tags) {
+			Node *node = m_root->FindNode(tag->GetName());
+			assert(node->GetNodeFlags() & NODE_TAG);
+			m_tags.push_back(static_cast<Tag *>(node));
 		}
+
+		UpdateTagTransforms();
 	}
 
 	Model::~Model()
@@ -236,43 +240,52 @@ namespace SceneGraph {
 		return m_materials.at(Clamp(i, 0, int(m_materials.size()) - 1)).second;
 	}
 
-	MatrixTransform *Model::GetTagByIndex(const unsigned int i) const
+	Tag *Model::GetTagByIndex(size_t i) const
 	{
-		if (m_tags.empty() || i > m_tags.size() - 1) return 0;
+		if (m_tags.empty() || m_tags.size() <= i)
+			return nullptr;
+
 		return m_tags.at(i);
 	}
 
-	MatrixTransform *Model::FindTagByName(const std::string &name) const
+	Tag *Model::FindTagByName(std::string_view name) const
 	{
-		for (TagContainer::const_iterator it = m_tags.begin();
-			 it != m_tags.end();
-			 ++it) {
-			assert(!(*it)->GetName().empty()); //tags must have a name
-			if ((*it)->GetName() == name) return (*it);
+		for (Tag *tag : m_tags) {
+			assert(!tag->GetName().empty()); //tags must have a name
+			if (tag->GetName() == name)
+				return tag;
 		}
-		return 0;
+		return nullptr;
 	}
 
-	void Model::FindTagsByStartOfName(const std::string &name, TVecMT &outNameMTs) const
+	void Model::FindTagsByStartOfName(std::string_view name, std::vector<Tag *> &outTags) const
 	{
-		for (TagContainer::const_iterator it = m_tags.begin();
-			 it != m_tags.end();
-			 ++it) {
-			assert(!(*it)->GetName().empty()); //tags must have a name
-			if (starts_with((*it)->GetName(), name)) {
-				outNameMTs.push_back((*it));
+		for (Tag *tag : m_tags) {
+			assert(!tag->GetName().empty()); //tags must have a name
+			if (starts_with(tag->GetName(), name)) {
+				outTags.push_back(tag);
 			}
 		}
 		return;
 	}
 
-	void Model::AddTag(const std::string &name, MatrixTransform *node)
+	void Model::AddTag(std::string_view name, Group *parent, Tag *node)
 	{
 		if (FindTagByName(name)) return;
-		node->SetName(name);
+
+		node->SetName(std::string(name));
 		node->SetNodeFlags(node->GetNodeFlags() | NODE_TAG);
-		m_root->AddChild(node);
+		parent->AddChild(node);
 		m_tags.push_back(node);
+	}
+
+	void Model::UpdateTagTransforms()
+	{
+		PROFILE_SCOPED();
+
+		for (Tag *tag : m_tags) {
+			tag->UpdateGlobalTransform();
+		}
 	}
 
 	void Model::SetPattern(unsigned int index)
@@ -359,6 +372,13 @@ namespace SceneGraph {
 			if (m_activeAnimations & (1 << i))
 				m_animations[i]->Interpolate();
 		}
+
+		// Assume if we're ticking an active animation, our tags most likely need to be updated.
+		// This can be optimized slightly by walking the node hierarchy and looking for a "dirty"
+		// flag to determine if the tag needs to be updated, but at current it's not a significant
+		// performance issue compared to animation interpolation.
+		if (m_activeAnimations)
+			UpdateTagTransforms();
 	}
 
 	uint32_t Model::FindAnimationIndex(Animation *anim) const
@@ -508,10 +528,10 @@ namespace SceneGraph {
 	// Debug Visualization Handling
 	// ========================================================================
 
-	static void AddAxisIndicators(const std::vector<MatrixTransform *> &mts, Graphics::VertexArray &lines)
+	static void AddAxisIndicators(const std::vector<Tag *> &mts, Graphics::VertexArray &lines)
 	{
-		for (std::vector<MatrixTransform *>::const_iterator i = mts.begin(); i != mts.end(); ++i) {
-			const matrix4x4f &trans = (*i)->GetTransform();
+		for (const Tag *tag : mts) {
+			const matrix4x4f &trans = tag->GetGlobalTransform();
 			const vector3f pos = trans.GetTranslate();
 			const matrix3x3f &orient = trans.GetOrient();
 			const vector3f x = orient.VectorX().Normalized();
@@ -557,35 +577,7 @@ namespace SceneGraph {
 	{
 		PROFILE_SCOPED()
 
-		const vector3f verts[16] = {
-			transform * vector3f(aabb.min.x, aabb.min.y, aabb.min.z),
-			transform * vector3f(aabb.max.x, aabb.min.y, aabb.min.z),
-			transform * vector3f(aabb.max.x, aabb.max.y, aabb.min.z),
-			transform * vector3f(aabb.min.x, aabb.max.y, aabb.min.z),
-			transform * vector3f(aabb.min.x, aabb.min.y, aabb.min.z),
-			transform * vector3f(aabb.min.x, aabb.min.y, aabb.max.z),
-			transform * vector3f(aabb.max.x, aabb.min.y, aabb.max.z),
-			transform * vector3f(aabb.max.x, aabb.min.y, aabb.min.z),
-
-			transform * vector3f(aabb.max.x, aabb.max.y, aabb.max.z),
-			transform * vector3f(aabb.min.x, aabb.max.y, aabb.max.z),
-			transform * vector3f(aabb.min.x, aabb.min.y, aabb.max.z),
-			transform * vector3f(aabb.max.x, aabb.min.y, aabb.max.z),
-			transform * vector3f(aabb.max.x, aabb.max.y, aabb.max.z),
-			transform * vector3f(aabb.max.x, aabb.max.y, aabb.min.z),
-			transform * vector3f(aabb.min.x, aabb.max.y, aabb.min.z),
-			transform * vector3f(aabb.min.x, aabb.max.y, aabb.max.z),
-		};
-
-		for (unsigned int i = 0; i < 7; i++) {
-			lines.Add(verts[i], color);
-			lines.Add(verts[i + 1], color);
-		}
-
-		for (unsigned int i = 8; i < 15; i++) {
-			lines.Add(verts[i], color);
-			lines.Add(verts[i + 1], color);
-		}
+		Graphics::Drawables::AABB::DrawVertices(lines, transform, aabb, color);
 	}
 
 	static void AddClipSphereVisualizer(float radius, Color color, Graphics::VertexArray &lines)
@@ -643,19 +635,23 @@ namespace SceneGraph {
 		Graphics::VertexArray debugLines(Graphics::ATTRIB_POSITION | Graphics::ATTRIB_DIFFUSE, m_debugFlags ? 256 : 0);
 
 		if (m_debugFlags & Model::DEBUG_TAGS) {
-			std::vector<MatrixTransform *> mts;
-			FindTagsByStartOfName("tag_", mts);
-			AddAxisIndicators(mts, debugLines);
+			std::vector<Tag *> tags;
+			FindTagsByStartOfName("tag_", tags);
+			AddAxisIndicators(tags, debugLines);
 		}
 
 		if (m_debugFlags & Model::DEBUG_DOCKING) {
-			std::vector<MatrixTransform *> mts;
-			FindTagsByStartOfName("entrance_", mts);
-			AddAxisIndicators(mts, debugLines);
-			FindTagsByStartOfName("loc_", mts);
-			AddAxisIndicators(mts, debugLines);
-			FindTagsByStartOfName("exit_", mts);
-			AddAxisIndicators(mts, debugLines);
+			std::vector<Tag *> tags;
+			FindTagsByStartOfName("entrance_", tags);
+			AddAxisIndicators(tags, debugLines);
+
+			tags.clear();
+			FindTagsByStartOfName("loc_", tags);
+			AddAxisIndicators(tags, debugLines);
+
+			tags.clear();
+			FindTagsByStartOfName("exit_", tags);
+			AddAxisIndicators(tags, debugLines);
 		}
 
 		if (m_debugFlags & Model::DEBUG_COLLMESH && m_collMesh) {

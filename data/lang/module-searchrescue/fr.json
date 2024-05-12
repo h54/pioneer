@@ -17,7 +17,7 @@
   },
   "COULD_YOU_REPEAT_THE_ORIGINAL_REQUEST": {
     "description": "",
-    "message": "Pouvez-vous répéter la demande initiale?"
+    "message": "Pouvez-vous répéter la demande initiale ?"
   },
   "CREW": {
     "description": "",
@@ -305,7 +305,7 @@
   },
   "FLAVOUR_4_TYPEOFHELPTEXT": {
     "description": "",
-    "message": "Le pilote demande {unit} tonnes de {cargo}."
+    "message": "Le pilot demande {unit} tonnes de {cargo}. {high_gravity}"
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
@@ -353,7 +353,7 @@
   },
   "FLAVOUR_6_FAILUREMSG": {
     "description": "",
-    "message": "Quel désastre! Vos pauvres collègues sont condamnés à une mort certaine!"
+    "message": "Quel désastre ! C'est une condamnation à mort pour nos pauvres collègues !"
   },
   "FLAVOUR_6_HOWMUCHTIMETEXT": {
     "description": "",
@@ -426,6 +426,22 @@
   "FULL_PASSENGERS": {
     "description": "",
     "message": "Cabines remplies. Aucun passager supplémentaire possible."
+  },
+  "HIGHGRAVITY_0": {
+    "description": "",
+    "message": "La gravité de surface de {planet} est de {gravity} g. Prenez ça en considération."
+  },
+  "HIGHGRAVITY_1": {
+    "description": "",
+    "message": "Rappelez-vous que la gravité de {planet} est de {gravity} g."
+  },
+  "HIGHGRAVITY_2": {
+    "description": "",
+    "message": "Vous atterrirez et décollerez dans une gravité de {gravity} g."
+  },
+  "HIGHGRAVITY_3": {
+    "description": "",
+    "message": "la gravité de {planet} est de {gravity} g."
   },
   "HOW_FAR": {
     "description": "",

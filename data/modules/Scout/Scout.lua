@@ -1,4 +1,4 @@
--- Copyright © 2008-2022 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Lang         = require "Lang"
@@ -330,7 +330,7 @@ local function calcSurfaceScanMission(sBody, difficulty, reward)
 
 	-- Calculate parameters which make approaching the body to scan it more difficult
 	local bodyDifficulty = (1 + sBody.gravity / EARTH_G)
-		* (1 + math.max(math.log(sBody.volatileGas), 0.0) * 0.5)
+		* (1 + math.max(math.log(sBody.atmosDensity), 0.0) * 0.5)
 		* (1 + sBody.eccentricity * 0.5)
 
 	local bodyReward = 1
@@ -615,12 +615,19 @@ local onScanComplete = function (player, scanId)
 				mission.client.name)
 		end
 	end
+
 	mission.location = newlocation
-	Game.player:SetHyperspaceTarget(mission.location:GetStarSystem().path)
+
+	if Game.system and mission.location:IsSameSystem(Game.system.path) then
+		Game.player:SetNavTarget(mission.location)
+	else
+		Game.player:SetHyperspaceTarget(mission.location:SystemOnly())
+	end
 end
 
 
 ---@param player Player
+---@param station SpaceStation
 local onShipDocked = function (player, station)
 	if not player:IsPlayer() then return end
 	local scanMgr = player:GetComponent("ScanManager")
@@ -670,6 +677,11 @@ end
 local loaded_data
 
 local onGameStart = function ()
+	-- If we loaded a saved game, the player may have a ScanManager component already
+	if not Game.player:GetComponent("ScanManager") then
+		Game.player:SetComponent("ScanManager", ScanManager.New(Game.player))
+	end
+
 	ads = {}
 	missions = {}
 	missionKey = {}
@@ -765,25 +777,17 @@ local onGameEnd = function ()
 	nearbysystems = nil
 end
 
+Event.Register("onGameStart", onGameStart)
 Event.Register("onGameEnd", onGameEnd)
 Event.Register("onCreateBB", onCreateBB)
 Event.Register("onUpdateBB", onUpdateBB)
 Event.Register("onEnterSystem", onEnterSystem)
 Event.Register("onShipDocked", onShipDocked)
-Event.Register("onGameStart", onGameStart)
 
 Event.Register("onScanRangeEnter", onScanRangeEnter)
 Event.Register("onScanRangeExit", onScanRangeExit)
 Event.Register("onScanPaused", onScanPaused)
 Event.Register("onScanComplete", onScanComplete)
-
--- Ensure the player ship has a ScanManager available
-Event.Register('onGameStart', function()
-	-- If we loaded a saved game, the player may have a ScanManager component already
-	if not Game.player:GetComponent("ScanManager") then
-		Game.player:SetComponent("ScanManager", ScanManager.New(Game.player))
-	end
-end)
 
 Mission.RegisterType('Scout', l.MAPPING, buildMissionDescription)
 

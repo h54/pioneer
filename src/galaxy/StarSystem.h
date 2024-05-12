@@ -1,10 +1,11 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _STARSYSTEM_H
 #define _STARSYSTEM_H
 
 #include "Polit.h"
+#include "Random.h"
 #include "RefCounted.h"
 #include "galaxy/Economy.h"
 #include "galaxy/GalaxyCache.h"
@@ -29,6 +30,7 @@ public:
 	friend class SystemBody;
 	friend class GalaxyObjectCache<StarSystem, SystemPath::LessSystemOnly>;
 	class GeneratorAPI; // Complete definition below
+	class EditorAPI; // Defined in editor module
 
 	enum ExplorationState {
 		eUNEXPLORED = 0,
@@ -45,6 +47,8 @@ public:
 	static void ToJson(Json &jsonObj, StarSystem *);
 	static RefCountedPtr<StarSystem> FromJson(RefCountedPtr<Galaxy> galaxy, const Json &jsonObj);
 	const SystemPath &GetPath() const { return m_path; }
+	const vector3f &GetPosition() const { return m_pos; }
+
 	const std::string &GetShortDescription() const { return m_shortDesc; }
 	const std::string &GetLongDescription() const { return m_longDesc; }
 	unsigned GetNumStars() const { return m_numStars; }
@@ -93,6 +97,10 @@ public:
 
 	void Dump(FILE *file, const char *indent = "", bool suppressSectorData = false) const;
 
+	// Dump all information about this system to JSON format suitable for
+	// loading as a custom system
+	void DumpToJson(Json &obj);
+
 	const RefCountedPtr<Galaxy> m_galaxy;
 
 protected:
@@ -120,6 +128,7 @@ private:
 	std::string GetStarTypes(SystemBody *body);
 
 	SystemPath m_path;
+	vector3f m_pos;
 	unsigned m_numStars;
 	std::string m_name;
 	std::vector<std::string> m_other_names;
@@ -157,9 +166,10 @@ private:
 class StarSystem::GeneratorAPI : public StarSystem {
 private:
 	friend class GalaxyGenerator;
-	GeneratorAPI(const SystemPath &path, RefCountedPtr<Galaxy> galaxy, StarSystemCache *cache, Random &rand);
 
 public:
+	GeneratorAPI(const SystemPath &path, RefCountedPtr<Galaxy> galaxy, StarSystemCache *cache, Random &rand);
+
 	bool HasCustomBodies() const { return m_hasCustomBodies; }
 
 	void SetCustom(bool isCustom, bool hasCustomBodies)
@@ -167,6 +177,7 @@ public:
 		m_isCustom = isCustom;
 		m_hasCustomBodies = hasCustomBodies;
 	}
+	void SetPosition(const vector3f &pos) { m_pos = pos; }
 	void SetNumStars(int numStars) { m_numStars = numStars; }
 	void SetRootBody(RefCountedPtr<SystemBody> rootBody) { m_rootBody = rootBody; }
 	void SetRootBody(SystemBody *rootBody) { m_rootBody.Reset(rootBody); }

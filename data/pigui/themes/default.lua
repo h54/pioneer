@@ -1,4 +1,4 @@
--- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local theme = {}
@@ -73,6 +73,7 @@ local styleColors = {
 	danger_500		= Color "C51010",
 	danger_700		= Color "8C0606",
 	danger_900		= Color "2C0505",
+
 }
 
 theme.styleColors = styleColors
@@ -229,6 +230,9 @@ theme.colors = {
 
 	equipScreenHighlight    = styleColors.gray_300,
 	equipScreenBgText       = styleColors.gray_400,
+
+	compareBetter = styleColors.accent_300,
+	compareWorse  = styleColors.warning_300,
 }
 
 -- ImGui global theming styles
@@ -570,6 +574,8 @@ theme.icons = {
 	equip_trade_computer = 301,
 	equip_autopilot = 302,
 	equip_hyperdrive = 303,
+	shipmarket_compare_better = 38,
+	shipmarket_compare_worse = 40,
 
 	-- TODO: manual / autopilot
 	-- dummy, until actually defined correctly

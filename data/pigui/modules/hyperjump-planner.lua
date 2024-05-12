@@ -1,4 +1,4 @@
--- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Game = require 'Game'
@@ -221,7 +221,7 @@ local function showJumpRoute()
 		smallButton(icons.search_lens, lui.CENTER_ON_SYSTEM,
 			function()
 				if selected_jump then
-					sectorView:GotoSystemPath(hyperjump_route[selected_jump].path)
+					sectorView:GetMap():GotoSystemPath(hyperjump_route[selected_jump].path)
 				end
 			end)
 
@@ -352,6 +352,9 @@ end
 function hyperJumpPlanner.onGameStart()
 	-- get notified when the player buys hydrogen
 	Game.player:GetComponent('CargoManager'):AddListener('hyperjump-planner', hyperJumpPlanner.onPlayerCargoChanged)
+	-- we may have just loaded a jump route list, so lets build it fresh now
+	buildJumpRouteList()
+
 end
 
 function hyperJumpPlanner.onGameEnd()

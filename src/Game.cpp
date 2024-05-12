@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "buildopts.h"
@@ -11,12 +11,14 @@
 #include "GameLog.h"
 #include "GameSaveError.h"
 #include "HyperspaceCloud.h"
+#include "JsonUtils.h"
 #include "MathUtil.h"
 #include "collider/CollisionSpace.h"
 #include "core/GZipFormat.h"
 #include "galaxy/Economy.h"
 #include "lua/LuaEvent.h"
 #include "lua/LuaSerializer.h"
+#include "pigui/LuaPiGui.h"
 #if WITH_OBJECTVIEWER
 #include "ObjectViewerView.h"
 #endif
@@ -32,9 +34,9 @@
 #include "pigui/PiGuiView.h"
 #include "ship/PlayerShipController.h"
 
-static const int s_saveVersion = 89;
+static const int s_saveVersion = 90;
 
-Game::Game(const SystemPath &path, const double startDateTime) :
+Game::Game(const SystemPath &path, const double startDateTime, const char *shipType) :
 	m_galaxy(GalaxyGenerator::Create()),
 	m_time(startDateTime),
 	m_state(State::NORMAL),
@@ -70,18 +72,39 @@ Game::Game(const SystemPath &path, const double startDateTime) :
 	Body *b = m_space->FindBodyForPath(&path);
 	assert(b);
 
-	m_player.reset(new Player("kanara"));
+	m_player.reset(new Player(shipType));
 
 	m_space->AddBody(m_player.get());
 
-	m_player->SetFrame(b->GetFrame());
-
 	if (b->GetType() == ObjectType::SPACESTATION) {
+		m_player->SetFrame(b->GetFrame());
 		m_player->SetDockedWith(static_cast<SpaceStation *>(b), 0);
 	} else {
+		auto f = Frame::GetFrame(b->GetFrame());
+		if (f->IsRotFrame()) {
+			m_player->SetFrame(f->GetParent());
+		} else {
+			m_player->SetFrame(b->GetFrame());
+		}
+		// random orbit
+		// Taken from: LuaSpace.cpp, _orbital_velocity_random_direction()
 		const SystemBody *sbody = b->GetSystemBody();
-		m_player->SetPosition(vector3d(0, 1.5 * sbody->GetRadius(), 0));
-		m_player->SetVelocity(vector3d(0, 0, 0));
+		vector3d pos{ MathUtil::RandomPointOnSphere(1.2 * b->GetPhysRadius()) };
+		// calculating basis from radius - vector
+		vector3d k = pos.Normalized();
+		vector3d i;
+		if (std::fabs(k.z) > 0.999999)	 // very vertical = z
+			i = vector3d(1.0, 0.0, 0.0); // second ort = x
+		else
+			i = k.Cross(vector3d(0.0, 0.0, 1.0)).Normalized();
+		vector3d j = k.Cross(i);
+		// generating random 2d direction and putting it into basis
+		vector3d randomOrthoDirection = MathUtil::RandomPointOnCircle(1.0) * matrix3x3d::FromVectors(i, j, k).Transpose();
+		// calculate the value of the orbital velocity
+		double orbitalVelocity = sqrt(G * sbody->GetMass() / pos.Length());
+
+		m_player->SetPosition(pos);
+		m_player->SetVelocity(randomOrthoDirection * orbitalVelocity);
 	}
 
 	CreateViews();
@@ -136,6 +159,7 @@ Game::Game(const Json &jsonObj) :
 
 	// Preparing the Lua stuff
 	Pi::luaSerializer->InitTableRefs();
+	Pi::luaSerializer->LoadPersistent(jsonObj);
 
 	GalacticEconomy::LoadFromJson(jsonObj);
 
@@ -191,6 +215,7 @@ void Game::ToJson(Json &jsonObj)
 	PROFILE_SCOPED()
 	// preparing the lua serializer
 	Pi::luaSerializer->InitTableRefs();
+	Pi::luaSerializer->SavePersistent(jsonObj);
 
 	// version
 	jsonObj["version"] = s_saveVersion;
@@ -358,17 +383,17 @@ bool Game::UpdateTimeAccel()
 
 					vector3d toBody = m_player->GetPosition() - b->GetPositionRelTo(m_player->GetFrame());
 					double dist = toBody.Length();
-					double rad = b->GetPhysRadius();
+					double rad = std::max(b->GetPhysRadius(), 10000.0);
 
 					if (dist < 1000.0) {
 						newTimeAccel = std::min(newTimeAccel, Game::TIMEACCEL_1X);
 					} else if (dist < std::min(rad + 0.0001 * AU, rad * 1.1)) {
 						newTimeAccel = std::min(newTimeAccel, Game::TIMEACCEL_10X);
-					} else if (dist < std::min(rad + 0.001 * AU, rad * 5.0)) {
+					} else if (dist < std::min(rad + 0.001 * AU, rad * 2.5)) {
 						newTimeAccel = std::min(newTimeAccel, Game::TIMEACCEL_100X);
-					} else if (dist < std::min(rad + 0.01 * AU, rad * 10.0)) {
+					} else if (dist < std::min(rad + 0.01 * AU, rad * 5.0)) {
 						newTimeAccel = std::min(newTimeAccel, Game::TIMEACCEL_1000X);
-					} else if (dist < std::min(rad + 0.1 * AU, rad * 1000.0)) {
+					} else if (dist < std::min(rad + 0.1 * AU, rad * 500.0)) {
 						newTimeAccel = std::min(newTimeAccel, Game::TIMEACCEL_10000X);
 					}
 				}
@@ -745,7 +770,8 @@ Game::Views::Views() :
 	m_deathView(nullptr),
 	m_spaceStationView(nullptr),
 	m_infoView(nullptr)
-{}
+{
+}
 
 void Game::Views::SetRenderer(Graphics::Renderer *r)
 {
@@ -797,15 +823,15 @@ void Game::Views::LoadFromJson(const Json &jsonObj, Game *game)
 Game::Views::~Views()
 {
 #if WITH_OBJECTVIEWER
-	delete m_objectViewerView;
+	if (m_objectViewerView) delete m_objectViewerView;
 #endif
 
-	delete m_deathView;
-	delete m_infoView;
-	delete m_spaceStationView;
-	delete m_systemView;
-	delete m_worldView;
-	delete m_sectorView;
+	if (m_deathView) delete m_deathView;
+	if (m_infoView) delete m_infoView;
+	if (m_spaceStationView) delete m_spaceStationView;
+	if (m_systemView) delete m_systemView;
+	if (m_worldView) delete m_worldView;
+	if (m_sectorView) delete m_sectorView;
 }
 
 // XXX this should be in some kind of central UI management class that
@@ -859,9 +885,11 @@ void Game::EmitPauseState(bool paused)
 	if (paused) {
 		// Notify UI that time is paused.
 		LuaEvent::Queue("onGamePaused");
+		LuaEvent::Queue(PiGui::GetEventQueue(), "onGamePaused");
 	} else {
 		// Notify the UI that time is running again.
 		LuaEvent::Queue("onGameResumed");
+		LuaEvent::Queue(PiGui::GetEventQueue(), "onGameResumed");
 	}
 	LuaEvent::Emit();
 }
@@ -897,12 +925,28 @@ Game *Game::LoadGame(const std::string &filename)
 
 bool Game::CanLoadGame(const std::string &filename)
 {
-	auto file = FileSystem::userFiles.ReadFile(FileSystem::JoinPathBelow(Pi::SAVE_DIR_NAME, filename));
-	if (!file)
+	FILE *f;
+	try {
+		f = FileSystem::userFiles.OpenReadStream(FileSystem::JoinPathBelow(Pi::SAVE_DIR_NAME, filename));
+	} catch (const std::invalid_argument &) {
+		return false;
+	}
+	if (!f)
 		return false;
 
+	fclose(f);
 	return true;
-	// file data is freed here
+}
+
+bool Game::DeleteSave(const std::string &filename)
+{
+	std::string filePath;
+	try {
+		filePath = FileSystem::JoinPathBelow(Pi::SAVE_DIR_NAME, filename);
+	} catch (const std::invalid_argument &) {
+		return false;
+	}
+	return FileSystem::userFiles.RemoveFile(filePath);
 }
 
 void Game::SaveGame(const std::string &filename, Game *game)
@@ -916,10 +960,19 @@ void Game::SaveGame(const std::string &filename, Game *game)
 	if (game->GetPlayer()->IsDead())
 		throw CannotSaveDeadPlayer();
 
-	if (!FileSystem::userFiles.MakeDirectory(Pi::SAVE_DIR_NAME)) {
+	if (!FileSystem::userFiles.MakeDirectory(Pi::SAVE_DIR_NAME))
+		throw CouldNotOpenFileException();
+
+	if (!FileSystem::IsValidFilename(filename))
+		throw std::invalid_argument(filename);
+	FILE *f;
+	try {
+		f = FileSystem::userFiles.OpenWriteStream(FileSystem::JoinPathBelow(Pi::SAVE_DIR_NAME, filename));
+	} catch (const std::invalid_argument &) {
 		throw CouldNotOpenFileException();
 	}
-
+	if (!f)
+		throw CouldNotOpenFileException();
 	Json rootNode;
 	game->ToJson(rootNode); // Encode the game data as JSON and give to the root value.
 	std::vector<uint8_t> jsonData;
@@ -927,10 +980,6 @@ void Game::SaveGame(const std::string &filename, Game *game)
 		PROFILE_SCOPED_DESC("json.to_cbor");
 		jsonData = Json::to_cbor(rootNode); // Convert the JSON data to CBOR.
 	}
-
-	FileSystem::userFiles.MakeDirectory(Pi::SAVE_DIR_NAME);
-	FILE *f = FileSystem::userFiles.OpenWriteStream(FileSystem::JoinPathBelow(Pi::SAVE_DIR_NAME, filename));
-	if (!f) throw CouldNotOpenFileException();
 
 	try {
 		// Compress the CBOR data.
@@ -946,4 +995,9 @@ void Game::SaveGame(const std::string &filename, Game *game)
 	}
 
 	Pi::GetApp()->RequestProfileFrame("SaveGame");
+}
+
+int Game::CurrentSaveVersion()
+{
+	return s_saveVersion;
 }

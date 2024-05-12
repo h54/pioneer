@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _GASGIANT_H
@@ -54,6 +54,7 @@ public:
 
 	static void CreateRenderTarget(const Uint16 width, const Uint16 height);
 	static void SetRenderTargetCubemap(const Uint32, Graphics::Texture *, const bool unBind = true);
+	static Graphics::RenderTarget *GetRenderTarget();
 	static void BeginRenderTarget();
 	static void EndRenderTarget();
 

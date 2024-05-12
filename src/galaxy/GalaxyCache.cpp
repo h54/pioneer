@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "galaxy/GalaxyCache.h"
@@ -9,7 +9,8 @@
 #include "galaxy/GalaxyGenerator.h"
 #include "galaxy/Sector.h"
 #include "galaxy/StarSystem.h"
-#include "utils.h"
+#include "core/Log.h"
+#include "profiler/Profiler.h"
 #include <utility>
 
 //#define DEBUG_CACHE

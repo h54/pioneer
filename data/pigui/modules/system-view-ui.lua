@@ -1,4 +1,4 @@
--- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Game = require 'Game'
@@ -807,7 +807,11 @@ function Windows.objectInfo:Show()
 				{ name = lc.RADIUS, icon = icons.body_radius,
 					value = (not starport) and ui.Format.Distance(body.radius) or nil },
 				{ name = lc.SURFACE_GRAVITY, icon = icons.body_radius,
-					value = (not starport) and ui.Format.Speed(body.gravity, true).." ("..ui.Format.Gravity(body.gravity / 9.8066)..")" or nil },
+					value = (not starport) and ui.Format.Speed(body.gravity, true).." ("..ui.Format.Gravity(body.gravity / 9.80665)..")" or nil },
+				{ name = lc.ESCAPE_VELOCITY, icon = icons.body_radius,
+					value = (not starport) and ui.Format.Speed(body.escapeVelocity , true) or nil },
+				{ name = lc.MEAN_DENSITY, icon = icons.body_radius,
+					value = (not starport) and ui.Format.Mass(body.meanDensity).."/m3" or nil },
 				{ name = lc.ORBITAL_PERIOD, icon = icons.body_orbit_period,
 					value = op and op > 0 and ui.Format.Duration(op, 2) or nil },
 				{ name = lc.DAY_LENGTH, icon = icons.body_day_length,

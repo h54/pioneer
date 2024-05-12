@@ -1,11 +1,11 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _MUSIC_H
 #define _MUSIC_H
 
 #include "Sound.h"
-#include <SDL.h>
+
 #include <sigc++/sigc++.h>
 #include <string>
 #include <vector>

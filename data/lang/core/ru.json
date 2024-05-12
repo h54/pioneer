@@ -411,6 +411,10 @@
     "description": "",
     "message": "Соотн. экваториального радиуса к полярному"
   },
+  "ESCAPE_VELOCITY": {
+    "description": "",
+    "message": "Вторая космическая скорость"
+  },
   "EXACT_MATCH_X": {
     "description": "",
     "message": "Точное соответствие: %system"
@@ -490,6 +494,10 @@
   "GAME_SAVE_CANNOT_WRITE": {
     "description": "",
     "message": "Этот сохраненный файл игры не может быть записан из-за системной ошибки."
+  },
+  "GAME_SAVE_INVALID_NAME": {
+    "description": "",
+    "message": "Это сохранение игры не записано из-за неверного имени."
   },
   "GENERAL_VIEW_CONTROLS": {
     "description": "",
@@ -782,6 +790,10 @@
   "MASS_N_TONNES": {
     "description": "",
     "message": "Масса: %{mass}т"
+  },
+  "MEAN_DENSITY": {
+    "description": "",
+    "message": "Средняя плотность"
   },
   "MEDICINES": {
     "description": "",
@@ -1280,7 +1292,7 @@
     "message": "Мусор"
   },
   "SCOOP": {
-    "description": "Is followed by a number, repersenting scoop mounts/slots available to fit cargo scoop and/or fuel scoop",
+    "description": "Is followed by a number, representing scoop mounts/slots available to fit cargo scoop and/or fuel scoop",
     "message": "Сборник"
   },
   "SCREENSHOT_FILENAME_TEMPLATE": {
@@ -1739,13 +1751,17 @@
     "description": "Distance unit: an astronomical unit, radius of Earth's orbit",
     "message": "АЕ"
   },
+  "UNIT_CUBIC_METERS": {
+    "description": "Volume unit: cubic meter",
+    "message": "m³"
+  },
   "UNIT_DAYS": {
     "description": "Duration unit: one 24-hour day",
     "message": "дн"
   },
   "UNIT_EARTH_GRAVITY": {
     "description": "Acceleration unit: one earth gravity (g)",
-    "message": "г"
+    "message": "g"
   },
   "UNIT_GIGATONNES": {
     "description": "Mass unit: one gigatonne",

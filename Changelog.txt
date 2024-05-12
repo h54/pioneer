@@ -1,9 +1,228 @@
-March 2023
+April 2024
+  * Internal Changes
+    * Documented minimal compiler version needed updating (#5810)
+    * Include stdlib.h instead of alloca.h for alloca(3) on FreeBSD (#5827)
+    * Include <algorithm> for std::max (#5828)
+    * Do not install libfmt by default (#5808)
+    * Renderer: Support running under Wayland (#5817)
+
+  * Fixes
+    * Police Coronatrix texture fix (#5816)
+    * Fix loud white nosie after mouse steering (#5812)
+    * Fix location recovery in save files (#5801)
+    * Use variable "dist" (SAR mission) for the distance in the BB if specified (#5818)
+
+March 2024
+  * Fixes
+    * Fix backwards save compatibility with v90 saves (#5798)
+    * Fix speed limiter button positions overlapping (#5802)
+
+Pioneer 2024-03-14 Release
+  * Internal Changes
+    * Add Lua "Persistent Object" Serialization (#5774)
+
+  * Fixes
+    * Minor model fixes (Lodos, Coronatrix) (#5782)
+    * Fix the accumulation of zombie traders and some other unnecessary things (#5783)
+    * System Editor Fixes (#5787)
+    * Consider InputBindings::Axis active only if it's value is non-zero (#5795)
+    * Fix incorrect position of starports (#5793)
+    * Fix system editor loading body parameter wrongly from .json file (#5792)
+    * Fix incorrect city locations (#5744)
+    * Fix hyperjump streaks falling down (#5770, #5794)
+    * Fix invalid binary orbits (#5764, #5794)
+    * Fix negative commodity demand (#5784, #5794)
+    * Improve collision mesh to Natrix (#5796)
+
+February 2024 (dev)
   * New Features
-  
+    * Editor Welcome Screen: don't require command line argument (#5772)
+    * Resizable Editor Window (#5779)
+
+  * Internal Changes
+    * Fix MSVC CI build on non-PR refs (#5733)
+    * Update libfmt, fix compilation warnings and invalid JSON CustomSystem position (#5759)
+    * Add documentation to make life for package maintainers easier (#5749)
+    * Fixed broken screenshots links (#5761)
+    * Adding editor.txt, removing ModelViewer.txt to document new editor (#5737)
+    * Misc cleanup, fixes, and Lua function library improvements (#5773)
+    * Update Github Upload-Artifact action for Windows CI (#5781)
+    * Add a recovery reader for the v90 flight log (#5763)
+
+  * Fixes
+    * Local missions should list distances in AU rather than Ly (#5756)
+    * Fix star background generation (#5758)
+    * Fix path of pioneer executable (#5743)
+    * Fix 'nil' in hyperdrive Maintenance BBS advert (#5754)
+    * Generate atmospheres for gas giants also in legacy custom systems (#5766)
+    * Fix "bad argument" error in SearchRescue.lua in custom systems (#5769)
+    * Fix crash when deleting a flightlog entry (#5768)
+    * Fix projectile and beam weapons not able to hit, frame sync (#5767)
+    * Don't crash when there are few background stars (#5778)
+    * Fix spelling / grammar in English language files (#5780)
+    * Fix that sometimes ships get stuck the moment they start to dock (#5127)
+    * Adding landing spike to Mola Ramsayi collision mesh (#5785)
+
+Pioneer 2024-02-03 Release
+  * New Features
+    * Add new music tracks by diduuz (#5727)
+
+  * Fixes
+    * Fix mission data for Custom Cargo mission persisting between games (#5730)
+    * Fix model viewer not working (#5729)
+    * Fix bogus GPS coordinates when entering an orbit (#5729)
+    * Fixes Visual Studio CMake build only supports Debug, not release or profiling (#5729)
+
+January 2024
+  * New Features
+    * Newground station cleanup and new textures (#5704)
+    * Add a function to recover old versions of saves (#5706)
+    * Docking with orbital in manual mode (#5619)
+    * Add delete button in save/load window (#5674)
+    * System overview icon upscale and update (#5540)
+    * Make ship market comparison colors colorblind friendly (#5715)
+    * Unify / re-balance mission travel time implementation (#5707)
+    * Stop TradeShips from performing illegal Hyperjumps (#5647)
+    * Improve planet rings shaders (#5708)
+    * Update/rework of the flightlog (#5666)
+    * Realistic Rayleigh/Mie atmospheric scattering (#5617)
+    * Save and load the current planned hyperjump in the save file (#5721)
+
+  * Internal Changes
+    * Release will now also build an AppImage (#5682)
+    * Re-add the galaxy dump function (#5676)
+    * Refactor Event Queues (#5671)
+    * Add Space.GetBodiesNear(), ProximityQuery module (#5637)
+    * Fix undefined behaviour in CommandBufferGL.cpp (#5694)
+    * Hardcode the project version, for packagers (#5713)
+    * Lua serializer comment error tweak (#5718)
+    * Add BUILD_DATE variable for windows builds (#5722)
+
+  * Fixes
+    * Avoid misaligned read when loading SGM files (#5692)
+    * Remove transparent backgrounds from screenshots (#5660)
+    * Fix assert on startup when calling back on an empty string (#5717)
+    * Fix orbital / surface scan missions being unable to be completed (#5724)
+    * Fix player being unable to collide with Stations if only ship in Frame (#5720)
+    * Crash from hyperjump-planner indexing local ship (nil) #5725
+    * Fix missing gas giant atmospheres (#5728)
+
+December 2023
+  * Fixes
+    * Fix installed directory structure on Windows (#5686)
+
+November 2023
+  * Internal Changes
+    * Lua Constant autocomplete support (#5663)
+    * Simplify SystemBody::GetAtmPressure (#5662)
+    * Improve Simplex Noise Performance (#5661)
+    * Improve CI Setup and Performance (#5670)
+    * Build with SSE4 / AVX, fix build artifact generation (#5651)
+    * Lua io and FileSystem uri changes (#5638)
+    * LuaBody/Player/Ship function changes (#5643)
+    * Update AppStream destination and filename (#5664)
+    * Improve BVH Broadphase Performance (#5669)
+
+  * Fixes
+    * Correct value of g-force in system editor (#5658)
+    * Fix assertion failed in Sfx::Sfx(const Json &jsonObj) (#5668)
+    * Fix crash in l_body_get_ground_position if there is no body to get (#5665)
+    * Fix lua components corruption on save (#5657)
+
+October 2023
+  * New Features
+    * Ship market comparison colors (#5632)
+    * Search bar for save/load window and crashes fix (#5634)
+    * ScanManager improvements and ship properties fixes (#5635)
+    * Improve realism of randomly-generated systems (#5622)
+    * Sensibly generate high-gravity planets (#5592)
+    * Implement graphical editor for creating custom systems (#5625)
+    * Allow double click on an item to load the saved game (#5652)
+
+  * Internal Changes
+    * Load custom systems from JSON, deprecate lua-based custom systems (#5622)
+    * Window VSync mode can be changed without restart (#5625)
+    * Restructured & reworked Pause button code (#5650)
+    * Added Appimage build script (#5620)
+    * Fix undefined behavior in space bodies deferred addition (#5648)
+
+  * Fixes
+    * Disable scrolling for tab-view and character info (#5642)
+    * Fix failed build for ALT Linux, by calming down -Werror=return-type (#5649)
+    * Fix for glued cockpit (#5631)
+    * Fix for commodity market in stock and demand reset (#5633)
+    * Fuel scooping rework (#5609)
+    * Fix Scans not resuming on game continue (#5577)
+    * Fix disappearing fuel after save and load (#5534)
+    * Fix ship info screen showing wrong cargo capacity and usage (#5557)
+    * Fix for "Assertion failed!" in the "Ship Repairs" window (#5640)
+    * Wording change for commands in the "Crew Roster" window (#5641)
+    * Fix constant planet density vs radius ratio (#5592)
+    * Fix main menu music not playing after exiting to main menu (#5645)
+    * Fix incorrect time acceleration after closing pause menu (#5646)
+    * Fix absurd number of spaceports generated on high-population worlds (#5625)
+    * Fix surface ports being generated on a single "orbital line" around the body (#5625)
+
+September 2023
+  * New Features
+    * Add Model Viewer Widget (#5613)
+
+  * Internal Changes
+    * Build directly from the CMake config on windows with Visual Studio 2019 (#5624)
+    * Expand ModManager, add System Editor prerequisites (#5623)
+    * Remove Visual Studio solution, improve new-contributor experience (#5626)
+
+  * Fixes
+    * Ignore x-axis only mouse wheel events (#5627)
+    * Fix for rounding error in lobby's +/-10% buttons (#5628, #5630)
+
+August 2023
+  * New Features
+    * Add New Game interface to customize starting parameters (#5561)
+    * Added icon to indicate up/down camera view (#5600)
+
+  * Internal Changes
+    * Editor Binary and Prerequisites (#5611)
+    * build: include <cstdint> explicitly (#5616)
+    * Upgrade IMGUI to v1.89.8 (#5599)
+    * C++ i18n APIs use std::string_view to reduce string copies (#5605)
+    * Better support for loading GTLF model sources (#5606)
+    * Added support for fully animated model tags (#5606)
+    * Improve compilation times by ~30% (#5309)
+    * Re-architect System Map to use object tracks (#5607)
+    * Load SVG icons into pigui fonts for better rendering (#5608)
+    * Disable runtime floating point exceptions (#5610)
+
+  * Fixes
+    * Fixes after sector map refactoring and new start menu added (#5612)
+
+July 2023
+  * New Features
+    * SecondHand - Add possibility to refuse selling (#5593)
+
+  * Fixes
+    * Fix issues when quitting Lua console (#5597)
+
+June 2023
+  * Fixes
+    * Mouseover tooltip for the ECM and the Advanced ECM systems (#5590)
+
+  * Internal Changes
+    * Include ad title in bulletin board search (#5589)
+    * Combat mission explanation about special equipment (#5588)
+
+May 2023
+  * Fixes
+    * Fix SIGFPE from zero length vector if flying long time enough (#5569)
+
+April 2023
+  * Fixes
+    * Fix military drive being too heavy (#5580)
+
+March 2023
   * Internal Changes
     * Use explicit-size types in LuaPushPull to fix 32-bit builds (#5538)
- 
+
   * Fixes
     * Fix empty accessory files used to reduce facegen accessory spawn chance (#5558)
     * Fix autopilot crash with no body in frame of reference (#5551)
@@ -38,7 +257,7 @@ January 2023
     * Enable in-system trading between different stations (#5474)
     * Increase amount of credits granted at Mars and New Hope starts (#5474)
     * Increase Bowfin's equipment capacity to improve its utility (#5498)
-  
+
   * Internal Changes
     * Improved code for Advice module / smaller saves (#5467)
     * Fix URLs changed, to forum (#5464)

@@ -411,6 +411,10 @@
     "description": "",
     "message": "Egyenlítői- és sarki sugár arány"
   },
+  "ESCAPE_VELOCITY": {
+    "description": "",
+    "message": "Szökési sebesség"
+  },
   "EXACT_MATCH_X": {
     "description": "",
     "message": "Pontos egyezés: %system"
@@ -490,6 +494,10 @@
   "GAME_SAVE_CANNOT_WRITE": {
     "description": "",
     "message": "Ez a mentés nem hajtható végre valamilyen rendszerhiba miatt."
+  },
+  "GAME_SAVE_INVALID_NAME": {
+    "description": "",
+    "message": "Érvénytelen név, a file nem menthető."
   },
   "GENERAL_VIEW_CONTROLS": {
     "description": "",
@@ -782,6 +790,10 @@
   "MASS_N_TONNES": {
     "description": "",
     "message": "Tömeg: %{mass}t"
+  },
+  "MEAN_DENSITY": {
+    "description": "",
+    "message": "Átlagsűrűség"
   },
   "MEDICINES": {
     "description": "",
@@ -1280,7 +1292,7 @@
     "message": "Hulladék"
   },
   "SCOOP": {
-    "description": "Is followed by a number, repersenting scoop mounts/slots available to fit cargo scoop and/or fuel scoop",
+    "description": "Is followed by a number, representing scoop mounts/slots available to fit cargo scoop and/or fuel scoop",
     "message": "Szívó"
   },
   "SCREENSHOT_FILENAME_TEMPLATE": {
@@ -1738,6 +1750,10 @@
   "UNIT_AU": {
     "description": "Distance unit: an astronomical unit, radius of Earth's orbit",
     "message": "AU"
+  },
+  "UNIT_CUBIC_METERS": {
+    "description": "Volume unit: cubic meter",
+    "message": "m³"
   },
   "UNIT_DAYS": {
     "description": "Duration unit: one 24-hour day",

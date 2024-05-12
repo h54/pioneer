@@ -1,17 +1,18 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "MaterialGL.h"
 #include "Program.h"
 #include "RendererGL.h"
 #include "Shader.h"
+
 #include "core/Log.h"
 #include "graphics/Material.h"
-
-#include "StringF.h"
 #include "graphics/Types.h"
 #include "graphics/opengl/TextureGL.h"
 #include "graphics/opengl/UniformBuffer.h"
+
+#include "profiler/Profiler.h"
 
 namespace Graphics {
 	namespace OGL {

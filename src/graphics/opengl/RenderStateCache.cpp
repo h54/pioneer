@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "RenderStateCache.h"
@@ -180,8 +180,12 @@ void RenderStateCache::ResetFrame()
 	for (uint32_t idx = 0; idx < m_textureCache.size(); idx++)
 		SetTexture(idx, nullptr);
 
+	if (m_activeRT)
+		m_activeRT->Unbind();
+
 	m_activeRenderStateHash = 0;
 	m_activeProgram = 0;
+	m_activeRT = nullptr;
 }
 
 void RenderStateCache::SetTexture(uint32_t index, TextureGL *texture)
@@ -237,6 +241,8 @@ void RenderStateCache::SetRenderTarget(RenderTarget *target)
 			m_activeRT->Unbind();
 		if (target)
 			target->Bind();
+
+		m_activeRT = target;
 	}
 }
 

@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Space.h"
@@ -9,6 +9,7 @@
 #include "Game.h"
 #include "GameSaveError.h"
 #include "HyperspaceCloud.h"
+#include "JsonUtils.h"
 #include "Lang.h"
 #include "MathUtil.h"
 #include "Pi.h"
@@ -19,6 +20,7 @@
 #include "SystemView.h"
 #include "collider/CollisionContact.h"
 #include "collider/CollisionSpace.h"
+#include "core/Log.h"
 #include "galaxy/Galaxy.h"
 #include "graphics/Graphics.h"
 #include "lua/LuaEvent.h"
@@ -200,7 +202,7 @@ Space::Space(Game *game, RefCountedPtr<Galaxy> galaxy, Space *oldSpace) :
 	m_processingFinalizationQueue(false)
 #endif
 {
-	m_background.reset(new Background::Container(Pi::renderer, Pi::rng, this, m_game->GetGalaxy()));
+	RefreshBackground();
 
 	m_rootFrameId = Frame::CreateFrame(FrameId::Invalid, Lang::SYSTEM, Frame::FLAG_DEFAULT, FLT_MAX);
 
@@ -220,9 +222,7 @@ Space::Space(Game *game, RefCountedPtr<Galaxy> galaxy, const SystemPath &path, S
 #endif
 {
 	PROFILE_SCOPED()
-	Uint32 _init[5] = { path.systemIndex, Uint32(path.sectorX), Uint32(path.sectorY), Uint32(path.sectorZ), UNIVERSE_SEED };
-	Random rand(_init, 5);
-	m_background.reset(new Background::Container(Pi::renderer, rand, this, m_game->GetGalaxy()));
+	RefreshBackground();
 
 	CityOnPlanet::SetCityModelPatterns(m_starSystem->GetPath());
 
@@ -251,10 +251,7 @@ Space::Space(Game *game, RefCountedPtr<Galaxy> galaxy, const Json &jsonObj, doub
 
 	m_starSystem = StarSystem::FromJson(galaxy, spaceObj);
 
-	const SystemPath &path = m_starSystem->GetPath();
-	Uint32 _init[5] = { path.systemIndex, Uint32(path.sectorX), Uint32(path.sectorY), Uint32(path.sectorZ), UNIVERSE_SEED };
-	Random rand(_init, 5);
-	m_background.reset(new Background::Container(Pi::renderer, rand, this, m_game->GetGalaxy()));
+	RefreshBackground();
 
 	RebuildSystemBodyIndex();
 
@@ -265,8 +262,11 @@ Space::Space(Game *game, RefCountedPtr<Galaxy> galaxy, const Json &jsonObj, doub
 
 	try {
 		Json bodyArray = spaceObj["bodies"].get<Json::array_t>();
-		for (Uint32 i = 0; i < bodyArray.size(); i++)
+		for (Uint32 i = 0; i < bodyArray.size(); i++) {
+			if (bodyArray[i].count("is_not_in_space") > 0)
+				continue;
 			m_bodies.push_back(Body::FromJson(bodyArray[i], this));
+		}
 	} catch (Json::type_error &) {
 		throw SavedGameCorruptException();
 	}
@@ -301,7 +301,7 @@ Space::Space(Game *game, RefCountedPtr<Galaxy> galaxy, const Json &jsonObj, doub
 		}
 	}
 
-	GenSectorCache(galaxy, &path);
+	GenSectorCache(galaxy, &m_starSystem->GetPath());
 
 	//DebugDumpFrames();
 }
@@ -312,16 +312,28 @@ Space::~Space()
 	for (Body *body : m_bodies)
 		KillBody(body);
 	UpdateBodies();
+
+	// since the player is owned by the game, we cannot delete it, but it
+	// stores the id of the frame we are going to delete
+	auto player = m_game->GetPlayer();
+	if (player) player->SetFrame(FrameId::Invalid);
+
 	Frame::DeleteFrames();
 }
 
 void Space::RefreshBackground()
 {
 	PROFILE_SCOPED()
-	const SystemPath &path = m_starSystem->GetPath();
-	Uint32 _init[5] = { path.systemIndex, Uint32(path.sectorX), Uint32(path.sectorY), Uint32(path.sectorZ), UNIVERSE_SEED };
-	Random rand(_init, 5);
-	m_background.reset(new Background::Container(Pi::renderer, rand, this, m_game->GetGalaxy()));
+	if (m_starSystem.Valid()) {
+		const SystemPath &path = m_starSystem->GetPath();
+		Uint32 _init[5] = { path.systemIndex, Uint32(path.sectorX), Uint32(path.sectorY), Uint32(path.sectorZ), UNIVERSE_SEED };
+		Random rand(_init, 5);
+		m_background.reset(new Background::Container(Pi::renderer, rand));
+		m_background->GetStarfield()->Fill(rand, &this->GetStarSystem()->GetPath(), m_game->GetGalaxy());
+	} else {
+		m_background.reset(new Background::Container(Pi::renderer, Pi::rng));
+		m_background->GetStarfield()->Fill(Pi::rng, nullptr, m_game->GetGalaxy());
+	}
 }
 
 void Space::ToJson(Json &jsonObj)
@@ -339,8 +351,23 @@ void Space::ToJson(Json &jsonObj)
 	spaceObj["frame"] = frameObj;
 
 	Json bodyArray = Json::array(); // Create JSON array to contain body data.
-	for (Body *b : m_bodies) {
+	for (size_t i = 0; i < m_bodyIndex.size() - 1; i++) {
+		// First index of m_bodyIndex is reserved to
+		// nullptr or bad index
+		Body *b = m_bodyIndex[i + 1];
 		Json bodyArrayEl({}); // Create JSON object to contain body.
+		if (!b->IsInSpace()) {
+			bodyArrayEl["is_not_in_space"] = true;
+			// Append empty body object to array.
+			// The only working example right now is ship in hyperspace
+			// which is loaded through HyperspaceCloud class, so
+			// there is no need to load it a second time.
+			// FIXME: This is done to save it's lua components which is otherwise won't save.
+			// This needs a better way to handle this case.
+			// Described in depth: https://github.com/pioneerspacesim/pioneer/pull/5657#issuecomment-1818188703
+			bodyArray.push_back(bodyArrayEl);
+			continue;
+		}
 		b->ToJson(bodyArrayEl, this);
 		bodyArray.push_back(bodyArrayEl); // Append body object to array.
 	}
@@ -547,13 +574,13 @@ std::vector<Space::BodyDist> Space::BodiesInAngle(const Body *b, const vector3d 
 		if (body->IsDead()) continue;
 
 		//offset from the body center - like for view from ship cocpit
-		vector3d dirBody = body->GetPositionRelTo(b) * b->GetOrient() -  offset;
+		vector3d dirBody = body->GetPositionRelTo(b) * b->GetOrient() - offset;
 		double d = dirBody.Length();
 		//Normalizing but not using Normalized() function to avoid calculating Length again
 		dirBody = dirBody / d;
 
 		//Bodies outside of the cone disregarded
-		if(dirBody.Dot(view_dir) < cosOfMaxAngle)
+		if (dirBody.Dot(view_dir) < cosOfMaxAngle)
 			continue;
 
 		ret.emplace_back(body, d);
@@ -612,7 +639,8 @@ public:
 	}
 	SectorDistanceSort(const SystemPath *centre) :
 		here(centre)
-	{}
+	{
+	}
 
 private:
 	SectorDistanceSort() {}
@@ -746,9 +774,11 @@ static FrameId MakeFramesFor(const double at_time, SystemBody *sbody, Body *b, F
 
 	if ((supertype == SystemBody::SUPERTYPE_GAS_GIANT) ||
 		(supertype == SystemBody::SUPERTYPE_ROCKY_PLANET)) {
-		// for planets we want an non-rotating frame for a few radii
+		// for planets we want an non-rotating frame covering its Hill radius
 		// and a rotating frame with no radius to contain attached objects
-		double frameRadius = std::max(4.0 * sbody->GetRadius(), sbody->GetMaxChildOrbitalDistance() * 1.05);
+		double hillRadius = sbody->GetSemiMajorAxis() * (1.0 - sbody->GetEccentricity()) * pow(sbody->GetMass() / (3.0 * sbody->GetParent()->GetMass()), 1.0 / 3.0);
+		double frameRadius = std::max(hillRadius, sbody->GetMaxChildOrbitalDistance() * 1.05);
+		frameRadius = std::max(sbody->GetRadius() * 4.0, frameRadius);
 		FrameId orbFrameId = Frame::CreateFrame(fId,
 			sbody->GetName().c_str(),
 			Frame::FLAG_HAS_ROT,
@@ -769,8 +799,11 @@ static FrameId MakeFramesFor(const double at_time, SystemBody *sbody, Body *b, F
 		rotFrame->SetBodies(sbody, b);
 
 		matrix3x3d rotMatrix = matrix3x3d::RotateX(sbody->GetAxialTilt());
-		double angSpeed = 2.0 * M_PI / sbody->GetRotationPeriod();
-		rotFrame->SetAngSpeed(angSpeed);
+
+		if (sbody->GetRotationPeriod() > 0.0) {
+			double angSpeed = 2.0 * M_PI / sbody->GetRotationPeriod();
+			rotFrame->SetAngSpeed(angSpeed);
+		}
 
 		if (sbody->HasRotationPhase())
 			rotMatrix = rotMatrix * matrix3x3d::RotateY(sbody->GetRotationPhaseAtStart());
@@ -1038,9 +1071,18 @@ void Space::TimeStep(float step)
 		b->UpdateFrame();
 
 	// AI acts here, then move all bodies and frames
-	for (Body *b : m_bodies)
+	// NOTE: The AI can add bodies here so we can't use an iterator
+	// this restores the previous version where only the initial list is
+	// updated unless the bodies vector reallocated where anything could
+	// have happened
+	// alternative fixes to delay addition caused
+	// https://github.com/pioneerspacesim/pioneer/issues/5695
+	//
+	// THIS IS A HACK/WORKAROUND until a more proper solution can be found
+	for (size_t i = 0; i < m_bodies.size(); ++i) {
+		auto b = m_bodies[i];
 		b->StaticUpdate(step);
-
+	}
 	Frame::UpdateOrbitRails(m_game->GetTime(), m_game->GetTimeStep());
 
 	for (Body *b : m_bodies)

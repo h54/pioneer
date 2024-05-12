@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Geom.h"
@@ -8,14 +8,14 @@
 #include "CollisionSpace.h"
 #include "GeomTree.h"
 
-#include <float.h>
+#include "profiler/Profiler.h"
 
 static const unsigned int MAX_CONTACTS = 8;
 
 Geom::Geom(const GeomTree *geomtree, const matrix4x4d &m, const vector3d &pos, void *data) :
-	m_orient(m),
 	m_pos(pos),
 	m_geomtree(geomtree),
+	m_orient(m),
 	m_data(data),
 	m_group(0),
 	m_mailboxIndex(0),

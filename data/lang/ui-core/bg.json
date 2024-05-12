@@ -19,6 +19,10 @@
     "description": "",
     "message": "Преданост:"
   },
+  "ALL_PARAMETERS_WERE_RECOVERED_SUCCESSFULLY": {
+    "description": "Message when restoring savegame",
+    "message": "Всички параметри са възстановени."
+  },
   "ALL_UP_WEIGHT": {
     "description": "",
     "message": "Общо тегло"
@@ -46,6 +50,10 @@
   "ATMO_PRESS_LIMIT": {
     "description": "Base external pressure limit of a ship (without atmo shield)",
     "message": "Максимално атм. налягане"
+  },
+  "ATTEMPTING_TO_RECOVER_GAME_PROGRESS_FROM_SAVE_X": {
+    "description": "Message when restoring savegame",
+    "message": "Възстановяване на играта от записа: {save}"
   },
   "ATTEMPT_TO_REPAIR_HULL": {
     "description": "",
@@ -99,6 +107,14 @@
     "description": "",
     "message": "Този артикул не може да бъде продаден"
   },
+  "CANT_FIND_PATH": {
+    "description": "Message when restoring savegame, file path",
+    "message": "Пътят не е намерен: %s"
+  },
+  "CANT_FIND_PLAYERS_SHIP_IN_SPACE": {
+    "description": "Message when restoring savegame",
+    "message": "Вашият кораб не е намерен в космоса"
+  },
   "CAPACITY": {
     "description": "Capacity of ship to fit more equipment",
     "message": "Капацитет"
@@ -131,6 +147,10 @@
     "description": "t for tonne",
     "message": "{amount} т. заети"
   },
+  "CASE_SENSITIVE": {
+    "description": "",
+    "message": "Регистър на текста"
+  },
   "CASH": {
     "description": "",
     "message": "Кредити"
@@ -158,6 +178,14 @@
   "CHANGE_PATTERN": {
     "description": "Paintshop button",
     "message": "Промяна на шаблона"
+  },
+  "CHARACTER": {
+    "description": "",
+    "message": "Характер"
+  },
+  "CHARISMA": {
+    "description": "Character parameter",
+    "message": "Харизма"
   },
   "CHIEF_MECHANIC": {
     "description": "",
@@ -251,9 +279,21 @@
     "description": "",
     "message": "Опции"
   },
+  "COULD_NOT_DELETE_SAVE": {
+    "description": "",
+    "message": "Записът не може да бъде изтрит"
+  },
+  "COULD_NOT_FIND_SYSTEM_BODY_FOR_FRAME": {
+    "description": "Message when restoring savegame",
+    "message": "Тялото не може да бъде намерено за отправната система"
+  },
   "COULD_NOT_LOAD_GAME": {
     "description": "",
     "message": "Играта не може да бъде заредена: "
+  },
+  "COULD_NOT_READ_THE_SAVE_VERSION": {
+    "description": "Message when restoring savegame",
+    "message": "Версията на записа не може да бъде прочетена"
   },
   "CREDIBLE": {
     "description": "For player reputation",
@@ -262,6 +302,10 @@
   "CREDITS": {
     "description": "in game currency",
     "message": "Кредити"
+  },
+  "CREW": {
+    "description": "Tab item in the start game menu",
+    "message": "Екипаж"
   },
   "CREW_CABINS": {
     "description": "",
@@ -283,6 +327,14 @@
     "description": "For hyperjump planner",
     "message": "Текущо гориво:"
   },
+  "CURRENT_SAVEGAME_VERSION": {
+    "description": "Message when restoring savegame",
+    "message": "Текуща версия на запазената игра: %s"
+  },
+  "CURRENT_SHIP": {
+    "description": "For tooltip comparing current ship specs to one in the shipyard",
+    "message": "Текущ кораб"
+  },
   "CURRENT_SYSTEM": {
     "description": "For hyperjump planner",
     "message": "Текуща система"
@@ -302,6 +354,14 @@
   "DECREASE": {
     "description": "Decrease something.",
     "message": "Намаляване"
+  },
+  "DELETE": {
+    "description": "",
+    "message": "Изтриване"
+  },
+  "DELETE_SAVE_CONFIRMATION": {
+    "description": "",
+    "message": "Сигурни ли сте, че искате да изтриете този запис?"
   },
   "DELTA_V": {
     "description": "",
@@ -327,6 +387,10 @@
     "description": "Time of departure, used in flight log",
     "message": "Дата на отпътуване"
   },
+  "DESCRIPTION": {
+    "description": "Start game parameter, e.g. 'This is an easy start from Cydonia'",
+    "message": "Описание"
+  },
   "DESTROY_ENEMY_SHIP": {
     "description": "",
     "message": "Унищожете вражеския кораб"
@@ -344,7 +408,7 @@
     "message": "Режимът на снимане скрива графичния потребителски интерфейс."
   },
   "DISMISS": {
-    "description": "Terminate crew memeber's contract",
+    "description": "Terminate crew member's contract",
     "message": "Отхвърляне"
   },
   "DISPLAY_HUD_TRAILS": {
@@ -374,6 +438,10 @@
   "DOCKED_AT": {
     "description": "",
     "message": "Скачен с"
+  },
+  "DOCKED_TO_A_BODY_THAT_IS_NOT_A_STATION": {
+    "description": "Message when restoring savegame",
+    "message": "Скачен с тяло, което не е станция"
   },
   "DOCK_AT_CURRENT_TARGET": {
     "description": "",
@@ -445,7 +513,7 @@
   },
   "ENGINEERING": {
     "description": "Engineering skills of crew",
-    "message": "Инженерство:"
+    "message": "Инженерство"
   },
   "ENTRY": {
     "description": "A note/entry/record into the flight log",
@@ -467,6 +535,10 @@
     "description": "",
     "message": "Грешка"
   },
+  "ERROR_APPLYING_PATCH": {
+    "description": "Message when restoring savegame",
+    "message": "Грешка при прилагане на корекцията"
+  },
   "ERROR_LANDING_GEAR_DOWN": {
     "description": "",
     "message": "Хиперскокът не може да започне, защото колесниците не са вдигнати!"
@@ -482,6 +554,10 @@
   "EXPERIENCED": {
     "description": "For player reputation",
     "message": "Опитен"
+  },
+  "EXPERIMENTAL": {
+    "description": "Indicates feature/option is experimental",
+    "message": "Експериментално"
   },
   "EXPERT": {
     "description": "For player reputation",
@@ -542,6 +618,10 @@
   "FEMALE": {
     "description": "",
     "message": "Жена"
+  },
+  "FILE_SAVEGAME_VERSION": {
+    "description": "Message when restoring savegame",
+    "message": "Версия на запазената игра: %s"
   },
   "FINAL_TARGET": {
     "description": "Hyperjump planner, referring to star system target",
@@ -1155,6 +1235,10 @@
     "description": "",
     "message": "Недостатъчни средства."
   },
+  "INTELLIGENCE": {
+    "description": "Character parameter",
+    "message": "Интелигентност"
+  },
   "INTERSTELLAR_TRADE_AVG": {
     "description": "Label displaying commodity flow at a per-system level",
     "message": "Междузвездна търговия:"
@@ -1231,6 +1315,10 @@
     "description": "",
     "message": "Имате разрешение. Оглеждайте се за трафик по време на излитането."
   },
+  "LAWFULNESS": {
+    "description": "Character parameter",
+    "message": "Законосъобразност"
+  },
   "LEGAL_STATUS": {
     "description": "",
     "message": "Правно положение"
@@ -1287,6 +1375,18 @@
     "description": "Label tab for showing custom logged events",
     "message": "Личен дневник"
   },
+  "LOG_EARLIEST_FIRST": {
+    "description": "Show the log entries in chronological order, earliest first",
+    "message": "Възходящ ред"
+  },
+  "LOG_EXPORT": {
+    "description": "Export the log",
+    "message": "Експортиране"
+  },
+  "LOG_HTML": {
+    "description": "Export the log as HTML or not",
+    "message": "HTML"
+  },
   "LOG_NEW": {
     "description": "Indicate to make an entry into flight log system",
     "message": "Нова записка"
@@ -1302,6 +1402,10 @@
   "LOW": {
     "description": "",
     "message": "Ниски"
+  },
+  "LUCK": {
+    "description": "Character parameter",
+    "message": "Късмет"
   },
   "LY": {
     "description": "Light year",
@@ -1415,9 +1519,21 @@
     "description": "",
     "message": "Подробности за мисията"
   },
+  "MODEL": {
+    "description": "3d model of the ship",
+    "message": "Модел"
+  },
+  "MONEY": {
+    "description": "",
+    "message": "Кредити"
+  },
   "MORE_INFO": {
     "description": "",
     "message": "Подробности..."
+  },
+  "MORE_THAN_ONE_PLAYERS_SHIP_FOUND_IN_SPACE": {
+    "description": "Message when restoring savegame",
+    "message": "Вашият кораб е намерен няколко пъти в космоса"
   },
   "MOSTLY_HARMLESS": {
     "description": "",
@@ -1460,8 +1576,8 @@
     "message": "Име"
   },
   "NAVIGATION": {
-    "description": "",
-    "message": "Навигация:"
+    "description": "Crew skill",
+    "message": "Навигация"
   },
   "NAVIGATOR": {
     "description": "",
@@ -1470,6 +1586,10 @@
   "NEGOTIATE": {
     "description": "",
     "message": "Договаряне"
+  },
+  "NEW_GAME": {
+    "description": "Main menu item",
+    "message": "Нова игра"
   },
   "NEW_PAINTJOB_APPLIED": {
     "description": "Paintshop popup",
@@ -1506,6 +1626,10 @@
   "NOTES": {
     "description": "",
     "message": "Бележки:"
+  },
+  "NOTORIETY": {
+    "description": "Character parameter",
+    "message": "Известност"
   },
   "NOT_ENOUGH_ALLOY_TO_ATTEMPT_A_REPAIR": {
     "description": "",
@@ -1647,6 +1771,10 @@
     "description": "Entry for ship info",
     "message": "Капацитет на кабината"
   },
+  "PATH_FOUND_BUT_VERIFICATION_FAILED": {
+    "description": "Message when restoring savegame",
+    "message": "Пътят е намерен, но проверката е неуспешна: %s"
+  },
   "PATTERN": {
     "description": "Ship painting pattern.",
     "message": "Шаблон"
@@ -1672,8 +1800,8 @@
     "message": "Пилот"
   },
   "PILOTING": {
-    "description": "",
-    "message": "Пилотиране:"
+    "description": "Crew skill",
+    "message": "Пилотиране"
   },
   "PILOT_SEAT_IS_NOW_OCCUPIED_BY_NAME": {
     "description": "",
@@ -1763,9 +1891,37 @@
     "description": "",
     "message": "Ранг:"
   },
+  "RAYLEIGH_ACCURATE": {
+    "description": "",
+    "message": "Рейли/Мие (високо качество)"
+  },
+  "RAYLEIGH_FAST": {
+    "description": "",
+    "message": "Рейли/Мие (ниско качество)"
+  },
+  "REALISTIC_SCATTERING": {
+    "description": "",
+    "message": "Разсейване"
+  },
+  "REALISTIC_SCATTERING_DESC": {
+    "description": "",
+    "message": "Изберете разсейването при визуализиране на атмосферата. (Рейли/Мие понижава производителността)"
+  },
   "REAR_WEAPON": {
     "description": "",
     "message": "Задно оръжие"
+  },
+  "RECOVER": {
+    "description": "Saveload menu button",
+    "message": "Възстановяване"
+  },
+  "RECOVERED_BUT_NOT_VALID": {
+    "description": "Message when restoring savegame",
+    "message": "Възстановено, но не е валидно"
+  },
+  "RECOVER_SAVEGAME": {
+    "description": "",
+    "message": "Възстановяване на запазената игра"
   },
   "REFUEL": {
     "description": "",
@@ -1871,6 +2027,14 @@
     "description": "",
     "message": "Запазване"
   },
+  "SAVE_DELETED_SUCCESSFULLY": {
+    "description": "",
+    "message": "Записът е изтрит"
+  },
+  "SCATTERING_OLD": {
+    "description": "",
+    "message": "Обикновено"
+  },
   "SCOOP_MOUNTS": {
     "description": "How many slots or mounts exist on the ship for fitting SCOOPS (e.g. cargo scoop, fuel scoop, multi-scoop) ",
     "message": "Товарни монтировки"
@@ -1882,6 +2046,14 @@
   "SELECT": {
     "description": "",
     "message": "Избиране"
+  },
+  "SELECTED_SAVE_DOESNT_EXISTS": {
+    "description": "",
+    "message": "Избраният запис не съществува"
+  },
+  "SELECTED_SAVE_IS_NOT_A_VALID_SAVE": {
+    "description": "",
+    "message": "Избраният запис е невалиден"
   },
   "SELECT_A_FILE_TO_SAVE_TO_OR_ENTER_A_NEW_FILENAME": {
     "description": "",
@@ -1895,6 +2067,10 @@
     "description": "",
     "message": "Изберете игра за зареждане..."
   },
+  "SELECT_START_PROFILE": {
+    "description": "Combo box for selecting the starting position",
+    "message": "Профил:"
+  },
   "SELL": {
     "description": "Commodities and equipment prices",
     "message": "Продажба"
@@ -1904,8 +2080,8 @@
     "message": "Продаване"
   },
   "SENSORS": {
-    "description": "",
-    "message": "Сензори:"
+    "description": "Crew skill",
+    "message": "Сензори"
   },
   "SENSORS_AND_DEFENCE": {
     "description": "",
@@ -1963,6 +2139,14 @@
     "description": "",
     "message": "Пазар за кораби"
   },
+  "SHIP_NAME": {
+    "description": "",
+    "message": "Име на кораба"
+  },
+  "SHIP_PARAMETERS": {
+    "description": "",
+    "message": "Параметри на кораба"
+  },
   "SHIP_REPAIRS": {
     "description": "Station tab name",
     "message": "Сервиз за кораби"
@@ -1975,13 +2159,21 @@
     "description": "",
     "message": "Симулиране на еволюцията на Вселената: {age} милиарда години ;-)"
   },
+  "SOME_PARAMETERS_ARE_NOT_OK": {
+    "description": "Diagnostics at game start",
+    "message": "Някои параметри са неточни:"
+  },
   "SOUND": {
     "description": "",
     "message": "Звук"
   },
+  "STANDARD_GAME_START_TIME": {
+    "description": "Standard game start time, current moment + 1200 years",
+    "message": "Стандартно време за начало на играта"
+  },
   "START_AT_BARNARDS_STAR": {
     "description": "",
-    "message": "Стартиране от звездата на Барнард"
+    "message": "Звездата на Барнард"
   },
   "START_AT_BARNARDS_STAR_DESC": {
     "description": "",
@@ -1989,7 +2181,7 @@
   },
   "START_AT_MARS": {
     "description": "",
-    "message": "Стартиране от Марс"
+    "message": "Марс"
   },
   "START_AT_MARS_DESC": {
     "description": "",
@@ -1997,11 +2189,15 @@
   },
   "START_AT_NEW_HOPE": {
     "description": "New Hope is an in game location",
-    "message": "Стартиране от Нова надежда"
+    "message": "Нова надежда"
   },
   "START_AT_NEW_HOPE_DESC": {
     "description": "",
     "message": "Това е умерен старт от „Ицалиян“ – Нова надежда в системата Епсилон Еридани."
+  },
+  "START_GAME": {
+    "description": "Button",
+    "message": "Начало"
   },
   "START_LOG_ENTRY_1": {
     "description": "First custom log message when starting a new game, giving backstory to the character. Importantly we here hint at what actions the player is best to take: buy fuel, get reputation, ask for take off clearance.",
@@ -2029,7 +2225,7 @@
   },
   "STATION_DOCKS": {
     "description": "Information shown in the station lobby, for total number of docking pads",
-    "message": "Нашият максимален капацитет е {total_docking_pads} площадки за скачване."
+    "message": "Разполагаме с {total_docking_pads} площадки за скачване."
   },
   "STATION_LOCAL_GRAVITY": {
     "description": "",
@@ -2055,6 +2251,14 @@
     "description": "",
     "message": "Статус"
   },
+  "SUMMARY": {
+    "description": "Tab item in the start game menu",
+    "message": "Обобщение"
+  },
+  "SYSTEM_BODY_INDEX_IS_OUT_OF_RANGE": {
+    "description": "Message when restoring savegame",
+    "message": "Индексът на тялото е извън обхвата"
+  },
   "TECH_CERTIFIED": {
     "description": "Lobby screen shows the tech level (an integer number) of the station",
     "message": "Тази станция има технологичен сертификат от ниво {tech_level}."
@@ -2078,6 +2282,10 @@
   "THERE_IS_NOBODY_ELSE_ON_BOARD_ABLE_TO_FLY_THIS_SHIP": {
     "description": "",
     "message": "На борда няма друг, който е способен да управлява кораба."
+  },
+  "THERE_WERE_ERRORS_IN_RECOVERY": {
+    "description": "Message when restoring savegame",
+    "message": "Имаше грешки при възстановяването:"
   },
   "THE_SHIP_IS_UNDER_STATION_CONTROL_COMMANDER": {
     "description": "",
@@ -2171,6 +2379,26 @@
     "description": "",
     "message": "Вид"
   },
+  "UNKNOWN_CUSTOM_LOG_ENTRY_FORMAT": {
+    "description": "Message when restoring savegame",
+    "message": "Неизвестен формат на личния дневник"
+  },
+  "UNKNOWN_FACTION": {
+    "description": "For entry in the flight log",
+    "message": "Неизвестна групировка"
+  },
+  "UNKNOWN_LOCATION_IN_SECTOR_X": {
+    "description": "For entry in the flight log",
+    "message": "Неизвестно местоположение в сектор {sector}"
+  },
+  "UNKNOWN_STATION_LOG_ENTRY_FORMAT": {
+    "description": "Message when restoring savegame",
+    "message": "Неизвестен формат на дневника на станцията"
+  },
+  "UNKNOWN_SYSTEM_LOG_ENTRY_FORMAT": {
+    "description": "Message when restoring savegame",
+    "message": "Неизвестен формат на дневника на системата"
+  },
   "UNLAWFUL_WEAPONS_DISCHARGE": {
     "description": "",
     "message": "Незаконно използване на оръжие"
@@ -2186,6 +2414,10 @@
   "UNRELIABLE": {
     "description": "",
     "message": "Ненадежден"
+  },
+  "UNSUCCESSFULLY_RECOVERED_PARAMETERS_ARE_NOW_UNLOCKED_PLEASE_SET_THEM_MANUALLY": {
+    "description": "Message when restoring savegame",
+    "message": "Неуспешно възстановените параметри са отключени, моля, задайте ги ръчно."
   },
   "UP_ACCEL": {
     "description": "",

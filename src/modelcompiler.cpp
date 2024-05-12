@@ -1,9 +1,8 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "buildopts.h"
 #include "core/Log.h"
-#include "libs.h"
 #include "utils.h"
 #include <cstdio>
 #include <cstdlib>
@@ -29,6 +28,7 @@
 #include "scenegraph/DumpVisitor.h"
 #include "scenegraph/FindNodeVisitor.h"
 #include <sstream>
+#include <SDL.h>
 
 std::unique_ptr<GameConfig> s_config;
 std::unique_ptr<Graphics::Renderer> s_renderer;

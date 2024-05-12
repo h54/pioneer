@@ -411,6 +411,10 @@
     "description": "",
     "message": "Stosunek średnicy równikowej do międzybiegunowej"
   },
+  "ESCAPE_VELOCITY": {
+    "description": "",
+    "message": "Prędkość ucieczki"
+  },
   "EXACT_MATCH_X": {
     "description": "",
     "message": "Znaleziono: %system"
@@ -490,6 +494,10 @@
   "GAME_SAVE_CANNOT_WRITE": {
     "description": "",
     "message": "Nie można zapisać gry z powodu błędu systemowego."
+  },
+  "GAME_SAVE_INVALID_NAME": {
+    "description": "",
+    "message": "Ten plik zapisu gry nie mógł być zapisany z powodu nieprawidłowej nazwy."
   },
   "GENERAL_VIEW_CONTROLS": {
     "description": "",
@@ -782,6 +790,10 @@
   "MASS_N_TONNES": {
     "description": "",
     "message": "Masa: %{mass}t"
+  },
+  "MEAN_DENSITY": {
+    "description": "",
+    "message": "Średnia gęstość"
   },
   "MEDICINES": {
     "description": "",
@@ -1280,7 +1292,7 @@
     "message": "Odpady"
   },
   "SCOOP": {
-    "description": "Is followed by a number, repersenting scoop mounts/slots available to fit cargo scoop and/or fuel scoop",
+    "description": "Is followed by a number, representing scoop mounts/slots available to fit cargo scoop and/or fuel scoop",
     "message": "Mocowania czerpaków"
   },
   "SCREENSHOT_FILENAME_TEMPLATE": {
@@ -1738,6 +1750,10 @@
   "UNIT_AU": {
     "description": "Distance unit: an astronomical unit, radius of Earth's orbit",
     "message": "JA"
+  },
+  "UNIT_CUBIC_METERS": {
+    "description": "Volume unit: cubic meter",
+    "message": "m³"
   },
   "UNIT_DAYS": {
     "description": "Duration unit: one 24-hour day",

@@ -1,11 +1,14 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "GeomTree.h"
-#include "../libs.h"
+
 #include "BVHTree.h"
 #include "Weld.h"
 #include "scenegraph/Serializer.h"
+#include "../utils.h"
+
+#include <map>
 
 #pragma GCC optimize("O3")
 

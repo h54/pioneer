@@ -411,6 +411,10 @@
     "description": "",
     "message": "Ekvatorsal yarıçapın kutupsala oranı"
   },
+  "ESCAPE_VELOCITY": {
+    "description": "",
+    "message": "Kaçış hızı"
+  },
   "EXACT_MATCH_X": {
     "description": "",
     "message": "Tam sonuç: %system"
@@ -490,6 +494,10 @@
   "GAME_SAVE_CANNOT_WRITE": {
     "description": "",
     "message": "Bu oyun kayıt dosyası bir sistem hatası nedeniyle yazılamadı."
+  },
+  "GAME_SAVE_INVALID_NAME": {
+    "description": "",
+    "message": "Bu oyun kayıt dosyası geçersiz bir isme sahip olduğu için yazılamadı."
   },
   "GENERAL_VIEW_CONTROLS": {
     "description": "",
@@ -782,6 +790,10 @@
   "MASS_N_TONNES": {
     "description": "",
     "message": "Kütle: %{mass}T"
+  },
+  "MEAN_DENSITY": {
+    "description": "",
+    "message": "Ortalama yoğunluk"
   },
   "MEDICINES": {
     "description": "",
@@ -1280,7 +1292,7 @@
     "message": "Atık"
   },
   "SCOOP": {
-    "description": "Is followed by a number, repersenting scoop mounts/slots available to fit cargo scoop and/or fuel scoop",
+    "description": "Is followed by a number, representing scoop mounts/slots available to fit cargo scoop and/or fuel scoop",
     "message": "Toplayıcı"
   },
   "SCREENSHOT_FILENAME_TEMPLATE": {
@@ -1738,6 +1750,10 @@
   "UNIT_AU": {
     "description": "Distance unit: an astronomical unit, radius of Earth's orbit",
     "message": "AB"
+  },
+  "UNIT_CUBIC_METERS": {
+    "description": "Volume unit: cubic meter",
+    "message": "m³"
   },
   "UNIT_DAYS": {
     "description": "Duration unit: one 24-hour day",

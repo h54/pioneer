@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _DRAWABLES_H
@@ -7,7 +7,10 @@
 #include "graphics/Material.h"
 #include "graphics/VertexArray.h"
 #include "graphics/VertexBuffer.h"
-#include "libs.h"
+
+#include <memory>
+
+struct Aabb;
 
 namespace Graphics {
 	class Renderer;
@@ -148,14 +151,11 @@ namespace Graphics {
 		class Sphere3D {
 		public:
 			//subdivisions must be 0-4
-			Sphere3D(Renderer *, RefCountedPtr<Material> material, int subdivisions = 0, float scale = 1.f, AttributeSet attribs = (ATTRIB_POSITION | ATTRIB_NORMAL | ATTRIB_UV0));
-			void Draw(Renderer *r);
-
-			RefCountedPtr<Material> GetMaterial() const { return m_material; }
+			Sphere3D(Renderer *, int subdivisions = 0, float scale = 1.f, AttributeSet attribs = (ATTRIB_POSITION | ATTRIB_NORMAL | ATTRIB_UV0));
+			void Draw(Renderer *r, Material *m);
 
 		private:
 			std::unique_ptr<MeshObject> m_sphereMesh;
-			RefCountedPtr<Material> m_material;
 		};
 		//------------------------------------------------------------
 
@@ -249,7 +249,7 @@ namespace Graphics {
 		// The visual density of the grid can be controlled by the lineSpacing parameter
 		class GridSphere {
 		public:
-			GridSphere(Graphics::Renderer *r, uint32_t numSubdivs = 12);
+			GridSphere(Graphics::Renderer *r, uint32_t numSubdivs = 4);
 
 			void SetLineColors(Color minorLineColor, Color majorLineColor, float lineWidth = 2.0);
 
@@ -280,6 +280,15 @@ namespace Graphics {
 		};
 
 		Axes3D *GetAxes3DDrawable(Graphics::Renderer *r);
+
+		//------------------------------------------------------------
+
+		// axis-aligned bounding box visualizer
+
+		class AABB {
+		public:
+			static void DrawVertices(Graphics::VertexArray &va, const matrix4x4f &transform, const Aabb &aabb, Color color);
+		};
 
 	} // namespace Drawables
 

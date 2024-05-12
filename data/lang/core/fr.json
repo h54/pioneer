@@ -411,6 +411,10 @@
     "description": "",
     "message": "Équatorial vers ratio de rayon polaire"
   },
+  "ESCAPE_VELOCITY": {
+    "description": "",
+    "message": "Vitesse de libération"
+  },
   "EXACT_MATCH_X": {
     "description": "",
     "message": "Résultat exact: %system"
@@ -481,7 +485,7 @@
   },
   "GAME_LOAD_WRONG_VERSION": {
     "description": "",
-    "message": "Cette sauvegarde ne peut être chargée : elle vient d'une autre  version de Pioneer"
+    "message": "Cette sauvegarde ne peut être chargée car elle vient d'une autre version de Pioneer."
   },
   "GAME_SAVED_TO": {
     "description": "",
@@ -490,6 +494,10 @@
   "GAME_SAVE_CANNOT_WRITE": {
     "description": "",
     "message": "Impossible d'écrire la sauvegarde à cause d'une erreur système."
+  },
+  "GAME_SAVE_INVALID_NAME": {
+    "description": "",
+    "message": "La sauvegarde n'a pas pu être écrite pour cause de nom invalide."
   },
   "GENERAL_VIEW_CONTROLS": {
     "description": "",
@@ -782,6 +790,10 @@
   "MASS_N_TONNES": {
     "description": "",
     "message": "Masse : %{mass}t"
+  },
+  "MEAN_DENSITY": {
+    "description": "",
+    "message": "Densité moyenne"
   },
   "MEDICINES": {
     "description": "",
@@ -1280,7 +1292,7 @@
     "message": "Détritus"
   },
   "SCOOP": {
-    "description": "Is followed by a number, repersenting scoop mounts/slots available to fit cargo scoop and/or fuel scoop",
+    "description": "Is followed by a number, representing scoop mounts/slots available to fit cargo scoop and/or fuel scoop",
     "message": "Scoop"
   },
   "SCREENSHOT_FILENAME_TEMPLATE": {
@@ -1738,6 +1750,10 @@
   "UNIT_AU": {
     "description": "Distance unit: an astronomical unit, radius of Earth's orbit",
     "message": "UA"
+  },
+  "UNIT_CUBIC_METERS": {
+    "description": "Volume unit: cubic meter",
+    "message": "m³"
   },
   "UNIT_DAYS": {
     "description": "Duration unit: one 24-hour day",

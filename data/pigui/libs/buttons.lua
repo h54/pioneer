@@ -1,9 +1,11 @@
--- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 local Engine = require 'Engine'
-local ui = require 'pigui.baseui'
 local pigui = Engine.pigui
 local Vector2 = _G.Vector2
+
+---@class ui
+local ui = require 'pigui.baseui'
 
 --
 -- Function: ui.withButtonColors
@@ -23,17 +25,18 @@ local Vector2 = _G.Vector2
 --
 -- Returns:
 --
---  none
+--   what the function fnc returns
 --
 function ui.withButtonColors(variant, fnc)
 	if variant then
 		pigui.PushStyleColor("Button", variant.normal)
 		pigui.PushStyleColor("ButtonHovered", variant.hovered)
 		pigui.PushStyleColor("ButtonActive", variant.active)
-		fnc()
+		local ret = table.pack(fnc())
 		pigui.PopStyleColor(3)
+		return table.unpack(ret, 1, ret.n)
 	else
-		fnc()
+		return fnc()
 	end
 end
 

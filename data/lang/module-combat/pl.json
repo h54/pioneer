@@ -131,6 +131,10 @@
     "description": "Distance in space, between two locations",
     "message": "Dystans:"
   },
+  "DO_I_NEED_SPECIAL_EQUIPMENT": {
+    "description": "",
+    "message": "Czy potrzebuję specjalnego sprzętu?"
+  },
   "FAILUREMSG_1": {
     "description": "",
     "message": "Wstydź się. Zejdź mi z oczu."
@@ -374,5 +378,9 @@
   "WILL_I_BE_IN_TROUBLE": {
     "description": "",
     "message": "Czy spodziewać się kłopotów?"
+  },
+  "YOU_NEED_A_RADAR": {
+    "description": "",
+    "message": "Tak, potrzebny Ci radar! Jeśli się zgodzisz, zaprogramuje Twój komputer pokładowy, żeby zapisał potrzebne dane. Dane zostaną przekazane jak tylko wrócisz."
   }
 }

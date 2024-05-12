@@ -305,7 +305,7 @@
   },
   "FLAVOUR_4_TYPEOFHELPTEXT": {
     "description": "",
-    "message": "Пилот просит {unit} т. {cargo}."
+    "message": "Пилот запрашивает {unit} тонны {cargo}. {high_gravity}"
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
@@ -353,7 +353,7 @@
   },
   "FLAVOUR_6_FAILUREMSG": {
     "description": "",
-    "message": "Просто катастрофа! Это же смертный приговор для наших несчастных коллег!"
+    "message": "What a disaster! This is a death sentence for our poor colleagues!"
   },
   "FLAVOUR_6_HOWMUCHTIMETEXT": {
     "description": "",
@@ -426,6 +426,22 @@
   "FULL_PASSENGERS": {
     "description": "",
     "message": "Все каюты полны. Свободных мест для пассажиров больше нет."
+  },
+  "HIGHGRAVITY_0": {
+    "description": "",
+    "message": "Поверхностная гравитация на планете {planet} равна {gravity} g. Пожалуйста, примите это во внимание."
+  },
+  "HIGHGRAVITY_1": {
+    "description": "",
+    "message": "Вы должны знать, что гравитация {planet} равна {gravity} g."
+  },
+  "HIGHGRAVITY_2": {
+    "description": "",
+    "message": "Вы приземлитесь и взлетите с {gravity} g."
+  },
+  "HIGHGRAVITY_3": {
+    "description": "",
+    "message": "У планеты {planet} гравитация {gravity} g."
   },
   "HOW_FAR": {
     "description": "",

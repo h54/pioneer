@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _CITYONPLANET_H
@@ -8,6 +8,7 @@
 #include "FrameId.h"
 #include "Random.h"
 #include "JsonFwd.h"
+#include "matrix4x4.h"
 
 #include <set>
 
@@ -25,7 +26,7 @@ namespace Graphics {
 } // namespace Graphics
 
 namespace FileSystem {
-	struct FileInfo;
+	class FileInfo;
 } // namespace FileSystem
 
 namespace SceneGraph {

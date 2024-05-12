@@ -1,7 +1,8 @@
--- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Engine = require 'Engine'
+local Event = require 'Event'
 local Input = require 'Input'
 local Game = require 'Game'
 local Lang = require 'Lang'
@@ -100,7 +101,9 @@ local function optionTextButton(label, tooltip, enabled, callback)
 		button = ui.button(label, optionButtonSize, variant, tooltip)
 	end)
 	if button then
-		callback(button)
+		if enabled then
+			callback(button)
+		end
 	end
 end --mainButton
 
@@ -162,6 +165,16 @@ local function showVideoOptions()
 	local gpuJobs = Engine.GetGpuJobsEnabled()
 	local disableScreenshotInfo = Engine.GetDisableScreenshotInfo()
 
+	-- Scattering is still an experimental feature
+	local experimental = "[" .. lui.EXPERIMENTAL .. "] "
+	local scatteringLabels = {
+		lui.SCATTERING_OLD,
+		experimental .. lui.RAYLEIGH_FAST,
+		experimental .. lui.RAYLEIGH_ACCURATE
+	}
+
+	local realisticScattering = Engine.GetRealisticScattering()
+
 	local cityDetail = keyOf(detailLabels,keyOf(detailLevels, Engine.GetCityDetailLevel()))-1
 	local displayNavTunnels = Engine.GetDisplayNavTunnels()
 	local displaySpeedLines = Engine.GetDisplaySpeedLines()
@@ -182,6 +195,11 @@ local function showVideoOptions()
 	if c then
 		local aa = aaModes[aaLabels[selectedAA+1]]
 		Engine.SetMultisampling(aa)
+	end
+
+	c,scattering = combo(lui.REALISTIC_SCATTERING, realisticScattering, scatteringLabels, lui.REALISTIC_SCATTERING_DESC)
+	if c then
+		Engine.SetRealisticScattering(scattering)
 	end
 
 	ui.columns(2,"video_checkboxes",false)
@@ -277,7 +295,6 @@ local captureBindingWindow
 local bindState = nil -- state, to capture the key combination
 captureBindingWindow = ModalWindow.New("CaptureBinding", function()
 	local info = keyCaptureBind
-
 	ui.text(bindManager.localizeBindingId(info.id))
 	ui.text(lui.PRESS_A_KEY_OR_CONTROLLER_BUTTON)
 
@@ -680,10 +697,6 @@ ui.optionsWindow = ModalWindow.New("Options", function()
 			Engine.SetStarFieldStarSizeFactor(starFieldStarSizeFactor/100)
 			needBackgroundStarRefresh = false
 		end
-		if Game.player then
-			Game.SetTimeAcceleration("1x")
-			Input.EnableBindings();
-		end
 		if selectedJoystick then
 			Input.SaveJoystickConfig(selectedJoystick)
 		end
@@ -691,7 +704,7 @@ ui.optionsWindow = ModalWindow.New("Options", function()
 
 	if Game.player then
 		ui.sameLine()
-		optionTextButton(lui.SAVE, nil, true, function()
+		optionTextButton(lui.SAVE, nil, Game.player.flightState ~= 'HYPERSPACE', function()
 			ui.saveLoadWindow.mode = "SAVE"
 			ui.saveLoadWindow:open()
 		end)
@@ -699,7 +712,6 @@ ui.optionsWindow = ModalWindow.New("Options", function()
 		ui.sameLine()
 		optionTextButton(lui.END_GAME, nil, true, function()
 			ui.optionsWindow:close()
-			Input.EnableBindings();
 			Game.EndGame()
 		end)
 	end
@@ -709,9 +721,29 @@ end, function (_, drawPopupFn)
 	ui.withStyleColors({ PopupBg = ui.theme.colors.modalBackground }, drawPopupFn)
 end)
 
+function ui.optionsWindow:changeState()
+    if not self.isOpen then
+		self:open()
+	else
+		self:close()
+	end
+end
+
+function ui.optionsWindow:open()
+	ModalWindow.open(self)
+	if Game.player then
+		Input.EnableBindings(false)
+		Event.Queue("onPauseMenuOpen")
+	end
+end
+
 function ui.optionsWindow:close()
 	if not captureBindingWindow.isOpen then
 		ModalWindow.close(self)
+		if Game.player then
+			Game.SetTimeAcceleration("1x")
+			Event.Queue("onPauseMenuClosed")
+		end
 	end
 end
 

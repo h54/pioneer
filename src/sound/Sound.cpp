@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 /*
@@ -11,6 +11,7 @@
 #include "JobQueue.h"
 #include "Pi.h"
 #include "Player.h"
+#include "utils.h"
 
 #include "SDL_audio.h"
 #include "SDL_events.h"

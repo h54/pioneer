@@ -5,7 +5,7 @@
   },
   "ADVANCED_TARGET_SCANNER_DESCRIPTION": {
     "description": "",
-    "message": "Целеви скенер с широк обхват и пълно системно покритие."
+    "message": "Целеви скенер с голям обхват и пълно системно покритие."
   },
   "ATMOSPHERIC_SHIELDING": {
     "description": "",
@@ -150,6 +150,10 @@
   "ECM_BASIC_DESCRIPTION": {
     "description": "",
     "message": "Електронна противомярка за защита от ракети, способна да унищожава някои видове самонасочващи се ракети."
+  },
+  "ECM_HOVER_MESSAGE": {
+    "description": "",
+    "message": "Активиране на електронната противомярка"
   },
   "EMPTY_SLOT": {
     "description": "Text indicating an empty equipment slot.",

@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "CommandBufferGL.h"
@@ -6,12 +6,14 @@
 #include "Program.h"
 #include "RenderStateCache.h"
 #include "RendererGL.h"
+#include "RenderTargetGL.h"
 #include "Shader.h"
 #include "TextureGL.h"
 #include "UniformBuffer.h"
 #include "VertexBufferGL.h"
 
 #include "graphics/VertexBuffer.h"
+#include "profiler/Profiler.h"
 
 using namespace Graphics::OGL;
 
@@ -125,6 +127,32 @@ void CommandList::AddClearCmd(bool clearColors, bool clearDepth, Color color)
 	}
 }
 
+void CommandList::AddBlitRenderTargetCmd(
+	Graphics::RenderTarget *src, Graphics::RenderTarget *dst,
+	const ViewportExtents &srcExtents,
+	const ViewportExtents &dstExtents,
+	bool resolveMSAA, bool blitDepthBuffer,
+	bool linearFilter)
+{
+	assert(!m_executing && "Attempt to append to a command list while it's being executed!");
+
+	if (resolveMSAA) {
+		assert(srcExtents.w == dstExtents.w && srcExtents.h == dstExtents.h &&
+			"Cannot scale a framebuffer while performing MSAA resolve!");
+	}
+
+	BlitRenderTargetCmd cmd{};
+	cmd.srcTarget = static_cast<OGL::RenderTarget *>(src);
+	cmd.dstTarget = static_cast<OGL::RenderTarget *>(dst);
+	cmd.srcExtents = srcExtents;
+	cmd.dstExtents = dstExtents;
+	cmd.resolveMSAA = resolveMSAA;
+	cmd.blitDepthBuffer = blitDepthBuffer;
+	cmd.linearFilter = linearFilter;
+
+	m_drawCmds.emplace_back(std::move(cmd));
+}
+
 void CommandList::Reset()
 {
 	assert(!m_executing && "Attempt to reset a command list while it's being executed!");
@@ -186,7 +214,9 @@ char *CommandList::SetupMaterialData(OGL::Material *mat)
 	const Shader *s = mat->GetShader();
 
 	char *alloc = AllocDrawData(s);
-	memcpy(alloc, mat->m_pushConstants.get(), s->GetConstantStorageSize());
+	if (mat->m_pushConstants) {
+		memcpy(alloc, mat->m_pushConstants.get(), s->GetConstantStorageSize());
+	}
 
 	BufferBinding<UniformBuffer> *buffers = getBufferBindings(s, alloc);
 	for (size_t index = 0; index < s->GetNumBufferBindings(); index++) {
@@ -293,4 +323,36 @@ void CommandList::ExecuteRenderPassCmd(const RenderPassCmd &cmd)
 		stateCache->ClearBuffers(cmd.clearColors, cmd.clearDepth, cmd.clearColor);
 
 	CHECKERRORS();
+}
+
+void CommandList::ExecuteBlitRenderTargetCmd(const BlitRenderTargetCmd &cmd)
+{
+	RenderStateCache *stateCache = m_renderer->GetStateCache();
+
+	// invalidate cached render target state
+	stateCache->SetRenderTarget(nullptr);
+
+	if (cmd.srcTarget)
+		cmd.srcTarget->Bind(RenderTarget::READ);
+
+	// dstTarget can be null if blitting to the window implicit backbuffer
+	if (cmd.dstTarget)
+		cmd.dstTarget->Bind(RenderTarget::DRAW);
+
+	int mask = GL_COLOR_BUFFER_BIT | (cmd.blitDepthBuffer ? GL_DEPTH_BUFFER_BIT : 0);
+
+	glBlitFramebuffer(
+		cmd.srcExtents.x, cmd.srcExtents.y, cmd.srcExtents.x + cmd.srcExtents.w, cmd.srcExtents.y + cmd.srcExtents.h,
+		cmd.dstExtents.x, cmd.dstExtents.y, cmd.dstExtents.x + cmd.dstExtents.w, cmd.dstExtents.y + cmd.dstExtents.h,
+		mask, cmd.linearFilter ? GL_LINEAR : GL_NEAREST);
+
+	if (cmd.srcTarget)
+		cmd.srcTarget->Unbind(RenderTarget::READ);
+
+	// dstTarget can be null if blitting to the window implicit backbuffer
+	if (cmd.dstTarget)
+		cmd.dstTarget->Unbind(RenderTarget::DRAW);
+
+	CHECKERRORS();
+
 }

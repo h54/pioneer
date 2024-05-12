@@ -1,4 +1,4 @@
--- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Commodities = require 'Commodities'
@@ -65,25 +65,27 @@ misc.missile_naval = EquipType.New({
 })
 misc.atmospheric_shielding = EquipType.New({
 	l10n_key="ATMOSPHERIC_SHIELDING", slots="atmo_shield", price=200,
-	capabilities={mass=1, atmo_shield=9},
+	capabilities={mass=1, atmo_shield=4},
 	purchasable=true, tech_level=3,
 	icon_name="equip_atmo_shield_generator"
 })
 misc.heavy_atmospheric_shielding = EquipType.New({
 	l10n_key="ATMOSPHERIC_SHIELDING_HEAVY", slots="atmo_shield", price=900,
-	capabilities={mass=2, atmo_shield=19},
+	capabilities={mass=2, atmo_shield=9},
 	purchasable=true, tech_level=5,
 	icon_name="equip_atmo_shield_generator"
 })
 misc.ecm_basic = EquipType.New({
 	l10n_key="ECM_BASIC", slots="ecm", price=6000,
 	capabilities={mass=2, ecm_power=2, ecm_recharge=5},
-	purchasable=true, tech_level=9, ecm_type = 'ecm'
+	purchasable=true, tech_level=9, ecm_type = 'ecm',
+	hover_message="ECM_HOVER_MESSAGE"
 })
 misc.ecm_advanced = EquipType.New({
 	l10n_key="ECM_ADVANCED", slots="ecm", price=15200,
 	capabilities={mass=2, ecm_power=3, ecm_recharge=5},
-	purchasable=true, tech_level="MILITARY", ecm_type = 'ecm_advanced'
+	purchasable=true, tech_level="MILITARY", ecm_type = 'ecm_advanced',
+	hover_message="ECM_HOVER_MESSAGE"
 })
 misc.radar = EquipType.New({
 	l10n_key="RADAR", slots="radar", price=680,

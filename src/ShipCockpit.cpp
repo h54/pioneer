@@ -11,7 +11,8 @@
 #include "graphics/Renderer.h"
 #include "ship/CameraController.h"
 
-ShipCockpit::ShipCockpit(const std::string &modelName) :
+ShipCockpit::ShipCockpit(const std::string &modelName, Body *ship) :
+	m_ship(ship),
 	m_shipDir(0.0),
 	m_shipYaw(0.0),
 	m_dir(0.0),
@@ -38,6 +39,21 @@ ShipCockpit::~ShipCockpit()
 void ShipCockpit::Render(Graphics::Renderer *renderer, const Camera *camera, const vector3d &viewCoords, const matrix4x4d &viewTransform)
 {
 	PROFILE_SCOPED()
+
+	double ambient = 0.0;
+	double direct = 0.5;
+
+	if (static_cast<Ship *>(m_ship)->GetFlightState() != Ship::HYPERSPACE)
+		camera->CalcLighting(m_ship, ambient, direct);
+
+	std::vector<float> lightIntensities;
+	for (int i = 0; i < camera->GetNumLightSources(); i++)
+		lightIntensities.push_back(direct * camera->ShadowedIntensity(i, m_ship));
+
+	// Setup dynamic lighting parameters
+	renderer->SetAmbientColor(Color(ambient * 255, ambient * 255, ambient * 255));
+	renderer->SetLightIntensity(camera->GetNumLightSources(), lightIntensities.data());
+
 	RenderModel(renderer, camera, viewCoords, viewTransform);
 }
 
@@ -48,13 +64,18 @@ inline void ShipCockpit::resetInternalCameraController()
 
 void ShipCockpit::Update(const Player *player, float timeStep)
 {
-	m_transform = matrix4x4d::Identity();
-
+	//Check if current view is exterior since we don't need to update cockpit
+	//because player can't see it
+	if (Pi::game->GetWorldView()->shipView->IsExteriorView())
+	{
+		return;
+	}
 	if (m_icc == nullptr) {
 		// I don't know where to put this
 		resetInternalCameraController();
 	}
 
+	m_transform = matrix4x4d::Identity();
 	double rotX;
 	double rotY;
 	m_icc->getRots(rotX, rotY);

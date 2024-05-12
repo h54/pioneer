@@ -131,6 +131,10 @@
     "description": "Distance in space, between two locations",
     "message": "Avstånd:"
   },
+  "DO_I_NEED_SPECIAL_EQUIPMENT": {
+    "description": "",
+    "message": "Behöver jag någon särskild utrustning?"
+  },
   "FAILUREMSG_1": {
     "description": "",
     "message": "Du borde skämmas. Försvinn ur min åsyn!"
@@ -374,5 +378,9 @@
   "WILL_I_BE_IN_TROUBLE": {
     "description": "",
     "message": "Kommer jag att stöta på problem?"
+  },
+  "YOU_NEED_A_RADAR": {
+    "description": "",
+    "message": "Ja, du behöver en radar! Om du samtycker kommer jag att programmera din skeppsdator att registrera radarutslagen vi behöver. Uppgifterna kommer att överföras till mig när du kommer tillbaka."
   }
 }

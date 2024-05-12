@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Ship.h"
@@ -11,9 +11,11 @@
 #include "GameSaveError.h"
 #include "HeatGradientPar.h"
 #include "HyperspaceCloud.h"
+#include "JsonUtils.h"
 #include "Lang.h"
 #include "Missile.h"
 #include "NavLights.h"
+#include "Pi.h"
 #include "Planet.h"
 #include "Player.h" // <-- Here only for 1 occurrence of "Pi::player" in Ship::Explode
 #include "Sensors.h"
@@ -32,7 +34,8 @@
 #include "lua/LuaTable.h"
 #include "lua/LuaUtils.h"
 #include "scenegraph/Animation.h"
-#include "scenegraph/MatrixTransform.h"
+#include "scenegraph/Tag.h"
+#include "scenegraph/CollisionGeometry.h"
 #include "ship/PlayerShipController.h"
 
 static const float TONS_HULL_PER_SHIELD = 10.f;
@@ -241,9 +244,9 @@ void Ship::Init()
 
 	// If we've got the tag_landing set then use it for an offset
 	// otherwise use zero so that it will dock but look clearly incorrect
-	const SceneGraph::MatrixTransform *mt = GetModel()->FindTagByName("tag_landing");
-	if (mt) {
-		m_landingMinOffset = mt->GetTransform().GetTranslate().y;
+	const SceneGraph::Tag *tagNode = GetModel()->FindTagByName("tag_landing");
+	if (tagNode) {
+		m_landingMinOffset = tagNode->GetGlobalTransform().GetTranslate().y;
 	} else {
 		m_landingMinOffset = 0.0; // GetAabb().min.y;
 	}
@@ -521,12 +524,11 @@ bool Ship::OnDamage(Body *attacker, float kgDamage, const CollisionContact &cont
 
 bool Ship::OnCollision(Body *b, Uint32 flags, double relVel)
 {
-	// Collision with SpaceStation docking surface is
+	// Collision with SpaceStation docking or entrance surface is
 	// completely handled by SpaceStations, you only
 	// need to return a "true" value in order to trigger
 	// a bounce in Space::OnCollision
-	// NOTE: 0x10 is a special flag set on docking surfaces
-	if (b->IsType(ObjectType::SPACESTATION) && (flags & 0x10)) {
+	if (b->IsType(ObjectType::SPACESTATION) && (flags & (SceneGraph::CollisionGeometry::DOCKING | SceneGraph::CollisionGeometry::ENTRANCE))) {
 		return true;
 	}
 
@@ -676,7 +678,7 @@ void Ship::UpdateLuaStats()
 	m_stats.hyperspace_range = m_stats.hyperspace_range_max = 0;
 	int hyperclass = p.Get("hyperclass_cap");
 	if (hyperclass) {
-		std::tie(m_stats.hyperspace_range_max, m_stats.hyperspace_range) =
+		std::tie(m_stats.hyperspace_range, m_stats.hyperspace_range_max) =
 			LuaObject<Ship>::CallMethod<double, double>(this, "GetHyperspaceRange");
 	}
 
@@ -896,13 +898,22 @@ void Ship::Blastoff()
 
 	assert(f->GetBody()->IsType(ObjectType::PLANET));
 
-	const double planetRadius = 2.0 + static_cast<Planet *>(f->GetBody())->GetTerrainHeight(up);
-	SetVelocity(vector3d(0, 0, 0));
-	SetAngVelocity(vector3d(0, 0, 0));
-	SetFlightState(FLYING);
+	if (ManualDocking()) {
+		if (!IsType(ObjectType::PLAYER)) {
+			Log::Warning("It wasn't the player's ship that tried to take off without an autopilot!");
+			return;
+		}
+		auto p = static_cast<Player*>(this);
+		p->DoFixspeedTakeoff();
+	} else {
+		const double planetRadius = 2.0 + static_cast<Planet *>(f->GetBody())->GetTerrainHeight(up);
+		SetVelocity(vector3d(0, 0, 0));
+		SetAngVelocity(vector3d(0, 0, 0));
+		SetFlightState(FLYING);
 
-	SetPosition(up * planetRadius - GetAabb().min.y * up);
-	SetThrusterState(1, 1.0); // thrust upwards
+		SetPosition(up * planetRadius - GetAabb().min.y * up);
+		SetThrusterState(1, 1.0); // thrust upwards
+	}
 
 	LuaEvent::Queue("onShipTakeOff", this, f->GetBody());
 }
@@ -1255,10 +1266,23 @@ void Ship::StaticUpdate(const float timeStep)
 				const vector3d vdir = GetVelocity().Normalized();
 				const vector3d pdir = -GetOrient().VectorZ();
 				const double dot = vdir.Dot(pdir);
-				if ((m_stats.free_capacity) && (dot > 0.90) && (speed > 100.0) && (density > 0.3)) {
-					const double rate = speed * density * 0.00000333 * double(m_stats.fuel_scoop_cap);
-					if (Pi::rng.Double() < rate) {
-						LuaEvent::Queue("onShipScoopFuel", this, p);
+				const double speed_times_density = speed * density;
+				/*
+				 * speed = m/s, density = g/cm^3 -> T/m^3, pressure = Pa -> N/m^2 -> kg/(m*s^2)
+				 * m    T      kg         m*kg^2           kg^2
+				 * - * --- * ----- = 1000 ------- = 1000 -------
+				 * s   m^3   m*s^2        m^4*s^3        m^3*s^3
+				 *
+				 * fuel_scoop_cap = area, m^2. rate = kg^2/(m*s^3) = (Pa*kg)/s^2
+				 */
+				const double hydrogen_density = 0.0002;
+				if ((m_stats.free_capacity) && (dot > 0.90) && speed_times_density > (100.0 * 0.3)) {
+					const double rate = speed_times_density * hydrogen_density * double(m_stats.fuel_scoop_cap);
+					m_hydrogenScoopedAccumulator += rate * timeStep;
+					if (m_hydrogenScoopedAccumulator > 1) {
+						const double scoopedTons = floor(m_hydrogenScoopedAccumulator);
+						LuaEvent::Queue("onShipScoopFuel", this, p, scoopedTons);
+						m_hydrogenScoopedAccumulator -= scoopedTons;
 					}
 				}
 			}

@@ -1,4 +1,4 @@
--- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local ShipDef = require 'ShipDef'
@@ -55,7 +55,7 @@ local statuses = {
 }
 
 debugView.registerTab('debug-trade-ships', function()
-	if not Core.ships and not Core.params then return end
+	if not Core.ships and not Core.params or not Game.system then return end
 	if not ui.beginTabItem("Tradeships") then return end
 
 	local function property(key, value)
@@ -108,7 +108,7 @@ debugView.registerTab('debug-trade-ships', function()
 			ui.sameLine()
 			property("Lawlessness", string.format("%.4f", Game.system.lawlessness))
 			ui.sameLine()
-			property("Total bodies in space", #Space.GetBodies())
+			property("Total bodies in space", Space.GetNumBodies())
 		end
 
 		if ui.collapsingHeader("Stations") then

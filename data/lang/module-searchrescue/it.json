@@ -305,7 +305,7 @@
   },
   "FLAVOUR_4_TYPEOFHELPTEXT": {
     "description": "",
-    "message": "Il pilota sta chiedendo {unit} ton. di {cargo}."
+    "message": "Il pilota sta chiedendo {unit} ton. di {cargo}. {high_gravity}"
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
@@ -426,6 +426,22 @@
   "FULL_PASSENGERS": {
     "description": "",
     "message": "Tutti gli alloggi sono occupati. Non c'è posto per altri passeggeri."
+  },
+  "HIGHGRAVITY_0": {
+    "description": "",
+    "message": "La gravità sulla superficie di {planet} è di {gravity} G. SI prega di tenerlo in considerazione."
+  },
+  "HIGHGRAVITY_1": {
+    "description": "",
+    "message": "Meglio che tu sappia che la gravità su {planet} è di {gravity} G."
+  },
+  "HIGHGRAVITY_2": {
+    "description": "",
+    "message": "Atterraggio e decollo saranno a {gravity} G."
+  },
+  "HIGHGRAVITY_3": {
+    "description": "",
+    "message": "{planet} ha {gravity} G."
   },
   "HOW_FAR": {
     "description": "",

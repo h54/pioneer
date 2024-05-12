@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _SCENEGRAPH_BINARYCONVERTER_H
@@ -38,7 +38,8 @@ namespace SceneGraph {
 	// 6:	32-bit indicies
 	// 6.1:	rewrote serialization, use lz4 compression instead of INFLATE/DEFLATE. Still compatible.
 	// 6.2: ignored StaticGeometry::m_blendMode in files. Still write blank value.
-	constexpr Uint32 SGM_VERSION = 6;
+	// 7:   Added discrete Tag node, tags are registered in the model hierarchy instead of at the root.
+	constexpr Uint32 SGM_VERSION = 7;
 
 	class BinaryConverter : public BaseLoader {
 	public:

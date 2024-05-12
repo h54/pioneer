@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Tombstone.h"
@@ -21,8 +21,7 @@ Tombstone::Tombstone(Graphics::Renderer *r, int width, int height) :
 
 void Tombstone::Draw(float _time)
 {
-	m_renderer->SetClearColor(Color::BLACK);
-	m_renderer->ClearScreen();
+	m_renderer->ClearScreen(Color::BLACK);
 
 	m_renderer->SetPerspectiveProjection(75, m_aspectRatio, 1.f, 10000.f);
 	m_renderer->SetTransform(matrix4x4f::Identity());

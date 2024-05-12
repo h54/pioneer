@@ -1,8 +1,10 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Color.h"
 #include "lua/LuaUtils.h"
+
+#include <cassert>
 
 const Color4f Color4f::BLACK = Color4f(0.0f, 0.0f, 0.0f, 1.0f);
 const Color4f Color4f::WHITE = Color4f(1.0f, 1.0f, 1.0f, 1.0f);

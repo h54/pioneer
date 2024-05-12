@@ -131,6 +131,10 @@
     "description": "Distance in space, between two locations",
     "message": "Uzaklık:"
   },
+  "DO_I_NEED_SPECIAL_EQUIPMENT": {
+    "description": "",
+    "message": "Özel bir ekipmana gerek var mı?"
+  },
   "FAILUREMSG_1": {
     "description": "",
     "message": "Yazıklar olsun. Gözüm seni görmesin."
@@ -374,5 +378,9 @@
   "WILL_I_BE_IN_TROUBLE": {
     "description": "",
     "message": "Belaya bulaşacak mıyım?"
+  },
+  "YOU_NEED_A_RADAR": {
+    "description": "",
+    "message": "Evet, bir radar gerekli! Eğer kabul edersen, geminizin bilgisayarına radar verisini kaydedecek bir yazılım yükleyeceğim. Geri geldiğinizde bu veriyi kendime aktaracağım."
   }
 }

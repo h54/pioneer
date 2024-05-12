@@ -411,6 +411,10 @@
     "description": "",
     "message": "Rapporto equatoriale - polare"
   },
+  "ESCAPE_VELOCITY": {
+    "description": "",
+    "message": "Velocità di fuga"
+  },
   "EXACT_MATCH_X": {
     "description": "",
     "message": "Corrispondenza esatta: %system"
@@ -490,6 +494,10 @@
   "GAME_SAVE_CANNOT_WRITE": {
     "description": "",
     "message": "Questo salvataggio non può essere scritto per via di un errore di sistema."
+  },
+  "GAME_SAVE_INVALID_NAME": {
+    "description": "",
+    "message": "Non è possibile scrivere il salvataggio per via del nome errato."
   },
   "GENERAL_VIEW_CONTROLS": {
     "description": "",
@@ -782,6 +790,10 @@
   "MASS_N_TONNES": {
     "description": "",
     "message": "Massa: %{mass}t"
+  },
+  "MEAN_DENSITY": {
+    "description": "",
+    "message": "Densità media"
   },
   "MEDICINES": {
     "description": "",
@@ -1280,7 +1292,7 @@
     "message": "Rifiuti"
   },
   "SCOOP": {
-    "description": "Is followed by a number, repersenting scoop mounts/slots available to fit cargo scoop and/or fuel scoop",
+    "description": "Is followed by a number, representing scoop mounts/slots available to fit cargo scoop and/or fuel scoop",
     "message": "Raccogli"
   },
   "SCREENSHOT_FILENAME_TEMPLATE": {
@@ -1738,6 +1750,10 @@
   "UNIT_AU": {
     "description": "Distance unit: an astronomical unit, radius of Earth's orbit",
     "message": "UA"
+  },
+  "UNIT_CUBIC_METERS": {
+    "description": "Volume unit: cubic meter",
+    "message": "m³"
   },
   "UNIT_DAYS": {
     "description": "Duration unit: one 24-hour day",

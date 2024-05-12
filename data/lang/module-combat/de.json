@@ -131,6 +131,10 @@
     "description": "Distance in space, between two locations",
     "message": "Distanz:"
   },
+  "DO_I_NEED_SPECIAL_EQUIPMENT": {
+    "description": "",
+    "message": "Brauche ich besondere Ausrüstung?"
+  },
   "FAILUREMSG_1": {
     "description": "",
     "message": "Schämen Sie sich und gehen sie mir aus den Augen."
@@ -361,7 +365,7 @@
   },
   "TARGET_AREA_REACHED": {
     "description": "",
-    "message": "Target area reached. Start data logging."
+    "message": "Zielgebiet erreicht. Starte Datenaufzeichnung."
   },
   "TIME_LIMIT": {
     "description": "",
@@ -374,5 +378,9 @@
   "WILL_I_BE_IN_TROUBLE": {
     "description": "",
     "message": "Werde ich Schwierigkeiten bekommen?"
+  },
+  "YOU_NEED_A_RADAR": {
+    "description": "",
+    "message": "Ja, Sie brauchen ein Radar! Wenn Sie die Aufgabe übernehmen, werde ich Ihren Schiffscomputer so einstellen, dass er die von uns benötigten Daten aufzeichnet. Das Schiff wird die Daten dann automatisch an mich übertragen, wenn Sie danach das nächste Mal hier landen."
   }
 }

@@ -1,12 +1,11 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "IniConfig.h"
 #include "FileSystem.h"
 #include "StringRange.h"
-#include "libs.h"
-#include "utils.h"
-#include <cstdlib>
+#include "core/Log.h"
+
 #include <sstream>
 
 void IniConfig::SetInt(const std::string &section, const std::string &key, int val)

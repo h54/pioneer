@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _FACTIONS_H
@@ -64,7 +64,7 @@ public:
 
 	double Radius() const { return (FACTION_CURRENT_YEAR - foundingDate) * expansionRate; };
 	bool IsValid() const { return idx != BAD_FACTION_IDX; };
-	Color AdjustedColour(fixed population, bool inRange) const;
+	Color AdjustedColour(fixed population, bool shadow) const;
 	Polit::GovType PickGovType(Random &rand) const;
 
 	// set the homeworld to one near the supplied co-ordinates

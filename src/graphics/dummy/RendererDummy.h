@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #pragma once
@@ -34,16 +34,21 @@ namespace Graphics {
 		virtual int GetMaximumNumberAASamples() const override final { return 0; }
 		virtual bool GetNearFarRange(float &near_, float &far_) const override final { return true; }
 
+		virtual void SetVSyncEnabled(bool) override {}
+
 		virtual bool BeginFrame() override final { return true; }
 		virtual bool EndFrame() override final { return true; }
 		virtual bool SwapBuffers() override final { return true; }
 
-		virtual bool SetRenderTarget(RenderTarget *) override final { return true; }
+		virtual RenderTarget *GetRenderTarget() override final { return m_rt; }
+		virtual bool SetRenderTarget(RenderTarget *rt) override final { m_rt = rt; return true; }
 		virtual bool SetScissor(ViewportExtents ext) override final { return true; }
 
-		virtual bool ClearScreen() override final { return true; }
+		virtual void CopyRenderTarget(RenderTarget *, RenderTarget *, ViewportExtents, ViewportExtents, bool) override final {}
+		virtual void ResolveRenderTarget(RenderTarget *, RenderTarget *, ViewportExtents) override final {}
+
+		virtual bool ClearScreen(const Color &, bool) override final { return true; }
 		virtual bool ClearDepthBuffer() override final { return true; }
-		virtual bool SetClearColor(const Color &c) override final { return true; }
 
 		virtual bool SetViewport(ViewportExtents v) override final { return true; }
 		virtual ViewportExtents GetViewport() const override final { return {}; }
@@ -95,6 +100,7 @@ namespace Graphics {
 
 	private:
 		const matrix4x4f m_identity;
+		Graphics::RenderTarget *m_rt;
 	};
 
 } // namespace Graphics

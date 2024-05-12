@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "PlayerShipController.h"
@@ -7,6 +7,7 @@
 #include "GameConfig.h"
 #include "GameSaveError.h"
 #include "Input.h"
+#include "Json.h"
 #include "Pi.h"
 #include "Player.h"
 #include "SDL_keycode.h"
@@ -105,7 +106,9 @@ struct PlayerShipController::Util {
 			auto good_speed = sqrt(2 * max_accel * want_rot) * 0.95;
 			auto frame_speed = want_rot / timeStep;
 			auto tot_speed = std::min(good_speed, frame_speed / 2);
-			rot_vel = (ship_dir.Cross(dir) * c.m_ship->GetOrient()).Normalized() * tot_speed;
+			// this cross product often becomes all-zeros (ship_dir coincides with requested dir)
+			// NormalizedSafe is crucial there to avoid NaN poisoning
+			rot_vel = (ship_dir.Cross(dir) * c.m_ship->GetOrient()).NormalizedSafe() * tot_speed;
 		}
 		return rot_vel;
 	};
@@ -494,9 +497,7 @@ void PlayerShipController::StaticUpdate(const float timeStep)
 {
 	// call autopilot AI, if active
 	if (m_ship->AIIsActive()) {
-		OS::EnableFPE();
 		m_ship->AITimeStep(timeStep);
-		OS::DisableFPE();
 		// the speed limiter should not work when the autopilot is working
 		if (IsSpeedLimiterActive()) SetSpeedLimiterActive(false);
 		return;

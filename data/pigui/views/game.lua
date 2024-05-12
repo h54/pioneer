@@ -1,4 +1,4 @@
--- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Engine = require 'Engine'
@@ -22,6 +22,8 @@ local colors = ui.theme.colors
 
 local reticuleCircleRadius = math.min(ui.screenWidth, ui.screenHeight) / 8
 local reticuleCircleThickness = 2.0
+
+local lastTimeAcceleration
 
 -- for modules
 ui.reticuleCircleRadius = reticuleCircleRadius
@@ -265,6 +267,16 @@ Event.Register("onGameStart", function()
 	gameView.rightSidebar:Reset()
 end)
 
+Event.Register("onPauseMenuOpen", function()
+	lastTimeAcceleration = Game.GetTimeAcceleration() ~= Game.GetRequestedTimeAcceleration() and Game.GetRequestedTimeAcceleration() or Game.GetTimeAcceleration()
+	Game.SetTimeAcceleration("paused")
+end)
+
+Event.Register("onPauseMenuClosed", function()
+	Game.SetTimeAcceleration((lastTimeAcceleration == "paused") and "1x" or lastTimeAcceleration)
+	Input.EnableBindings()
+end)
+
 ui.registerHandler('game', function(delta_t)
 		-- delta_t is ignored for now
 		gameView.player = Game.player
@@ -284,20 +296,11 @@ ui.registerHandler('game', function(delta_t)
 
 		-- TODO: dispatch escape key to views and let them handle it
 		if currentView == "world" and ui.escapeKeyReleased(true) then
-			if not ui.optionsWindow.isOpen then
-				Game.SetTimeAcceleration("paused")
-				ui.optionsWindow:open()
-				Input.EnableBindings(false)
-			else
-				ui.optionsWindow:close()
-				if not ui.optionsWindow.isOpen then
-					Game.SetTimeAcceleration("1x")
-					Input.EnableBindings()
-				end
-			end
+			ui.optionsWindow:changeState()
 		end
 
 		callModules('modal')
+		callModules('ui-timer')
 
 		if ui.ctrlHeld() and ui.isKeyReleased(ui.keys.delete) then
 			gameView.debugReload()

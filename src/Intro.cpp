@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Intro.h"
@@ -74,8 +74,8 @@ Intro::Intro(Graphics::Renderer *r, int width, int height) :
 
 	m_modelIndex = 0;
 
-	const int w = Graphics::GetScreenWidth();
-	const int h = Graphics::GetScreenHeight();
+	const int w = r->GetWindowWidth();
+	const int h = r->GetWindowHeight();
 
 	// double-width viewport, centred, then offset 1/6th to centre on the left
 	// 2/3rds of the screen, to the left of the menu
@@ -96,7 +96,8 @@ void Intro::RefreshBackground(Graphics::Renderer *r)
 {
 	const SystemPath s(0, 0, 0);
 	RefCountedPtr<Galaxy> galaxy(GalaxyGenerator::Create());
-	m_background.reset(new Background::Container(r, Pi::rng, nullptr, galaxy, &s));
+	m_background.reset(new Background::Container(r, Pi::rng));
+	m_background->GetStarfield()->Fill(Pi::rng, &s, galaxy);
 }
 
 void Intro::Reset()
@@ -150,7 +151,10 @@ void Intro::Draw(float deltaTime)
 	m_renderer->SetTransform(matrix4x4f::Identity());
 
 	m_renderer->SetAmbientColor(m_ambientColor);
+
+	float intensity[4] = { 1.f, 1.f, 1.f, 1.f };
 	m_renderer->SetLights(m_lights.size(), &m_lights[0]);
+	m_renderer->SetLightIntensity(4, intensity);
 
 	// XXX all this stuff will be gone when intro uses a Camera
 	// rotate background by time, and a bit extra Z so it's not so flat
@@ -158,7 +162,7 @@ void Intro::Draw(float deltaTime)
 	m_renderer->ClearDepthBuffer();
 	m_background->Draw(brot);
 
-	m_renderer->SetViewport({ m_spinnerLeft, 0, m_spinnerWidth, Graphics::GetScreenHeight() });
+	m_renderer->SetViewport({ m_spinnerLeft, 0, m_spinnerWidth, m_renderer->GetWindowHeight() });
 	m_renderer->SetPerspectiveProjection(75, m_spinnerRatio, 1.f, 10000.f);
 
 	matrix4x4f trans =

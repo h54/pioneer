@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "GalaxyGenerator.h"
@@ -187,8 +187,8 @@ RefCountedPtr<StarSystem> GalaxyGenerator::GenerateStarSystem(RefCountedPtr<Gala
 	assert(path.systemIndex < sec->m_systems.size());
 	Uint32 seed = sec->m_systems[path.systemIndex].GetSeed();
 	std::string name = sec->m_systems[path.systemIndex].GetName();
-	Uint32 _init[6] = { path.systemIndex, Uint32(path.sectorX), Uint32(path.sectorY), Uint32(path.sectorZ), UNIVERSE_SEED, Uint32(seed) };
-	Random rng(_init, 6);
+	Uint32 _init[5] = { Uint32(seed), Uint32(path.sectorX), Uint32(path.sectorY), Uint32(path.sectorZ), UNIVERSE_SEED };
+	Random rng(_init, 5);
 	StarSystemConfig config;
 	RefCountedPtr<StarSystem::GeneratorAPI> system(new StarSystem::GeneratorAPI(path, galaxy, cache, rng));
 	for (StarSystemGeneratorStage *sysgen : m_starSystemStage)

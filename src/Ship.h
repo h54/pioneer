@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _SHIP_H
@@ -104,6 +104,7 @@ public:
 	void SetGunState(int idx, int state);
 	void UpdateMass();
 	virtual bool SetWheelState(bool down); // returns success of state change, NOT state itself
+	virtual bool ManualDocking() const { return false; }
 	void Blastoff();
 	bool Undock();
 	virtual void TimeStepUpdate(const float timeStep) override;
@@ -184,7 +185,7 @@ public:
 	AlertState GetAlertState() { return m_alertState; }
 
 	void AIClearInstructions(); // Note: defined in Ship-AI.cpp
-	bool AIIsActive() { return m_curAICmd ? true : false; }
+	bool AIIsActive() const { return m_curAICmd ? true : false; }
 	void AIGetStatusText(char *str); // Note: defined in Ship-AI.cpp
 
 	void AIKamikaze(Body *target); // Note: defined in Ship-AI.cpp
@@ -329,6 +330,8 @@ private:
 	std::unordered_map<Body *, Uint8> m_relationsMap;
 
 	std::string m_shipName;
+
+	double m_hydrogenScoopedAccumulator = 0;
 
 public:
 	// FIXME: these methods are deprecated; all calls should use the propulsion object directly.

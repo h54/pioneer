@@ -7,6 +7,14 @@
     "description": "",
     "message": "Αναγνωρίστε πότε έφτασε η κατάλληλη στιγμή να την σκαπουλάρετε"
   },
+  "ADVICE_11_BODYTEXT": {
+    "description": "",
+    "message": "Βεβαιωθείτε ότι γνωρίζετε την επιτάχυνση της βαρύτητας στην επιφάνεια ενός πλανήτη προτού διανοηθείτε να προσεδαφιστείτε σε αυτόν."
+  },
+  "ADVICE_11_HEADLINE": {
+    "description": "A reference to the song 'The Harder They Come', by Jimmy Cliff",
+    "message": "Όσο μεγαλύτερα τα g, τόσο σκληρότερη η πτώση."
+  },
   "ADVICE_1_BODYTEXT": {
     "description": "Point made is: the real illegal goods traders are fixed to each station, but police's fake illegal goods traders will be random every time.",
     "message": "Καθώς επιστρέφετε σε ένα σταθμό, να είστε προσεκτικοί με εκείνες τις εναλλακτικές αγορές που δεν αναγνωρίζετε και θα μείνετε έξω από προβλήματα με το νόμο."

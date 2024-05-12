@@ -1,4 +1,4 @@
--- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 -- Stuff from the C++ side that we want available directly in Lua
@@ -6,6 +6,7 @@
 local Engine = require 'Engine'
 local pigui = Engine.pigui
 
+---@class ui
 local ui = {}
 
 ui.calcTextAlignment = pigui.CalcTextAlignment
@@ -22,10 +23,13 @@ ui.getWindowContentSize = pigui.GetWindowContentSize ---@type fun(name: string):
 ui.setNextWindowPos = pigui.SetNextWindowPos ---@type fun(pos: Vector2, cond: string, pivot: Vector2?)
 ui.setNextWindowSize = pigui.SetNextWindowSize ---@type fun(size: Vector2, cond: string)
 ui.setNextWindowSizeConstraints = pigui.SetNextWindowSizeConstraints ---@type fun(min: Vector2, max: Vector2)
+--- Collapse or expand the next window
+ui.setNextWindowCollapsed = pigui.SetNextWindowCollapsed ---@type fun(collapse: boolean?)
 
 -- Forwarded as-is for use in complicated layout primitives without introducing additional scopes
 ui.beginGroup = pigui.BeginGroup
 ui.endGroup = pigui.EndGroup
+ui.getTime = pigui.GetTime
 
 ui.dummy = pigui.Dummy
 ui.newLine = pigui.NewLine
@@ -45,6 +49,7 @@ ui.selectable = pigui.Selectable
 ui.progressBar = pigui.ProgressBar
 ui.plotHistogram = pigui.PlotHistogram
 ui.setTooltip = pigui.SetTooltip
+ui.setItemTooltip = pigui.SetItemTooltip
 ui.addCircle = pigui.AddCircle
 ui.addCircleFilled = pigui.AddCircleFilled
 ui.addRect = pigui.AddRect ---@type fun(a: Vector2, b: Vector2, col: Color, rounding: number, edges: integer, thickness: number)
@@ -89,6 +94,7 @@ ui.getWindowPadding = pigui.GetWindowPadding ---@type fun(): Vector2
 -- Add extra window padding after beginning a window.
 -- WARNING: this must only be called at "top-level" window scope (e.g. not in a Group or Columns etc.)
 ui.addWindowPadding = pigui.AddWindowPadding ---@type fun(padding: Vector2)
+ui.getItemRect = pigui.GetItemRect ---@type fun(): Vector2, Vector2 -- return min, max corners of last item bounding box
 
 ui.getTargetsNearby = pigui.GetTargetsNearby
 ui.getProjectedBodies = pigui.GetProjectedBodies
@@ -121,21 +127,23 @@ ui.isWindowHovered = pigui.IsWindowHovered
 ui.vSliderInt = pigui.VSliderInt ---@type fun(l: string, v: integer, min: integer, max: integer, fmt: string?): value:integer, changed:boolean
 ui.sliderInt = pigui.SliderInt ---@type fun(l: string, v: integer, min: integer, max: integer, fmt: string?): value:integer, changed:boolean
 ui.colorEdit = pigui.ColorEdit
+ui.getStyleColor = pigui.GetStyleColor
 ui.nextItemWidth = pigui.NextItemWidth
 ui.pushItemWidth = pigui.PushItemWidth
 ui.popItemWidth = pigui.PopItemWidth
+ui.calcItemWidth = pigui.CalcItemWidth
 ui.sliderFloat = pigui.SliderFloat ---@type fun(l: string, v: number, min: number, max: number, fmt: string?): value:number, changed:boolean
 ui.beginTabBar = pigui.BeginTabBar
 ui.beginTabItem = pigui.BeginTabItem
 ui.endTabItem = pigui.EndTabItem
 ui.endTabBar = pigui.EndTabBar
 
-ui.beginTable = pigui.BeginTable
+ui.beginTable = pigui.BeginTable ---@type fun(id: string, columns: integer, flags: any)
 ui.endTable = pigui.EndTable
 ui.tableNextRow = pigui.TableNextRow
 ui.tableNextColumn = pigui.TableNextColumn
 ui.tableSetColumnIndex = pigui.TableSetColumnIndex
-ui.tableSetupColumn = pigui.TableSetupColumn
+ui.tableSetupColumn = pigui.TableSetupColumn ---@type fun(id: string, flags: any)
 ui.tableSetupScrollFreeze = pigui.TableSetupScrollFreeze
 ui.tableHeadersRow = pigui.TableHeadersRow
 ui.tableHeader = pigui.TableHeader
@@ -182,31 +190,6 @@ ui.addImage = pigui.AddImage
 ui.image = pigui.Image
 
 --
--- Function: ui.incrementDrag
---
--- ui.incrementDrag(label, value, v_min, v_max, format)
---
--- Create a "drag with arrows and progress bar" widget
---
--- Example:
---
--- > value = ui.incrementDrag("##mydrag", value, 0, 20, "%dt")
---
--- Parameters:
---
---   label - string, text, also used as ID
---   value - int, set drag to this value
---   v_min - int, lower bound
---   v_max - int, upper bound
---   format - optional string, format according to snprintf
---
--- Returns:
---
---   value - the value that the drag was set to
---
-ui.incrementDrag = pigui.IncrementDrag
-
---
 -- Function: ui.dragFloat
 --
 -- ui.dragFloat(label, value, v_speed, v_min, v_max, format)
@@ -215,7 +198,7 @@ ui.incrementDrag = pigui.IncrementDrag
 --
 -- Example:
 --
--- > value = ui.dragFloat("##mydrag", value, 0, 20, "%dt")
+-- > value = ui.dragFloat("##mydrag", value, 0.5, 0, 20, "%dt")
 --
 -- Parameters:
 --

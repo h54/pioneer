@@ -1,4 +1,4 @@
--- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Game = require 'Game'
@@ -73,18 +73,30 @@ function PiGuiTabView.registerView(self, view)
 	self:resize()
 end
 
+function PiGuiTabView:refreshTab(i)
+	local tab = self.tabs[i]
+	local ok, err = ui.pcall(tab.refresh, tab)
+
+	if not ok then
+		tab.showView = false
+		tab.err = err
+	end
+end
+
 function PiGuiTabView:SwitchTo(id)
 	for i, v in ipairs(self.tabs) do
 		if v.id == id then
-			if self.currentTab ~= i then self.tabs[i].refresh() end
-			self.currentTab = i
+			if self.currentTab ~= i then
+				self.currentTab = i
+				self:refreshTab(i)
+			end
 			return
 		end
 	end
 	print("View not found:", id)
 end
 
-local staticButtonFlags = ui.WindowFlags {"NoResize", "NoTitleBar", "NoMove", "NoFocusOnAppearing", "NoScrollbar"}
+local staticButtonFlags = ui.WindowFlags {"NoResize", "NoTitleBar", "NoMove", "NoFocusOnAppearing", "NoScrollbar", "NoScrollWithMouse"}
 local vCenter = Vector2(0.5, 0.5)
 local mainWindowFlags = ui.WindowFlags {"NoResize", "NoTitleBar"}
 
@@ -93,11 +105,17 @@ function PiGuiTabView.renderTabView(self)
 	self.isActive = Game.CurrentView() == self.name
 	if not self.isActive then return end
 
-	local tab = self.tabs[self.currentTab] or self.tabs[1]
+	if not self.tabs[self.currentTab] then
+		self.currentTab = 1
+	end
+
+	local tab = self.tabs[self.currentTab]
 	if not tab then return end
 
 	-- refresh the tab since we're swapping back to the view
-	if self.isActive and not wasActive then tab.refresh() end
+	if self.isActive and not wasActive then
+		self:refreshTab(self.currentTab)
+	end
 
 	local styleColors = {
 		["WindowBg"] = colors.blueBackground,
@@ -108,6 +126,10 @@ function PiGuiTabView.renderTabView(self)
 		WindowBorderSize = 1.0,
 		WindowPadding = self.windowPadding,
 	}
+
+	if(tab.windows) then
+		tab.windows:display()
+	end	
 
 	if (tab.showView) then
 		ui.withStyleColorsAndVars(styleColors, styleVars, function()
@@ -171,7 +193,7 @@ function PiGuiTabView.renderTabView(self)
 	if ui.ctrlHeld() and ui.isKeyReleased(ui.keys.delete) then
 		if tab.debugReload then tab:debugReload() end
 		-- refresh the (possibly) new tab
-		self.tabs[self.currentTab]:refresh()
+		self:refreshTab(self.currentTab)
 	end
 end
 

@@ -1,12 +1,14 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef ORBIT_H
 #define ORBIT_H
 
-#include "libs.h"
 #include "matrix3x3.h"
 #include "vector3.h"
+
+#include <cassert>
+#include <cmath>
 
 class Orbit {
 public:

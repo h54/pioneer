@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Terrain.h"
@@ -6,8 +6,10 @@
 #include "FileSystem.h"
 #include "FloatComparison.h"
 #include "GameConfig.h"
+#include "MathUtil.h"
 #include "perlin.h"
-#include "../utils.h"
+#include "core/macros.h"
+#include "core/Log.h"
 #include "../galaxy/SystemBody.h"
 
 // static instancer. selects the best height and color classes for the body
@@ -16,7 +18,7 @@ Terrain *Terrain::InstanceTerrain(const SystemBody *body)
 	// special case for heightmaps
 	// XXX this is terrible but will do for now until we get a unified
 	// heightmap setup. if you add another height fractal, remember to change
-	// the check in CustomSystem::l_height_map
+	// the check in CustomSystem::l_height_map / SystemBodyData::LoadFromJson
 	if (!body->GetHeightMapFilename().empty()) {
 		const GeneratorInstancer choices[] = {
 			InstanceGenerator<TerrainHeightMapped, TerrainColorEarthLikeHeightmapped>,

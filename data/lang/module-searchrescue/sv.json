@@ -305,11 +305,11 @@
   },
   "FLAVOUR_4_TYPEOFHELPTEXT": {
     "description": "",
-    "message": "Piloten frågar efter {unit} ton av {cargo}."
+    "message": "Piloten har begärt {unit} ton {cargo}. {high_gravity}"
   },
   "FLAVOUR_5_ADTEXT": {
     "description": "",
-    "message": "Strandsat skepp begär tankning nära {starport}."
+    "message": "Strandsatt skepp begär tankning nära {starport}."
   },
   "FLAVOUR_5_ADTITLE": {
     "description": "",
@@ -426,6 +426,22 @@
   "FULL_PASSENGERS": {
     "description": "",
     "message": "Alla hytter fulla. Ytterligare passagerare får inte plats."
+  },
+  "HIGHGRAVITY_0": {
+    "description": "",
+    "message": "Ytgravitationen på {planet} är {gravity} g. Ta med det i beräkningen. "
+  },
+  "HIGHGRAVITY_1": {
+    "description": "",
+    "message": "Du borde känna till att gravitationen på {planet} är {gravity} g."
+  },
+  "HIGHGRAVITY_2": {
+    "description": "",
+    "message": "Du kommer att landa och lyfta under {gravity} g."
+  },
+  "HIGHGRAVITY_3": {
+    "description": "",
+    "message": "{planet} är {gravity} g."
   },
   "HOW_FAR": {
     "description": "",

@@ -1,9 +1,10 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Thruster.h"
 #include "BaseLoader.h"
 #include "Easing.h"
+#include "MathUtil.h"
 #include "NodeVisitor.h"
 #include "Serializer.h"
 #include "graphics/Material.h"
@@ -12,6 +13,7 @@
 #include "graphics/TextureBuilder.h"
 #include "graphics/VertexArray.h"
 #include "graphics/VertexBuffer.h"
+#include "profiler/Profiler.h"
 
 namespace SceneGraph {
 

@@ -1,10 +1,13 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _GEOMTREE_H
 #define _GEOMTREE_H
 
-#include "libs.h"
+#include "Aabb.h"
+
+#include <memory>
+#include <vector>
 
 namespace Serializer {
 	class Reader;

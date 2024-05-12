@@ -1,11 +1,11 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _TERRAINNOISE_H
 #define _TERRAINNOISE_H
 
 #include "perlin.h"
-#include "../libs.h"
+#include "MathUtil.h"
 
 namespace TerrainNoise {
 

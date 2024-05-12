@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _SCENEGRAPH_LOADER_H
@@ -10,7 +10,6 @@
 #include "Model.h"
 #include "StaticGeometry.h"
 #include "graphics/Material.h"
-#include "libs.h"
 #include "text/DistanceFieldFont.h"
 
 namespace SceneGraph {

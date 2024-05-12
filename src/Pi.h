@@ -1,16 +1,14 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _PI_H
 #define _PI_H
 
 #include "Random.h"
+#include "MathUtil.h"
 #include "core/GuiApplication.h"
 #include "gameconsts.h"
-#include "libs.h"
 
-#include "SDL_keyboard.h"
-#include <sigc++/sigc++.h>
 #include <map>
 #include <string>
 #include <vector>
@@ -97,8 +95,8 @@ public:
 		App() :
 			GuiApplication("Pioneer") {}
 
-		void Startup() override;
-		void Shutdown() override;
+		void OnStartup() override;
+		void OnShutdown() override;
 
 		void PreUpdate() override;
 		void PostUpdate() override;
@@ -126,6 +124,7 @@ public:
 
 public:
 	static void Init(const std::map<std::string, std::string> &options, bool no_gui = false);
+	static void Uninit();
 
 	static void StartGame(Game *game);
 
@@ -150,10 +149,6 @@ public:
 	static void SetSpeedLinesDisplayed(bool state) { speedLinesDisplayed = state; }
 	static bool AreHudTrailsDisplayed() { return hudTrailsDisplayed; }
 	static void SetHudTrailsDisplayed(bool state) { hudTrailsDisplayed = state; }
-
-	// Get the default speed modifier to apply to movement (scrolling, zooming...), depending on the "shift" keys.
-	// This is a default value only, centralized here to promote uniform user expericience.
-	static float GetMoveSpeedShiftModifier();
 
 	static std::string GetSaveDir();
 	static SceneGraph::Model *FindModel(const std::string &, bool allowPlaceholder = true);
@@ -244,8 +239,6 @@ private:
 	static bool bRefreshBackgroundStars;
 	static float amountOfBackgroundStarsDisplayed;
 	static float starFieldStarSizeFactor;
-
-	static bool doingMouseGrab;
 
 	static bool isRecordingVideo;
 	static FILE *ffmpegFile;

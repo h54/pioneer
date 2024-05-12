@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "LuaEngine.h"
@@ -20,6 +20,7 @@
 #include "Pi.h"
 #include "Player.h"
 #include "Random.h"
+#include "SDL_video.h"
 #include "WorldView.h"
 #include "buildopts.h"
 #include "core/OS.h"
@@ -29,6 +30,8 @@
 #include "sound/Sound.h"
 #include "sound/SoundMusic.h"
 #include "utils.h"
+
+#include <SDL_timer.h>
 /*
  * Interface: Engine
  *
@@ -417,9 +420,12 @@ static int l_engine_set_vsync_enabled(lua_State *l)
 {
 	if (lua_isnone(l, 1))
 		return luaL_error(l, "SetVSyncEnabled takes one boolean argument");
+
 	const bool vsync = lua_toboolean(l, 1);
 	Pi::config->SetInt("VSync", (vsync ? 1 : 0));
 	Pi::config->Save();
+
+	Pi::renderer->SetVSyncEnabled(vsync);
 	return 0;
 }
 
@@ -748,6 +754,23 @@ static int l_engine_set_gpu_jobs_enabled(lua_State *l)
 	return 0;
 }
 
+static int l_engine_get_realistic_scattering(lua_State *l)
+{
+	lua_pushinteger(l, Pi::config->Int("RealisticScattering"));
+	return 1;
+}
+
+static int l_engine_set_realistic_scattering(lua_State *l)
+{
+	const int scattering = luaL_checkinteger(l, 1);
+	if (scattering != Pi::config->Int("RealisticScattering")) {
+		Pi::config->SetInt("RealisticScattering", scattering);
+		Pi::config->Save();
+		Pi::OnChangeDetailLevel();
+	}
+	return 0;
+}
+
 static int l_engine_is_intro_zooming(lua_State *l)
 {
 	if (Pi::intro) {
@@ -1057,6 +1080,9 @@ void LuaEngine::Register()
 
 		{ "GetGpuJobsEnabled", l_engine_get_gpu_jobs_enabled },
 		{ "SetGpuJobsEnabled", l_engine_set_gpu_jobs_enabled },
+
+		{ "GetRealisticScattering", l_engine_get_realistic_scattering },
+		{ "SetRealisticScattering", l_engine_set_realistic_scattering },
 
 		{ "GetPlanetDetailLevel", l_engine_get_planet_detail_level },
 		{ "SetPlanetDetailLevel", l_engine_set_planet_detail_level },

@@ -1,4 +1,4 @@
--- Copyright © 2008-2022 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Game        = require 'Game'
@@ -94,8 +94,9 @@ function scanDisplay:drawDebug()
 	minRes = ui.dragFloat("MinRes", minRes, 1.0, 0.1, 100, "%f")
 	coverage = ui.dragFloat("Coverage", coverage, 0.5, 0.5, 100, "%fkm^2")
 
-	if scanMgr:GetActiveScan() then
-		local altitude, resolution = scanMgr:GetBodyState(self.ship.frameBody)
+	local activeScan = scanMgr:GetActiveScan()
+	if activeScan then
+		local altitude, resolution = scanMgr:GetBodyState(scanMgr:GetScanBodyByType())
 
 		ui.text("Current Alt: " .. altitude)
 		ui.text("Current Res: " .. resolution)

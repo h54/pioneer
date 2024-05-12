@@ -1,4 +1,4 @@
--- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 
@@ -301,7 +301,7 @@ local triggerAdCreation = function ()
 	-- Return if ad should be created based on lawlessness and min/max frequency values.
 	-- Ad number per system is based on how many stations a system has so a player will
 	-- be met with a certain number of stations that have one or more ads.
-	local stations = Space.GetBodies(function (body) return body.superType == 'STARPORT' end)
+	local stations = Space.GetBodies("SpaceStation")
 	local freq = Game.system.lawlessness * ad_freq_max
 	if freq < ad_freq_min then freq = ad_freq_min end
 	local ad_num_max = freq * #stations
@@ -862,7 +862,8 @@ local onChat = function (form, ref, option)
 			pass         = ad.pickup_pass,
 			deliver_crew = ad.deliver_crew,
 			unit         = unit,
-			cargo        = cargo
+			cargo        = cargo,
+			high_gravity = ad.high_gravity,
 		})
 		form:SetMessage(typeofhelptext)
 
@@ -1000,10 +1001,11 @@ local findNearbyStations = function (vacuum, body)
 	-- get station bodies within current system depending on vacuum variable
 	local nearbystations_raw
 	if vacuum == true then
-		nearbystations_raw = Space.GetBodies(function (body)
-				return body.superType == 'STARPORT' and (body.type == 'STARPORT_ORBITAL' or (not body.path:GetSystemBody().parent.hasAtmosphere)) end)
+		nearbystations_raw = utils.filter_array(Space.GetBodies("SpaceStation"), function (body)
+			return body.type == 'STARPORT_ORBITAL' or (not body.path:GetSystemBody().parent.hasAtmosphere)
+		end)
 	else
-		nearbystations_raw = Space.GetBodies(function (body) return body.superType == 'STARPORT' end)
+		nearbystations_raw = Space.GetBodies("SpaceStation")
 	end
 
 	-- determine distance to body
@@ -1039,7 +1041,7 @@ local findClosestPlanets = function ()
 	end
 
 	-- get planets with stations and remove from planet list
-	local ground_stations = Space.GetBodies(function (body) return body.type == 'STARPORT_SURFACE' end)
+	local ground_stations = utils.filter_array(Space.GetBodies("SpaceStation"), function (body) return body.type == 'STARPORT_SURFACE' end)
 	for _,ground_station in pairs(ground_stations) do
 		for i=#rockyplanets, 1, -1 do
 			if rockyplanets[i] == Space.GetBody(ground_station.path:GetSystemBody().parent.index) then
@@ -1051,7 +1053,7 @@ local findClosestPlanets = function ()
 
 	-- create dictionary of stations
 	local closestplanets = {}
-	local stations = Space.GetBodies(function (body) return body.superType == 'STARPORT' end)
+	local stations = Space.GetBodies("SpaceStation")
 	for _,station in pairs(stations) do closestplanets[station] = {} end
 
 	-- pick closest planets to stations
@@ -1192,6 +1194,7 @@ local placeAdvert = function (station, ad)
 		description = desc,
 		icon        = "searchrescue",
 		due         = ad.due,
+		dist        = (ad.flavour.loctype == 'CLOSE_PLANET' or ad.flavour.loctype == 'CLOSE_SPACE') and ad.dist,
 		reward      = ad.reward,
 		location    = ad.location,
 		onChat      = onChat,
@@ -1203,7 +1206,7 @@ end
 
 local makeAdvert = function (station, manualFlavour, closestplanets)
 	-- Make a single advertisement for the bulletin board of the supplied station.
-	local due, dist, client, entity, problem, location
+	local due, dist, client, entity, problem, location, high_gravity
 	local lat = 0
 	local long = 0
 
@@ -1270,6 +1273,15 @@ local makeAdvert = function (station, manualFlavour, closestplanets)
 		due = (5 * dist + 4) * Engine.rand:Integer(20,24) * 60 * 60     -- TODO: adjust due date based on urgency
 	end
 
+	-- Create message string for the cases where the target landed on a planet that is higher gravity (> 1.2 g)
+	high_gravity = ""
+	if planet_target:GetSystemBody().gravity / 9.8066 > 1.2 and flavour.id == 4 then -- flavour id 4 is landed on a planet
+		high_gravity = string.interp(l["HIGHGRAVITY_" .. Engine.rand:Integer(0, getNumberOfFlavours("HIGHGRAVITY"))], {
+			planet       = planet_target:GetSystemBody().name,
+			gravity      = string.format("%.2f", planet_target:GetSystemBody().gravity / 9.8066),
+		})
+	end
+
 	--double the time if return to original station is required
 	if flavour.reward_immediate == false then due = 2 * due end
 	due = Game.time + due
@@ -1289,7 +1301,7 @@ local makeAdvert = function (station, manualFlavour, closestplanets)
 	local needed_fuel
 	if flavour.id == 2 or flavour.id == 5 then
 		needed_fuel = math.max(math.floor(shipdef.fuelTankMass * 0.1), 1)
-	elseif flavour.id == 4 then -- different planet 
+	elseif flavour.id == 4 then -- different planet
 		needed_fuel = math.max(math.floor(shipdef.fuelTankMass * 0.5), 1)
 	end
 	deliver_comm[Commodities.hydrogen] = needed_fuel
@@ -1358,6 +1370,7 @@ local makeAdvert = function (station, manualFlavour, closestplanets)
 		system_local   = system_local,
 		station_target = station_target,
 		planet_target  = planet_target,
+		high_gravity   = high_gravity,
 		system_target  = system_target,
 		flavour	       = flavour,
 		client	       = client,
@@ -1977,8 +1990,8 @@ local onCreateBB = function (station)
 	local closestplanets = findClosestPlanets()
 
 	-- force ad creation for debugging
-	local num = 3
-	for _ = 1,num do
+	-- local num = 3
+	-- for _ = 1,num do
 		-- makeAdvert(station, 1, closestplanets)
 		-- makeAdvert(station, 2, closestplanets)
 		-- makeAdvert(station, 3, closestplanets)
@@ -1986,7 +1999,7 @@ local onCreateBB = function (station)
 		-- makeAdvert(station, 5, closestplanets)
 		-- makeAdvert(station, 6, closestplanets)
 		-- makeAdvert(station, 7, closestplanets)
-	end
+	-- end
 
 	if triggerAdCreation() then makeAdvert(station, nil, closestplanets) end
 end
@@ -2154,7 +2167,7 @@ local buildMissionDescription = function(mission)
 	end
 
 	desc.client = mission.client
-	desc.location = mission.location
+	desc.location = mission.target or mission.location
 
 	-- default to place-of-assistance reward
 	local paymentAddress = l.PLACE_OF_ASSISTANCE

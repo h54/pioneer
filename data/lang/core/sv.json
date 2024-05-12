@@ -325,7 +325,7 @@
   },
   "DECREASE_RADAR_RANGE": {
     "description": "",
-    "message": "Minska radar-avstånd"
+    "message": "Minska radaravstånd"
   },
   "DECREASE_SET_SPEED": {
     "description": "",
@@ -411,6 +411,10 @@
     "description": "",
     "message": "Ekvatorial till polarradie förhållande"
   },
+  "ESCAPE_VELOCITY": {
+    "description": "",
+    "message": "Flykthastighet"
+  },
   "EXACT_MATCH_X": {
     "description": "",
     "message": "Exakt matchning; %system"
@@ -445,7 +449,7 @@
   },
   "FLYBY_VIEW": {
     "description": "camera view setting",
-    "message": "Flyby view"
+    "message": "Förbiflygning vy"
   },
   "FOLLOWING_SELECTION": {
     "description": "",
@@ -491,6 +495,10 @@
     "description": "",
     "message": "Den sparade spelfilen kunde inte skrivas på grund av ett systemfel."
   },
+  "GAME_SAVE_INVALID_NAME": {
+    "description": "",
+    "message": "This saved game file could not be written because of a invalid name."
+  },
   "GENERAL_VIEW_CONTROLS": {
     "description": "",
     "message": "Generella vykontroller"
@@ -517,15 +525,15 @@
   },
   "HEADING_LOCK_ANTINORMAL": {
     "description": "Autopilot direction (perpendicular, down), relative to plane of orbit",
-    "message": "Hold {target} anti-normal"
+    "message": "Håll {target} antinormal"
   },
   "HEADING_LOCK_BACKWARD": {
     "description": "Autopilot points/holds/faces you retrograde (backwards rel. orbital direction)",
-    "message": "Hold {target} retrograde"
+    "message": "Håll {target} retrograd"
   },
   "HEADING_LOCK_FORWARD": {
     "description": "Autopilot points/holds/faces you prograde (tangent to the orbit, i.e. forward), http://wiki.kerbalspaceprogram.com/wiki/Maneuver_node",
-    "message": "Hold {target} prograde"
+    "message": "Håll {target} prograd"
   },
   "HEADING_LOCK_KILLROT": {
     "description": "",
@@ -533,15 +541,15 @@
   },
   "HEADING_LOCK_NORMAL": {
     "description": "Autopilot direction (perpendicular, up), relative to plane of orbit. ",
-    "message": "Hold {target} normal"
+    "message": "Håll {target} normal"
   },
   "HEADING_LOCK_RADIALLY_INWARD": {
     "description": "Autopilot direction, relative to orbit (face towards planet)",
-    "message": "Hold {target} radially in"
+    "message": "Håll {target} radiellt"
   },
   "HEADING_LOCK_RADIALLY_OUTWARD": {
     "description": "Autopilot direction, relative to orbit (face away from palent)",
-    "message": "Hold {target} radially out"
+    "message": "Håll {target} antiradiellt"
   },
   "HEAVY_INDUSTRY": {
     "description": "",
@@ -641,7 +649,7 @@
   },
   "INCREASE_RADAR_RANGE": {
     "description": "",
-    "message": "Öka radar-avstånd"
+    "message": "Öka radaravstånd"
   },
   "INCREASE_SET_SPEED": {
     "description": "",
@@ -782,6 +790,10 @@
   "MASS_N_TONNES": {
     "description": "",
     "message": "Massa: %{mass}t"
+  },
+  "MEAN_DENSITY": {
+    "description": "",
+    "message": "Medeldensitet"
   },
   "MEDICINES": {
     "description": "",
@@ -1280,7 +1292,7 @@
     "message": "Skräp"
   },
   "SCOOP": {
-    "description": "Is followed by a number, repersenting scoop mounts/slots available to fit cargo scoop and/or fuel scoop",
+    "description": "Is followed by a number, representing scoop mounts/slots available to fit cargo scoop and/or fuel scoop",
     "message": "Skopa"
   },
   "SCREENSHOT_FILENAME_TEMPLATE": {
@@ -1321,7 +1333,7 @@
   },
   "SEMI_MAJOR_AXIS": {
     "description": "",
-    "message": "Semi-stor axel"
+    "message": "Halv storaxel"
   },
   "SET_AS_COMBAT_TARGET": {
     "description": "",
@@ -1489,7 +1501,7 @@
   },
   "STAR_B_WF": {
     "description": "",
-    "message": "Wolf-Rayet - Riskerar kollaps"
+    "message": "Wolf-Rayet-stjärna - Riskerar kollaps"
   },
   "STAR_F": {
     "description": "",
@@ -1549,7 +1561,7 @@
   },
   "STAR_M_WF": {
     "description": "",
-    "message": "Wolf-Rayet - Ostabil"
+    "message": "Wolf-Rayet-stjärna - Ostabil"
   },
   "STAR_O": {
     "description": "",
@@ -1569,7 +1581,7 @@
   },
   "STAR_O_WF": {
     "description": "",
-    "message": "Wolf-Rayet - Nära förestående kollaps"
+    "message": "Wolf-Rayet-stjärna - Nära förestående kollaps"
   },
   "STAR_SM_BH": {
     "description": "",
@@ -1597,7 +1609,7 @@
   },
   "SWAP_SELECTED_HYPERSPACE_TARGET": {
     "description": "",
-    "message": "Byt markerad och hyper-mål"
+    "message": "Byt markerad och hypermål"
   },
   "SWITCHED_TO_PARENT": {
     "description": "Show ship's heading, coordinates are on the celestial sphere (defined by the ecliptic).",
@@ -1697,7 +1709,7 @@
   },
   "TOGGLE_RADAR_MODE": {
     "description": "",
-    "message": "Växla radar-läge"
+    "message": "Växla radarläge"
   },
   "TOGGLE_RADAR_VIEW": {
     "description": "Tooltip for the Radar View button",
@@ -1738,6 +1750,10 @@
   "UNIT_AU": {
     "description": "Distance unit: an astronomical unit, radius of Earth's orbit",
     "message": "AE"
+  },
+  "UNIT_CUBIC_METERS": {
+    "description": "Volume unit: cubic meter",
+    "message": "m³"
   },
   "UNIT_DAYS": {
     "description": "Duration unit: one 24-hour day",

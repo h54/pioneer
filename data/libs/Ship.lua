@@ -1,4 +1,4 @@
--- Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 ---@class Ship
@@ -666,6 +666,41 @@ function Ship:OnScoopCargo(cargoType)
 	Event.Queue('onShipScoopCargo', self, success, cargoType)
 
 	return success
+end
+
+
+--
+-- Method: GetGPS
+--
+-- Get altitude, speed, and position of a ship
+--
+-- > alt, vspd, lat, long = ship:GetGPS()
+--
+-- Returns:
+--
+--   alt - altitude
+--
+--   vspd - vertical speed
+--
+--   lat - latitude
+--
+--   lon - longitude
+--
+-- Availability:
+--
+--   November, 2023
+--
+-- Status:
+--
+--   experimental
+--
+function Ship:GetGPS()
+   if not self.frameBody then return end
+   local lat, lon, altitude = self:GetGroundPosition()
+   local vspd = self:GetVelocityRelTo(self.frameBody):dot(self:GetPositionRelTo(self.frameBody):normalized())
+   lat = math.rad2deg(lat)
+   lon = math.rad2deg(lon)
+   return altitude, vspd, lat, lon
 end
 
 --

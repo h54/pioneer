@@ -1,4 +1,4 @@
-// Copyright © 2008-2023 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #pragma once
@@ -12,6 +12,8 @@
 #include "RefCounted.h"
 #include <stack>
 #include <unordered_map>
+
+typedef void *SDL_GLContext;
 
 namespace Graphics {
 
@@ -54,16 +56,23 @@ namespace Graphics {
 		virtual int GetMaximumNumberAASamples() const override final;
 		virtual bool GetNearFarRange(float &near_, float &far_) const override final;
 
+		virtual void SetVSyncEnabled(bool) override;
+
+		virtual void OnWindowResized() override;
+
 		virtual bool BeginFrame() override final;
 		virtual bool EndFrame() override final;
 		virtual bool SwapBuffers() override final;
 
+		virtual RenderTarget *GetRenderTarget() override final;
 		virtual bool SetRenderTarget(RenderTarget *) override final;
 		virtual bool SetScissor(ViewportExtents) override final;
 
-		virtual bool ClearScreen() override final;
+		virtual void CopyRenderTarget(RenderTarget *, RenderTarget *, ViewportExtents, ViewportExtents, bool) override final;
+		virtual void ResolveRenderTarget(RenderTarget *, RenderTarget *, ViewportExtents) override final;
+
+		virtual bool ClearScreen(const Color &c, bool) override final;
 		virtual bool ClearDepthBuffer() override final;
-		virtual bool SetClearColor(const Color &c) override final;
 
 		virtual bool SetViewport(ViewportExtents v) override final;
 		virtual ViewportExtents GetViewport() const override final { return m_viewport; }
@@ -110,7 +119,6 @@ namespace Graphics {
 		virtual bool ReloadShaders() override final;
 
 		virtual bool Screendump(ScreendumpState &sd) override final;
-		virtual bool FrameGrab(ScreendumpState &sd) override final;
 
 		bool DrawMeshInternal(OGL::MeshObject *, PrimitiveType type);
 		bool DrawMeshInstancedInternal(OGL::MeshObject *, OGL::InstanceBuffer *, PrimitiveType type);
@@ -136,13 +144,11 @@ namespace Graphics {
 		RefCountedPtr<OGL::UniformBuffer> m_lightUniformBuffer;
 		bool m_useNVDepthRanged;
 		OGL::RenderTarget *m_activeRenderTarget = nullptr;
-		OGL::RenderTarget *m_windowRenderTarget = nullptr;
 		std::unique_ptr<OGL::CommandList> m_drawCommandList;
 
 		matrix4x4f m_modelViewMat;
 		matrix4x4f m_projectionMat;
 		ViewportExtents m_viewport;
-		Color m_clearColor;
 
 	private:
 		static bool initted;
