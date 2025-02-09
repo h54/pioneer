@@ -21,7 +21,7 @@
   },
   "ALL_PARAMETERS_WERE_RECOVERED_SUCCESSFULLY": {
     "description": "Message when restoring savegame",
-    "message": "Tous les paramètres ont été récupéré avec succès"
+    "message": "Tous les paramètres ont été récupérés avec succès"
   },
   "ALL_UP_WEIGHT": {
     "description": "",
@@ -67,6 +67,10 @@
     "description": "Market header when buying items",
     "message": "Disponible à l'achat"
   },
+  "AVAILABLE_STOCK": {
+    "description": "Market stat showing number of items in stock",
+    "message": "Stock disponible"
+  },
   "AVERAGE": {
     "description": "",
     "message": "Moyen"
@@ -81,6 +85,14 @@
   },
   "BUY": {
     "description": "Commodities and equipment prices",
+    "message": "Achat"
+  },
+  "BUY_EQUIP": {
+    "description": "Button text to buy selected equipment. May be used in a singular or plural context.",
+    "message": "Acheter {name}"
+  },
+  "BUY_PRICE": {
+    "description": "Title for buy-price column in commodity market",
     "message": "Achat"
   },
   "BUY_SHIP": {
@@ -106,6 +118,10 @@
   "CANNOT_SELL_ITEM": {
     "description": "",
     "message": "Cet objet ne peut pas être vendu"
+  },
+  "CANNOT_SELL_NONEMPTY_EQUIP": {
+    "description": "",
+    "message": "L'équipement doit être vidé avant de pouvoir être vendu"
   },
   "CANT_FIND_PATH": {
     "description": "Message when restoring savegame, file path",
@@ -219,6 +235,10 @@
     "description": "",
     "message": "Fermer"
   },
+  "COLLAPSE": {
+    "description": "Close / collapse an open folder or group",
+    "message": "Replier"
+  },
   "COLOR": {
     "description": "",
     "message": "Couleur"
@@ -231,6 +251,10 @@
     "description": "",
     "message": "Commandant"
   },
+  "COMMODITY": {
+    "description": "Title for commodity name column in commodity market",
+    "message": "Marchandise"
+  },
   "COMMODITY_MARKET": {
     "description": "",
     "message": "Bourse d'échange"
@@ -238,6 +262,18 @@
   "COMMODITY_TRADE_ANALYSIS": {
     "description": "",
     "message": "Analyse du commerce de marchandises de:"
+  },
+  "COMMODITY_TRADE_ANALYSIS_SYSTEM": {
+    "description": "",
+    "message": "Analyse commerciale au niveau du système solaire de:"
+  },
+  "COMMODITY_TRADE_ANALYSIS_TOOLTIP_1": {
+    "description": "",
+    "message": "Flux de marchandise moyen pour les marchandises achetées et vendues dans le système."
+  },
+  "COMMODITY_TRADE_ANALYSIS_TOOLTIP_2": {
+    "description": "",
+    "message": "Les données peuvent ne pas refléter les prix d'une marchandise précise."
   },
   "COMPETENT": {
     "description": "Combat rating",
@@ -279,6 +315,10 @@
     "description": "",
     "message": "Options de controle"
   },
+  "COPY": {
+    "description": "As for clipboard",
+    "message": "Copier"
+  },
   "COULD_NOT_DELETE_SAVE": {
     "description": "",
     "message": "Impossible d'éffacer la sauvegarde"
@@ -288,12 +328,20 @@
     "message": "Impossible de trouver l'objet stellaire du système dans le cadre de référence"
   },
   "COULD_NOT_LOAD_GAME": {
-    "description": "",
+    "description": "Label indicating a specific file could not be loaded",
     "message": "Impossible de charger la partie:"
+  },
+  "COULD_NOT_LOAD_SAVE_FILES": {
+    "description": "Label indicating the list of save files could not be loaded",
+    "message": "Impossible de charger les sauvegardes"
   },
   "COULD_NOT_READ_THE_SAVE_VERSION": {
     "description": "Message when restoring savegame",
     "message": "Impossible de lire la version de la sauvegarde"
+  },
+  "COULD_NOT_SAVE_GAME": {
+    "description": "Label indicating a specific file could not be saved",
+    "message": "Impossible de charger la sauvegarde:"
   },
   "CREDIBLE": {
     "description": "For player reputation",
@@ -315,12 +363,16 @@
     "description": "",
     "message": "Liste d'équipage"
   },
+  "CRIME": {
+    "description": "Heading introducing a single crime name or list of crime names",
+    "message": "Crime"
+  },
   "CRIMINAL": {
     "description": "Legal status of player",
     "message": "Criminel"
   },
   "CRIMINAL_RECORD": {
-    "description": "Past crimes / crime history of character",
+    "description": "Heading for past crimes / crime history of character, proper noun",
     "message": "Casier judiciaire"
   },
   "CURRENT_FUEL": {
@@ -338,6 +390,10 @@
   "CURRENT_SYSTEM": {
     "description": "For hyperjump planner",
     "message": "Système actuel"
+  },
+  "CUT": {
+    "description": "As for clipboard",
+    "message": "Couper"
   },
   "DANGEROUS": {
     "description": "Player combat rating",
@@ -445,7 +501,7 @@
   },
   "DOCK_AT_CURRENT_TARGET": {
     "description": "",
-    "message": "S'arrimer a la cible actuelle"
+    "message": "S'arrimer à la cible actuelle"
   },
   "DRIVE_ACTIVE": {
     "description": "Ship jump status",
@@ -461,7 +517,7 @@
   },
   "D_DAYS_LEFT": {
     "description": "",
-    "message": "Jours restants: %d"
+    "message": "Temps restant:"
   },
   "ECONOMY_TRADE": {
     "description": "",
@@ -523,6 +579,10 @@
     "description": "",
     "message": "Équipement"
   },
+  "EQUIPMENT_CAPACITY": {
+    "description": "The equipment capacity of a ship",
+    "message": "Capacité de l'équipement"
+  },
   "EQUIPMENT_MARKET": {
     "description": "",
     "message": "Marché d'équipement"
@@ -541,15 +601,19 @@
   },
   "ERROR_LANDING_GEAR_DOWN": {
     "description": "",
-    "message": "Saut hyper-espace impossible: le train d'aterrissage n'est pas rentré!"
+    "message": "Saut hyper-espace impossible : le train d’atterrissage n'est pas rentré !"
   },
   "ESCAPE_SPEED": {
     "description": "",
-    "message": "Vitesse de libération:"
+    "message": "Vitesse de libération :"
   },
   "EXIT_THIS_GAME": {
     "description": "",
     "message": "Quitter le jeu"
+  },
+  "EXPAND": {
+    "description": "Open / expand a collapsed folder or group",
+    "message": "Déplier"
   },
   "EXPERIENCED": {
     "description": "For player reputation",
@@ -570,6 +634,10 @@
   "FAILED": {
     "description": "When failed mission",
     "message": "Loupé"
+  },
+  "FAILED_TO_RECOVER_SOME_EQUIPMENT": {
+    "description": "",
+    "message": "Certains équipement n'ont pu être récupérés"
   },
   "FEATURE_ACCESSORIES": {
     "description": "Face feature for FaceGenerator in the PersonalInfo view",
@@ -621,15 +689,19 @@
   },
   "FILE_SAVEGAME_VERSION": {
     "description": "Message when restoring savegame",
-    "message": "Version du fichier de sauvegarde: %s"
+    "message": "Version du fichier de sauvegarde : %s"
   },
   "FINAL_TARGET": {
     "description": "Hyperjump planner, referring to star system target",
-    "message": "Destination finale:"
+    "message": "Destination finale :"
   },
   "FINANCE": {
     "description": "Financial statement of player, e.g. cash",
     "message": "Finance"
+  },
+  "FINE": {
+    "description": "Cost of a criminal action",
+    "message": "Amende"
   },
   "FLIGHTLOG_DOCKING": {
     "description": "Used in Flight Log, to indicate player's position. 'primary_info' is a station name",
@@ -715,6 +787,10 @@
     "description": "",
     "message": "Plein écran"
   },
+  "GAME_OPTIONS": {
+    "description": "GameOptions - tooltip for the Game Options tab in the Settings Window",
+    "message": "Options de jeu"
+  },
   "GAME_TIME": {
     "description": "",
     "message": "Temps de jeu"
@@ -725,11 +801,11 @@
   },
   "GIVE_ORDERS_TO_CREW": {
     "description": "",
-    "message": "Donner des ordres a l'équipage"
+    "message": "Donner des ordres à l'équipage"
   },
   "GOOD_RIDDANCE_TO_YOU_TOO": {
     "description": "",
-    "message": "Bon vent a toi, aussi."
+    "message": "Bon vent à toi aussi."
   },
   "GO_BACK": {
     "description": "",
@@ -797,7 +873,7 @@
   },
   "HUD_BRAKE_DISTANCE_MAIN_THRUSTERS": {
     "description": "Tooltip: The braking distance using the main thrusters.",
-    "message": "La distance de freinage utilisant les réacteurs principaux"
+    "message": "La distance de freinage avec les réacteurs principaux"
   },
   "HUD_BUTTON_AUTOPILOT_DOCKING": {
     "description": "Tooltip: Autopilot docking",
@@ -817,11 +893,11 @@
   },
   "HUD_BUTTON_CRUISE_FORWARD": {
     "description": "Tooltip for button",
-    "message": "Mode croisière: avancer"
+    "message": "Mode croisière : avancer"
   },
   "HUD_BUTTON_CRUISE_UP": {
     "description": "Tooltip for button",
-    "message": "Mode croisière: vers le haut"
+    "message": "Mode croisière : vers le haut"
   },
   "HUD_BUTTON_DISABLE_AUTOPILOT": {
     "description": "Tooltip for button",
@@ -935,6 +1011,10 @@
     "description": "Tooltip: Sidereal camera view",
     "message": "Vue sidérale"
   },
+  "HUD_BUTTON_SWITCH_TO_CURRENT_SYSTEM": {
+    "description": "Tooltip: Switch to current system",
+    "message": "Basculer vers système courant"
+  },
   "HUD_BUTTON_SWITCH_TO_GALAXY_MAP": {
     "description": "Tooltip: Switch to galaxy map",
     "message": "Bascule vers carte galactique"
@@ -942,6 +1022,10 @@
   "HUD_BUTTON_SWITCH_TO_SECTOR_MAP": {
     "description": "Tooltip: Switch to sector map",
     "message": "Bascule vers carte du secteur"
+  },
+  "HUD_BUTTON_SWITCH_TO_SELECTED_SYSTEM": {
+    "description": "Tooltip: Switch to selected system",
+    "message": "Basculer vers système sélectionné"
   },
   "HUD_BUTTON_SWITCH_TO_SYSTEM_MAP": {
     "description": "Tooltip: Switch to system map",
@@ -1111,6 +1195,18 @@
     "description": "Tooltip: Current distance of the radar.",
     "message": "Distance radar"
   },
+  "HUD_RADAR_TOGGLE_MODE": {
+    "description": "Tooltip: Toggle radar mode.",
+    "message": "Mettre le radar en mode 2D ou 3D"
+  },
+  "HUD_RADAR_ZOOM_MODE_AUTOMATIC": {
+    "description": "Tooltip: Current radar zoom mode.",
+    "message": "Zoom automatique"
+  },
+  "HUD_RADAR_ZOOM_MODE_MANUAL": {
+    "description": "Tooltip: Current radar zoom mode.",
+    "message": "Zoom manuel"
+  },
   "HUD_REQUEST_TIME_ACCEL": {
     "description": "Tooltip: Request time acceleration {time}",
     "message": "Demande d'accélération du temps: {time}"
@@ -1173,7 +1269,7 @@
   },
   "HULL_REPAIRED_BY_NAME_NOW_AT_N_PERCENT": {
     "description": "",
-    "message": "Coque Réparée par {name}, actuellement a {repairPercent}%"
+    "message": "Coque Réparée par {name}, actuellement à {repairPercent}%"
   },
   "HULL_REPAIR_ATTEMPT_FAILED_HULL_SUFFERED_MINOR_DAMAGE": {
     "description": "",
@@ -1194,6 +1290,10 @@
   "HYPERSPACE_RANGE": {
     "description": "",
     "message": "Portée Hyperspaciale"
+  },
+  "ILLEGAL_COMMODITIES": {
+    "description": "Commodities illegal in the current system or polity",
+    "message": "Marchandises illégales"
   },
   "ILLEGAL_IN_SYSTEM": {
     "description": "An illegal action or commodity",
@@ -1227,6 +1327,14 @@
     "description": "Ship jump status",
     "message": "Amorcée"
   },
+  "INSTALL": {
+    "description": "Install something",
+    "message": "Installer"
+  },
+  "INSTALLED": {
+    "description": "Label indicating something is installed",
+    "message": "Installé"
+  },
   "INSUFFICIENT_FUEL": {
     "description": "Ship jump status",
     "message": "Carburant insuffisant"
@@ -1251,9 +1359,13 @@
     "description": "",
     "message": "En soute"
   },
+  "IN_HOLD": {
+    "description": "Column title of the Commodity Market screen",
+    "message": "En soute"
+  },
   "IN_STOCK": {
-    "description": "",
-    "message": "En stock"
+    "description": "Column title of Commodity and Ship Equipment markets showing current station stock level.",
+    "message": "Stock"
   },
   "IN_SYSTEM": {
     "description": "Used in flight log, show which star system we are/were in",
@@ -1265,7 +1377,7 @@
   },
   "ITS_BEEN_GREAT_WORKING_FOR_YOU_IF_YOU_NEED_ME_AGAIN_ILL_BE_HERE_A_WHILE": {
     "description": "",
-    "message": "J'ai apprécié de travailler pour vous. Si un jour vous avez besoin de moi, je serais a votre service."
+    "message": "J'ai apprécié de travailler pour vous. Si un jour vous avez besoin de moi, je serais à votre service."
   },
   "JETTISON": {
     "description": "",
@@ -1309,7 +1421,7 @@
   },
   "LAUNCH_PERMISSION_GRANTED_DEPART_QUICK": {
     "description": "",
-    "message": "Permission accordée. Décollez rapidement afin de ne pas encombrer pas la zone d'atterrissage, s'il vous plait."
+    "message": "Permission accordée. Décollez rapidement afin de ne pas encombrer la zone d'atterrissage, s'il vous plait."
   },
   "LAUNCH_PERMISSION_GRANTED_WATCH_TRAFFIC": {
     "description": "",
@@ -1318,6 +1430,14 @@
   "LAWFULNESS": {
     "description": "Character parameter",
     "message": "Légalité"
+  },
+  "LEGAL_RULES": {
+    "description": "Refers to laws, rules and regulations",
+    "message": "Lois applicables dans l'espace contrôlé par la station. Le respect des lois est automatiquement vérifié jusqu'à une distance de: {distance}."
+  },
+  "LEGAL_RULES_AND_REGULATIONS": {
+    "description": "Heading on a tab, keep it short",
+    "message": "Réglementation"
   },
   "LEGAL_STATUS": {
     "description": "",
@@ -1731,6 +1851,10 @@
     "description": "Ship jump status",
     "message": "Hors de portée"
   },
+  "OUT_OF_STOCK": {
+    "description": "Equipment availability",
+    "message": "Rupture de stock"
+  },
   "OVERVIEW_NAME_FILTER": {
     "description": "Filter overview window entries by name",
     "message": "Filtrer les entrées de la fenêtre d'aperçu par nom"
@@ -1770,6 +1894,10 @@
   "PASSENGER_CABIN_CAPACITY": {
     "description": "Entry for ship info",
     "message": "Capacité cabine passager"
+  },
+  "PASTE": {
+    "description": "As for clipboard",
+    "message": "Coller"
   },
   "PATH_FOUND_BUT_VERIFICATION_FAILED": {
     "description": "Message when restoring savegame",
@@ -1833,7 +1961,11 @@
   },
   "POOR": {
     "description": "Player combat rating",
-    "message": "Debutant"
+    "message": "Débutant"
+  },
+  "POSESSION_OF_COMMODITIES_ILLEGAL": {
+    "description": "",
+    "message": "La possession de certaines marchandises est interdite dans ce système."
   },
   "POSITION": {
     "description": "The job title/position of crew memeber",
@@ -1937,7 +2069,7 @@
   },
   "RELIABLE": {
     "description": "For player reputation",
-    "message": "Reliable"
+    "message": "Fiable"
   },
   "REMOVE": {
     "description": "Remove, e.g. deleting a log entry",
@@ -1955,9 +2087,9 @@
     "description": "",
     "message": "Réparer {damage}% de dégâts de la coque pour {price}"
   },
-  "REPLACE_EQUIPMENT_WITH": {
+  "REPLACE_EQUIPMENT": {
     "description": "Market header when replacing equipped items",
-    "message": "Remplacer l'équipement avec"
+    "message": "Remplacer Équipement"
   },
   "REPUTATION": {
     "description": "",
@@ -1982,6 +2114,14 @@
   "RESET_PREVIEW": {
     "description": "Paintshop button",
     "message": "Réinitialiser l'aperçu"
+  },
+  "RESET_VIEW_ON_HYPERSPACE_EXIT": {
+    "description": "Reset View on Hyperspace Exit option",
+    "message": "Réinitialiser la vue lors de la sortie d'hyper-espace"
+  },
+  "RESET_VIEW_ON_HYPERSPACE_EXIT_DESC": {
+    "description": "The tooltip of Reset View on Hyperspace Exit in the settings menu",
+    "message": "Réinitialiser vers la vue de jeu principale lors de la sortie d'hyper-espace"
   },
   "RETURN_TO_GAME": {
     "description": "",
@@ -2027,6 +2167,14 @@
     "description": "",
     "message": "Sauvegarder"
   },
+  "SAVED_GAMES": {
+    "description": "Header for save/load window",
+    "message": "Sauvegardes"
+  },
+  "SAVE_AS": {
+    "description": "",
+    "message": "Sauver sous"
+  },
   "SAVE_DELETED_SUCCESSFULLY": {
     "description": "",
     "message": "Sauvegarde supprimée avec succès"
@@ -2046,6 +2194,10 @@
   "SELECT": {
     "description": "",
     "message": "Sélectionner"
+  },
+  "SELECTED": {
+    "description": "Label indicating the following item is selected",
+    "message": "Sélectionné"
   },
   "SELECTED_SAVE_DOESNT_EXISTS": {
     "description": "",
@@ -2075,9 +2227,17 @@
     "description": "Commodities and equipment prices",
     "message": "Vente"
   },
+  "SELL_EQUIP": {
+    "description": "Button text to sell installed equipment. May be used in a singular or plural context.",
+    "message": "Vendre {name}"
+  },
   "SELL_EQUIPPED": {
     "description": "Button text to sell selected ship equipment",
     "message": "Vendre ce qui est équipé"
+  },
+  "SELL_PRICE": {
+    "description": "Title for sell-price column in commodity market",
+    "message": "Vente"
   },
   "SENSORS": {
     "description": "Crew skill",
@@ -2154,6 +2314,10 @@
   "SHIP_TYPE": {
     "description": "",
     "message": "Type de vaisseau"
+  },
+  "SHOW_AUTOSAVES": {
+    "description": "Button tooltip indicating whether to show autosave files",
+    "message": "Afficher les sauvegardes automatiques"
   },
   "SIMULATING_UNIVERSE_EVOLUTION_N_BYEARS": {
     "description": "",
@@ -2273,7 +2437,7 @@
   },
   "TEXTURE_COMPRESSION": {
     "description": "",
-    "message": "La compression de texture libère de la mémoire de la carte graphique car les textures prennent moins de place, ce qui est probablement ce que vous voulez, en échange de leur compression (et donc d'un peu de performance) pendant le démarrage du jeu."
+    "message": "La compression de texture libère de la mémoire de la carte graphique car les textures prennent moins de place, ce qui est probablement ce que vous voulez, en échange de leur compression (et donc d'un peu de temps) pendant le démarrage du jeu."
   },
   "THANKS_AND_REMEMBER_TO_BUY_FUEL": {
     "description": "",
@@ -2281,11 +2445,15 @@
   },
   "THERE_IS_NOBODY_ELSE_ON_BOARD_ABLE_TO_FLY_THIS_SHIP": {
     "description": "",
-    "message": "Il n'y a personne d'autre a bord pour piloter"
+    "message": "Il n'y a personne d'autre à bord pour piloter"
   },
   "THERE_WERE_ERRORS_IN_RECOVERY": {
     "description": "Message when restoring savegame",
     "message": "Erreurs lors de la récupération:"
+  },
+  "THESE_ITEMS_ARE_PUNISHABLE_BY_FINE": {
+    "description": "",
+    "message": "L' acheter, la revente et le transport de ces objets est punissable d'une amende et d'une confiscation possible"
   },
   "THE_SHIP_IS_UNDER_STATION_CONTROL_COMMANDER": {
     "description": "",
@@ -2366,6 +2534,10 @@
   "TRADING_TO": {
     "description": "Indicates the destination system of a commodity trade.",
     "message": "Vers {system}:"
+  },
+  "TRANSFER_FUEL": {
+    "description": "Label indicating the ability to transfer fuel between equipment tanks",
+    "message": "Transfert de carburant"
   },
   "TRUSTWORTHY": {
     "description": "For player reputation",
@@ -2463,6 +2635,10 @@
     "description": "Ship Repair tab button.",
     "message": "Visiter le garagiste"
   },
+  "VOLUME": {
+    "description": "The volume property of some object",
+    "message": "Volume"
+  },
   "VSYNC": {
     "description": "For the checkbox in settings window",
     "message": "VSync"
@@ -2501,7 +2677,7 @@
   },
   "YOURE_GOING_TO_REGRET_SACKING_ME": {
     "description": "",
-    "message": "Vous allez regretter de m'avoir virer!"
+    "message": "Vous allez regretter de m'avoir viré !"
   },
   "YOUR_HULL_IS_AT_X_INTEGRITY": {
     "description": "",

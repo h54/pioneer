@@ -1,8 +1,7 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Game = require 'Game'
-local Equipment = require 'Equipment'
 local Commodities = require 'Commodities'
 
 local Lang = require 'Lang'
@@ -22,7 +21,6 @@ local hyperJumpPlanner = {} -- for export
 
 -- hyperjump route stuff
 local hyperjump_route = {}
-local route_jumps = 0
 local current_system
 local current_path
 local map_selected_path
@@ -66,8 +64,8 @@ local function showInfo()
 
 		textIcon(icons.route_destination, lui.FINAL_TARGET)
 
-		if route_jumps > 0 then
-			local final_path = hyperjump_route[route_jumps].path
+		if #hyperjump_route > 0 then
+			local final_path = hyperjump_route[#hyperjump_route].path
 			ui.sameLine()
 			if ui.selectable(ui.Format.SystemPath(final_path), false, {}) then
 				sectorView:SwitchToPath(final_path)
@@ -79,14 +77,14 @@ local function showInfo()
 
 		textIcon(icons.fuel, lui.REQUIRED_FUEL)
 		ui.sameLine()
-		ui.text(total_fuel .. lc.UNIT_TONNES)
+		ui.text(string.format("%.1f%s", total_fuel, lc.UNIT_TONNES))
 		ui.sameLine()
 		ui.text("[")
 		ui.sameLine()
 		ui.withStyleVars({ItemSpacing = Vector2(0.0)}, function()
 			textIcon(icons.hull, lui.CURRENT_FUEL)
 			ui.sameLine()
-			ui.text(" : " .. current_fuel .. lc.UNIT_TONNES)
+			ui.text(" : " .. string.format("%.1f%s", current_fuel, lc.UNIT_TONNES))
 		end)
 		ui.sameLine()
 		ui.text("]")
@@ -116,10 +114,10 @@ local function buildJumpRouteList()
 	-- if we are not in the system, then we are in hyperspace, we start building the route from the jump target
 	local start = Game.system and Game.system.path or player:GetHyperspaceDestination()
 
-	local drive = table.unpack(player:GetEquip("engine")) or nil
-	local fuel_type = drive and drive.fuel or Commodities.hydrogen
+	local drive = player:GetInstalledHyperdrive()
+	if not drive then return end
 
-	local cur_fuel = player:GetComponent('CargoManager'):CountCommodity(fuel_type)
+	local cur_fuel = drive.storedFuel
 	local running_fuel = 0
 
 	for jumpIndex, jump in pairs(sectorView:GetRoute()) do
@@ -139,7 +137,11 @@ local function buildJumpRouteList()
 		hyperjump_route[jumpIndex] = {
 			path = jump,
 			color = color,
-			textLine = jumpIndex ..": ".. jump_sys.name .. " (" .. string.format("%.2f", distance) .. lc.UNIT_LY .. " - " .. fuel .. lc.UNIT_TONNES..")"
+			textLine = "{}: {} ({} - {})" % {
+				jumpIndex, jump_sys.name,
+				string.format("%.2f%s", distance, lc.UNIT_LY),
+				string.format("%.1f%s", fuel, lc.UNIT_TONNES)
+			}
 		}
 		running_fuel = fuel + running_fuel
 		start = jump
@@ -160,7 +162,7 @@ end
 
 local function showJumpRoute()
 	if ui.collapsingHeader(lui.ROUTE_JUMPS, {"DefaultOpen"}) then
-		smallButton(icons.forward, lui.ADD_JUMP,
+		smallButton(icons.plus, lui.ADD_JUMP,
 			function()
 				sectorView:AddToRoute(map_selected_path)
 				updateHyperspaceTarget()
@@ -168,7 +170,7 @@ local function showJumpRoute()
 			end)
 		ui.sameLine()
 
-		smallButton(icons.current_line, lui.REMOVE_JUMP,
+		smallButton(icons.minus, lui.REMOVE_JUMP,
 			function()
 				if selected_jump then
 					sectorView:RemoveRouteItem(selected_jump)
@@ -199,7 +201,7 @@ local function showJumpRoute()
 			end)
 		ui.sameLine()
 
-		smallButton(icons.retrograde_thin, lui.CLEAR_ROUTE,
+		smallButton(icons.cross, lui.CLEAR_ROUTE,
 			function()
 				sectorView:ClearRoute()
 				updateHyperspaceTarget()
@@ -230,7 +232,7 @@ local function showJumpRoute()
 		local clicked
 		ui.child("routelist", function()
 			for jumpIndex, jump in pairs(hyperjump_route) do
-				ui.withStyleColors({["Text"] = jump.color}, function()
+				ui.withStyleColors({Text = jump.color}, function()
 					if ui.selectable(jump.textLine, jumpIndex == selected_jump) then
 						clicked = jumpIndex
 					end
@@ -280,19 +282,19 @@ function hyperJumpPlanner.Dummy()
 	ui.text("Fuel line")
 	ui.text("Duration line")
 	ui.collapsingHeader("Route jumps",{"DefaultOpen"})
-	smallButton(icons.forward, lui.ADD_JUMP, function() end)
+	smallButton(icons.plus, lui.ADD_JUMP, function() end)
 	ui.sameLine()
-	smallButton(icons.forward, lui.ADD_JUMP, function() end)
+	smallButton(icons.plus, lui.ADD_JUMP, function() end)
 	ui.sameLine()
-	smallButton(icons.forward, lui.ADD_JUMP, function() end)
+	smallButton(icons.plus, lui.ADD_JUMP, function() end)
 	ui.sameLine()
-	smallButton(icons.forward, lui.ADD_JUMP, function() end)
+	smallButton(icons.plus, lui.ADD_JUMP, function() end)
 	ui.sameLine()
-	smallButton(icons.forward, lui.ADD_JUMP, function() end)
+	smallButton(icons.plus, lui.ADD_JUMP, function() end)
 	ui.sameLine()
-	smallButton(icons.forward, lui.ADD_JUMP, function() end)
+	smallButton(icons.plus, lui.ADD_JUMP, function() end)
 	ui.sameLine()
-	smallButton(icons.forward, lui.ADD_JUMP, function() end)
+	smallButton(icons.plus, lui.ADD_JUMP, function() end)
 	ui.separator()
 	--reserve 5 route items
 	ui.text("1: Barnard's Star (5.95ly - 1t) SPACE")
@@ -308,13 +310,12 @@ function hyperJumpPlanner.display()
 		textIconSize = ui.calcTextSize("H")
 		textIconSize.x = textIconSize.y -- make square
 	end
-	local drive = table.unpack(Game.player:GetEquip("engine")) or nil
+	local drive = Game.player:GetInstalledHyperdrive()
 	local fuel_type = drive and drive.fuel or Commodities.hydrogen
 	current_system = Game.system -- will be nil during the hyperjump
 	current_path = Game.system and current_system.path -- will be nil during the hyperjump
-	current_fuel = Game.player:GetComponent('CargoManager'):CountCommodity(fuel_type)
+	current_fuel = Game.player:GetComponent('CargoManager'):CountCommodity(fuel_type) + (drive and drive.storedFuel or 0)
 	map_selected_path = sectorView:GetSelectedSystemPath()
-	route_jumps = sectorView:GetRouteSize()
 	showHyperJumpPlannerWindow()
 end -- hyperJumpPlanner.display
 
@@ -323,7 +324,7 @@ function hyperJumpPlanner.setSectorView(sv)
 end
 
 function hyperJumpPlanner.onPlayerCargoChanged(comm, count)
-	local drive = table.unpack(Game.player:GetEquip("engine")) or nil
+	local drive = Game.player:GetInstalledHyperdrive()
 	local fuel_type = drive and drive.fuel or Commodities.hydrogen
 
 	if comm.name == fuel_type.name then
@@ -331,8 +332,9 @@ function hyperJumpPlanner.onPlayerCargoChanged(comm, count)
 	end
 end
 
-function hyperJumpPlanner.onShipEquipmentChanged(ship, equipment)
-	if ship:IsPlayer() and equipment and equipment:IsValidSlot("engine", ship) then
+---@type EquipSet.Listener
+function hyperJumpPlanner.onShipEquipmentChanged(op, equip, slot)
+	if (op == 'install' or op == 'modify') and equip:IsA("Equipment.HyperdriveType") then
 		buildJumpRouteList()
 	end
 end
@@ -342,7 +344,7 @@ function hyperJumpPlanner.onEnterSystem(ship)
 	-- this should be the case if you are following a route and want the route to be
 	-- updated as you make multiple jumps
 	if ship:IsPlayer() and remove_first_if_current then
-		if route_jumps > 0 and hyperjump_route[1] and hyperjump_route[1].path:IsSameSystem(Game.system.path) then
+		if #hyperjump_route > 0 and hyperjump_route[1] and hyperjump_route[1].path:IsSameSystem(Game.system.path) then
 			sectorView:RemoveRouteItem(1)
 		end
 	end
@@ -352,6 +354,7 @@ end
 function hyperJumpPlanner.onGameStart()
 	-- get notified when the player buys hydrogen
 	Game.player:GetComponent('CargoManager'):AddListener('hyperjump-planner', hyperJumpPlanner.onPlayerCargoChanged)
+	Game.player:GetComponent('EquipSet'):AddListener(hyperJumpPlanner.onShipEquipmentChanged)
 	-- we may have just loaded a jump route list, so lets build it fresh now
 	buildJumpRouteList()
 

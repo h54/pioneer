@@ -1,4 +1,4 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Lang = require 'Lang'
@@ -14,15 +14,11 @@ local ModelSkin = require 'SceneGraph.ModelSkin'
 local ShipDef = require "ShipDef"
 local SystemPath = require 'SystemPath'
 
-local misc = Equipment.misc
-local laser = Equipment.laser
-
 local Defs = require 'pigui.modules.new-game-window.defs'
 local Layout = require 'pigui.modules.new-game-window.layout'
 local Recovery = require 'pigui.modules.new-game-window.recovery'
 local StartVariants = require 'pigui.modules.new-game-window.start-variants'
 local FlightLogParam = require 'pigui.modules.new-game-window.flight-log'
-local Helpers = require 'pigui.modules.new-game-window.helpers'
 local Game = require 'Game'
 
 local profileCombo = { items = {}, selected = 0 }
@@ -34,15 +30,19 @@ StartVariants.register({
 	logmsg     = lui.START_LOG_ENTRY_1,
 	shipType   = 'coronatrix',
 	money      = 600,
-	hyperdrive = true,
-	equipment  = {
-		{ laser.pulsecannon_1mw,      1 },
-		{ misc.atmospheric_shielding, 1 },
-		{ misc.autopilot,             1 },
-		{ misc.radar,                 1 }
+	equipment = {
+		computer_1     = "misc.autopilot",
+		laser_front_s2 = "laser.pulsecannon_1mw",
+		shield_s1_1    = "shield.basic_s1",
+		shield_s1_2    = "shield.basic_s1",
+		sensor         = "sensor.radar",
+		hull_mod       = "hull.atmospheric_shielding_s1",
+		hyperdrive     = "hyperspace.hyperdrive_2",
+		thruster       = "thruster.default_s1",
+		missile_bay_1  = "missile_bay.opli_internal_s2",
+		missile_bay_2  = "missile_bay.opli_internal_s2",
 	},
 	cargo      = {
-		{ Commodities.hydrogen, 2 }
 	},
 	pattern    = 1,
 	colors     = { Color('000000'), Color('000000'), Color('000000') }
@@ -56,14 +56,15 @@ StartVariants.register({
 	shipType   = 'pumpkinseed',
 	money      = 400,
 	hyperdrive = true,
-	equipment  = {
-		{ laser.pulsecannon_1mw,      1 },
-		{ misc.atmospheric_shielding, 1 },
-		{ misc.autopilot,             1 },
-		{ misc.radar,                 1 }
+	equipment = {
+		computer_1     = "misc.autopilot",
+		laser_front_s1 = "laser.pulsecannon_1mw",
+		sensor         = "sensor.radar",
+		hull_mod       = "hull.atmospheric_shielding_s1",
+		hyperdrive     = "hyperspace.hyperdrive_1",
+		thruster       = "thruster.default_s1",
 	},
 	cargo      = {
-		{ Commodities.hydrogen, 2 }
 	},
 	pattern    = 1,
 	colors     = { Color('000000'), Color('000000'), Color('FFFF00') }
@@ -77,13 +78,13 @@ StartVariants.register({
 	shipType       = 'xylophis',
 	money          = 100,
 	hyperdrive     = false,
-	equipment      = {
-		{misc.atmospheric_shielding,1},
-		{misc.autopilot,1},
-		{misc.radar,1}
+	equipment = {
+		computer_1     = "misc.autopilot",
+		sensor         = "sensor.radar",
+		hull_mod       = "hull.atmospheric_shielding_s0",
+		thruster       = "thruster.default_s1",
 	},
 	cargo          = {
-		{ Commodities.hydrogen, 2 }
 	},
 	pattern    = 6,
 	colors     = { Color('E17F00'), Color('FFFFFF'), Color('FF7F00') }
@@ -148,27 +149,67 @@ local function startGame(gameParams)
 		player:Enroll(member)
 	end
 
-	local eqSections = {
-		engine = 'hyperspace',
-		laser_rear = 'laser',
-		laser_front = 'laser'
-	}
-	for _, slot in pairs({ 'engine', 'laser_rear', 'laser_front' }) do
-		local eqSection = eqSections[slot]
-		local eqEntry = gameParams.ship.equipment[slot]
-		if eqEntry then
-			player:AddEquip(Equipment[eqSection][eqEntry], 1, slot)
+	local equipSet = player:GetComponent("EquipSet")
+	player:UpdateEquipStats()
+
+	-- slotless
+	for _, item in ipairs(gameParams.ship.equipment) do
+		local proto = Equipment.Get(item)
+		if not equipSet:Install(proto:Instance()) then
+			logWarning("Couldn't install equipment item {} in misc. cargo space" % { proto:GetName() })
 		end
 	end
 
-	for _,equip in pairs(gameParams.ship.equipment.misc) do
-		player:AddEquip(Equipment.misc[equip.id], equip.amount)
+	local function installEquipment(nodes, prefix)
+		for slot, node in pairs(nodes) do
+
+			local item
+
+			if type(node) == 'table' then
+				item = node.id
+				assert(item)
+			else
+				item = node
+			end
+
+			if prefix then
+				slot = prefix .. slot
+			end
+
+			local proto = Equipment.Get(item)
+			if type(slot) == "string" then
+				local slotHandle = equipSet:GetSlotHandle(slot)
+				if slotHandle then
+					local inst = proto:Instance()
+
+					if inst.SpecializeForShip then inst:SpecializeForShip(equipSet.config) end
+
+					if slotHandle.count then
+						inst:SetCount(slotHandle.count)
+					end
+
+					if not equipSet:Install(inst, slotHandle) then
+						logWarning("Couldn't install equipment item {} into slot {}" % { inst:GetName(), slot })
+					end
+				end
+
+				if type(node) == 'table' then
+					installEquipment(node.slots, slot .. "##")
+				end
+			end
+		end
 	end
+	installEquipment(gameParams.ship.equipment)
 
 	---@type CargoManager
 	local cargoMgr = player:GetComponent('CargoManager')
 	for id, amount in pairs(gameParams.ship.cargo) do
 		cargoMgr:AddCommodity(Commodities[id], amount)
+	end
+
+	local drive = player:GetInstalledHyperdrive()
+	if drive then
+		drive:SetFuel(player, drive:GetMaxFuel())
 	end
 
 	for _, entry in ipairs(gameParams.flightlog.Custom) do
@@ -251,6 +292,11 @@ local function hasNameInArray(param, array)
 	end
 end
 
+local function unlockAll()
+	Layout.setLock(false)
+	FlightLogParam.value.Custom = {{ entry = "Custom start of the game - for the purpose of debugging or cheat." }}
+end
+
 -- wait a few frames, and then calculate the static layout (updateLayout)
 local initFrames = 2
 
@@ -269,8 +315,7 @@ NewGameWindow = ModalWindow.New("New Game", function()
 				profileCombo.selected = ret
 				local action = profileCombo.actions[ret + 1]
 				if action == 'DO_UNLOCK' then
-					Layout.setLock(false)
-					FlightLogParam.value.Custom = {{ text = "Custom start of the game - for the purpose of debugging or cheat." }}
+					unlockAll()
 				else
 					setStartVariant(StartVariants.item(ret + 1))
 				end
@@ -387,7 +432,7 @@ function NewGameWindow:open()
 	end
 	if self.debugMode then
 		profileCombo.selected = #profileCombo.items - 1
-		Layout.setLock(false)
+		unlockAll()
 	end
 	ModalWindow.open(self)
 end

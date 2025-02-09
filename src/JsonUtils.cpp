@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _USE_MATH_DEFINES
@@ -9,6 +9,7 @@
 #include "FileSystem.h"
 #include "base64/base64.hpp"
 #include "core/GZipFormat.h"
+#include "core/StringName.h"
 #include "utils.h"
 
 #include <cinttypes>
@@ -850,4 +851,14 @@ void StrToMatrix4x4d(const char *str, matrix4x4d &val)
 	for (int i = 0; i < 16; i++)
 		val[i] = fu[i].d;
 #endif
+}
+
+void to_json(Json &out, const StringName &str)
+{
+	out = str.sv();
+}
+
+void from_json(const Json &obj, StringName &str)
+{
+	str = StringName(obj.get<std::string_view>());
 }

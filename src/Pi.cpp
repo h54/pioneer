@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "buildopts.h"
@@ -30,6 +30,7 @@
 #include "Player.h"
 #include "PngWriter.h"
 #include "Projectile.h"
+#include "SaveGameManager.h"
 #include "SectorView.h"
 #include "Sfx.h"
 #include "Shields.h"
@@ -38,6 +39,7 @@
 #include "SpaceStation.h"
 #include "Star.h"
 #include "StringF.h"
+#include "SystemView.h"
 #include "Tombstone.h"
 #include "TransferPlanner.h"
 #include "WorldView.h"
@@ -158,7 +160,7 @@ protected:
 	bool m_hasQueuedJobs = 0;
 
 	template <typename T>
-	void AddStep(std::string name, T fn)
+	void AddStep(const std::string &name, T fn)
 	{
 		m_loaders.push_back(LoadStep{ fn, name });
 	}
@@ -336,6 +338,8 @@ void Pi::App::OnStartup()
 
 	Output("%s\n", OS::GetOSInfoString().c_str());
 
+	SaveGameManager::Init();
+
 	ModManager::Init();
 	ModManager::LoadMods(config);
 
@@ -505,7 +509,7 @@ void StartupScreen::Start()
 	// XXX UI requires Lua  but Pi::ui must exist before we start loading
 	// templates. so now we have crap everywhere :/
 	Output("Lua::Init()\n");
-	Lua::Init();
+	Lua::Init(Pi::GetAsyncJobQueue());
 
 	// TODO: Get the lua state responsible for drawing the init progress up as fast as possible
 	// Investigate using a pigui-only Lua state that we can initialize without depending on
@@ -675,6 +679,8 @@ void MainMenu::Start()
 
 	perfInfoDisplay->ClearCounter(PiGui::PerfInfo::COUNTER_PHYS);
 	perfInfoDisplay->ClearCounter(PiGui::PerfInfo::COUNTER_PIGUI);
+
+	LuaEvent::Queue("onEnterMainMenu");
 }
 
 void MainMenu::Update(float deltaTime)
@@ -685,6 +691,8 @@ void MainMenu::Update(float deltaTime)
 		Pi::intro->RefreshBackground(Pi::renderer);
 
 	Pi::intro->Draw(deltaTime);
+
+	LuaEvent::Emit();
 
 	Pi::pigui->NewFrame();
 	PiGui::EmitEvents();
@@ -779,6 +787,12 @@ void Pi::HandleKeyDown(SDL_Keysym *key)
 	case SDLK_F11: // Reload shaders
 		renderer->ReloadShaders();
 		break;
+
+	case SDLK_F8: // EXPLOSION!
+	{
+		SfxManager::AddExplosion(Pi::game->GetPlayer());
+		break;
+	}
 #endif /* DEVKEYS */
 
 #if WITH_OBJECTVIEWER
@@ -804,9 +818,9 @@ void Pi::HandleKeyDown(SDL_Keysym *key)
 
 		else {
 			const std::string name = "_quicksave";
-			const std::string path = FileSystem::JoinPath(GetSaveDir(), name);
+			const std::string path = FileSystem::JoinPath(SaveGameManager::GetSaveGameDirectory(), name);
 			try {
-				Game::SaveGame(name, Pi::game);
+				SaveGameManager::SaveGame(name, Pi::game);
 				Pi::game->log->Add(Lang::GAME_SAVED_TO + path);
 			} catch (CouldNotOpenFileException) {
 				Pi::game->log->Add(stringf(Lang::COULD_NOT_OPEN_FILENAME, formatarg("path", path)));
@@ -980,7 +994,7 @@ void GameLoop::Update(float deltaTime)
 	// Record physics timestep but keep information about current frame timing.
 	perfTimer.SoftStop();
 	// store the physics time until the end of the frame
-	phys_time = perfTimer.milliseconds() / 1.e3;
+	phys_time = perfTimer.milliseconds();
 
 	// did the player die?
 	if (Pi::game->GetPlayer()->IsDead()) {
@@ -1056,7 +1070,7 @@ void GameLoop::Update(float deltaTime)
 	Pi::pigui->Render();
 
 	perfTimer.SoftStop();
-	pigui_time = perfTimer.milliseconds() / 1.e3;
+	pigui_time = perfTimer.milliseconds();
 
 	if (Pi::game->UpdateTimeAccel())
 		accumulator = 0; // fix for huge pauses 10000x -> 1x
@@ -1196,13 +1210,6 @@ SceneGraph::Model *Pi::FindModel(const std::string &name, bool allowPlaceholder)
 	return m;
 }
 
-const char Pi::SAVE_DIR_NAME[] = "savefiles";
-
-std::string Pi::GetSaveDir()
-{
-	return FileSystem::JoinPath(FileSystem::GetUserDir(), Pi::SAVE_DIR_NAME);
-}
-
 // request that the game is ended as soon as safely possible
 void Pi::RequestEndGame()
 {
@@ -1220,10 +1227,36 @@ void Pi::RequestQuit()
 
 void Pi::SetView(View *v)
 {
+	// TODO: Should it be an error or warning to switch the view to itself?
+	View *previousView = currentView;
+
 	if (currentView) currentView->Detach();
 	currentView = v;
 	if (currentView) currentView->Attach();
-	LuaEvent::Queue("onViewChanged");
+	LuaEvent::Queue("onViewChanged",
+	                currentView? currentView->GetViewName().c_str() : "",
+	                previousView? previousView->GetViewName().c_str() : "");
+
+}
+
+bool Pi::SetView(const std::string& target)
+{
+	if (!target.compare("WorldView")) {
+		Pi::SetView(Pi::game->GetWorldView());
+	} else if (!target.compare("StationView")) {
+		Pi::SetView(Pi::game->GetSpaceStationView());
+	} else if (!target.compare("InfoView")) {
+		Pi::SetView(Pi::game->GetInfoView());
+	} else if (!target.compare("DeathView")) {
+		Pi::SetView(Pi::game->GetDeathView());
+	} else if (!target.compare("SectorView")) {
+		Pi::SetView(Pi::game->GetSectorView());
+	} else if (!target.compare("SystemView")) {
+		Pi::SetView(Pi::game->GetSystemView());
+	} else {
+		return false;
+	}
+	return true;
 }
 
 void Pi::OnChangeDetailLevel()

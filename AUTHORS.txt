@@ -65,6 +65,7 @@ The Pioneer Developers are:
 * Jon Jenkins
 * Joshua Mathews
 * Jost Triller
+* K. Eugene Carlson
 * Karl Fogelmark
 * Kimmo Kotajärvi
 * Konrad Mruk
@@ -80,6 +81,7 @@ The Pioneer Developers are:
 * Marcus de Roos
 * Maxim aka Max5377
 * McPain
+* Michael Werle
 * Michele Botticelli
 * Michele Fanti
 * Miha Vitorovič
@@ -114,6 +116,7 @@ The Pioneer Developers are:
 * Sukender (Benoit Neil)
 * Szilárd Bálint
 * Taiki Kim
+* Tatjam
 * Taylor Talkington
 * Thierry Dupré
 * Tim Jones
@@ -132,7 +135,7 @@ The Pioneer Developers are:
 Licensing
 =========
 
-Copyright © 2008-2024 Pioneer Developers
+Copyright © 2008-2025 Pioneer Developers
 Portions copyright © 2013-2014 Meteoric Games Ltd.
 
 Pioneer's core code and extension modules are licensed under the terms of the
@@ -154,7 +157,7 @@ Pioneer includes the following third-party software:
   Copyright (C) 2002, Lev Povalahev
   Licensed under the Modified BSD licence (see licenses/GLEW.txt)
 
-  atomic_queue - C++ lockless queue
+  atomic_queue v1.6.4 - C++ lockless queue
   Copyright (c) 2019 Maxim Egorushkin
   Licensed under the MIT license (see contrib/atomic_queue/LICENSE)
 

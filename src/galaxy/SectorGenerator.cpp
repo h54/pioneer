@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "SectorGenerator.h"
@@ -44,12 +44,13 @@ bool SectorCustomSystemsGenerator::Apply(Random &rng, RefCountedPtr<Galaxy> gala
 		s.m_seed = cs->seed;
 
 		if (cs->want_rand_explored) {
+
 			/*
 			 * 0 - ~500ly from sol: explored
 			 * ~500ly - ~700ly (65-90 sectors): gradual
 			 * ~700ly+: unexplored
 			 */
-			if (((dist <= Square(90)) && (dist <= Square(65) || rng.Int32(dist) <= Square(40))) || galaxy->GetFactions()->IsHomeSystem(SystemPath(sx, sy, sz, sysIdx)))
+			if (((dist <= Square(m_GalaxyExploredMax)) && (dist <= Square(m_GalaxyExploredMin) || rng.Int32(dist) <= Square(m_GalaxyExploredMix))) || galaxy->GetFactions()->IsHomeSystem(SystemPath(sx, sy, sz, sysIdx)))
 				s.m_explored = StarSystem::eEXPLORED_AT_START;
 			else
 				s.m_explored = StarSystem::eUNEXPLORED;
@@ -171,7 +172,7 @@ bool SectorRandomSystemsGenerator::Apply(Random &rng, RefCountedPtr<Galaxy> gala
 		 * ~500ly - ~700ly (65-90 sectors): gradual
 		 * ~700ly+: unexplored
 		 */
-		if (((dist <= Square(90)) && (dist <= Square(65) || rng.Int32(dist) <= Square(40))) || galaxy->GetFactions()->IsHomeSystem(SystemPath(sx, sy, sz, customCount + i)))
+		if (((dist <= Square(m_GalaxyExploredMax)) && (dist <= Square(m_GalaxyExploredMin) || rng.Int32(dist) <= Square(m_GalaxyExploredMix))) || galaxy->GetFactions()->IsHomeSystem(SystemPath(sx, sy, sz, customCount + i)))
 			s.m_explored = StarSystem::eEXPLORED_AT_START;
 		else
 			s.m_explored = StarSystem::eUNEXPLORED;

@@ -1,4 +1,4 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 local Engine = require 'Engine'
 local Format = require 'Format'
@@ -79,15 +79,10 @@ ui.fonts = {
 -- Returns:
 --   size - Vector2, the size of the text when rendered
 --
-function ui.calcTextSize(text, font, size)
-	if size == nil and type(font) == "table" then
-		size = font.size
-		font = font.name
-	end
-
+function ui.calcTextSize(text, font, wrapWidth)
 	local pushed = false
-	if font then pushed = pigui:PushFont(font, size) end
-	local ret = pigui.CalcTextSize(text)
+	if font then pushed = pigui:PushFont(font.name, font.size) end
+	local ret = pigui.CalcTextSize(text, wrapWidth)
 	if pushed then pigui:PopFont() end
 
 	return ret
@@ -344,6 +339,42 @@ ui.Format = {
 	Volume = function(number, places)
 		return ui.Format.Number(number, places or 1) .. lc.UNIT_CUBIC_METERS
 	end,
+	-- Format an Area quantity, scaling from square meters to square megameters
+	-- Returns the formatted value, the units, and the number of digits following the decimal point
+	AreaUnit= function(area, digits)
+		local a = math.abs(area)
+		local d = 0
+		local u = lc.UNIT_SQUARE_METERS
+		local div = 1
+		if a < 1e2 then
+			d = 2
+			u = lc.UNIT_SQUARE_METERS
+		elseif a < 1e4 then
+			d = 0
+			u = lc.UNIT_SQUARE_METERS
+		elseif a < 1e8 then
+			d = 2
+			u = lc.UNIT_SQUARE_KILOMETERS
+			div = 1e6
+		elseif a < 1e10 then
+			d = 0
+			u = lc.UNIT_SQUARE_KILOMETERS
+			div = 1e6
+		elseif a < 1e14 then
+			d = 2
+			u = lc.UNIT_SQUARE_MEGAMETERS
+			div = 1e12
+		else
+			d = 0
+			u = lc.UNIT_SQUARE_MEGAMETERS
+			div = 1e12
+		end
+		return ui.Format.Number(area / div, digits or d), u
+	end,
+	Area = function(area, digits)
+		local a, u = ui.Format.AreaUnit(area, digits)
+		return a .. ' ' .. u
+	end,
 	SystemPath = function(path)
 		local sectorString = "("..path.sectorX..", "..path.sectorY..", "..path.sectorZ..")"
 		if path:IsSectorPath() then
@@ -434,7 +465,7 @@ ui.addStyledText = function(position, anchor_horizontal, anchor_vertical, text, 
 
 	if tooltip and (ui.isMouseHoveringWindow() or not ui.isAnyWindowHovered()) and tooltip ~= "" then
 		if pigui.IsMouseHoveringRect(position, position + size, true) then
-			ui.maybeSetTooltip(tooltip)
+			ui.setTooltip(tooltip)
 		end
 	end
 
@@ -451,7 +482,7 @@ end
 --   tooltip - string, tooltip text to display to the user
 --   font    - optional font table, used to display the given tooltip
 --
-function ui.maybeSetTooltip(tooltip, font)
+function ui.setTooltip(tooltip, font)
 	if not Input.GetMouseCaptured() then
 		ui.withFont(font or ui.fonts.pionillium.details, function()
 			pigui.SetTooltip(tooltip)
@@ -459,4 +490,20 @@ function ui.maybeSetTooltip(tooltip, font)
 	end
 end
 
-ui.setTooltip = ui.maybeSetTooltip
+--
+-- Function: setItemTooltip
+--
+-- Displays a tooltip in the UI if the last submitted "item" is hovered with a short delay.
+-- The function does not display a tooltip if the mouse is currently captured by the game.
+--
+-- Parameters:
+--   tooltip - string, tooltip text to display to the user
+--   font    - optional font table, used to display the given tooltip
+--
+function ui.setItemTooltip(tooltip, font)
+	if not Input.GetMouseCaptured() then
+		ui.withFont(font or ui.fonts.pionillium.details, function()
+			pigui.SetItemTooltip(tooltip)
+		end)
+	end
+end

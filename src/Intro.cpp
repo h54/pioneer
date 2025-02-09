@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Intro.h"
@@ -16,18 +16,13 @@
 
 class PiRngWrapper {
 public:
-	PiRngWrapper(size_t maxValue) :
-		maxVal(maxValue) {}
 	typedef unsigned int result_type;
 	static constexpr unsigned int min() { return 0; }
 	static constexpr unsigned int max() { return std::numeric_limits<uint32_t>::max(); }
 	unsigned int operator()()
 	{
-		return Pi::rng.Int32(maxVal);
+		return Pi::rng.Int32();
 	}
-
-private:
-	const int32_t maxVal;
 };
 
 Intro::Intro(Graphics::Renderer *r, int width, int height) :
@@ -46,7 +41,7 @@ Intro::Intro(Graphics::Renderer *r, int width, int height) :
 	m_skin.SetDecal("pioneer");
 	m_skin.SetLabel(Lang::PIONEER);
 
-	for (auto i : ShipType::player_ships) {
+	for (const auto &i : ShipType::player_ships) {
 		SceneGraph::Model *model = Pi::FindModel(ShipType::types[i].modelName)->MakeInstance();
 		model->SetThrust(vector3f(0.f, 0.f, -0.6f), vector3f(0.f));
 		if (ShipType::types[i].isGlobalColorDefined) model->SetThrusterColor(ShipType::types[i].globalThrusterColor);
@@ -63,14 +58,10 @@ Intro::Intro(Graphics::Renderer *r, int width, int height) :
 			}
 			model->SetThrusterColor(dir, ShipType::types[i].directionThrusterColor[j]);
 		}
-		const Uint32 numMats = model->GetNumMaterials();
-		for (Uint32 m = 0; m < numMats; m++) {
-			RefCountedPtr<Graphics::Material> mat = model->GetMaterialByIndex(m);
-		}
 		m_models.push_back(model);
 	}
 
-	std::shuffle(m_models.begin(), m_models.end(), PiRngWrapper(m_models.size()));
+	std::shuffle(m_models.begin(), m_models.end(), PiRngWrapper());
 
 	m_modelIndex = 0;
 

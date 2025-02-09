@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _STARSYSTEM_H
@@ -41,7 +41,7 @@ public:
 	void ExportToLua(const char *filename);
 
 	const std::string &GetName() const { return m_name; }
-	std::vector<std::string> GetOtherNames() const { return m_other_names; }
+	const std::vector<std::string>& GetOtherNames() const { return m_other_names; }
 	SystemPath GetPathOf(const SystemBody *sbody) const;
 	SystemBody *GetBodyByPath(const SystemPath &path) const;
 	static void ToJson(Json &jsonObj, StarSystem *);
@@ -86,6 +86,8 @@ public:
 	ExplorationState GetExplored() const { return m_explored; }
 	double GetExploredTime() const { return m_exploredTime; }
 	void ExploreSystem(double time);
+
+	bool HasCustomBodies() const { return m_hasCustomBodies; }
 
 	fixed GetMetallicity() const { return m_metallicity; }
 	fixed GetIndustrial() const { return m_industrial; }
@@ -169,8 +171,6 @@ private:
 
 public:
 	GeneratorAPI(const SystemPath &path, RefCountedPtr<Galaxy> galaxy, StarSystemCache *cache, Random &rand);
-
-	bool HasCustomBodies() const { return m_hasCustomBodies; }
 
 	void SetCustom(bool isCustom, bool hasCustomBodies)
 	{

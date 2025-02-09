@@ -67,6 +67,10 @@
     "description": "Market header when buying items",
     "message": "Disponible Para Compra"
   },
+  "AVAILABLE_STOCK": {
+    "description": "Market stat showing number of items in stock",
+    "message": "Available Stock"
+  },
   "AVERAGE": {
     "description": "",
     "message": "Mediocre"
@@ -81,6 +85,14 @@
   },
   "BUY": {
     "description": "Commodities and equipment prices",
+    "message": "Comprar"
+  },
+  "BUY_EQUIP": {
+    "description": "Button text to buy selected equipment. May be used in a singular or plural context.",
+    "message": "Buy {name}"
+  },
+  "BUY_PRICE": {
+    "description": "Title for buy-price column in commodity market",
     "message": "Comprar"
   },
   "BUY_SHIP": {
@@ -106,6 +118,10 @@
   "CANNOT_SELL_ITEM": {
     "description": "",
     "message": "Este artículo no se puede vender"
+  },
+  "CANNOT_SELL_NONEMPTY_EQUIP": {
+    "description": "",
+    "message": "Cannot sell an equipment item unless it is empty."
   },
   "CANT_FIND_PATH": {
     "description": "Message when restoring savegame, file path",
@@ -219,6 +235,10 @@
     "description": "",
     "message": "Cerrar"
   },
+  "COLLAPSE": {
+    "description": "Close / collapse an open folder or group",
+    "message": "Collapse"
+  },
   "COLOR": {
     "description": "",
     "message": "Color"
@@ -231,6 +251,10 @@
     "description": "",
     "message": "Comandante"
   },
+  "COMMODITY": {
+    "description": "Title for commodity name column in commodity market",
+    "message": "Commodity"
+  },
   "COMMODITY_MARKET": {
     "description": "",
     "message": "Mercado de Productos"
@@ -238,6 +262,18 @@
   "COMMODITY_TRADE_ANALYSIS": {
     "description": "",
     "message": "Análisis de comercio de productos básicos de:"
+  },
+  "COMMODITY_TRADE_ANALYSIS_SYSTEM": {
+    "description": "",
+    "message": "System-wide trade analysis of:"
+  },
+  "COMMODITY_TRADE_ANALYSIS_TOOLTIP_1": {
+    "description": "",
+    "message": "Average interstellar trade flow for all commodities bought and sold in the system."
+  },
+  "COMMODITY_TRADE_ANALYSIS_TOOLTIP_2": {
+    "description": "",
+    "message": "Data may not reflect individual market prices."
   },
   "COMPETENT": {
     "description": "Combat rating",
@@ -279,6 +315,10 @@
     "description": "",
     "message": "Opciones de Control"
   },
+  "COPY": {
+    "description": "As for clipboard",
+    "message": "Copy"
+  },
   "COULD_NOT_DELETE_SAVE": {
     "description": "",
     "message": "Could not delete save"
@@ -288,12 +328,20 @@
     "message": "Could not find system body for frame"
   },
   "COULD_NOT_LOAD_GAME": {
-    "description": "",
+    "description": "Label indicating a specific file could not be loaded",
     "message": "No se pudo cargar el juego: "
+  },
+  "COULD_NOT_LOAD_SAVE_FILES": {
+    "description": "Label indicating the list of save files could not be loaded",
+    "message": "Could not load save files"
   },
   "COULD_NOT_READ_THE_SAVE_VERSION": {
     "description": "Message when restoring savegame",
     "message": "Could not read the save version"
+  },
+  "COULD_NOT_SAVE_GAME": {
+    "description": "Label indicating a specific file could not be saved",
+    "message": "Could not save game: "
   },
   "CREDIBLE": {
     "description": "For player reputation",
@@ -315,13 +363,17 @@
     "description": "",
     "message": "Tripulación"
   },
+  "CRIME": {
+    "description": "Heading introducing a single crime name or list of crime names",
+    "message": "Crime"
+  },
   "CRIMINAL": {
     "description": "Legal status of player",
     "message": "Criminal"
   },
   "CRIMINAL_RECORD": {
-    "description": "Past crimes / crime history of character",
-    "message": "Registro Criminal"
+    "description": "Heading for past crimes / crime history of character, proper noun",
+    "message": "Criminal Record"
   },
   "CURRENT_FUEL": {
     "description": "For hyperjump planner",
@@ -338,6 +390,10 @@
   "CURRENT_SYSTEM": {
     "description": "For hyperjump planner",
     "message": "Sistema actual"
+  },
+  "CUT": {
+    "description": "As for clipboard",
+    "message": "Cut"
   },
   "DANGEROUS": {
     "description": "Player combat rating",
@@ -461,7 +517,7 @@
   },
   "D_DAYS_LEFT": {
     "description": "",
-    "message": "Días restantes: %d"
+    "message": "Time left:"
   },
   "ECONOMY_TRADE": {
     "description": "",
@@ -523,6 +579,10 @@
     "description": "",
     "message": "Equipo"
   },
+  "EQUIPMENT_CAPACITY": {
+    "description": "The equipment capacity of a ship",
+    "message": "Equipment Capacity"
+  },
   "EQUIPMENT_MARKET": {
     "description": "",
     "message": "Mercado de Equipos"
@@ -551,6 +611,10 @@
     "description": "",
     "message": "Salir del iuego"
   },
+  "EXPAND": {
+    "description": "Open / expand a collapsed folder or group",
+    "message": "Expand"
+  },
   "EXPERIENCED": {
     "description": "For player reputation",
     "message": "Experimentado"
@@ -570,6 +634,10 @@
   "FAILED": {
     "description": "When failed mission",
     "message": "Fallida"
+  },
+  "FAILED_TO_RECOVER_SOME_EQUIPMENT": {
+    "description": "",
+    "message": "Failed to recover some equipment"
   },
   "FEATURE_ACCESSORIES": {
     "description": "Face feature for FaceGenerator in the PersonalInfo view",
@@ -630,6 +698,10 @@
   "FINANCE": {
     "description": "Financial statement of player, e.g. cash",
     "message": "Finanzas"
+  },
+  "FINE": {
+    "description": "Cost of a criminal action",
+    "message": "Fine"
   },
   "FLIGHTLOG_DOCKING": {
     "description": "Used in Flight Log, to indicate player's position. 'primary_info' is a station name",
@@ -714,6 +786,10 @@
   "FULL_SCREEN": {
     "description": "",
     "message": "Pantalla completa"
+  },
+  "GAME_OPTIONS": {
+    "description": "GameOptions - tooltip for the Game Options tab in the Settings Window",
+    "message": "Game Options"
   },
   "GAME_TIME": {
     "description": "",
@@ -935,6 +1011,10 @@
     "description": "Tooltip: Sidereal camera view",
     "message": "Vista sideral"
   },
+  "HUD_BUTTON_SWITCH_TO_CURRENT_SYSTEM": {
+    "description": "Tooltip: Switch to current system",
+    "message": "Switch to current system"
+  },
   "HUD_BUTTON_SWITCH_TO_GALAXY_MAP": {
     "description": "Tooltip: Switch to galaxy map",
     "message": "Cambiar a mapa de la galaxia"
@@ -942,6 +1022,10 @@
   "HUD_BUTTON_SWITCH_TO_SECTOR_MAP": {
     "description": "Tooltip: Switch to sector map",
     "message": "Cambiar a mapa de sector"
+  },
+  "HUD_BUTTON_SWITCH_TO_SELECTED_SYSTEM": {
+    "description": "Tooltip: Switch to selected system",
+    "message": "Switch to selected system"
   },
   "HUD_BUTTON_SWITCH_TO_SYSTEM_MAP": {
     "description": "Tooltip: Switch to system map",
@@ -1111,6 +1195,18 @@
     "description": "Tooltip: Current distance of the radar.",
     "message": "Distancia activa de radar"
   },
+  "HUD_RADAR_TOGGLE_MODE": {
+    "description": "Tooltip: Toggle radar mode.",
+    "message": "Toggle radar between 2D and 3D modes"
+  },
+  "HUD_RADAR_ZOOM_MODE_AUTOMATIC": {
+    "description": "Tooltip: Current radar zoom mode.",
+    "message": "Automatic zoom"
+  },
+  "HUD_RADAR_ZOOM_MODE_MANUAL": {
+    "description": "Tooltip: Current radar zoom mode.",
+    "message": "Manual zoom"
+  },
   "HUD_REQUEST_TIME_ACCEL": {
     "description": "Tooltip: Request time acceleration {time}",
     "message": "Solicitar aceleración temporal: {time}"
@@ -1195,6 +1291,10 @@
     "description": "",
     "message": "Alcance hiperespacial"
   },
+  "ILLEGAL_COMMODITIES": {
+    "description": "Commodities illegal in the current system or polity",
+    "message": "Illegal Commodities"
+  },
   "ILLEGAL_IN_SYSTEM": {
     "description": "An illegal action or commodity",
     "message": "Ilegal en el Sistema"
@@ -1227,6 +1327,14 @@
     "description": "Ship jump status",
     "message": "Iniciado"
   },
+  "INSTALL": {
+    "description": "Install something",
+    "message": "Install"
+  },
+  "INSTALLED": {
+    "description": "Label indicating something is installed",
+    "message": "Installed"
+  },
   "INSUFFICIENT_FUEL": {
     "description": "Ship jump status",
     "message": "Fuel insuficiente"
@@ -1251,9 +1359,13 @@
     "description": "",
     "message": "En la bodega de carga"
   },
+  "IN_HOLD": {
+    "description": "Column title of the Commodity Market screen",
+    "message": "In hold"
+  },
   "IN_STOCK": {
-    "description": "",
-    "message": "En Almacén"
+    "description": "Column title of Commodity and Ship Equipment markets showing current station stock level.",
+    "message": "Stock"
   },
   "IN_SYSTEM": {
     "description": "Used in flight log, show which star system we are/were in",
@@ -1318,6 +1430,14 @@
   "LAWFULNESS": {
     "description": "Character parameter",
     "message": "Lawfulness"
+  },
+  "LEGAL_RULES": {
+    "description": "Refers to laws, rules and regulations",
+    "message": "Legal rules applicable in station controlled space. Laws are sensor enforced within a distance of: {distance}"
+  },
+  "LEGAL_RULES_AND_REGULATIONS": {
+    "description": "Heading on a tab, keep it short",
+    "message": "Rules and Regulations"
   },
   "LEGAL_STATUS": {
     "description": "",
@@ -1725,11 +1845,15 @@
   },
   "OUTSTANDING_FINES": {
     "description": "Unpaid fines for crimes committed",
-    "message": "Multas espectaculares"
+    "message": "Outstanding Fines"
   },
   "OUT_OF_RANGE": {
     "description": "Ship jump status",
     "message": "Fuera de rango"
+  },
+  "OUT_OF_STOCK": {
+    "description": "Equipment availability",
+    "message": "Out of stock"
   },
   "OVERVIEW_NAME_FILTER": {
     "description": "Filter overview window entries by name",
@@ -1770,6 +1894,10 @@
   "PASSENGER_CABIN_CAPACITY": {
     "description": "Entry for ship info",
     "message": "Capacidad de la cabina de pasajeros"
+  },
+  "PASTE": {
+    "description": "As for clipboard",
+    "message": "Paste"
   },
   "PATH_FOUND_BUT_VERIFICATION_FAILED": {
     "description": "Message when restoring savegame",
@@ -1834,6 +1962,10 @@
   "POOR": {
     "description": "Player combat rating",
     "message": "Inepto"
+  },
+  "POSESSION_OF_COMMODITIES_ILLEGAL": {
+    "description": "",
+    "message": "Possession of certain commodities is illegal in this system."
   },
   "POSITION": {
     "description": "The job title/position of crew memeber",
@@ -1955,9 +2087,9 @@
     "description": "",
     "message": "Reparar {damage}% de daño del casco por {price}"
   },
-  "REPLACE_EQUIPMENT_WITH": {
+  "REPLACE_EQUIPMENT": {
     "description": "Market header when replacing equipped items",
-    "message": "Reemplazar Equipo Con"
+    "message": "Replace Equipment"
   },
   "REPUTATION": {
     "description": "",
@@ -1982,6 +2114,14 @@
   "RESET_PREVIEW": {
     "description": "Paintshop button",
     "message": "Reiniciar Vista Previa"
+  },
+  "RESET_VIEW_ON_HYPERSPACE_EXIT": {
+    "description": "Reset View on Hyperspace Exit option",
+    "message": "Reset View on Hyperspace Exit"
+  },
+  "RESET_VIEW_ON_HYPERSPACE_EXIT_DESC": {
+    "description": "The tooltip of Reset View on Hyperspace Exit in the settings menu",
+    "message": "Reset view to main game view when exiting from hyperspace"
   },
   "RETURN_TO_GAME": {
     "description": "",
@@ -2027,6 +2167,14 @@
     "description": "",
     "message": "Guardar"
   },
+  "SAVED_GAMES": {
+    "description": "Header for save/load window",
+    "message": "Saved Games"
+  },
+  "SAVE_AS": {
+    "description": "",
+    "message": "Save As"
+  },
   "SAVE_DELETED_SUCCESSFULLY": {
     "description": "",
     "message": "Save deleted successfully"
@@ -2046,6 +2194,10 @@
   "SELECT": {
     "description": "",
     "message": "Seleccionar"
+  },
+  "SELECTED": {
+    "description": "Label indicating the following item is selected",
+    "message": "Selected"
   },
   "SELECTED_SAVE_DOESNT_EXISTS": {
     "description": "",
@@ -2075,9 +2227,17 @@
     "description": "Commodities and equipment prices",
     "message": "Vender"
   },
+  "SELL_EQUIP": {
+    "description": "Button text to sell installed equipment. May be used in a singular or plural context.",
+    "message": "Sell {name}"
+  },
   "SELL_EQUIPPED": {
     "description": "Button text to sell selected ship equipment",
     "message": "Vender lo Equipado"
+  },
+  "SELL_PRICE": {
+    "description": "Title for sell-price column in commodity market",
+    "message": "Vender"
   },
   "SENSORS": {
     "description": "Crew skill",
@@ -2154,6 +2314,10 @@
   "SHIP_TYPE": {
     "description": "",
     "message": "Tipo de Nave"
+  },
+  "SHOW_AUTOSAVES": {
+    "description": "Button tooltip indicating whether to show autosave files",
+    "message": "Show Autosaves"
   },
   "SIMULATING_UNIVERSE_EVOLUTION_N_BYEARS": {
     "description": "",
@@ -2269,7 +2433,7 @@
   },
   "TECH_LEVEL": {
     "description": "System view label for technology level",
-    "message": "Nivel de tecnología"
+    "message": "Tech Level"
   },
   "TEXTURE_COMPRESSION": {
     "description": "",
@@ -2286,6 +2450,10 @@
   "THERE_WERE_ERRORS_IN_RECOVERY": {
     "description": "Message when restoring savegame",
     "message": "There were errors in recovery:"
+  },
+  "THESE_ITEMS_ARE_PUNISHABLE_BY_FINE": {
+    "description": "",
+    "message": "Purchase, sale, and transportation of these items is punishable by a fine and possible confiscation"
   },
   "THE_SHIP_IS_UNDER_STATION_CONTROL_COMMANDER": {
     "description": "",
@@ -2366,6 +2534,10 @@
   "TRADING_TO": {
     "description": "Indicates the destination system of a commodity trade.",
     "message": "A {system}:"
+  },
+  "TRANSFER_FUEL": {
+    "description": "Label indicating the ability to transfer fuel between equipment tanks",
+    "message": "Transfer Fuel"
   },
   "TRUSTWORTHY": {
     "description": "For player reputation",
@@ -2462,6 +2634,10 @@
   "VISIT_REPAIR_SERVICES": {
     "description": "Ship Repair tab button.",
     "message": "Visitar Servicios de Reparación"
+  },
+  "VOLUME": {
+    "description": "The volume property of some object",
+    "message": "Volume"
   },
   "VSYNC": {
     "description": "For the checkbox in settings window",

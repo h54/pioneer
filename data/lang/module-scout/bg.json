@@ -259,6 +259,10 @@
     "description": "",
     "message": "Опасност:"
   },
+  "DATA_COLLECTED_PROGRESS": {
+    "description": "Label for scan card progress bar",
+    "message": "Събрани данни: {percent_completed}%"
+  },
   "DEADLINE": {
     "description": "",
     "message": "Краен срок:"

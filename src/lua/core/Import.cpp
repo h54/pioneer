@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "CoreFwdDecl.h"
@@ -121,7 +121,7 @@ static std::string get_caller(lua_State *L, int depth = 1)
  * This function discards the trailing component of the directory path. If you
  * wish to retain it, ensure the path string ends with '/'.
  */
-static std::string path_to_module(std::string path)
+static std::string path_to_module(const std::string &path)
 {
 	std::string module_name;
 
@@ -350,7 +350,7 @@ static bool lua_import_module(lua_State *L, const std::string &moduleName)
 	lua_pop(L, 1);
 
 	// Load the module from the Core c++ module cache
-	if (load_from_core(L, moduleName.c_str())) {
+	if (load_from_core(L, moduleName)) {
 		DEBUG_INDENTED_PRINTF("-> loaded module %s from C++ core modules\n", moduleName.c_str());
 		DEBUG_INDENT_DECREASE();
 		LUA_DEBUG_END(L, 1);
@@ -361,7 +361,7 @@ static bool lua_import_module(lua_State *L, const std::string &moduleName)
 	std::string errorMsg = "could not load module '" + moduleName + "'";
 	errorMsg += "\n\tno entry Imports[\"" + moduleName + "\"]";
 	errorMsg += "\n\tno field package.core." + moduleName;
-	for (auto path : triedPaths) {
+	for (const auto &path : triedPaths) {
 		errorMsg += "\n\tno file '" + path + "'";
 	}
 	lua_pushstring(L, errorMsg.c_str());
@@ -446,7 +446,7 @@ static std::string make_module_name(lua_State *L, int idx)
 	return name;
 }
 
-static std::string get_caller_module_name(lua_State *L, int depth = 1)
+std::string pi_lua_get_caller_module(lua_State *L, int depth)
 {
 	std::string caller = get_caller(L, depth);
 	std::string_view sv(caller);
@@ -458,7 +458,7 @@ static std::string get_caller_module_name(lua_State *L, int depth = 1)
 
 static int l_reimport_package(lua_State *L)
 {
-	std::string name = lua_gettop(L) ? make_module_name(L, 1) : get_caller_module_name(L);
+	std::string name = lua_gettop(L) ? make_module_name(L, 1) : pi_lua_get_caller_module(L);
 
 	// Get the module name -> file path mapping
 	std::string path = get_path_cache(L, name);
@@ -483,7 +483,7 @@ static int l_reimport_package(lua_State *L)
 static int l_get_module_name(lua_State *L)
 {
 	int depth = luaL_optinteger(L, 1, 1);
-	lua_pushstring(L, get_caller_module_name(L, depth > 1 ? depth : 1).c_str());
+	lua_pushstring(L, pi_lua_get_caller_module(L, depth > 1 ? depth : 1).c_str());
 	return 1;
 }
 

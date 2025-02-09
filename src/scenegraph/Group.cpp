@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Group.h"
@@ -133,7 +133,7 @@ namespace SceneGraph {
 		}
 	}
 
-	void Group::Render(const std::vector<matrix4x4f> &trans, const RenderData *rd)
+	void Group::RenderInstanced(const std::vector<matrix4x4f> &trans, const RenderData *rd)
 	{
 		RenderChildren(trans, rd);
 	}
@@ -143,7 +143,7 @@ namespace SceneGraph {
 		PROFILE_SCOPED()
 		for (std::vector<Node *>::iterator itr = m_children.begin(), itEnd = m_children.end(); itr != itEnd; ++itr) {
 			if ((*itr)->GetNodeMask() & rd->nodemask)
-				(*itr)->Render(trans, rd);
+				(*itr)->RenderInstanced(trans, rd);
 		}
 	}
 

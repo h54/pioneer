@@ -1,4 +1,4 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 --
@@ -131,6 +131,8 @@ Event.New = function()
 	--
 	--   stable
 	--
+	---@param name string
+	---@param cb function
 	self.Register = function (name, cb)
 		super.Register(self, name, package.modulename(2), cb)
 	end
@@ -237,6 +239,28 @@ Event.New = function()
 
 	return self
 end
+
+--
+-- Event: onEnterMainMenu
+--
+-- Triggered when the menu is loaded.
+--
+-- > local onMenuLoaded = function () ... end
+-- > Event.Register("onEnterMainMenu", onMenuLoaded)
+--
+-- onMenuLoaded is triggered once the menu is fully available
+--
+-- This is a good place to perform startup checks, including checking for
+-- errors and making them visible to the player
+--
+-- Availability:
+--
+--   2025-02-03
+--
+-- Status:
+--
+--   stable
+--
 
 --
 -- Event: onGameStart
@@ -769,30 +793,6 @@ end
 -- Availability:
 --
 --   alpha 32
---
--- Status:
---
---   experimental
---
-
---
--- Event: onShipEquipmentChanged
---
--- Triggered when a ship's equipment set changes.
---
--- > local onShipEquipmentChanged = function (ship, equipType) ... end
--- > Event.Register("onShipEquipmentChanged", onShipEquipmentChanged)
---
--- Parameters:
---
---   ship - the <Ship> whose equipment just changed
---
---   equipType - The <EquipType> item that was added or removed,
---   or nil if the change involved multiple types of equipment
---
--- Availability:
---
---   alpha 15
 --
 -- Status:
 --

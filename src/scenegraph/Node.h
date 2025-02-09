@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _NODE_H
@@ -84,7 +84,7 @@ namespace SceneGraph {
 		virtual void Accept(NodeVisitor &v);
 		virtual void Traverse(NodeVisitor &v);
 		virtual void Render(const matrix4x4f &trans, const RenderData *rd) {}
-		virtual void Render(const std::vector<matrix4x4f> &trans, const RenderData *rd) {}
+		virtual void RenderInstanced(const std::vector<matrix4x4f> &trans, const RenderData *rd) {}
 		void DrawAxes();
 		void SetName(const std::string &name) { m_name = name; }
 		const std::string &GetName() const { return m_name; }

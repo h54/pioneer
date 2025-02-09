@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _PI_H
@@ -150,10 +150,7 @@ public:
 	static bool AreHudTrailsDisplayed() { return hudTrailsDisplayed; }
 	static void SetHudTrailsDisplayed(bool state) { hudTrailsDisplayed = state; }
 
-	static std::string GetSaveDir();
 	static SceneGraph::Model *FindModel(const std::string &, bool allowPlaceholder = true);
-
-	static const char SAVE_DIR_NAME[];
 
 	static LuaSerializer *luaSerializer;
 	static LuaTimer *luaTimer;
@@ -171,6 +168,7 @@ public:
 	static int statNumPatches;
 
 	static void SetView(View *v);
+	static bool SetView(const std::string& view_name);
 	static View *GetView() { return currentView; }
 
 	static void SetAmountBackgroundStars(const float pc)

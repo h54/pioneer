@@ -1,4 +1,4 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txtl
 
 local ui = require 'pigui'
@@ -33,7 +33,7 @@ end
 -- Title text is gray, followed by the variable text:
 local function headerText(title, text, wrap)
 	if not text then return end
-	ui.textColored(ui.theme.colors.grey, string.gsub(title, ":", "") .. ":")
+	ui.textColored(ui.theme.colors.fontDim, string.gsub(title, ":", "") .. ":")
 	ui.sameLine()
 	if wrap then
 		ui.textWrapped(text)

@@ -1,11 +1,13 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _LUAUTILS_H
 #define _LUAUTILS_H
 
 // to mask __attribute on MSVC
+#include "core/Log.h"
 #include "core/macros.h"
+#include "DateTime.h"
 
 #include <lua.hpp>
 #include <string>
@@ -63,6 +65,9 @@ inline void pi_lua_settable(lua_State *l, const char *key, const char *value)
 	lua_rawset(l, -3);
 }
 
+/** Push a DateTime as a new table into \p l. */
+void pi_lua_push_date_time(lua_State *l, const Time::DateTime &dt);
+
 void pi_lua_open_standard_base(lua_State *l);
 
 // pushes a read-only proxy table that points at the table at <index>
@@ -83,6 +88,8 @@ void pi_lua_warn(lua_State *l, const char *format, ...) __attribute((format(prin
 
 bool pi_lua_split_table_path(lua_State *l, const std::string &path);
 
+std::string pi_lua_get_caller_module(lua_State *l, int depth = 1);
+
 int secure_trampoline(lua_State *l);
 
 std::string pi_lua_traceback(lua_State *l, int top);
@@ -90,7 +97,7 @@ std::string pi_lua_dumpstack(lua_State *l, int top);
 void pi_lua_printvalue(lua_State *l, int idx);
 void pi_lua_stacktrace(lua_State *l);
 
-#ifdef DEBUG
+#ifndef NDEBUG
 #define LUA_DEBUG_START(luaptr) const int __luaStartStackDepth = lua_gettop(luaptr)
 #define LUA_DEBUG_END(luaptr, expectedStackDiff)                                                   \
 	do {                                                                                           \

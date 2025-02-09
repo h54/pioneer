@@ -1,16 +1,14 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "EnumStrings.h"
 #include "FileSystem.h"
 #include "Game.h"
 #include "GameSaveError.h"
-#include "LuaConstants.h"
 #include "LuaObject.h"
 #include "LuaTable.h"
 #include "LuaUtils.h"
 #include "Pi.h"
-#include "Planet.h"
 #include "Space.h"
 #include "SpaceStation.h"
 #include "Star.h"
@@ -20,6 +18,8 @@
 #include "galaxy/GalaxyCache.h"
 #include "galaxy/Sector.h"
 #include "galaxy/StarSystem.h"
+
+#include "profiler/Profiler.h"
 
 /*
  * Class: StarSystem
@@ -487,7 +487,7 @@ static int l_starsystem_attr_other_names(lua_State *l)
 	StarSystem *s = LuaObject<StarSystem>::CheckFromLua(1);
 	LuaTable names(l);
 	int i = 1;
-	for (std::string n : s->GetOtherNames()) {
+	for (const std::string &n : s->GetOtherNames()) {
 		LuaPush(l, i++);
 		LuaPush(l, n);
 		lua_settable(l, -3);

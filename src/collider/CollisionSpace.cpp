@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "CollisionSpace.h"
@@ -201,7 +201,11 @@ void CollisionSpace::CollideGeom(Geom *a, Geom *b, void (*callback)(CollisionCon
 	double r2 = b->GetGeomTree()->GetRadius();
 
 	if ((pos1 - pos2).Length() <= (r1 + r2)) {
-		a->Collide(b, callback);
+		std::vector<CollisionContact> contacts = a->Collide(b);
+
+		for (auto &contact : contacts) {
+			callback(&contact);
+		}
 	}
 }
 

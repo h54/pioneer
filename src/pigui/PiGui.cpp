@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "PiGui.h"
@@ -50,7 +50,7 @@ public:
 	{
 	}
 
-	virtual void OnExecute(TaskRange range) override
+	void OnExecute(TaskRange range) override
 	{
 		PROFILE_SCOPED()
 
@@ -64,7 +64,7 @@ public:
 class PiGui::RasterizeSVGTask : public Task, public CompleteNotifier {
 public:
 	// Rasterize an SVG file to a texture and upload to GPU on main thread
-	RasterizeSVGTask(std::string filename, int width, int height, Graphics::Texture *outputTexture) :
+	RasterizeSVGTask(const std::string &filename, int width, int height, Graphics::Texture *outputTexture) :
 		filename(filename),
 		width(width),
 		height(height),
@@ -73,7 +73,7 @@ public:
 	}
 
 	// Rasterize an SVG file to CPU buffer for use with font data
-	RasterizeSVGTask(std::string filename, int width, int height, PiFace *fontFace) :
+	RasterizeSVGTask(const std::string &filename, int width, int height, PiFace *fontFace) :
 		filename(filename),
 		width(width),
 		height(height),
@@ -96,7 +96,7 @@ public:
 		return true;
 	}
 
-	virtual void OnExecute(TaskRange range) override
+	void OnExecute(TaskRange range) override
 	{
 		PROFILE_SCOPED()
 
@@ -132,7 +132,7 @@ public:
 		}
 	}
 
-	virtual void OnComplete() override
+	void OnComplete() override
 	{
 		if (imageData)
 			delete[] imageData;

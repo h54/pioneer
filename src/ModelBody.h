@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _MODELBODY_H
@@ -31,7 +31,7 @@ public:
 	virtual ~ModelBody();
 	void SetPosition(const vector3d &p) override;
 	void SetOrient(const matrix3x3d &r) override;
-	virtual void SetFrame(FrameId fId) override;
+	void SetFrame(FrameId fId) override;
 	// Colliding: geoms are checked against collision space
 	void SetColliding(bool colliding);
 	bool IsColliding() const { return m_colliding; }
@@ -47,12 +47,10 @@ public:
 
 	void RenderModel(Graphics::Renderer *r, const Camera *camera, const vector3d &viewCoords, const matrix4x4d &viewTransform);
 
-	virtual void TimeStepUpdate(const float timeStep) override;
+	void TimeStepUpdate(const float timeStep) override;
 
 protected:
-	virtual void SaveToJson(Json &jsonObj, Space *space) override;
-
-	Shields *GetShields() const { return m_shields.get(); }
+	void SaveToJson(Json &jsonObj, Space *space) override;
 
 private:
 	void RebuildCollisionMesh();
@@ -69,7 +67,6 @@ private:
 	SceneGraph::Model *m_model;
 	std::vector<Geom *> m_dynGeoms;
 	SceneGraph::Animation *m_idleAnimation;
-	std::unique_ptr<Shields> m_shields;
 };
 
 #endif /* _MODELBODY_H */

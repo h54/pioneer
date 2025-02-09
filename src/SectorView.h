@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _SECTORVIEW_H
@@ -10,7 +10,7 @@
 #include "JsonFwd.h"
 
 #include "galaxy/SystemPath.h"
-#include "pigui/PiGuiView.h"
+#include "View.h"
 
 #include "vector3.h"
 #include "matrix4x4.h"
@@ -20,7 +20,7 @@ class Galaxy;
 class SectorMap;
 struct SectorMapContext;
 
-class SectorView : public PiGuiView, public DeleteEmitter {
+class SectorView : public View, public DeleteEmitter {
 public:
 	SectorView(Game *game);
 	SectorView(const Json &jsonObj, Game *game);
@@ -56,7 +56,7 @@ public:
 	void AddToRoute(const SystemPath &path);
 	bool RemoveRouteItem(const std::vector<SystemPath>::size_type element);
 	void ClearRoute();
-	std::vector<SystemPath> GetRoute();
+	const std::vector<SystemPath>& GetRoute() const;
 	const std::string AutoRoute(const SystemPath &start, const SystemPath &target, std::vector<SystemPath> &outRoute) const;
 	void SetDrawRouteLines(bool value);
 

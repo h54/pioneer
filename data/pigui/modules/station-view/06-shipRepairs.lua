@@ -1,4 +1,4 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local ui = require 'pigui'
@@ -327,7 +327,7 @@ local function drawPaintshop()
 
 				ui.dummy(verticalDummy)
 
-				ui.withStyleColors({["Text"] = priceColor }, function()
+				ui.withStyleColors({Text = priceColor }, function()
 					ui.text(l.PRICE.. ": " ..Format.Money(price, false))
 				end)
 				if ui.button(l.PURCHASE_PAINTJOB, Vector2(200, 36)) then

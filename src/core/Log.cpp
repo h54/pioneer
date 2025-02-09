@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Log.h"
@@ -35,7 +35,7 @@ Log::Logger::~Logger()
 		fclose(file);
 }
 
-bool Log::Logger::SetLogFile(std::string filename)
+bool Log::Logger::SetLogFile(const std::string &filename)
 {
 	FILE *stream = FileSystem::userFiles.OpenWriteStream(filename, FileSystem::FileSourceFS::WRITE_TEXT);
 	if (!stream) {

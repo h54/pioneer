@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "GasGiant.h"
@@ -135,7 +135,7 @@ public:
 
 		// add all of the middle indices
 		for (int i = 0; i < IDX_VBO_COUNT_ALL_IDX(); ++i) {
-			pl.push_back(indices[i]);
+			pl.emplace_back(indices[i]);
 		}
 
 		return tri_count;
@@ -258,7 +258,7 @@ public:
 
 	void Render(Graphics::Renderer *renderer, const vector3d &campos, const matrix4x4d &modelView, const Graphics::Frustum &frustum)
 	{
-		if (!frustum.TestPoint(clipCentroid, clipRadius))
+		if (!frustum.TestSphere(clipCentroid, clipRadius))
 			return;
 
 		const vector3d relpos = clipCentroid - campos;
@@ -303,7 +303,7 @@ GasGiant::GasGiant(const SystemBody *body) :
 	m_hasGpuJobRequest(false),
 	m_timeDelay(s_initialCPUDelayTime)
 {
-	s_allGasGiants.push_back(this);
+	s_allGasGiants.emplace_back(this);
 
 	for (int i = 0; i < NUM_PATCHES; i++) {
 		m_hasJobRequest[i] = false;
@@ -635,15 +635,13 @@ void GasGiant::Render(Graphics::Renderer *renderer, const matrix4x4d &modelView,
 		SetUpMaterials();
 
 	//Update material parameters
-	//XXX no need to calculate AP every frame
-	auto ap = GetSystemBody()->CalcAtmosphereParams();
-	SetMaterialParameters(trans, radius, shadows, ap);
-	if (ap.atmosDensity > 0.0) {
+	SetMaterialParameters(trans, radius, shadows, m_atmosphereParameters);
+	if (m_atmosphereParameters.atmosDensity > 0.0) {
 		// make atmosphere sphere slightly bigger than required so
 		// that the edges of the pixel shader atmosphere jizz doesn't
 		// show ugly polygonal angles
 		DrawAtmosphereSurface(renderer, trans, campos,
-			ap.atmosRadius * 1.01,
+			m_atmosphereParameters.atmosRadius * 1.01,
 			m_atmosphereMaterial);
 	}
 
@@ -678,7 +676,6 @@ void GasGiant::Render(Graphics::Renderer *renderer, const matrix4x4d &modelView,
 
 void GasGiant::SetUpMaterials()
 {
-
 	// Request material for this planet, with atmosphere.
 	// Separate materials for surface and sky.
 	Graphics::MaterialDescriptor surfDesc;
@@ -687,8 +684,8 @@ void GasGiant::SetUpMaterials()
 	surfDesc.textures = 1;
 
 	//planetoid with atmosphere
-	const AtmosphereParameters ap(GetSystemBody()->CalcAtmosphereParams());
-	assert(ap.atmosDensity > 0.0);
+	m_atmosphereParameters = GetSystemBody()->CalcAtmosphereParams();
+	assert(m_atmosphereParameters.atmosDensity > 0.0);
 	assert(m_surfaceTextureSmall.Valid() || m_surfaceTexture.Valid());
 
 	// surface material is solid
@@ -741,7 +738,7 @@ void GasGiant::BuildFirstPatches()
 	GenerateTexture();
 }
 
-void GasGiant::Init()
+void GasGiant::InitGasGiant()
 {
 	IniConfig cfg;
 	cfg.Read(FileSystem::gameDataFiles, "configs/GasGiants.ini");
@@ -764,7 +761,7 @@ void GasGiant::Init()
 	CreateRenderTarget(s_texture_size_gpu[Pi::detail.planets], s_texture_size_gpu[Pi::detail.planets]);
 }
 
-void GasGiant::Uninit()
+void GasGiant::UninitGasGiant()
 {
 	s_patchContext.Reset();
 }

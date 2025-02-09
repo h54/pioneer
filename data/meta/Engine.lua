@@ -1,4 +1,4 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 -- This file implements type information about C++ classes for Lua static analysis
@@ -19,5 +19,10 @@
 local Engine = {}
 
 -- TODO: add information about Engine methods
+
+-- Get a model file by name
+---@param name string
+---@return SceneGraph.Model model
+function Engine.GetModel(name) end
 
 return Engine

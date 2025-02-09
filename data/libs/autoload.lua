@@ -1,4 +1,4 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 -- this is the only library automatically loaded at startup
@@ -78,33 +78,66 @@ end
 -- Copy values from table b into a
 --
 -- Does not copy metatable nor recurse into the table.
--- Pass an optional predicate to transform the keys and values before assignment.
+-- Pass an optional transformer to mutate the keys and values before assignment.
 ---@generic K, V
 ---@param a table
 ---@param b table<K, V>
----@param predicate nil|fun(k: K, v: V): any, any
+---@param transformer nil|fun(k: K, v: V): any, any
 ---@return table
-table.merge = function(a, b, predicate)
-	for k, v in pairs(b) do
-		if predicate then k, v = predicate(k, v) end
-		a[k] = v
+table.merge = function(a, b, transformer)
+	if transformer then
+		for k, v in pairs(b) do
+			k, v = transformer(k, v)
+			a[k] = v
+		end
+	else
+		for k, v in pairs(b) do
+			a[k] = v
+		end
 	end
 	return a
+end
+
+-- Copy table recursively using pairs()
+--
+-- Does not copy metatable
+---@generic T
+---@param t T
+---@return T
+table.deepcopy = function(t)
+
+	if not t then return nil end
+
+	local result = {}
+	for k, v in pairs(t) do
+		if type(v) == 'table' then
+			result[k] = table.deepcopy(v)
+		else
+			result[k] = v
+		end
+	end
+	return result
 end
 
 -- Append array b to array a
 --
 -- Does not copy metatable nor recurse into the table.
--- Pass an optional predicate to transform the keys and values before assignment.
+-- Pass an optional transformer to mutate the keys and values before assignment.
 ---@generic T
 ---@param a table
 ---@param b T[]
----@param predicate nil|fun(v: T): any
+---@param transformer nil|fun(v: T): any
 ---@return table
-table.append = function(a, b, predicate)
-	for _, v in ipairs(b) do
-		if predicate then v = predicate(v) end
-		table.insert(a, v)
+table.append = function(a, b, transformer)
+	if transformer then
+		for _, v in ipairs(b) do
+			v = transformer(v)
+			table.insert(a, v)
+		end
+	else
+		for _, v in ipairs(b) do
+			table.insert(a, v)
+		end
 	end
 	return a
 end

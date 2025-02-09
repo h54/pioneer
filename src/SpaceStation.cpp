@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "SpaceStation.h"
@@ -800,7 +800,7 @@ void SpaceStation::Render(Graphics::Renderer *r, const Camera *camera, const vec
 			SetClipRadius(m_adjacentCity->GetClipRadius());
 		}
 
-		m_adjacentCity->Render(r, camera->GetContext()->GetFrustum(), this, viewCoords, viewTransform);
+		m_adjacentCity->Render(r, camera->GetContext(), this, viewCoords, viewTransform);
 
 		RenderModel(r, camera, viewCoords, viewTransform);
 		m_navLights->Render(r);
@@ -903,3 +903,19 @@ double SpaceStation::GetUndockAnimStageDuration(int bay, DockStage stage) const
 	return stageLength / averageVelocity;
 }
 
+bool SpaceStation::CalcInteriorLighting(const Body *b, Color4ub &sLight, double& sIntense) const
+{
+	vector3d bPoint = b->GetPositionRelTo(this);
+	const float dist = GetModel()->DistanceFromPointToBound("interior", vector3f(bPoint));
+
+	// This number can be tweaked to make fading more / less gradual,
+	// it could depend on ship size but this value feels good on all current ships
+	const float bRadius = 30.0f;
+	if(dist - bRadius < 0.0f) {
+		sIntense = std::max(std::min((bRadius - dist) / bRadius, 1.0f), 0.0f);
+		sLight = Color::GRAY;
+		return true;
+	}
+
+	return false;
+}

@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Input.h"
@@ -285,7 +285,7 @@ void Manager::InitGame()
 
 */
 
-InputBindings::Action *InputFrame::AddAction(std::string id)
+InputBindings::Action *InputFrame::AddAction(const std::string &id)
 {
 	auto *action = manager->GetActionBinding(id);
 	if (!action)
@@ -295,7 +295,7 @@ InputBindings::Action *InputFrame::AddAction(std::string id)
 	return action;
 }
 
-InputBindings::Axis *InputFrame::AddAxis(std::string id)
+InputBindings::Axis *InputFrame::AddAxis(const std::string &id)
 {
 	auto *axis = manager->GetAxisBinding(id);
 	if (!axis)
@@ -314,7 +314,6 @@ bool Manager::AddInputFrame(InputFrame *frame)
 
 	m_inputFrames.push_back(frame);
 	frame->active = true;
-	frame->onFrameAdded.emit(frame);
 	m_frameListChanged = true;
 
 	return true;
@@ -363,12 +362,11 @@ void Manager::RemoveInputFrame(InputFrame *frame)
 
 		ClearInputFrameState(frame);
 		frame->active = false;
-		frame->onFrameRemoved.emit(frame);
 		m_frameListChanged = true;
 	}
 }
 
-InputBindings::Action *Manager::AddActionBinding(std::string id, BindingGroup *group, InputBindings::Action &&binding)
+InputBindings::Action *Manager::AddActionBinding(const std::string &id, BindingGroup *group, InputBindings::Action &&binding)
 {
 	// throw an error if we attempt to bind an action onto an already-bound axis in the same group.
 	if (group->bindings.count(id) && group->bindings[id] != BindingGroup::ENTRY_ACTION)
@@ -386,7 +384,7 @@ InputBindings::Action *Manager::AddActionBinding(std::string id, BindingGroup *g
 	return &(actionBindings[id] = binding);
 }
 
-InputBindings::Axis *Manager::AddAxisBinding(std::string id, BindingGroup *group, InputBindings::Axis &&binding)
+InputBindings::Axis *Manager::AddAxisBinding(const std::string &id, BindingGroup *group, InputBindings::Axis &&binding)
 {
 	// throw an error if we attempt to bind an axis onto an already-bound action in the same group.
 	if (group->bindings.count(id) && group->bindings[id] != BindingGroup::ENTRY_AXIS)
@@ -404,14 +402,24 @@ InputBindings::Axis *Manager::AddAxisBinding(std::string id, BindingGroup *group
 	return &(axisBindings[id] = binding);
 }
 
-InputBindings::Action *Manager::GetActionBinding(std::string id)
+InputBindings::Action *Manager::GetActionBinding(const std::string &id)
 {
 	return actionBindings.count(id) ? &actionBindings[id] : &Input::nullAction;
 }
 
-InputBindings::Axis *Manager::GetAxisBinding(std::string id)
+InputBindings::Axis *Manager::GetAxisBinding(const std::string &id)
 {
 	return axisBindings.count(id) ? &axisBindings[id] : &Input::nullAxis;
+}
+
+bool Manager::HasActionBinding(const std::string &id) const
+{
+	return actionBindings.count(id) > 0;
+}
+
+bool Manager::HasAxisBinding(const std::string &id) const
+{
+	return axisBindings.count(id) > 0;
 }
 
 /*

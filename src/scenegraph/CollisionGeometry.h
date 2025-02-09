@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _SCENEGRAPH_COLLISIONGEOMETRY_H
@@ -23,10 +23,10 @@ namespace SceneGraph {
 	public:
 		CollisionGeometry(Graphics::Renderer *r, const std::vector<vector3f> &, const std::vector<Uint32> &, unsigned int flag);
 		CollisionGeometry(const CollisionGeometry &, NodeCopyCache *cache = 0);
-		virtual Node *Clone(NodeCopyCache *cache = 0) override;
-		virtual const char *GetTypeName() const override { return "CollisionGeometry"; }
-		virtual void Accept(NodeVisitor &nv) override;
-		virtual void Save(NodeDatabase &) override;
+		Node *Clone(NodeCopyCache *cache = 0) override;
+		const char *GetTypeName() const override { return "CollisionGeometry"; }
+		void Accept(NodeVisitor &nv) override;
+		void Save(NodeDatabase &) override;
 		static CollisionGeometry *Load(NodeDatabase &);
 
 		const std::vector<vector3f> &GetVertices() const { return m_vertices; }

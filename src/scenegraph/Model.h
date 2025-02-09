@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _SCENEGRAPH_MODEL_H
@@ -66,6 +66,7 @@
 #include "Pattern.h"
 #include "graphics/Drawables.h"
 #include "graphics/Material.h"
+#include "LoaderDefinitions.h"
 #include <stdexcept>
 
 namespace SceneGraph {
@@ -79,6 +80,18 @@ namespace SceneGraph {
 	struct LoadingError : public std::runtime_error {
 		LoadingError(const std::string &str) :
 			std::runtime_error(str.c_str()) {}
+	};
+
+	struct RunTimeBoundDefinition {
+		BoundDefinition boundDef;
+		// Resolved tags to avoid looking up each frame
+		Tag* startTag;
+		Tag* endTag;
+		// Construct from a scene graph bound definition and a model
+		// Note: The constructor doesn't add ourselves to the model, simply resolves the tags!
+		explicit RunTimeBoundDefinition(Model* in_model, const BoundDefinition& bdef);
+		// Copy a RunTimeBoundDefinition from another model, updating tags
+		explicit RunTimeBoundDefinition(const RunTimeBoundDefinition& copied, Model* new_model);
 	};
 
 	typedef std::vector<std::pair<std::string, RefCountedPtr<Graphics::Material>>> MaterialContainer;
@@ -101,7 +114,7 @@ namespace SceneGraph {
 		void SetDrawClipRadius(float clipRadius) { m_boundingRadius = clipRadius; }
 
 		void Render(const matrix4x4f &trans, const RenderData *rd = 0);				 //ModelNode can override RD
-		void Render(const std::vector<matrix4x4f> &trans, const RenderData *rd = 0); //ModelNode can override RD
+		void RenderInstanced(const matrix4x4f &trans, const std::vector<matrix4x4f> &instTrans, const RenderData *rd = 0); //ModelNode can override RD
 
 		RefCountedPtr<CollMesh> CreateCollisionMesh();
 		RefCountedPtr<CollMesh> GetCollisionMesh() const { return m_collMesh; }
@@ -149,7 +162,7 @@ namespace SceneGraph {
 		// Get the index of an animation in this container. If there is no such animation, returns UINT32_MAX.
 		uint32_t FindAnimationIndex(Animation *) const;
 		// Return a reference to all animations defined on this model.
-		const std::vector<Animation *> GetAnimations() const { return m_animations; }
+		const AnimationContainer& GetAnimations() const { return m_animations; }
 		// Mark an animation as actively updating. A maximum of 64 active animations are supported.
 		void SetAnimationActive(uint32_t index, bool active);
 		bool GetAnimationActive(uint32_t index) const;
@@ -182,6 +195,9 @@ namespace SceneGraph {
 		};
 		void SetDebugFlags(Uint32 flags);
 
+		// If distance > 0 it means you are outside bound, otherwise you are inside
+		float DistanceFromPointToBound(const std::string& name, vector3f point);
+
 	private:
 		Model(const Model &);
 
@@ -196,7 +212,7 @@ namespace SceneGraph {
 		Graphics::Renderer *m_renderer;
 		std::string m_name;
 
-		std::vector<Animation *> m_animations;
+		AnimationContainer m_animations;
 		uint64_t m_activeAnimations; // bitmask of actively ticking animations
 
 		std::vector<Tag *> m_tags;		 //named attachment points
@@ -213,6 +229,8 @@ namespace SceneGraph {
 
 		std::unique_ptr<Graphics::MeshObject> m_debugMesh;
 		std::unique_ptr<Graphics::Material> m_debugLineMat;
+
+		std::vector<RunTimeBoundDefinition> m_bounds;
 	};
 
 } // namespace SceneGraph

@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "MatrixTransform.h"
@@ -45,7 +45,7 @@ namespace SceneGraph {
 	}
 
 	static const matrix4x4f s_ident(matrix4x4f::Identity());
-	void MatrixTransform::Render(const std::vector<matrix4x4f> &trans, const RenderData *rd)
+	void MatrixTransform::RenderInstanced(const std::vector<matrix4x4f> &trans, const RenderData *rd)
 	{
 		if (0 == memcmp(&m_transform, &s_ident, sizeof(matrix4x4f))) {
 			// m_transform is identity so avoid performing all multiplications

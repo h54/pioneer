@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _BODY_H
@@ -53,8 +53,8 @@ enum class AltitudeType { // <enum name=AltitudeType scope='AltitudeType' public
 #define OBJDEF(__thisClass, __parentClass, __TYPE)                                  \
 	static constexpr ObjectType StaticType() { return ObjectType::__TYPE; }         \
 	static constexpr ObjectType SuperType() { return __parentClass::StaticType(); } \
-	virtual ObjectType GetType() const override { return ObjectType::__TYPE; }      \
-	virtual bool IsType(ObjectType c) const override                                \
+	ObjectType GetType() const override { return ObjectType::__TYPE; }              \
+	bool IsType(ObjectType c) const override                                        \
 	{                                                                               \
 		if (__thisClass::GetType() == (c))                                          \
 			return true;                                                            \
@@ -152,18 +152,32 @@ public:
 	T *GetComponent() const
 	{
 		auto *type = BodyComponentDB::GetComponentType<T>();
-		return m_components & (uint64_t(1) << uint8_t(type->componentIndex)) ? type->get(this) : nullptr;
+		return m_components & GetComponentBit(type->componentIndex) ? type->get(this) : nullptr;
 	}
 
+	// Add a component to this body if it is not already present.
+	// Returns a pointer to the existing component if a new one could not be added.
 	template <typename T>
 	T *AddComponent()
 	{
 		auto *type = BodyComponentDB::GetComponentType<T>();
-		if (m_components & (uint64_t(1) << uint8_t(type->componentIndex)))
+		if (m_components & GetComponentBit(type->componentIndex))
 			return type->get(this);
 
-		m_components |= (uint64_t(1) << uint8_t(type->componentIndex));
+		m_components |= GetComponentBit(type->componentIndex);
 		return type->newComponent(this);
+	}
+
+	// Remove a component from this body, destroying it.
+	template<typename T>
+	void RemoveComponent()
+	{
+		auto *type = BodyComponentDB::GetComponentType<T>();
+		if (!(m_components & GetComponentBit(type->componentIndex)))
+			return;
+
+		m_components ^= GetComponentBit(type->componentIndex);
+		type->deleteComponent(this);
 	}
 
 	// Returns the bitset of components attached to this body. Prefer using HasComponent<> or GetComponent<> instead.
@@ -179,6 +193,8 @@ public:
 	// Interpolated between physics ticks.
 	const matrix3x3d &GetInterpOrient() const { return m_interpOrient; }
 	vector3d GetInterpPosition() const { return m_interpPos; }
+	matrix4x4d GetInterpMatrix() const { return matrix4x4d(GetInterpOrient(), GetInterpPosition()); }
+
 	vector3d GetInterpPositionRelTo(FrameId relToId) const;
 	vector3d GetInterpPositionRelTo(const Body *relTo) const;
 	matrix3x3d GetInterpOrientRelTo(FrameId relToId) const;
@@ -216,6 +232,8 @@ protected:
 	matrix3x3d m_interpOrient;
 
 private:
+	uint64_t GetComponentBit(uint8_t bit) const { return uint64_t(1) << bit; }
+
 	vector3d m_pos;
 	matrix3x3d m_orient;
 	FrameId m_frame; // frame of reference

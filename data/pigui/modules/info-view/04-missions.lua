@@ -1,4 +1,4 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Character	= require 'Character'
@@ -102,11 +102,10 @@ local function makeMissionRows()
 		end
 
 		local playerSystem = Game.system or Game.player:GetHyperspaceTarget():GetStarSystem()
-		local days = math.max(0, (mission.due - Game.time) / (24*60*60))
 
 		-- Use AU for interplanetary, LY for interstellar distances
 		local dist, dist_display
-		if mission.location:IsSameSystem(playerSystem.path) then
+		if mission.location:IsSameSystem(playerSystem.path) and not Game.InHyperspace() then
 			if mission.location:IsBodyPath() then
 				local body = mission.location:GetSystemBody().body
 				dist = Game.player:GetPositionRelTo(body):length()
@@ -123,7 +122,7 @@ local function makeMissionRows()
 			mission:GetTypeDescription(),
 			mission.client.name,
 			locationName .. dist_display,
-			ui.Format.Date(mission.due) .."\n".. string.format(l.D_DAYS_LEFT, days),
+			ui.Format.Date(mission.due) .."\n".. l.D_DAYS_LEFT .." ".. ui.Format.Duration(mission.due - Game.time, 2),
 			ui.Format.Money(mission.reward),
 		}
 

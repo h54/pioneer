@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Projectile.h"
@@ -25,6 +25,8 @@
 #include "graphics/VertexArray.h"
 #include "lua/LuaEvent.h"
 #include "lua/LuaUtils.h"
+
+#include "profiler/Profiler.h"
 
 std::unique_ptr<Graphics::MeshObject> Projectile::s_sideMesh;
 std::unique_ptr<Graphics::MeshObject> Projectile::s_glowMesh;

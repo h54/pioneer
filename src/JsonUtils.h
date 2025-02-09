@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _JSON_UTILS_H
@@ -17,6 +17,8 @@
 #include "matrix3x3.h"
 #include "matrix4x4.h"
 #include "vector3.h"
+
+class StringName;
 
 namespace FileSystem {
 	class FileSource;
@@ -116,5 +118,8 @@ void StrToMatrix3x3f(const char *str, matrix3x3f &val);
 void StrToMatrix3x3d(const char *str, matrix3x3d &val);
 void StrToMatrix4x4f(const char *str, matrix4x4f &val);
 void StrToMatrix4x4d(const char *str, matrix4x4d &val);
+
+void to_json(Json &, const StringName &);
+void from_json(const Json &, StringName &);
 
 #endif /* _JSON_UTILS_H */

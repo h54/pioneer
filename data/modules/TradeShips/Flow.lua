@@ -1,7 +1,6 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
-local e = require 'Equipment'
 local Engine = require 'Engine'
 local Game = require 'Game'
 local Ship = require 'Ship'
@@ -34,10 +33,11 @@ end
 -- return an array of names of ships that (at first sight) can be traders
 local getAcceptableShips = function ()
 	-- accept all ships with the hyperdrive, in fact
+	---@param def ShipDef
 	local filter_function = function(_,def)
 		-- XXX should limit to ships large enough to carry significant
 		--     cargo, but we don't have enough ships yet
-		return def.tag == 'SHIP' and def.hyperdriveClass > 0 -- and def.roles.merchant
+		return def.tag == 'SHIP' and def.hyperdriveClass > 0 and def.cargo > 0 -- and def.roles.merchant
 	end
 	return utils.build_array(
 		utils.map(function (k,def)
@@ -464,12 +464,8 @@ Flow.spawnInitialShips = function()
 			Core.ships[ship] = { ts_error = "OK", status = 'inbound', starport = params.to, ship_name	= params.id}
 
 			Trader.addEquip(ship)
-			local fuel_added = Trader.addFuel(ship)
+			Trader.addHyperdriveFuel(ship, hj_route.fuel)
 			Trader.addCargo(ship, 'import')
-
-			if fuel_added and fuel_added > 0 then
-				Trader.removeFuel(ship, math.min(hj_route.fuel, fuel_added))
-			end
 
 			Space.PutShipOnRoute(ship, params.to, Engine.rand:Number(0.0, 0.999))-- don't generate at the destination
 			ship:AIDockWith(params.to)

@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #pragma once
@@ -28,7 +28,7 @@ namespace Log {
 		void LogLevel(Severity sv, std::string_view message);
 		void LogLevel(Severity sv, const char *message);
 
-		bool SetLogFile(std::string filename);
+		bool SetLogFile(const std::string &filename);
 		FILE *GetLogFileHandle() { return file; }
 
 		// Return the severity cutoff at which log messages will be printed to stderr.

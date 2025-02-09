@@ -1,4 +1,4 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Game = require 'Game'
@@ -97,6 +97,11 @@ local onGameStart = function ()
 
 	-- allow hyperjump planner to register its events:
 	hyperJumpPlanner.onGameStart()
+
+	-- Reset hyperspace cache when ship equipment changes
+	Game.player:GetComponent('EquipSet'):AddListener(function (op, equip, slot)
+		hyperspaceDetailsCache = {}
+	end)
 end
 
 local function getHyperspaceDetails(path)
@@ -134,7 +139,7 @@ sectorViewLayout.mainFont = font
 
 local function draw_jump_status(item)
 	textIcon(statusIcons[item.jumpStatus].icon, lui[item.jumpStatus])
-	ui.text(string.format("%.2f%s %d%s %s",
+	ui.text(string.format("%.2f%s %.1f%s %s",
 		item.distance, lc.UNIT_LY, item.fuelRequired, lc.UNIT_TONNES, ui.Format.Duration(item.duration, 2)))
 end
 
@@ -161,7 +166,7 @@ function Windows.systemInfo:Show()
 		if not sectorView:GetMap():IsCenteredOn(systempath) then
 			-- add button to center on the object
 			ui.sameLine()
-			if ui.iconButton(icons.maneuver, Vector2(ui.getTextLineHeight()), lui.CENTER_ON_SYSTEM, ui.theme.buttonColors.transparent) then
+			if ui.inlineIconButton("center", icons.maneuver, lui.CENTER_ON_SYSTEM, ui.theme.buttonColors.transparent) then
 				sectorView:GetMap():GotoSystemPath(systempath)
 			end
 		end
@@ -299,6 +304,10 @@ function Windows.edgeButtons.Show()
 	ui.mainMenuButton(icons.search_lens, lui.ZOOM)
 	sectorView:GetMap():SetZoomMode(ui.isItemActive())
 	ui.text("")
+
+	if ui.mainMenuButton(icons.info, lc.OBJECT_INFO, buttonState[Windows.systemInfo.visible]) then
+		Windows.systemInfo.visible = not Windows.systemInfo.visible
+	end
 	-- settings buttons
 	if ui.mainMenuButton(icons.settings, lui.SETTINGS) then
 		ui.openPopup("sectorViewLabelSettings")
@@ -309,9 +318,6 @@ function Windows.edgeButtons.Show()
 
 	if ui.mainMenuButton(icons.shield_other, lui.FACTIONS, buttonState[Windows.factions.visible]) then
 		Windows.factions.visible = not Windows.factions.visible
-	end
-	if ui.mainMenuButton(icons.info, lc.OBJECT_INFO, buttonState[Windows.systemInfo.visible]) then
-		Windows.systemInfo.visible = not Windows.systemInfo.visible
 	end
 	if ui.mainMenuButton(icons.route, lui.HYPERJUMP_ROUTE, buttonState[Windows.hjPlanner.visible]) then
 		Windows.hjPlanner.visible = not Windows.hjPlanner.visible
@@ -409,7 +415,7 @@ function Windows.factions.Show()
 	local factions = sectorView:GetMap():GetFactions()
 	for _,f in pairs(factions) do
 		local changed, value
-		ui.withStyleColors({ ["Text"] = Color(f.faction.colour.r, f.faction.colour.g, f.faction.colour.b) }, function()
+		ui.withStyleColors({ Text = Color(f.faction.colour.r, f.faction.colour.g, f.faction.colour.b) }, function()
 			changed, value = ui.checkbox(f.faction.name, f.visible)
 		end)
 		if changed then
@@ -424,7 +430,7 @@ Windows.hjPlanner.Dummy = hyperJumpPlanner.Dummy
 function sectorViewLayout:onUpdateWindowPivots(w)
 	w.hjPlanner.anchors = { ui.anchor.right, ui.anchor.bottom }
 	w.systemInfo.anchors = { ui.anchor.right, ui.anchor.bottom }
-	w.edgeButtons.anchors = { ui.anchor.right, ui.anchor.center }
+	w.edgeButtons.anchors = { ui.anchor.right, ui.anchor.top }
 	w.factions.anchors = { ui.anchor.right, ui.anchor.top }
 end
 
@@ -451,7 +457,7 @@ end
 
 ui.registerModule("game", { id = 'map-sector-view', draw = function()
 	player = Game.player
-	if Game.CurrentView() == "sector" then
+	if Game.CurrentView() == "SectorView" then
 		sectorViewLayout:display()
 
 		if ui.isKeyReleased(ui.keys.tab) then
@@ -460,11 +466,13 @@ ui.registerModule("game", { id = 'map-sector-view', draw = function()
 		end
 
 		if ui.escapeKeyReleased() then
-			Game.SetView("world")
+			Game.SetView("WorldView")
 		end
 
 		if ui.ctrlHeld() and ui.isKeyReleased(ui.keys.delete) then
 			systemEconView = package.reimport('pigui.modules.system-econ-view').New()
+			package.reimport('pigui.modules.hyperjump-planner')
+			package.reimport()
 		end
 	end
 end})
@@ -482,11 +490,6 @@ Event.Register("onGameEnd", function()
 	leftBarMode = "SEARCH"
 
 	hyperJumpPlanner.onGameEnd()
-end)
-
-Event.Register("onShipEquipmentChanged", function(ship, ...)
-	if ship:IsPlayer() then hyperspaceDetailsCache = {} end
-	hyperJumpPlanner.onShipEquipmentChanged(ship, ...)
 end)
 
 Event.Register("onShipTypeChanged", function(ship, ...)

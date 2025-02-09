@@ -1,4 +1,4 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local utils = require 'utils'
@@ -48,8 +48,8 @@ GameParam.reader = Helpers.versioned {{
 ---@return string? errorString
 function GameParam:fromSaveGame(saveGame)
 	local value, errorString = self.reader(saveGame)
+	if value then self.value = value end
 	if errorString then return errorString end
-	self.value = value
 end
 
 function GameParam:isEmpty()

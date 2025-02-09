@@ -1,4 +1,4 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Defs = require 'pigui.modules.new-game-window.defs'
@@ -103,12 +103,11 @@ Widgets.inputText = function(lock, valid, id, text, randomFnc)
 			end)
 		else
 			if randomFnc then
-				local size = ui.getFrameHeight()
 				local wholeWidth = ui.calcItemWidth()
-				ui.nextItemWidth(wholeWidth - size - Defs.gap.x)
+				ui.nextItemWidth(wholeWidth - ui.getFrameHeight() - Defs.gap.x)
 				local txt, changed = ui.inputText(id, text)
 				ui.sameLine()
-				if ui.iconButton(ui.theme.icons.random, Vector2(size, size), tostring(id) .. "_random_button") then
+				if ui.iconButton(id .. "_random", ui.theme.icons.random) then
 					local newtxt = randomFnc()
 					if newtxt and newtxt ~= txt then
 						txt, changed = newtxt, true
@@ -141,7 +140,7 @@ Widgets.incrementDrag = function(lock, label, value, v_speed, v_min, v_max, form
 		local indent = (itemWidth - txtWidth) * 0.5
 		local cur = ui.getCursorPos()
 		if draw_progress_bar then
-			ui.withStyleColors({ ["PlotHistogram"] = Defs.progressBarColor }, function()
+			ui.withStyleColors({ PlotHistogram = Defs.progressBarColor }, function()
 				ui.progressBar((value - v_min) / (v_max - v_min), Vector2(0,0), "")
 			end)
 		else
@@ -161,6 +160,24 @@ Widgets.incrementDrag = function(lock, label, value, v_speed, v_min, v_max, form
 	else
 		return ui.incrementDrag(label, value, v_speed, v_min, v_max, format, draw_progress_bar)
 	end
+end
+
+-- return actual height
+Widgets.filledHeader = function(label, width)
+
+	local fillHeight = Defs.lineHeight + Defs.gap.y
+
+	local p1 = ui.getCursorScreenPos()
+	local p2 = Vector2(p1.x + width, p1.y + fillHeight)
+	ui.addRectFilled(p1, p2, ui.theme.colors.tableHighlight, 0, 0)
+
+	ui.addCursorPos(Defs.gap)
+	ui.text(label)
+	-- here we are at the bottom edge of the fill, add another gap
+	ui.addCursorPos(Vector2(0, Defs.gap.y))
+
+	-- text height plus three gaps
+	return fillHeight + Defs.gap.y
 end
 
 return Widgets

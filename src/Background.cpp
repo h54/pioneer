@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Background.h"
@@ -262,7 +262,7 @@ namespace Background {
 
 	class SampleStarsTask : public Task {
 	public:
-		SampleStarsTask(RefCountedPtr<Galaxy> galaxy, StarQueryInfo info, int32_t starsLimit, StarInfo &stars, double &medianBrightness, TaskRange range) :
+		SampleStarsTask(RefCountedPtr<Galaxy> galaxy, const StarQueryInfo &info, int32_t starsLimit, StarInfo &stars, double &medianBrightness, TaskRange range) :
 			Task(range),
 			galaxy(galaxy),
 			info(info),
@@ -367,14 +367,14 @@ namespace Background {
 
 		RefCountedPtr<Galaxy> galaxy;
 		const StarQueryInfo info;
-		const int32_t starsLimit;
+		const size_t starsLimit;
 		StarInfo &stars;
 		double &medianBrightness;
 	};
 
 	class SortStarsTask : public Task {
 	public:
-		SortStarsTask(StarQueryInfo info, StarInfo &stars, double medianBrightness) :
+		SortStarsTask(const StarQueryInfo &info, StarInfo &stars, double medianBrightness) :
 			info(info),
 			stars(stars),
 			medianBrightness(medianBrightness)
@@ -382,7 +382,7 @@ namespace Background {
 
 		// Do the brightness sort on worker threads using the worker's subset
 		// of stars rather than on the main thread with all stars.
-		virtual void OnExecute(TaskRange) override
+		void OnExecute(TaskRange) override
 		{
 			PROFILE_SCOPED()
 			const size_t numStars = stars.pos.size();
@@ -446,6 +446,8 @@ namespace Background {
 		m_pointSprites.reset(new Graphics::Drawables::PointSprites);
 
 		const Uint32 NUM_BG_STARS = MathUtil::mix(BG_STAR_MIN, BG_STAR_MAX, Pi::GetAmountBackgroundStars());
+		m_animMesh.reset();
+
 		// user doesn't want to see stars
 		if (NUM_BG_STARS == BG_STAR_MIN) return;
 
@@ -610,6 +612,9 @@ namespace Background {
 		if (!Pi::game || Pi::player->GetFlightState() != Ship::HYPERSPACE) {
 			m_pointSprites->Draw(m_renderer, m_material.Get());
 		} else {
+			if (!m_animMesh) // user doesn't want to see stars
+				return;
+
 			Graphics::VertexBuffer *buffer = m_animMesh->GetVertexBuffer();
 			assert(sizeof(StarVert) == 16);
 			assert(buffer->GetDesc().stride == sizeof(StarVert));

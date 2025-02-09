@@ -1,4 +1,4 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 -- This file implements type information about C++ classes for Lua static analysis
@@ -50,6 +50,10 @@ function Body:isa(type) end
 ---@param value any NOTE: functions, tables, and coroutines cannot be set as body properties
 function Body:setprop(key, value) end
 
+-- Clears the given body property
+---@param key string
+function Body:unsetprop(key) end
+
 -- Check if the given property exists on the body
 ---@param key string
 ---@return boolean
@@ -82,7 +86,7 @@ function Body:DistanceTo(otherBody) end
 --- Get the body's position relative to its parent frame.
 ---
 --- If the parent is a TerrainBody, altitude will be the height above terrain or sea level in meters.
----@param boolean? terrainRelative
+---@param terrainRelative boolean?
 ---@return number latitude the latitude of the body in radians
 ---@return number longitude the longitude of the body in radians
 ---@return number? altitude altitude above the ground or sea level in meters
@@ -108,7 +112,7 @@ function Body:GetPositionRelTo(other) end
 --- Returns height above terrain or sea level if the other body is a TerrainBody or
 --- distance between bodies otherwise.
 ---@param other Body
----@param boolean? terrainRelative
+---@param terrainRelative boolean?
 ---@return number altitude
 function Body:GetAltitudeRelTo(other, terrainRelative) end
 

@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "buildopts.h"
@@ -54,9 +54,9 @@ public:
 		m_path(path),
 		m_inPlace(inPlace) {}
 
-	virtual void OnRun() override final { RunCompiler(m_name, m_path, m_inPlace); } // RUNS IN ANOTHER THREAD!! MUST BE THREAD SAFE!
-	virtual void OnFinish() override final {}
-	virtual void OnCancel() override final {}
+	void OnRun() final { RunCompiler(m_name, m_path, m_inPlace); } // RUNS IN ANOTHER THREAD!! MUST BE THREAD SAFE!
+	void OnFinish() final {}
+	void OnCancel() final {}
 
 protected:
 	std::string m_name;

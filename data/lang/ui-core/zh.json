@@ -67,6 +67,10 @@
     "description": "Market header when buying items",
     "message": "可供购买"
   },
+  "AVAILABLE_STOCK": {
+    "description": "Market stat showing number of items in stock",
+    "message": "Available Stock"
+  },
   "AVERAGE": {
     "description": "",
     "message": "平均值"
@@ -81,6 +85,14 @@
   },
   "BUY": {
     "description": "Commodities and equipment prices",
+    "message": "购买"
+  },
+  "BUY_EQUIP": {
+    "description": "Button text to buy selected equipment. May be used in a singular or plural context.",
+    "message": "购买 {name}"
+  },
+  "BUY_PRICE": {
+    "description": "Title for buy-price column in commodity market",
     "message": "购买"
   },
   "BUY_SHIP": {
@@ -106,6 +118,10 @@
   "CANNOT_SELL_ITEM": {
     "description": "",
     "message": "此商品不能出售"
+  },
+  "CANNOT_SELL_NONEMPTY_EQUIP": {
+    "description": "",
+    "message": "除非装备槽为空，否则无法出售装备物品。"
   },
   "CANT_FIND_PATH": {
     "description": "Message when restoring savegame, file path",
@@ -219,6 +235,10 @@
     "description": "",
     "message": "关闭"
   },
+  "COLLAPSE": {
+    "description": "Close / collapse an open folder or group",
+    "message": "折叠"
+  },
   "COLOR": {
     "description": "",
     "message": "颜色"
@@ -231,6 +251,10 @@
     "description": "",
     "message": "指挥官"
   },
+  "COMMODITY": {
+    "description": "Title for commodity name column in commodity market",
+    "message": "商品"
+  },
   "COMMODITY_MARKET": {
     "description": "",
     "message": "商品市场"
@@ -238,6 +262,18 @@
   "COMMODITY_TRADE_ANALYSIS": {
     "description": "",
     "message": "商品贸易分析:"
+  },
+  "COMMODITY_TRADE_ANALYSIS_SYSTEM": {
+    "description": "",
+    "message": "全系统范围的贸易分析："
+  },
+  "COMMODITY_TRADE_ANALYSIS_TOOLTIP_1": {
+    "description": "",
+    "message": "系统内所有买卖商品的平均星际贸易流量。"
+  },
+  "COMMODITY_TRADE_ANALYSIS_TOOLTIP_2": {
+    "description": "",
+    "message": "数据可能不反映个别市场价格。"
   },
   "COMPETENT": {
     "description": "Combat rating",
@@ -279,6 +315,10 @@
     "description": "",
     "message": "控制选项"
   },
+  "COPY": {
+    "description": "As for clipboard",
+    "message": "Copy"
+  },
   "COULD_NOT_DELETE_SAVE": {
     "description": "",
     "message": "无法删除保存的数据"
@@ -288,12 +328,20 @@
     "message": "无法找到系统主体"
   },
   "COULD_NOT_LOAD_GAME": {
-    "description": "",
+    "description": "Label indicating a specific file could not be loaded",
     "message": "无法加载游戏:"
+  },
+  "COULD_NOT_LOAD_SAVE_FILES": {
+    "description": "Label indicating the list of save files could not be loaded",
+    "message": "无法加载存档文件"
   },
   "COULD_NOT_READ_THE_SAVE_VERSION": {
     "description": "Message when restoring savegame",
     "message": "无法读取保存版本"
+  },
+  "COULD_NOT_SAVE_GAME": {
+    "description": "Label indicating a specific file could not be saved",
+    "message": "无法保存游戏："
   },
   "CREDIBLE": {
     "description": "For player reputation",
@@ -315,12 +363,16 @@
     "description": "",
     "message": "船员名册"
   },
+  "CRIME": {
+    "description": "Heading introducing a single crime name or list of crime names",
+    "message": "犯罪"
+  },
   "CRIMINAL": {
     "description": "Legal status of player",
     "message": "犯人"
   },
   "CRIMINAL_RECORD": {
-    "description": "Past crimes / crime history of character",
+    "description": "Heading for past crimes / crime history of character, proper noun",
     "message": "犯罪记录"
   },
   "CURRENT_FUEL": {
@@ -338,6 +390,10 @@
   "CURRENT_SYSTEM": {
     "description": "For hyperjump planner",
     "message": "当前星系"
+  },
+  "CUT": {
+    "description": "As for clipboard",
+    "message": "Cut"
   },
   "DANGEROUS": {
     "description": "Player combat rating",
@@ -461,7 +517,7 @@
   },
   "D_DAYS_LEFT": {
     "description": "",
-    "message": "剩余天数: %d"
+    "message": "Time left:"
   },
   "ECONOMY_TRADE": {
     "description": "",
@@ -523,6 +579,10 @@
     "description": "",
     "message": "装备"
   },
+  "EQUIPMENT_CAPACITY": {
+    "description": "The equipment capacity of a ship",
+    "message": "装备容量"
+  },
   "EQUIPMENT_MARKET": {
     "description": "",
     "message": "装备市场"
@@ -551,6 +611,10 @@
     "description": "",
     "message": "退出游戏"
   },
+  "EXPAND": {
+    "description": "Open / expand a collapsed folder or group",
+    "message": "展开"
+  },
   "EXPERIENCED": {
     "description": "For player reputation",
     "message": "有经验的"
@@ -570,6 +634,10 @@
   "FAILED": {
     "description": "When failed mission",
     "message": "失败"
+  },
+  "FAILED_TO_RECOVER_SOME_EQUIPMENT": {
+    "description": "",
+    "message": "Failed to recover some equipment"
   },
   "FEATURE_ACCESSORIES": {
     "description": "Face feature for FaceGenerator in the PersonalInfo view",
@@ -630,6 +698,10 @@
   "FINANCE": {
     "description": "Financial statement of player, e.g. cash",
     "message": "财务"
+  },
+  "FINE": {
+    "description": "Cost of a criminal action",
+    "message": "罚款"
   },
   "FLIGHTLOG_DOCKING": {
     "description": "Used in Flight Log, to indicate player's position. 'primary_info' is a station name",
@@ -714,6 +786,10 @@
   "FULL_SCREEN": {
     "description": "",
     "message": "全屏"
+  },
+  "GAME_OPTIONS": {
+    "description": "GameOptions - tooltip for the Game Options tab in the Settings Window",
+    "message": "游戏选项"
   },
   "GAME_TIME": {
     "description": "",
@@ -935,6 +1011,10 @@
     "description": "Tooltip: Sidereal camera view",
     "message": "恒星视角"
   },
+  "HUD_BUTTON_SWITCH_TO_CURRENT_SYSTEM": {
+    "description": "Tooltip: Switch to current system",
+    "message": "切换到当前系统"
+  },
   "HUD_BUTTON_SWITCH_TO_GALAXY_MAP": {
     "description": "Tooltip: Switch to galaxy map",
     "message": "切换到星系地图"
@@ -942,6 +1022,10 @@
   "HUD_BUTTON_SWITCH_TO_SECTOR_MAP": {
     "description": "Tooltip: Switch to sector map",
     "message": "切换到扇区图"
+  },
+  "HUD_BUTTON_SWITCH_TO_SELECTED_SYSTEM": {
+    "description": "Tooltip: Switch to selected system",
+    "message": "切换选择的系统"
   },
   "HUD_BUTTON_SWITCH_TO_SYSTEM_MAP": {
     "description": "Tooltip: Switch to system map",
@@ -1111,6 +1195,18 @@
     "description": "Tooltip: Current distance of the radar.",
     "message": "有效雷达距离"
   },
+  "HUD_RADAR_TOGGLE_MODE": {
+    "description": "Tooltip: Toggle radar mode.",
+    "message": "在2D和3D模式之间切换雷达"
+  },
+  "HUD_RADAR_ZOOM_MODE_AUTOMATIC": {
+    "description": "Tooltip: Current radar zoom mode.",
+    "message": "自动缩放"
+  },
+  "HUD_RADAR_ZOOM_MODE_MANUAL": {
+    "description": "Tooltip: Current radar zoom mode.",
+    "message": "手动缩放"
+  },
   "HUD_REQUEST_TIME_ACCEL": {
     "description": "Tooltip: Request time acceleration {time}",
     "message": "请求时间加速： {time}"
@@ -1195,17 +1291,21 @@
     "description": "",
     "message": "超空间范围"
   },
+  "ILLEGAL_COMMODITIES": {
+    "description": "Commodities illegal in the current system or polity",
+    "message": "非法商品"
+  },
   "ILLEGAL_IN_SYSTEM": {
     "description": "An illegal action or commodity",
     "message": "系统违禁"
   },
   "ILLEGAL_JUMP": {
     "description": "A finable crime",
-    "message": "鲁莽的超空间跳跃已经被记录在案"
+    "message": "已记录鲁莽的超空间跳跃"
   },
   "IM_TIRED_OF_WORKING_FOR_NOTHING_DONT_YOU_KNOW_WHAT_A_CONTRACT_IS": {
     "description": "",
-    "message": "我受够了给别人白干活儿. 你难道不知道什么叫合同吗?"
+    "message": "我已经厌倦了无报酬的工作。你知道什么是合同吗？"
   },
   "INACTIVE": {
     "description": "",
@@ -1226,6 +1326,14 @@
   "INITIATED": {
     "description": "Ship jump status",
     "message": "发动"
+  },
+  "INSTALL": {
+    "description": "Install something",
+    "message": "Install"
+  },
+  "INSTALLED": {
+    "description": "Label indicating something is installed",
+    "message": "已安装"
   },
   "INSUFFICIENT_FUEL": {
     "description": "Ship jump status",
@@ -1251,9 +1359,13 @@
     "description": "",
     "message": "在货仓内"
   },
+  "IN_HOLD": {
+    "description": "Column title of the Commodity Market screen",
+    "message": "在库存中"
+  },
   "IN_STOCK": {
-    "description": "",
-    "message": "有存货"
+    "description": "Column title of Commodity and Ship Equipment markets showing current station stock level.",
+    "message": "库存"
   },
   "IN_SYSTEM": {
     "description": "Used in flight log, show which star system we are/were in",
@@ -1265,7 +1377,7 @@
   },
   "ITS_BEEN_GREAT_WORKING_FOR_YOU_IF_YOU_NEED_ME_AGAIN_ILL_BE_HERE_A_WHILE": {
     "description": "",
-    "message": "能给你干活实在是太棒了.如果你还需要我帮忙,我瞬间就会出现在你面前."
+    "message": "和你合作非常愉快。如果你还需要我，我会在这里待一会儿。"
   },
   "JETTISON": {
     "description": "",
@@ -1293,15 +1405,15 @@
   },
   "LAUNCH_PERMISSION_DENIED_BUSY": {
     "description": "",
-    "message": "发射请求驳回:港口正忙."
+    "message": "发射许可被拒绝：对接舱忙碌。"
   },
   "LAUNCH_PERMISSION_DENIED_CREW": {
     "description": "",
-    "message": "发射许可被拒绝：没有足够的船员来操纵这艘船。"
+    "message": "发射许可被拒绝：没有足够的船员来操作这艘飞船。"
   },
   "LAUNCH_PERMISSION_DENIED_FINED": {
     "description": "",
-    "message": "发射请求驳回:你的罚金已经爆表了."
+    "message": "发射许可被拒绝：您有未支付的罚款。"
   },
   "LAUNCH_PERMISSION_GRANTED": {
     "description": "",
@@ -1318,6 +1430,14 @@
   "LAWFULNESS": {
     "description": "Character parameter",
     "message": "合法性"
+  },
+  "LEGAL_RULES": {
+    "description": "Refers to laws, rules and regulations",
+    "message": "适用于控制站空间的法律规则。在以下距离内，法律由传感器执行：{distance}"
+  },
+  "LEGAL_RULES_AND_REGULATIONS": {
+    "description": "Heading on a tab, keep it short",
+    "message": "规则与规章"
   },
   "LEGAL_STATUS": {
     "description": "",
@@ -1725,11 +1845,15 @@
   },
   "OUTSTANDING_FINES": {
     "description": "Unpaid fines for crimes committed",
-    "message": "未缴罚款"
+    "message": "未支付的罚款"
   },
   "OUT_OF_RANGE": {
     "description": "Ship jump status",
     "message": "超出范围"
+  },
+  "OUT_OF_STOCK": {
+    "description": "Equipment availability",
+    "message": "Out of stock"
   },
   "OVERVIEW_NAME_FILTER": {
     "description": "Filter overview window entries by name",
@@ -1770,6 +1894,10 @@
   "PASSENGER_CABIN_CAPACITY": {
     "description": "Entry for ship info",
     "message": "客舱容量"
+  },
+  "PASTE": {
+    "description": "As for clipboard",
+    "message": "Paste"
   },
   "PATH_FOUND_BUT_VERIFICATION_FAILED": {
     "description": "Message when restoring savegame",
@@ -1834,6 +1962,10 @@
   "POOR": {
     "description": "Player combat rating",
     "message": "穷"
+  },
+  "POSESSION_OF_COMMODITIES_ILLEGAL": {
+    "description": "",
+    "message": "在这个系统中，持有某些商品是非法的。"
   },
   "POSITION": {
     "description": "The job title/position of crew memeber",
@@ -1955,9 +2087,9 @@
     "description": "",
     "message": "花 {price} 修理船体的 {damage}%"
   },
-  "REPLACE_EQUIPMENT_WITH": {
+  "REPLACE_EQUIPMENT": {
     "description": "Market header when replacing equipped items",
-    "message": "将设备替换为"
+    "message": "更换装备"
   },
   "REPUTATION": {
     "description": "",
@@ -1982,6 +2114,14 @@
   "RESET_PREVIEW": {
     "description": "Paintshop button",
     "message": "重置预览"
+  },
+  "RESET_VIEW_ON_HYPERSPACE_EXIT": {
+    "description": "Reset View on Hyperspace Exit option",
+    "message": "重置超空间退出时的视图"
+  },
+  "RESET_VIEW_ON_HYPERSPACE_EXIT_DESC": {
+    "description": "The tooltip of Reset View on Hyperspace Exit in the settings menu",
+    "message": "从超空间退出时将视图重置为主游戏视图"
   },
   "RETURN_TO_GAME": {
     "description": "",
@@ -2027,6 +2167,14 @@
     "description": "",
     "message": "保存"
   },
+  "SAVED_GAMES": {
+    "description": "Header for save/load window",
+    "message": "保存的游戏"
+  },
+  "SAVE_AS": {
+    "description": "",
+    "message": "保存为"
+  },
   "SAVE_DELETED_SUCCESSFULLY": {
     "description": "",
     "message": "保存已成功删除"
@@ -2046,6 +2194,10 @@
   "SELECT": {
     "description": "",
     "message": "选择"
+  },
+  "SELECTED": {
+    "description": "Label indicating the following item is selected",
+    "message": "已选择"
   },
   "SELECTED_SAVE_DOESNT_EXISTS": {
     "description": "",
@@ -2075,9 +2227,17 @@
     "description": "Commodities and equipment prices",
     "message": "价格"
   },
+  "SELL_EQUIP": {
+    "description": "Button text to sell installed equipment. May be used in a singular or plural context.",
+    "message": "出售 {name}"
+  },
   "SELL_EQUIPPED": {
     "description": "Button text to sell selected ship equipment",
     "message": "出售装备"
+  },
+  "SELL_PRICE": {
+    "description": "Title for sell-price column in commodity market",
+    "message": "价格"
   },
   "SENSORS": {
     "description": "Crew skill",
@@ -2154,6 +2314,10 @@
   "SHIP_TYPE": {
     "description": "",
     "message": "飞船类型"
+  },
+  "SHOW_AUTOSAVES": {
+    "description": "Button tooltip indicating whether to show autosave files",
+    "message": "显示自动保存"
   },
   "SIMULATING_UNIVERSE_EVOLUTION_N_BYEARS": {
     "description": "",
@@ -2269,7 +2433,7 @@
   },
   "TECH_LEVEL": {
     "description": "System view label for technology level",
-    "message": "科技等级"
+    "message": "Tech Level"
   },
   "TEXTURE_COMPRESSION": {
     "description": "",
@@ -2286,6 +2450,10 @@
   "THERE_WERE_ERRORS_IN_RECOVERY": {
     "description": "Message when restoring savegame",
     "message": "在恢复过程中出现错误："
+  },
+  "THESE_ITEMS_ARE_PUNISHABLE_BY_FINE": {
+    "description": "",
+    "message": "购买、销售和运输这些物品将受到罚款和可能的没收处罚"
   },
   "THE_SHIP_IS_UNDER_STATION_CONTROL_COMMANDER": {
     "description": "",
@@ -2367,6 +2535,10 @@
     "description": "Indicates the destination system of a commodity trade.",
     "message": "去{system}:"
   },
+  "TRANSFER_FUEL": {
+    "description": "Label indicating the ability to transfer fuel between equipment tanks",
+    "message": "Transfer Fuel"
+  },
   "TRUSTWORTHY": {
     "description": "For player reputation",
     "message": "可信的"
@@ -2405,11 +2577,11 @@
   },
   "UNOCCUPIED_PASSENGER_CABINS": {
     "description": "",
-    "message": "客舱闲置"
+    "message": "未占用的乘客舱"
   },
   "UNPROFITABLE_TRADE": {
     "description": "Indicates an unprofitable trade route.",
-    "message": "无利润贸易"
+    "message": "无利可图的贸易"
   },
   "UNRELIABLE": {
     "description": "",
@@ -2417,7 +2589,7 @@
   },
   "UNSUCCESSFULLY_RECOVERED_PARAMETERS_ARE_NOW_UNLOCKED_PLEASE_SET_THEM_MANUALLY": {
     "description": "Message when restoring savegame",
-    "message": "未成功回收的参数现已解锁，请手动设置。"
+    "message": "未能成功恢复的参数现已解锁，请手动设置。"
   },
   "UP_ACCEL": {
     "description": "",
@@ -2462,6 +2634,10 @@
   "VISIT_REPAIR_SERVICES": {
     "description": "Ship Repair tab button.",
     "message": "访问维修服务"
+  },
+  "VOLUME": {
+    "description": "The volume property of some object",
+    "message": "音量"
   },
   "VSYNC": {
     "description": "For the checkbox in settings window",

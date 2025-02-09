@@ -1,4 +1,4 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local utils = require "libs.utils"
@@ -29,13 +29,13 @@ function layout.NewWindow(name, bgColor, flags)
 		pos = Vector2(0.0, 0.0),
 		visible = true,
 		name = name,
-		style_colors = {["WindowBg"] = bgColor or ui.theme.colors.lightBlackBackground},
+		style_colors = {WindowBg = bgColor or ui.theme.colors.lightBlackBackground},
 		params = flags or defaultWindowFlags,
 	}
 	--- func desc
 	---@param collapse boolean|nil If not present or true, collapse this window, else expand it
 	function new_window:Collapse( collapse )
-		if collapse == nil then collapse = true end 
+		if collapse == nil then collapse = true end
 		self.to_collapse = collapse
 	end
 	return new_window

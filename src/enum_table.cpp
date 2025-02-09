@@ -1,4 +1,4 @@
-/* Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details */
+/* Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details */
 /* Licensed under the terms of the GPL v3. See licenses/GPL-3.txt        */
 
 /* THIS FILE IS AUTO-GENERATED, CHANGES WILL BE OVERWRITTEN */
@@ -168,6 +168,12 @@ const struct EnumItem ENUM_ProjectableBases[] = {
 const struct EnumItem ENUM_SystemViewMode[] = {
 	{ "Orrery", int(SystemView::Mode::Orrery) },
 	{ "Atlas", int(SystemView::Mode::Atlas) },
+	{ 0, 0 },
+};
+
+const struct EnumItem ENUM_SystemSelectionMode[] = {
+	{ "CURRENT_SYSTEM", int(SystemView::SystemSelectionMode::CURRENT_SYSTEM) },
+	{ "SELECTED_SYSTEM", int(SystemView::SystemSelectionMode::SELECTED_SYSTEM) },
 	{ 0, 0 },
 };
 
@@ -353,6 +359,7 @@ const struct EnumTable ENUM_TABLES[] = {
 	{ "ProjectableTypes", ENUM_ProjectableTypes },
 	{ "ProjectableBases", ENUM_ProjectableBases },
 	{ "SystemViewMode", ENUM_SystemViewMode },
+	{ "SystemSelectionMode", ENUM_SystemSelectionMode },
 	{ "SystemViewColorIndex", ENUM_SystemViewColorIndex },
 	{ "PolitEcon", ENUM_PolitEcon },
 	{ "PolitGovType", ENUM_PolitGovType },
@@ -384,6 +391,7 @@ const struct EnumTable ENUM_TABLES_PUBLIC[] = {
 	{ "ProjectableTypes", ENUM_ProjectableTypes },
 	{ "ProjectableBases", ENUM_ProjectableBases },
 	{ "SystemViewMode", ENUM_SystemViewMode },
+	{ "SystemSelectionMode", ENUM_SystemSelectionMode },
 	{ "SystemViewColorIndex", ENUM_SystemViewColorIndex },
 	{ "PolitEcon", ENUM_PolitEcon },
 	{ "PolitGovType", ENUM_PolitGovType },

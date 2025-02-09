@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Loader.h"
@@ -215,6 +215,11 @@ namespace SceneGraph {
 
 		Model *model = new Model(m_renderer, def.name);
 		m_model = model;
+
+		for(const BoundDefinition& bdef : def.boundsDefs) {
+			m_model->m_bounds.push_back(RunTimeBoundDefinition(m_model, bdef));
+		}
+
 		bool patternsUsed = false;
 
 		m_thrustersRoot.Reset(new Group(m_renderer));

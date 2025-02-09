@@ -1,10 +1,11 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _LUAPUSHPULL_H
 #define _LUAPUSHPULL_H
 
 #include "Lua.h"
+#include "core/StringName.h"
 #include <lua.hpp>
 
 #include <cstddef>
@@ -28,11 +29,31 @@ inline void pi_lua_generic_push(lua_State *l, const std::string &value)
 {
 	lua_pushlstring(l, value.c_str(), value.size());
 }
+inline void pi_lua_generic_push(lua_State *l, const StringName &value)
+{
+	lua_pushlstring(l, value.c_str(), value.size());
+}
 inline void pi_lua_generic_push(lua_State *l, const std::string_view &value)
 {
 	lua_pushlstring(l, value.data(), value.size());
 }
 inline void pi_lua_generic_push(lua_State *l, const std::nullptr_t &value) { lua_pushnil(l); }
+inline void pi_lua_generic_push(lua_State *l, const Time::DateTime &dt) {
+	int year, month, day, hour, minute, second;
+	dt.GetDateParts(&year, &month, &day);
+	dt.GetTimeParts(&hour, &minute, &second);
+
+	lua_createtable(l, 7, 0);
+	pi_lua_settable(l, "year", year);
+	pi_lua_settable(l, "month", month);
+	pi_lua_settable(l, "day", day);
+	pi_lua_settable(l, "hour", hour);
+	pi_lua_settable(l, "minute", minute);
+	pi_lua_settable(l, "second", second);
+	pi_lua_settable(l, "timestamp", dt.ToGameTime());
+}
+
+
 
 inline void pi_lua_generic_pull(lua_State *l, int index, bool &out) { out = lua_toboolean(l, index); }
 inline void pi_lua_generic_pull(lua_State *l, int index, int32_t &out) { out = luaL_checkinteger(l, index); }
@@ -47,6 +68,12 @@ inline void pi_lua_generic_pull(lua_State *l, int index, std::string &out)
 	size_t len;
 	const char *buf = luaL_checklstring(l, index, &len);
 	std::string(buf, len).swap(out);
+}
+inline void pi_lua_generic_pull(lua_State *l, int index, StringName &out)
+{
+	size_t len;
+	const char *buf = luaL_checklstring(l, index, &len);
+	out = StringName(std::string_view(buf, len));
 }
 // the returned string view is only valid until the lua object is removed from the stack
 inline void pi_lua_generic_pull(lua_State *l, int index, std::string_view &out)

@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "pigui/ModelSpinner.h"
@@ -64,7 +64,6 @@ void ModelSpinner::SetModel(SceneGraph::Model *model, const SceneGraph::ModelSki
 	m_model.reset(model->MakeInstance());
 	skin.Apply(m_model.get());
 	m_model->SetPattern(pattern);
-	m_shields.reset(new Shields(model));
 	// m_model->SetDebugFlags(SceneGraph::Model::DEBUG_BBOX);
 }
 
@@ -156,9 +155,8 @@ vector3f ModelSpinner::ModelSpaceToScreenSpace(vector3f modelSpaceVec)
 {
 	matrix4x4f projection = matrix4x4f::PerspectiveMatrix(DEG2RAD(SPINNER_FOV), m_size.x / m_size.y, 1.f, 10000.f, true);
 	matrix4x4f modelView = MakeModelViewMat();
-	Graphics::ViewportExtents vp = { 0, 0, int32_t(m_size.x), int32_t(m_size.y) };
 
-	return Graphics::ProjectToScreen(modelView * modelSpaceVec, projection, vp);
+	return Graphics::ProjectToScreen(modelView * modelSpaceVec, projection) * vector3f(m_size.x, m_size.y, 1.0);
 }
 
 vector2d ModelSpinner::GetTagPos(const char *tagName)

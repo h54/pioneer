@@ -1,19 +1,19 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "LuaJson.h"
 #include "FileSystem.h"
 #include "JsonUtils.h"
+#include "SaveGameManager.h"
 #include "LuaObject.h"
 #include "LuaUtils.h"
-#include "Pi.h"
 
 /*
  * Interface: Json
  */
 
 // Do a simple JSON->Lua translation.
-static void _push_json_to_lua(lua_State *l, Json &obj)
+void LuaJson::PushToLua(lua_State *l, const Json &obj)
 {
 	lua_checkstack(l, 20);
 
@@ -40,15 +40,15 @@ static void _push_json_to_lua(lua_State *l, Json &obj)
 		size_t size = obj.size();
 		for (size_t idx = 0; idx < size; idx++) {
 			lua_pushinteger(l, idx + 1);
-			_push_json_to_lua(l, obj[idx]);
+			PushToLua(l, obj[idx]);
 			lua_settable(l, -3);
 		}
 	} break;
 	case Json::value_t::object: {
 		lua_newtable(l);
-		for (Json::iterator it = obj.begin(); it != obj.end(); it++) {
-			lua_pushstring(l, it.key().c_str());
-			_push_json_to_lua(l, it.value());
+		for (const auto &pair : obj.items()) {
+			lua_pushstring(l, pair.key().c_str());
+			PushToLua(l, pair.value());
 			lua_settable(l, -3);
 		}
 	} break;
@@ -79,7 +79,7 @@ static int l_load_json(lua_State *l)
 	if (data.is_null())
 		return luaL_error(l, "Error loading JSON file %s.", filename.c_str());
 
-	_push_json_to_lua(l, data);
+	LuaJson::PushToLua(l, data);
 
 	return 1;
 }
@@ -101,11 +101,12 @@ static int l_load_save_file(lua_State *l)
 {
 	std::string filename = luaL_checkstring(l, 1);
 
-	Json data = JsonUtils::LoadJsonSaveFile(FileSystem::JoinPathBelow(Pi::SAVE_DIR_NAME, filename), FileSystem::userFiles);
-	if (data.is_null())
+	Json data = SaveGameManager::LoadGameToJson(filename);
+	if (data.is_null()) {
 		return luaL_error(l, "Error loading JSON file %s.", filename.c_str());
+	}
 
-	_push_json_to_lua(l, data);
+	LuaJson::PushToLua(l, data);
 
 	return 1;
 }

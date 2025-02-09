@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _OGL_RENDERTARGET_H
@@ -28,11 +28,11 @@ namespace Graphics {
 			};
 
 			~RenderTarget();
-			virtual Texture *GetColorTexture() const override final;
-			virtual Texture *GetDepthTexture() const override final;
-			virtual void SetCubeFaceTexture(const Uint32 face, Texture *t) override final;
-			virtual void SetColorTexture(Texture *) override final;
-			virtual void SetDepthTexture(Texture *) override final;
+			Texture *GetColorTexture() const final;
+			Texture *GetDepthTexture() const final;
+			void SetCubeFaceTexture(const Uint32 face, Texture *t) final;
+			void SetColorTexture(Texture *) final;
+			void SetDepthTexture(Texture *) final;
 
 		protected:
 			friend class Graphics::RendererOGL;

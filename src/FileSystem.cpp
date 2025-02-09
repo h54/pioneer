@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "FileSystem.h"
@@ -146,7 +146,7 @@ namespace FileSystem {
 		return path;
 	}
 
-	bool CopyDir(FileSource &sourceFS, std::string sourceDir, FileSourceFS &targetFS, std::string targetDir, FileSystem::CopyMode copymode)
+	bool CopyDir(FileSource &sourceFS, const std::string &sourceDir, FileSourceFS &targetFS, const std::string &targetDir, FileSystem::CopyMode copymode)
 	{
 		// NOTE: copymode var is not used, because only mode ONLY_MISSING_IN_TARGET is implemented
 		if (!sourceFS.Lookup(sourceDir).IsDir() || !targetFS.Lookup(targetDir).IsDir())

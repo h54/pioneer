@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "GeoSphere.h"
@@ -39,13 +39,14 @@ static const int detail_edgeLen[5] = {
 
 static const double gs_targetPatchTriLength(100.0);
 static std::vector<GeoSphere *> s_allGeospheres;
+static Uint32 s_debugFlags = GeoSphere::DebugFlags::DEBUG_NONE;
 
-void GeoSphere::Init()
+void GeoSphere::InitGeoSphere()
 {
 	s_patchContext.Reset(new GeoPatchContext(detail_edgeLen[Pi::detail.planets > 4 ? 4 : Pi::detail.planets]));
 }
 
-void GeoSphere::Uninit()
+void GeoSphere::UninitGeoSphere()
 {
 	assert(s_patchContext.Unique());
 	s_patchContext.Reset();
@@ -71,7 +72,7 @@ void GeoSphere::UpdateAllGeoSpheres()
 }
 
 // static
-void GeoSphere::OnChangeDetailLevel()
+void GeoSphere::OnChangeGeoSphereDetailLevel()
 {
 	s_patchContext.Reset(new GeoPatchContext(detail_edgeLen[Pi::detail.planets > 4 ? 4 : Pi::detail.planets]));
 
@@ -127,6 +128,18 @@ bool GeoSphere::OnAddSingleSplitResult(const SystemPath &path, SSingleSplitResul
 	return false;
 }
 
+//static
+void GeoSphere::SetDebugFlags(Uint32 flags)
+{
+	s_debugFlags = flags;
+}
+
+//static
+Uint32 GeoSphere::GetDebugFlags()
+{
+	return s_debugFlags;
+}
+
 void GeoSphere::Reset()
 {
 	{
@@ -174,6 +187,8 @@ void GeoSphere::Reset()
 
 	CalculateMaxPatchDepth();
 
+	m_visiblePatches.reserve(1024);
+
 	m_initStage = eBuildFirstPatches;
 }
 
@@ -187,9 +202,17 @@ GeoSphere::GeoSphere(const SystemBody *body) :
 {
 	print_info(body, m_terrain.Get());
 
-	s_allGeospheres.push_back(this);
+	s_allGeospheres.emplace_back(this);
 
 	CalculateMaxPatchDepth();
+
+	m_visiblePatches.reserve(1024);
+
+	if (Pi::config->Int("SortGeoPatches") == 0) {
+		SetDebugFlags(GetDebugFlags() & ~DebugFlags::DEBUG_SORTGEOPATCHES);
+	} else {
+		SetDebugFlags(GetDebugFlags() | DebugFlags::DEBUG_SORTGEOPATCHES);
+	}
 
 	//SetUpMaterials is not called until first Render since light count is zero :)
 }
@@ -207,7 +230,7 @@ bool GeoSphere::AddQuadSplitResult(SQuadSplitResult *res)
 	assert(res);
 	assert(mQuadSplitResults.size() < MAX_SPLIT_OPERATIONS);
 	if (mQuadSplitResults.size() < MAX_SPLIT_OPERATIONS) {
-		mQuadSplitResults.push_back(res);
+		mQuadSplitResults.emplace_back(res);
 		result = true;
 	}
 	return result;
@@ -219,7 +242,7 @@ bool GeoSphere::AddSingleSplitResult(SSingleSplitResult *res)
 	assert(res);
 	assert(mSingleSplitResults.size() < MAX_SPLIT_OPERATIONS);
 	if (mSingleSplitResults.size() < MAX_SPLIT_OPERATIONS) {
-		mSingleSplitResults.push_back(res);
+		mSingleSplitResults.emplace_back(res);
 		result = true;
 	}
 	return result;
@@ -342,7 +365,7 @@ void GeoSphere::Update()
 	} break;
 	case eReceivedFirstPatches: {
 		for (int i = 0; i < NUM_PATCHES; i++) {
-			m_patches[i]->NeedToUpdateVBOs();
+			m_patches[i]->SetNeedToUpdateVBOs();
 		}
 		m_initStage = eDefaultUpdateState;
 	} break;
@@ -360,7 +383,7 @@ void GeoSphere::Update()
 
 void GeoSphere::AddQuadSplitRequest(double dist, SQuadSplitRequest *pReq, GeoPatch *pPatch)
 {
-	mQuadSplitRequests.push_back(TDistanceRequest(dist, pReq, pPatch));
+	mQuadSplitRequests.emplace_back(dist, pReq, pPatch);
 }
 
 void GeoSphere::ProcessQuadSplitRequests()
@@ -400,16 +423,14 @@ void GeoSphere::Render(Graphics::Renderer *renderer, const matrix4x4d &modelView
 		SetUpMaterials();
 
 	//Update material parameters
-	//XXX no need to calculate AP every frame
-	auto ap = GetSystemBody()->CalcAtmosphereParams();
-	SetMaterialParameters(trans, radius, shadows, ap);
+	SetMaterialParameters(trans, radius, shadows, m_atmosphereParameters);
 
-	if (m_atmosphereMaterial.Valid() && ap.atmosDensity > 0.0) {
+	if (m_atmosphereMaterial.Valid() && m_atmosphereParameters.atmosDensity > 0.0) {
 		// make atmosphere sphere slightly bigger than required so
 		// that the edges of the pixel shader atmosphere jizz doesn't
 		// show ugly polygonal angles
 		DrawAtmosphereSurface(renderer, trans, campos,
-			ap.atmosRadius * 1.02,
+			m_atmosphereParameters.atmosRadius * 1.02,
 			m_atmosphereMaterial);
 	}
 
@@ -425,9 +446,7 @@ void GeoSphere::Render(Graphics::Renderer *renderer, const matrix4x4d &modelView
 		ambient.a = 255;
 		emission = StarSystem::starRealColors[GetSystemBody()->GetType()];
 		emission.a = 255;
-	}
-
-	else {
+	} else {
 		// give planet some ambient lighting if the viewer is close to it
 		double camdist = 0.1 / campos.LengthSqr();
 		// why the fuck is this returning 0.1 when we are sat on the planet??
@@ -441,9 +460,38 @@ void GeoSphere::Render(Graphics::Renderer *renderer, const matrix4x4d &modelView
 
 	renderer->SetTransform(matrix4x4f(modelView));
 
-	for (int i = 0; i < NUM_PATCHES; i++) {
-		m_patches[i]->Render(renderer, campos, modelView, frustum);
+	if (s_debugFlags & GeoSphere::DebugFlags::DEBUG_WIREFRAME) 
+		renderer->SetWireFrameMode(true);
+
+	if (s_debugFlags & GeoSphere::DebugFlags::DEBUG_SORTGEOPATCHES) {
+		// Gather the patches that could be rendered
+		for (int i = 0; i < NUM_PATCHES; i++) {
+			m_patches[i]->GatherRenderablePatches(m_visiblePatches, renderer, campos, frustum);
+		}
+
+		// distance sort the patches
+		std::sort(m_visiblePatches.begin(), m_visiblePatches.end(), [&, campos](const std::pair<double, GeoPatch *> &a, const std::pair<double, GeoPatch *> &b) {
+			return (a.first) < (b.first);
+		});
+
+		// cull occluded patches somehow?
+		// create frustum from corner points, something vertical, and the campos??? Cull anything within that frustum?
+
+		// render the sorted patches
+		for (std::pair<double, GeoPatch *> &pPatch : m_visiblePatches) {
+			pPatch.second->RenderImmediate(renderer, campos, modelView);
+		}
+
+		// must clear this after each render otherwise it just accumulates every patch ever drawn!
+		m_visiblePatches.clear();
+	} else {
+		for (int i = 0; i < NUM_PATCHES; i++) {
+			m_patches[i]->Render(renderer, campos, modelView, frustum);
+		}
 	}
+
+	if (s_debugFlags & GeoSphere::DebugFlags::DEBUG_WIREFRAME)
+		renderer->SetWireFrameMode(false);
 
 	renderer->SetAmbientColor(oldAmbient);
 
@@ -452,6 +500,7 @@ void GeoSphere::Render(Graphics::Renderer *renderer, const matrix4x4d &modelView
 
 void GeoSphere::SetUpMaterials()
 {
+	m_atmosphereParameters = GetSystemBody()->CalcAtmosphereParams();
 	// normal star has a different setup path than geosphere terrain does
 	if (GetSystemBody()->GetSuperType() == SystemBody::SUPERTYPE_STAR) {
 		Graphics::MaterialDescriptor surfDesc;
@@ -478,9 +527,8 @@ void GeoSphere::SetUpMaterials()
 			surfDesc.quality &= ~Graphics::HAS_ATMOSPHERE;
 		} else {
 			//planetoid with or without atmosphere
-			const AtmosphereParameters ap(GetSystemBody()->CalcAtmosphereParams());
 			surfDesc.lighting = true;
-			if (ap.atmosDensity > 0.0) {
+			if (m_atmosphereParameters.atmosDensity > 0.0) {
 				surfDesc.quality |= Graphics::HAS_ATMOSPHERE;
 			}
 		}

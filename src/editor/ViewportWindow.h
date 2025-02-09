@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #pragma once
@@ -23,10 +23,10 @@ namespace Editor
 		ViewportWindow(EditorApp *app);
 		~ViewportWindow();
 
-		virtual void OnAppearing() override;
-		virtual void OnDisappearing() override;
+		void OnAppearing() override;
+		void OnDisappearing() override;
 
-		virtual void Update(float deltaTime) override;
+		void Update(float deltaTime) override;
 
 	protected:
 

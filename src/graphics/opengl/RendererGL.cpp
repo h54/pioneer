@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "RendererGL.h"
@@ -287,7 +287,7 @@ namespace Graphics {
 		m_drawUniformBuffers.reserve(8);
 		GetDrawUniformBuffer(0);
 
-		m_lightUniformBuffer.Reset(new OGL::UniformBuffer(sizeof(LightData) * TOTAL_NUM_LIGHTS, BUFFER_USAGE_DYNAMIC));
+		m_lightUniformBuffer = {};
 	}
 
 	RendererOGL::~RendererOGL()
@@ -296,7 +296,7 @@ namespace Graphics {
 			buffer.reset();
 		}
 
-		m_lightUniformBuffer.Reset();
+		m_lightUniformBuffer = {};
 
 		s_DynamicDrawBufferMap.clear();
 
@@ -560,6 +560,8 @@ namespace Graphics {
 		stat.SetStatCount(Stats::STAT_NUM_RENDER_STATES, m_renderStateCache->m_stateDescCache.size());
 		stat.SetStatCount(Stats::STAT_NUM_SHADER_PROGRAMS, numShaderPrograms);
 
+		m_lightUniformBuffer = {};
+
 		return true;
 	}
 
@@ -769,8 +771,11 @@ namespace Graphics {
 
 		m_numLights = numlights;
 		m_numDirLights = 0;
+
+		using LightUBO = LightData[TOTAL_NUM_LIGHTS];
+
 		// ScopedMap will be released at the end of the function
-		auto lightData = m_lightUniformBuffer->Map<LightData>(BufferMapMode::BUFFER_MAP_WRITE);
+		auto lightData = GetDrawUniformBuffer(sizeof(LightUBO))->Allocate<LightUBO>(m_lightUniformBuffer);
 		assert(lightData.isValid());
 
 		for (Uint32 i = 0; i < numlights; i++) {
@@ -785,7 +790,7 @@ namespace Graphics {
 			assert(m_numDirLights <= TOTAL_NUM_LIGHTS);
 
 			// Update the GPU-side light data buffer
-			LightData &gpuLight = lightData.data()[i];
+			LightData &gpuLight = (*lightData.data())[i];
 			gpuLight.diffuse = l.GetDiffuse().ToColor4f();
 			gpuLight.specular = l.GetSpecular().ToColor4f();
 			gpuLight.position = l.GetPosition();
@@ -820,7 +825,7 @@ namespace Graphics {
 		// If we don't have one, make one
 		if (iter == s_DynamicDrawBufferMap.end()) {
 			auto desc = VertexBufferDesc::FromAttribSet(v->GetAttributeSet());
-			desc.numVertices = DYNAMIC_DRAW_BUFFER_SIZE / desc.stride;
+			desc.numVertices = std::max(v->GetNumVerts(), DYNAMIC_DRAW_BUFFER_SIZE / desc.stride);
 			desc.usage = BUFFER_USAGE_DYNAMIC;
 
 			size_t stateHash = m_renderStateCache->CacheVertexDesc(desc);
@@ -971,7 +976,8 @@ namespace Graphics {
 
 		inst->Release();
 		CheckRenderErrors(__FUNCTION__, __LINE__);
-		m_stats.AddToStatCount(Stats::STAT_DRAWCALL, 1);
+		m_stats.AddToStatCount(Stats::STAT_DRAWCALLINSTANCES, 1);
+		m_stats.AddToStatCount(Stats::STAT_DRAWCALLSINSTANCED, inst->GetInstanceCount());
 		stat_primitives(m_stats, type, numElems);
 		return true;
 	}
@@ -1162,9 +1168,9 @@ namespace Graphics {
 		return CreateMeshObject(vertexBuffer, indexBuffer);
 	}
 
-	OGL::UniformBuffer *RendererOGL::GetLightUniformBuffer()
+	const BufferBinding<UniformBuffer> &RendererOGL::GetLightUniformBuffer()
 	{
-		return m_lightUniformBuffer.Get();
+		return m_lightUniformBuffer;
 	}
 
 	OGL::UniformLinearBuffer *RendererOGL::GetDrawUniformBuffer(Uint32 size)

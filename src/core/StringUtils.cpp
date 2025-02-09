@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "StringUtils.h"
@@ -89,7 +89,7 @@ std::string format_date_only(double t)
 	return buf;
 }
 
-std::string string_join(std::vector<std::string> &v, std::string sep)
+std::string string_join(std::vector<std::string> &v, const std::string &sep)
 {
 	std::vector<std::string>::iterator i = v.begin();
 	std::string out;

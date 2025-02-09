@@ -1,4 +1,4 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Rand       = require 'Rand'
@@ -31,7 +31,12 @@ table.sort(Economies, function(a, b) return a.id < b.id end)
 -- Percentage modifier applied to buying/selling commodities
 -- Prevents buying a commodity at a station and immediately reselling it
 Economy.TradeFeeSplit = 2
+
+-- Total trade fee percentage applied to a buy->sell transaction
 Economy.TotalTradeFees = 2 * Economy.TradeFeeSplit
+
+-- Scalar multiplier applied when reselling "used" equipment items back onto the market
+Economy.BaseResellPriceModifier = 0.8
 
 -- stationMarket is a persistent table of stock information for every station
 -- the player has visited in their journey

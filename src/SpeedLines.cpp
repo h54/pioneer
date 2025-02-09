@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "SpeedLines.h"
@@ -10,6 +10,7 @@
 #include "core/IniConfig.h"
 #include "graphics/RenderState.h"
 #include "graphics/Renderer.h"
+#include "profiler/Profiler.h"
 
 // default values
 float SpeedLines::BOUNDS = 2000.f;

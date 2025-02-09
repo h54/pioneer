@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "ModelViewer.h"
@@ -8,21 +8,27 @@
 #include "NavLights.h"
 #include "PngWriter.h"
 #include "Random.h"
-#include "SDL_keycode.h"
+#include "ShipType.h"
 
+#include "collider/BVHTree.h"
+#include "collider/GeomTree.h"
 #include "core/Log.h"
 
 #include "editor/EditorApp.h"
 #include "editor/ModelViewerWidget.h"
 #include "editor/EditorDraw.h"
 
+#include "graphics/RenderState.h"
 #include "scenegraph/BinaryConverter.h"
 #include "scenegraph/DumpVisitor.h"
 #include "scenegraph/FindNodeVisitor.h"
+#include "scenegraph/Model.h"
 #include "scenegraph/SceneGraph.h"
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
+
+#include <SDL_keycode.h>
 
 using namespace Editor;
 
@@ -45,8 +51,9 @@ ModelViewer::ModelViewer(EditorApp *app, LuaManager *lm) :
 {
 	m_modelWindow.reset(new ModelViewerWidget(app));
 
+	m_modelWindow->GetUIExtPostRender().connect(sigc::mem_fun(this, &ModelViewer::OnPostRender));
 	m_modelWindow->GetUIExtOverlay().connect(sigc::mem_fun(this, &ModelViewer::DrawTagNames));
-	m_modelWindow->GetUIExtMenu().connect(sigc::mem_fun(this, &ModelViewer::DrawShipControls));
+	m_modelWindow->GetUIExtMenu().connect(sigc::mem_fun(this, &ModelViewer::ExtendMenuBar));
 
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 }
@@ -59,6 +66,7 @@ void ModelViewer::Start()
 {
 	NavLights::Init(m_renderer);
 	Shields::Init(m_renderer);
+	ShipType::Init();
 
 	UpdateModelList();
 	UpdateDecalList();
@@ -66,11 +74,14 @@ void ModelViewer::Start()
 	Log::GetLog()->printCallback.connect(sigc::mem_fun(this, &ModelViewer::AddLog));
 
 	m_modelWindow->OnAppearing();
+
+	m_shields.reset(new Shields());
 }
 
 void ModelViewer::End()
 {
 	ClearModel();
+	m_shields.reset();
 
 	Shields::Uninit();
 	NavLights::Uninit();
@@ -176,7 +187,13 @@ void ModelViewer::AddLog(Time::DateTime, Log::Severity sv, std::string_view line
 
 void ModelViewer::ClearModel()
 {
-	m_shields.reset();
+	m_shields->ClearModel();
+	m_shieldModel.reset();
+
+	m_modelIsShip = false;
+	m_modelHasShields = false;
+	m_modelHasThrusters = false;
+
 	m_modelWindow->ClearModel();
 	m_modelName.clear();
 
@@ -383,19 +400,88 @@ void ModelViewer::OnModelLoaded()
 
 	ResetThrusters();
 
-	m_shields.reset(new Shields(model));
 	SceneGraph::DumpVisitor d(model);
 	model->GetRoot()->Accept(d);
 	Log::Verbose("{}", d.GetModelStatistics());
 
+	// Find a shipdef that uses this model to determine if this is a ship model
+	const ShipType *shipType = nullptr;
+	for (const auto &pair : ShipType::types) {
+		if (pair.second.modelName == model->GetName()) {
+			shipType = &pair.second;
+			break;
+		}
+	}
+
+	m_modelIsShip = shipType != nullptr;
+
 	SceneGraph::FindNodeVisitor visitor(SceneGraph::FindNodeVisitor::MATCH_NAME_STARTSWITH, "thruster_");
 	model->GetRoot()->Accept(visitor);
-	m_modelIsShip = !visitor.GetResults().empty();
+	m_modelHasThrusters = !visitor.GetResults().empty();
 
-	m_shields.reset(new Shields(model));
+	// Find the correct shield mesh for the ship, or fall back to legacy shield code
+	if (shipType) {
+
+		SceneGraph::Loader loader(m_renderer);
+		SceneGraph::Model *shieldModel = nullptr;
+
+		try {
+			shieldModel = loader.LoadModel(shipType->shieldName);
+
+			m_shieldModel.reset(shieldModel);
+			m_shields->ApplyModel(m_shieldModel.get());
+		} catch (SceneGraph::LoadingError &e) {}
+
+	}
 
 	m_modelSupportsDecals = model->SupportsDecals();
 	m_modelHasShields = m_shields.get() && m_shields->GetFirstShieldMesh();
+}
+
+void ModelViewer::RenderModelExtras()
+{
+	if (m_shieldModel && m_modelHasShields) {
+		m_shieldModel->Render(m_modelWindow->GetModelViewMat());
+	}
+}
+
+void ModelViewer::OnPostRender()
+{
+	RenderModelExtras();
+
+	if (!m_modelWindow->GetModel())
+		return;
+
+	RefCountedPtr<CollMesh> collMesh = m_modelWindow->GetModel()->GetCollisionMesh();
+
+	static std::unique_ptr<Graphics::Material> s_debugLinesMat;
+
+	if (!s_debugLinesMat) {
+		Graphics::MaterialDescriptor desc;
+		Graphics::RenderStateDesc rsd;
+		rsd.depthWrite = false;
+		rsd.primitiveType = Graphics::LINE_SINGLE;
+
+		s_debugLinesMat.reset(m_renderer->CreateMaterial("vtxColor", desc, rsd));
+	}
+
+	Graphics::VertexArray va(Graphics::ATTRIB_POSITION | Graphics::ATTRIB_DIFFUSE, 256);
+	if (m_showStaticCollTriBVH)
+		BuildGeomTreeVisualizer(va, collMesh->GetGeomTree()->GetTriTree(), 1);
+
+	if (m_showStaticCollEdgeBVH)
+		BuildGeomTreeVisualizer(va, collMesh->GetGeomTree()->GetEdgeTree(), 0);
+
+	if (m_showDynamicCollMesh) {
+		size_t idx = 1;
+		for (auto *geomTree : collMesh->GetDynGeomTrees()) {
+			BuildGeomTreeVisualizer(va, geomTree->GetTriTree(), idx++);
+		}
+	}
+
+	m_renderer->SetTransform(m_modelWindow->GetModelViewMat());
+
+	m_renderer->DrawBuffer(&va, s_debugLinesMat.get());
 }
 
 void ModelViewer::DrawModelSelector()
@@ -451,6 +537,41 @@ void ModelViewer::DrawTagNames()
 
 	ImVec2 pos = ImGui::GetCursorScreenPos() + ImVec2(point.x + 8.0f, size.y - point.y);
 	ImGui::GetWindowDrawList()->AddText(pos, IM_COL32_WHITE, m_selectedTag->GetName().c_str());
+}
+
+static Color get_color(int colorBase)
+{
+	switch (colorBase & 0x7) {
+		default:
+		case 0: return Color::STEELBLUE;
+		case 1: return Color::YELLOW;
+		case 2: return Color::BLUE;
+		case 3: return Color::RED;
+		case 4: return Color::GREEN;
+		case 5: return Color::WHITE;
+		case 6: return Color::GRAY;
+		case 7: return Color::PINK;
+	}
+}
+
+void ModelViewer::BuildGeomTreeVisualizer(Graphics::VertexArray &va, SingleBVHTreeBase *bvh, int colIndexBase)
+{
+	uint32_t stackLevel = 0;
+	uint32_t *stack = stackalloc(uint32_t, bvh->GetHeight() + 1);
+	// Push the root node
+	stack[stackLevel++] = 0;
+
+	while (stackLevel > 0) {
+		const SingleBVHTree::Node *node = bvh->GetNode(stack[--stackLevel]);
+
+		if (node->kids[0] != 0) {
+			// Push in reverse order for pre-order traversal
+			stack[stackLevel++] = node->kids[1];
+			stack[stackLevel++] = node->kids[0];
+		}
+
+		Graphics::Drawables::AABB::DrawVertices(va, matrix4x4fIdentity, Aabb(node->aabb.min, node->aabb.max, 0.1), get_color(colIndexBase));
+	}
 }
 
 struct NodeHierarchyVisitor : SceneGraph::NodeVisitor {
@@ -517,9 +638,50 @@ void ModelViewer::DrawModelHierarchy()
 	m_modelWindow->GetModel()->GetRoot()->Accept(v);
 }
 
+void ModelViewer::ExtendMenuBar()
+{
+	SceneGraph::Model *model = m_modelWindow->GetModel();
+	if (!model)
+		return;
+
+	if (model->GetCollisionMesh() && Draw::MenuButton("Collision")) {
+		GeomTree *gt = model->GetCollisionMesh()->GetGeomTree();
+
+		ImGui::SeparatorText("Triangle Collision BVH");
+		ImGui::Spacing();
+
+		ImGui::Checkbox("Draw BVH Tree##Tri", &m_showStaticCollTriBVH);
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Tri Tree:  SAH: %f | Num Nodes: %zu", gt->GetTriTree()->CalculateSAH(), gt->GetTriTree()->GetNumNodes());
+
+		ImGui::Spacing();
+		ImGui::SeparatorText("Edge Collision BVH");
+		ImGui::Spacing();
+
+		ImGui::Checkbox("Draw BVH Tree##Edge", &m_showStaticCollEdgeBVH);
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Edge Tree:  SAH: %f | Num Nodes: %zu", gt->GetEdgeTree()->CalculateSAH(), gt->GetEdgeTree()->GetNumNodes());
+
+		ImGui::Spacing();
+		ImGui::SeparatorText("Dynamic Collision BVH");
+		ImGui::Spacing();
+
+		ImGui::Checkbox("Draw BVH Trees##DynTri", &m_showDynamicCollMesh);
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Dynamic Collision Meshes: %zu", model->GetCollisionMesh()->GetDynGeomTrees().size());
+
+		ImGui::EndMenu();
+	}
+
+	DrawShipControls();
+}
+
 void ModelViewer::DrawShipControls()
 {
-	bool showMenu = m_modelIsShip || m_modelHasShields || m_modelSupportsDecals;
+	bool showMenu = m_modelIsShip || m_modelHasShields || m_modelHasThrusters || m_modelSupportsDecals;
 
 	if (!showMenu || !Draw::MenuButton("Ship"))
 		return;
@@ -555,7 +717,7 @@ void ModelViewer::DrawShipControls()
 		ImGui::Spacing();
 	}
 
-	if (m_modelIsShip) {
+	if (m_modelHasThrusters) {
 		bool valuesChanged = false;
 		ImGui::TextUnformatted("Linear Thrust");
 		ImGui::Spacing();
@@ -585,7 +747,9 @@ void ModelViewer::DrawShipControls()
 			m_modelWindow->GetModel()->SetThrust(m_linearThrust, m_angularThrust);
 
 		ImGui::Spacing();
+	}
 
+	if (m_modelIsShip) {
 		ImGui::SeparatorText("Weapons");
 		ImGui::Spacing();
 

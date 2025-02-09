@@ -1,4 +1,176 @@
+February
+  * Fixes
+    * Replace `texture2D()` with `texture()` (#6045)
+    * Fixing tail Malabar/Vatakara stabilizer decals (#6061)
+
+  * Internal
+    * Add amd64 architecture (#6043)
+    * build-ci: allow re-running release builds on workflow_dispatch (#6037)
+    * Conform to C.128, aka: Virtual functions should specify exactly one of virtual, override, or final (#5995)
+    * Store AtmosphereParameters in BaseSphere, calculate with material setup (#6059)
+
+Pioneer 2025-02-03 Release
+  * Fixes
+    * Fix error when tradeship attempts to redock to nearby starport (#6035)
+    * Fix crash in Assassination mission (#6035)
+    * Fix thrusters offered in SecondHand advert (#6035)
+    * Fix the Vatakara not having a shield model (#6034)
+    * Fix Game crashes when disabling rotation while exiting a station (#6034)
+    * Fix terrain texture disappearance / GeoPatch/GeoSphere refactoring (#5979)
+
+  * Internal
+    * CMake: Rename PROJECT_VERSION -> PIONEER_VERSION (#6036)
+    * Fix compilation on Clang v19+ (#6034)
+
+January 2025
+  * New Features
+    * Add four new cultures (#6008)
+    * Noise detail texture sampling for gas giant rings (#5985)
+    * Improve Naval and Smart missiles (#6027)
+    * New hyperdrive algorithms and internal hyperfuel tanks (#6026)
+    * Add support for new equipment to the game start menu. (#6029)
+
+  * Fixes
+    * Fix billboard atlas animation playing order and frame count (#5997)
+    * Ship pattern fix (#6005)
+    * Add equipment for all size slots (#5993)
+    * Fix ships spawned without enough threat value for the base hull receiving no equipment (#6006)
+    * Fix assertion when spawning more police than a station has pads (no issue)
+    * Fix assertion when pressing the missile fire keybind with no installed missiles (#6007)
+    * Fix assertion when hovering a notification (#6004)
+    * Fix randomly-generated starports not having a population (#5955)
+    * Fixed a rogue trailing quote in the Tolisay faction name (#6024)
+    * Fixed Error in debug view when tab object has no label (#6022)
+    * Fixed Game crashes on hyperjump with star field density set to 0 (#5880)
+    * Fixed System Editor does not load position within the sector (#6012)
+    * Fix unexpected behaviour from Missile UI buttons (#4159)
+    * Fix missile firing during paused game (#5926)
+    * Fix Assassination stack trace crash when jumping into target system too late (#6032)
+    * Fix bugs, expand equipment coverage, add detailed stats for equipment (#6032)
+
+  * Internal
+    * Display how many instanced objects are drawn (#5994)
+    * Add automated ship JSON import from Notion to github (#6019)
+    * Add support for required slots, validate shipdefs on startup (#6013)
+    * Increment savefile version to v91 (and update NameGen list) (#6010)
+    * Updating weapon tags to match the ship DB on Notion (#6028)
+    * Added launch settings to vscode  (#6032)
+
+December 2024
+  * New Features
+    * Fully support installing multiple weapons per ship (#5991)
+    * Expose galaxy parameters - allow changing explored space radius (#5941)
+
+November 2024
+  * New Features
+    * Total overhaul of Ship Equipment - EquipSet v2 (#5734)
+    * Degrade scooped cargo requiring cargo life support (#5949)
+    * Improvement: Radar auto-zoom on cargo canisters (#5948)
+    * Add Buy and Sell prices to the Commodity Market (#5945)
+    * Natrix overhaul (#5963)
+    * Natrix patterns (#5975)
+    * feat(ui): add keybinding for target radial (#5962)
+    * feat(radar): add manual zoom mode to scanner (#5958)
+    * feat(radar): capture mouse wheel for zooming radar (#5978)
+    * Feat/radar improvements (e.g. intermediate zoom step, etc.) (#5984)
+
+  * Internal
+    * Fix builds which use "-DDEBUG" (#5946)
+    * Lua function GetEquipFree("cargo") is not behaving as expected (#3450)
+    * Build Cleanup (#5956)
+    * Optimize CityOnPlanet CPU-side rendering cost (#5943)
+    * Removing normal map from default cockpit materials (#5964)
+    * Fully expose InputBindings to Lua (#5965)
+    * Small fixes and improvements (#5968)
+    * Linux de-profile and msvc compilation fix (#5967)
+    * More default colours and cleanup copy-n-paste in GeoPatch (#5973)
+    * Cleanup Sound interfaces to allow plugging in alternative backend (#5959)
+    * Cleanup and unify Feat/view event and names (#5974)
+    * Allocate light data UBO from per-frame allocator, misc. fixes and cleanup (#5970)
+
+  * Fixes
+    * Fix $HOME/.pioneer randomly created on Linux (#5944)
+    * Ubuntu 24.04 & openSuSE Tumbleweed - Illegal instruction, core dumped (#5877)
+    * Preview information for modules in particular for hyperdrives and guns (#2820)
+    * New game may give you zero equipment (#4803)
+    * Weapon on sale not installed (#5567)
+    * Missiles buttons not showing up (#5887)
+    * Buying and selling ship equipment does not require confirmation (#5020)
+    * assertion failed in equipment-market.lua:91 (#5883)
+    * fix crash bugs in Passengers introduced by equip-v2 (#5957)
+    * Fix the ability to start from all start positions (#5971)
+    * Fix incorrect dV calculations in ship market (#5970)
+    * Fixing icons.svg after the radar updates (#5982)
+    * Fix(flightlog): fix crash when removing a flight log entry (#5988)
+    * Updating Vatakara to use the shield mesh of the Malabar (#5990)
+
+October 2024
+  * New Features
+    * NameGen - Spice up the station names (#5906)
+    * Add interior lighting to stations (#5823)
+    * Feat/reset view on hyperspace exit (#5922)
+    * Rework scout mission display and completion (#5932)
+
+  * Internal
+    * Improve narrow-phase collision physics performance (#5789)
+    * CppCheck 2.15 performance cleanup (#5931)
+    * Misc. code improvements (#5937)
+    * refactor: run SaveGameStats in a job (#5934)
+
+  * Fixes
+    * Fix hyperspace route update bug across save/load cycle (#5924)
+    * Fix creating save game directory on startup & implementation improvement (#5927)
+
+September 2024
+  * New Features
+    * Icelandic culture name generator fix-up (#5913)
+
+  * Internal
+    * Simplified random station selection for delivery missions (#5915)
+
+  * Fixes
+    * Fix savefiles directory not being created (#5919)
+    * Update advice on hyper drive mechanics (#5923)
+
+August 2024
+  * New Features
+    * Implement a consistent (and purple!) UI theme (#5865)
+    * Added Perf-Info button to Dump a system to systemeditor compatible JSON (#5888)
+    * Station Police shows: crime records, rules & regulations, banned goods (#5863)
+    * Redesign Save/Load window, add UI Notification system (#5898)
+    * Added/remade 3 new factions (#5892)
+    * Add ability to reroll random systems to System Editor (#5901)
+    * Clarify system-level economy display (#5900)
+    * Polaris is also found by name "North Star" (#5908)
+    * Add Hawaiian names (#5910)
+
+  * Fixes
+    * Fix crash in mission list in hyper space when combat mission (#5872)
+    * Invert illegal commodities icons in the Economy & Trade view (#5884)
+    * Police patrol improvement, don't confuse player with pirate (#5809)
+    * Fix intro screen ship spinner parade's lack of randomness for some (#5896)
+    * Repopulate BBS with adverts if empty (#5894)
+    * Better explanation of the combat mission due date (#5891)
+    * Create BBS if empty (#5912)
+
+  * Internal Changes
+    * Separating shield.models (#5853)
+    * Separate shield meshes from ship models (#5840)
+    * Don't build against lzcnt by default and enable USE_SSE42 only on Intel (#5871)
+    * Improve PerfInfo debug window (#5899)
+    * Move local, and bright stars systems definitions from lua to json (#5911)
+
 July 2024
+  * New Features
+    * Add "jettison all" buttons to cargo sidebar menu (#5867)
+    * Add Easter egg. Story about time traveller  (#5864)
+
+  * Internal Changes
+    * Fix debug commodities tab (#5861)
+    * News Event: debug can also remove adverts (#5862)
+    * Improve Lua type checking for string enums (#5869
+
+Pioneer 2024-07-10 Release
   * Fixes
     * Fix bad placeholders in translated strings (#5852)
     * Fix DLLs not being installed on Windows builds (#5850)
@@ -17,7 +189,7 @@ June 2024
 
 May 2024
   * Fixes
-    * Fixing misalligned little parts of the Xylophis cockpit (#5834)
+    * Fixing misaligned little parts of the Xylophis cockpit (#5834)
     * Removing stray triangles from Bluenose (#5835)
 
   * Internal Changes
@@ -33,7 +205,7 @@ April 2024
 
   * Fixes
     * Police Coronatrix texture fix (#5816)
-    * Fix loud white nosie after mouse steering (#5812)
+    * Fix loud white noise after mouse steering (#5812)
     * Fix location recovery in save files (#5801)
     * Use variable "dist" (SAR mission) for the distance in the BB if specified (#5818)
     * Fixing flipping landing gear animation of Bowfin (#5814)
@@ -72,7 +244,7 @@ February 2024 (dev)
     * Fixed broken screenshots links (#5761)
     * Adding editor.txt, removing ModelViewer.txt to document new editor (#5737)
     * Misc cleanup, fixes, and Lua function library improvements (#5773)
-    * Update Github Upload-Artifact action for Windows CI (#5781)
+    * Update Github Upload-Artefact action for Windows CI (#5781)
     * Add a recovery reader for the v90 flight log (#5763)
 
   * Fixes

@@ -1,4 +1,4 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Game    = require 'Game'
@@ -224,9 +224,9 @@ function SystemEconView:drawCommodityList(commList, illegalList, thisSystem, oth
 
 				-- only display illegal icon if the commodity is actually legal in the other system
 				if otherSystem and (info[2] or info[3]) then
-					drawIcon(SystemEconView.ClassifyPrice(info[2]), iconSize)
-					ui.sameLine(0, 0)
 					drawIcon(SystemEconView.ClassifyPrice(info[3]), iconSize)
+					ui.sameLine(0, 0)
+					drawIcon(SystemEconView.ClassifyPrice(info[2]), iconSize)
 				end
 			end)
 
@@ -246,7 +246,24 @@ function SystemEconView:drawSystemComparison(selected, current)
 	local otherSys = showComparison and current or nil
 
 	ui.withFont(pionillium.body, function()
-		ui.text(lui.COMMODITY_TRADE_ANALYSIS)
+		ui.text(lui.COMMODITY_TRADE_ANALYSIS_SYSTEM)
+
+		local iconSize = Vector2(ui.getTextLineHeight())
+		ui.sameLine(ui.getContentRegion().x - iconSize.x + ui.getWindowPadding().x)
+		ui.icon(icons.info, iconSize, colors.fontDim)
+
+		if ui.isItemHovered() then
+			ui.withFont(pionillium.details, function()
+				ui.customTooltip(function()
+					ui.pushTextWrapPos(ui.getTextLineHeight() * 20)
+					ui.textWrapped(lui.COMMODITY_TRADE_ANALYSIS_TOOLTIP_1)
+					ui.spacing()
+					ui.textWrapped(lui.COMMODITY_TRADE_ANALYSIS_TOOLTIP_2)
+					ui.popTextWrapPos()
+				end)
+			end)
+		end
+
 		ui.spacing()
 
 		ui.withFont(pionillium.heading, function()
@@ -343,7 +360,7 @@ function SystemEconView:drawPriceList(key, prices)
 		drawIcon(profit, iconSize)
 
 		ui.tableSetColumnIndex(2)
-		ui.textColored(ui.theme.styleColors.gray_200, price)
+		ui.text(price)
 	end
 
 	ui.endTable()
@@ -388,7 +405,7 @@ function SystemEconView:drawSystemFinder()
 
 			ui.withFont(pionillium.heading, function()
 				local price = ui.Format.Money(self.savedMarket[key])
-				ui.textColored(ui.theme.styleColors.gray_200, commName)
+				ui.text(commName)
 				ui.sameLine(ui.getContentRegion().x - ui.calcTextSize(price).x)
 				ui.text(price)
 			end)
@@ -410,7 +427,7 @@ function SystemEconView:drawSystemFinder()
 
 				local idx = self:drawPriceList(key, entries)
 				if idx then
-					Game.sectorView:GotoSystemPath(entries[idx][3])
+					Game.sectorView:SwitchToPath(entries[idx][3])
 				end
 
 			elseif self.compareMode == CompareMode.ByStation then

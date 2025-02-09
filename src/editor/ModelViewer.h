@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #pragma once
@@ -22,6 +22,8 @@ namespace SceneGraph {
 	class Model;
 	class Tag;
 }
+
+class SingleBVHTreeBase;
 
 namespace Editor {
 
@@ -53,6 +55,8 @@ protected:
 private:
 	void AddLog(Time::DateTime, Log::Severity, std::string_view line);
 
+	void RenderModelExtras();
+
 	void UpdateModelList();
 	void UpdateDecalList();
 	void UpdateShield();
@@ -69,6 +73,12 @@ private:
 	void ResetThrusters();
 	void Screenshot();
 	void SaveModelToBinary();
+
+	// Draw additional debug overlays
+	void OnPostRender();
+	void BuildGeomTreeVisualizer(Graphics::VertexArray &va, SingleBVHTreeBase *bvh, int colIndexBase);
+
+	void ExtendMenuBar();
 
 	void SetupLayout(ImGuiID dockspaceID);
 	void DrawModelSelector();
@@ -106,9 +116,11 @@ private:
 
 	bool m_modelIsShip = false;
 	bool m_modelHasShields = false;
+	bool m_modelHasThrusters = false;
 
 	std::unique_ptr<Shields> m_shields;
 	std::unique_ptr<SceneGraph::Model> m_gunModel;
+	std::unique_ptr<SceneGraph::Model> m_shieldModel;
 
 	bool m_screenshotQueued = false;
 	bool m_shieldIsHit = false;
@@ -118,6 +130,10 @@ private:
 	bool m_showShields = false;
 	bool m_showUI = true;
 	bool m_metricsWindow = false;
+
+	bool m_showStaticCollTriBVH = false;
+	bool m_showStaticCollEdgeBVH = false;
+	bool m_showDynamicCollMesh = false;
 };
 
 } // namespace Editor

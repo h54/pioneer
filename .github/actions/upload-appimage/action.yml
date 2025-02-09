@@ -14,6 +14,9 @@ inputs:
   upload_release:
     description: "should the binary be uploaded to a tagged release?"
     default: false
+  tag_name:
+    description: "release tag to upload artifacts to"
+    default: ""
 
 runs:
   using: "composite"
@@ -33,15 +36,18 @@ runs:
         ARCH=x86_64 ./linuxdeploy-x86_64.AppImage --appdir "out/install/pioneer-$BUILD_SLUG" --output appimage
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.artifact_name }}
         path: ${{ format('Pioneer*.AppImage', inputs.build_slug) }}
+        retention-days: 14
+        compression-level: 0 # Contains a pre-compressed AppImage file...
 
     - name: Upload Release Files
       uses: softprops/action-gh-release@v1
-      if: ${{ github.event_name == 'release' && inputs.upload_release }}
+      if: ${{ (github.event_name == 'release' || github.event_name == 'workflow_dispatch') && inputs.upload_release }}
       with:
         files: Pioneer*.AppImage
+        tag_name: ${{ inputs.tag_name || github.ref_name }}
       env:
         GITHUB_TOKEN: ${{ inputs.token }}

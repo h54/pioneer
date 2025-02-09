@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef INPUT_H
@@ -40,7 +40,7 @@ namespace Input {
 	};
 
 	struct BindingPage {
-		BindingGroup *GetBindingGroup(std::string id) { return &groups[id]; }
+		BindingGroup *GetBindingGroup(const std::string &id) { return &groups[id]; }
 
 		std::map<std::string, BindingGroup> groups;
 	};
@@ -49,9 +49,10 @@ namespace Input {
 		using Axis = InputBindings::Axis;
 		using Action = InputBindings::Action;
 
-		InputFrame(Input::Manager *man, bool modal = false) :
+		InputFrame(Input::Manager *man, bool modal = false, std::string_view id = "") :
 			manager(man),
-			modal(modal)
+			modal(modal),
+			id(id)
 		{}
 
 		std::vector<Action *> actions;
@@ -61,18 +62,13 @@ namespace Input {
 		Manager *manager = nullptr;
 		bool active = false;
 		bool modal = false;
+		std::string id;
 
 		// Call this at startup to register all the bindings associated with the frame.
 		virtual void RegisterBindings(){};
 
-		// Called when the frame is added to the stack.
-		sigc::signal<void, InputFrame *> onFrameAdded;
-
-		// Called when the frame is removed from the stack.
-		sigc::signal<void, InputFrame *> onFrameRemoved;
-
-		Action *AddAction(std::string id);
-		Axis *AddAxis(std::string id);
+		Action *AddAction(const std::string &id);
+		Axis *AddAxis(const std::string &id);
 	};
 
 	struct JoystickInfo {
@@ -138,8 +134,8 @@ public:
 	// When enable is false, this prevents the input system from writing to the config file.
 	void EnableConfigSaving(bool enable) { m_enableConfigSaving = enable; }
 
-	BindingPage *GetBindingPage(std::string id) { return &bindingPages[id]; }
-	std::map<std::string, BindingPage> GetBindingPages() { return bindingPages; }
+	BindingPage *GetBindingPage(const std::string &id) { return &bindingPages[id]; }
+	const std::map<std::string, BindingPage>& GetBindingPages() const { return bindingPages; }
 
 	// Pushes an InputFrame onto the input stack.
 	bool AddInputFrame(InputFrame *frame);
@@ -158,13 +154,15 @@ public:
 
 	// Creates a new action binding, copying the provided binding.
 	// The returned binding pointer points to the actual binding.
-	InputBindings::Action *AddActionBinding(std::string id, BindingGroup *group, InputBindings::Action &&binding);
-	InputBindings::Action *GetActionBinding(std::string id);
+	InputBindings::Action *AddActionBinding(const std::string &id, BindingGroup *group, InputBindings::Action &&binding);
+	InputBindings::Action *GetActionBinding(const std::string &id);
+	bool HasActionBinding(const std::string &id) const;
 
 	// Creates a new axis binding, copying the provided binding.
 	// The returned binding pointer points to the actual binding.
-	InputBindings::Axis *AddAxisBinding(std::string id, BindingGroup *group, InputBindings::Axis &&binding);
-	InputBindings::Axis *GetAxisBinding(std::string id);
+	InputBindings::Axis *AddAxisBinding(const std::string &id, BindingGroup *group, InputBindings::Axis &&binding);
+	InputBindings::Axis *GetAxisBinding(const std::string &id);
+	bool HasAxisBinding(const std::string &id) const;
 
 	// Call EnableBindings() to temporarily disable handling input bindings while
 	// you're recording a new input binding or are in a modal window.

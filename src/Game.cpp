@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "buildopts.h"
@@ -24,6 +24,7 @@
 #endif
 #include "Pi.h"
 #include "Player.h"
+#include "SaveGameManager.h"
 #include "SectorView.h"
 #include "Sfx.h"
 #include "Space.h"
@@ -31,14 +32,12 @@
 #include "SystemView.h"
 #include "WorldView.h"
 #include "galaxy/GalaxyGenerator.h"
-#include "pigui/PiGuiView.h"
 #include "ship/PlayerShipController.h"
-
-static const int s_saveVersion = 90;
 
 Game::Game(const SystemPath &path, const double startDateTime, const char *shipType) :
 	m_galaxy(GalaxyGenerator::Create()),
 	m_time(startDateTime),
+	m_playedDuration(0),
 	m_state(State::NORMAL),
 	m_wantHyperspace(false),
 	m_hyperspaceProgress(0),
@@ -107,6 +106,9 @@ Game::Game(const SystemPath &path, const double startDateTime, const char *shipT
 		m_player->SetVelocity(randomOrthoDirection * orbitalVelocity);
 	}
 
+	// Record when we started playing this save so we can determine how long it's been played this session
+	m_sessionStartTimestamp = std::chrono::steady_clock::now().time_since_epoch().count();
+
 	CreateViews();
 
 	EmitPauseState(IsPaused());
@@ -149,8 +151,8 @@ Game::Game(const Json &jsonObj) :
 	try {
 		int version = jsonObj["version"];
 		Output("savefile version: %d\n", version);
-		if (version != s_saveVersion) {
-			Output("can't load savefile, expected version: %d\n", s_saveVersion);
+		if (version != SaveGameManager::CurrentSaveVersion()) {
+			Output("can't load savefile, expected version: %d\n", SaveGameManager::CurrentSaveVersion());
 			throw SavedGameWrongVersionException();
 		}
 	} catch (Json::type_error &) {
@@ -189,6 +191,10 @@ Game::Game(const Json &jsonObj) :
 		for (Uint32 i = 0; i < hyperspaceCloudArray.size(); i++) {
 			m_hyperspaceClouds.push_back(static_cast<HyperspaceCloud *>(Body::FromJson(hyperspaceCloudArray[i], 0)));
 		}
+
+		const Json &gameInfo = jsonObj["game_info"];
+		m_playedDuration = gameInfo.value("duration", 0.0);
+
 	} catch (Json::type_error &) {
 		throw SavedGameCorruptException();
 	}
@@ -205,6 +211,8 @@ Game::Game(const Json &jsonObj) :
 
 	Pi::luaSerializer->UninitTableRefs();
 
+	m_sessionStartTimestamp = std::chrono::steady_clock::now().time_since_epoch().count();
+
 	EmitPauseState(IsPaused());
 
 	Pi::GetApp()->RequestProfileFrame("LoadGame");
@@ -218,7 +226,7 @@ void Game::ToJson(Json &jsonObj)
 	Pi::luaSerializer->SavePersistent(jsonObj);
 
 	// version
-	jsonObj["version"] = s_saveVersion;
+	jsonObj["version"] = SaveGameManager::CurrentSaveVersion();
 
 	// galaxy generator
 	m_galaxy->ToJson(jsonObj);
@@ -267,9 +275,32 @@ void Game::ToJson(Json &jsonObj)
 	Json gameInfo = Json::object();
 	float credits = LuaObject<Player>::CallMethod<float>(Pi::player, "GetMoney");
 
+	// Get the player's character name
+	// TODO: add an easier way to get the player's character object once player+ship are split more firmly
+	pi_lua_import(Lua::manager->GetLuaState(), "Character");
+	LuaTable characters(Lua::manager->GetLuaState(), -1);
+
+	std::string character_name = characters.Sub("persistent").Sub("player").Get<std::string>("name");
+	gameInfo["character"] = character_name;
+
+	// Remove the Character table
+	lua_pop(Lua::manager->GetLuaState(), 1);
+
+	// Determine how long we've been playing this save (since we created or loaded it)
+	std::chrono::steady_clock::duration start_time(m_sessionStartTimestamp);
+	auto playtime_duration = std::chrono::steady_clock::now().time_since_epoch() - start_time;
+
+	auto playtime_this_session = std::chrono::duration_cast<std::chrono::seconds>(playtime_duration).count();
+
+	gameInfo["duration"] = m_playedDuration + playtime_this_session;
+
+	// Information about the player's ship
+	gameInfo["shipHull"] = Pi::player->GetShipType()->name;
+	gameInfo["shipName"] = Pi::player->GetShipName();
+
 	gameInfo["system"] = Pi::game->GetSpace()->GetStarSystem()->GetName();
 	gameInfo["credits"] = credits;
-	gameInfo["ship"] = Pi::player->GetShipType()->modelName;
+	gameInfo["ship"] = Pi::player->GetShipType()->id;
 	if (Pi::player->IsDocked()) {
 		gameInfo["docked_at"] = Pi::player->GetDockedWith()->GetSystemBody()->GetName();
 	}
@@ -792,8 +823,8 @@ void Game::Views::Init(Game *game)
 	m_sectorView = new SectorView(game);
 	m_worldView = new WorldView(game);
 	m_systemView = new SystemView(game);
-	m_spaceStationView = new PiGuiView("StationView");
-	m_infoView = new PiGuiView("InfoView");
+	m_spaceStationView = new View("StationView");
+	m_infoView = new View("InfoView");
 	m_deathView = new DeathView(game);
 
 #if WITH_OBJECTVIEWER
@@ -809,8 +840,8 @@ void Game::Views::LoadFromJson(const Json &jsonObj, Game *game)
 	m_worldView = new WorldView(jsonObj, game);
 
 	m_systemView = new SystemView(game);
-	m_spaceStationView = new PiGuiView("StationView");
-	m_infoView = new PiGuiView("InfoView");
+	m_spaceStationView = new View("StationView");
+	m_infoView = new View("InfoView");
 	m_deathView = new DeathView(game);
 
 #if WITH_OBJECTVIEWER
@@ -892,112 +923,4 @@ void Game::EmitPauseState(bool paused)
 		LuaEvent::Queue(PiGui::GetEventQueue(), "onGameResumed");
 	}
 	LuaEvent::Emit();
-}
-
-Json Game::LoadGameToJson(const std::string &filename)
-{
-	Json rootNode = JsonUtils::LoadJsonSaveFile(FileSystem::JoinPathBelow(Pi::SAVE_DIR_NAME, filename), FileSystem::userFiles);
-	if (!rootNode.is_object()) {
-		Output("Loading saved game '%s' failed.\n", filename.c_str());
-		throw SavedGameCorruptException();
-	}
-	if (!rootNode["version"].is_number_integer() || rootNode["version"].get<int>() != s_saveVersion) {
-		Output("Loading saved game '%s' failed: wrong save file version.\n", filename.c_str());
-		throw SavedGameCorruptException();
-	}
-	return rootNode;
-}
-
-Game *Game::LoadGame(const std::string &filename)
-{
-	Output("Game::LoadGame('%s')\n", filename.c_str());
-
-	Json rootNode = LoadGameToJson(filename);
-
-	try {
-		return new Game(rootNode);
-	} catch (const Json::type_error &) {
-		throw SavedGameCorruptException();
-	} catch (const Json::out_of_range &) {
-		throw SavedGameCorruptException();
-	}
-}
-
-bool Game::CanLoadGame(const std::string &filename)
-{
-	FILE *f;
-	try {
-		f = FileSystem::userFiles.OpenReadStream(FileSystem::JoinPathBelow(Pi::SAVE_DIR_NAME, filename));
-	} catch (const std::invalid_argument &) {
-		return false;
-	}
-	if (!f)
-		return false;
-
-	fclose(f);
-	return true;
-}
-
-bool Game::DeleteSave(const std::string &filename)
-{
-	std::string filePath;
-	try {
-		filePath = FileSystem::JoinPathBelow(Pi::SAVE_DIR_NAME, filename);
-	} catch (const std::invalid_argument &) {
-		return false;
-	}
-	return FileSystem::userFiles.RemoveFile(filePath);
-}
-
-void Game::SaveGame(const std::string &filename, Game *game)
-{
-	PROFILE_SCOPED()
-	assert(game);
-
-	if (game->IsHyperspace())
-		throw CannotSaveInHyperspace();
-
-	if (game->GetPlayer()->IsDead())
-		throw CannotSaveDeadPlayer();
-
-	if (!FileSystem::userFiles.MakeDirectory(Pi::SAVE_DIR_NAME))
-		throw CouldNotOpenFileException();
-
-	if (!FileSystem::IsValidFilename(filename))
-		throw std::invalid_argument(filename);
-	FILE *f;
-	try {
-		f = FileSystem::userFiles.OpenWriteStream(FileSystem::JoinPathBelow(Pi::SAVE_DIR_NAME, filename));
-	} catch (const std::invalid_argument &) {
-		throw CouldNotOpenFileException();
-	}
-	if (!f)
-		throw CouldNotOpenFileException();
-	Json rootNode;
-	game->ToJson(rootNode); // Encode the game data as JSON and give to the root value.
-	std::vector<uint8_t> jsonData;
-	{
-		PROFILE_SCOPED_DESC("json.to_cbor");
-		jsonData = Json::to_cbor(rootNode); // Convert the JSON data to CBOR.
-	}
-
-	try {
-		// Compress the CBOR data.
-		const std::string comressed_data = gzip::CompressGZip(
-			std::string(reinterpret_cast<const char *>(jsonData.data()), jsonData.size()),
-			filename + ".json");
-		size_t nwritten = fwrite(comressed_data.data(), comressed_data.size(), 1, f);
-		fclose(f);
-		if (nwritten != 1) throw CouldNotWriteToFileException();
-	} catch (gzip::CompressionFailedException) {
-		fclose(f);
-		throw CouldNotWriteToFileException();
-	}
-
-	Pi::GetApp()->RequestProfileFrame("SaveGame");
-}
-
-int Game::CurrentSaveVersion()
-{
-	return s_saveVersion;
 }

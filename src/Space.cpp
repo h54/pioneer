@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Space.h"
@@ -22,11 +22,12 @@
 #include "collider/CollisionSpace.h"
 #include "core/Log.h"
 #include "galaxy/Galaxy.h"
-#include "graphics/Graphics.h"
 #include "lua/LuaEvent.h"
 #include "lua/LuaTimer.h"
+
+#include "profiler/Profiler.h"
+
 #include <algorithm>
-#include <functional>
 
 //#define DEBUG_CACHE
 
@@ -80,13 +81,14 @@ static void RelocateStarportIfNecessary(SystemBody *sbody, Planet *planet, vecto
 		// check height at 6 points around the starport center stays within variation tolerances
 		// GetHeight gives a varying height field in 3 dimensions.
 		// Given it's smoothly varying it's fine to sample it in arbitrary directions to get an idea of how sharply it varies
-		double v[6];
-		v[0] = fabs(planet->GetTerrainHeight(vector3d(pos_.x + delta, pos_.y, pos_.z)) - radius - height);
-		v[1] = fabs(planet->GetTerrainHeight(vector3d(pos_.x - delta, pos_.y, pos_.z)) - radius - height);
-		v[2] = fabs(planet->GetTerrainHeight(vector3d(pos_.x, pos_.y, pos_.z + delta)) - radius - height);
-		v[3] = fabs(planet->GetTerrainHeight(vector3d(pos_.x, pos_.y, pos_.z - delta)) - radius - height);
-		v[4] = fabs(planet->GetTerrainHeight(vector3d(pos_.x, pos_.y + delta, pos_.z)) - radius - height);
-		v[5] = fabs(planet->GetTerrainHeight(vector3d(pos_.x, pos_.y - delta, pos_.z)) - radius - height);
+		double v[6]{
+			fabs(planet->GetTerrainHeight(vector3d(pos_.x + delta, pos_.y, pos_.z)) - radius - height),
+			fabs(planet->GetTerrainHeight(vector3d(pos_.x - delta, pos_.y, pos_.z)) - radius - height),
+			fabs(planet->GetTerrainHeight(vector3d(pos_.x, pos_.y, pos_.z + delta)) - radius - height),
+			fabs(planet->GetTerrainHeight(vector3d(pos_.x, pos_.y, pos_.z - delta)) - radius - height),
+			fabs(planet->GetTerrainHeight(vector3d(pos_.x, pos_.y + delta, pos_.z)) - radius - height),
+			fabs(planet->GetTerrainHeight(vector3d(pos_.x, pos_.y - delta, pos_.z)) - radius - height),
+		};
 
 		// break if variation for all points is within limits
 		double variationMax = 0.0;
@@ -1085,8 +1087,9 @@ void Space::TimeStep(float step)
 	}
 	Frame::UpdateOrbitRails(m_game->GetTime(), m_game->GetTimeStep());
 
-	for (Body *b : m_bodies)
+	for (Body *b : m_bodies) {
 		b->TimeStepUpdate(step);
+	}
 
 	LuaEvent::Emit();
 	Pi::luaTimer->Tick();

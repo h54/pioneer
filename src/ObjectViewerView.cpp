@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "ObjectViewerView.h"
@@ -27,14 +27,13 @@
 #if WITH_OBJECTVIEWER
 
 ObjectViewerView::ObjectViewerView() :
-	PiGuiView("ObjectViewerView"),
+	View("ObjectViewerView"),
 	m_targetBody(nullptr),
 	m_systemBody(nullptr),
-	m_state{}
+	m_state{},
+	viewingDist(1000.0f),
+	m_camRot(matrix4x4d::Identity())
 {
-	viewingDist = 1000.0f;
-	m_camRot = matrix4x4d::Identity();
-
 	float znear;
 	float zfar;
 	Pi::renderer->GetNearFarRange(znear, zfar);
@@ -124,8 +123,9 @@ void ObjectViewerView::ReloadState()
 
 void ObjectViewerView::Update()
 {
-	if (Pi::input->KeyState(SDLK_EQUALS)) viewingDist *= 0.99f;
-	if (Pi::input->KeyState(SDLK_MINUS)) viewingDist *= 1.01f;
+	const float zoomScaler = (Pi::input->KeyState(SDLK_LSHIFT) || Pi::input->KeyState(SDLK_RSHIFT)) ? 0.001f : 0.01f;
+	if (Pi::input->KeyState(SDLK_EQUALS)) viewingDist *= (1.0f - zoomScaler);
+	if (Pi::input->KeyState(SDLK_MINUS)) viewingDist *= (1.0f + zoomScaler);
 	viewingDist = Clamp(viewingDist, 10.0f, 1e12f);
 
 	Body *body = Pi::player->GetNavTarget();
@@ -254,7 +254,7 @@ void ObjectViewerView::DrawPiGui()
 		DrawControlsWindow();
 	}
 
-	PiGuiView::DrawPiGui();
+	View::DrawPiGui();
 }
 
 static constexpr fixed dtofixed(double val, uint32_t denom = 1 << 16)

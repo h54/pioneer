@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _AABB_H
@@ -119,6 +119,13 @@ struct AABB {
 
 	auto IsIn(Vec3 point) const { return point >= min && point <= max; }
 	auto Intersects(const AABB &rhs) const { return min < rhs.max && max > rhs.min; }
+
+	// Compute the surface area of this AABB for surface area heuristic computations
+	auto SurfaceArea() const
+	{
+		Vec3 size = max - min;
+		return Number(2.0) * (size.x * size.y + size.x * size.z + size.y * size.z);
+	}
 };
 
 using AABBd = AABB<vector3d>;

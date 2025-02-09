@@ -1,4 +1,4 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Comms = require 'Comms'
@@ -130,7 +130,7 @@ local onShipDocked = function (ship, starport)
 		ship:SetHullPercent()
 		Trader.addEquip(ship)
 	end
-	Trader.addFuel(ship)
+	Trader.addHyperdriveFuel(ship)
 	ship:SetFuelPercent()
 
 	if trader.status == 'docked' then
@@ -246,7 +246,7 @@ local onShipHit = function (ship, attacker)
 	-- maybe jettison a bit of cargo
 	if Engine.rand:Number(1) < trader.chance then
 		local cargo_type = nil
-		local max_cap = ShipDef[ship.shipId].capacity
+		local max_cap = ShipDef[ship.shipId].equipCapacity
 
 		---@type CargoManager
 		local cargoMgr = ship:GetComponent('CargoManager')

@@ -1,4 +1,4 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Engine = require 'Engine'
@@ -8,14 +8,13 @@ local Space = require 'Space'
 local Comms = require 'Comms'
 local Event = require 'Event'
 local Mission = require 'Mission'
-local MissionUtils = require 'modules.MissionUtils'
 local Format = require 'Format'
 local Serializer = require 'Serializer'
 local Character = require 'Character'
-local Equipment = require 'Equipment'
-local ShipDef = require 'ShipDef'
-local Ship = require 'Ship'
 local utils = require 'utils'
+
+local MissionUtils = require 'modules.MissionUtils'
+local ShipBuilder = require 'modules.MissionUtils.ShipBuilder'
 
 local l = Lang.GetResource("module-deliverpackage")
 local lc = Lang.GetResource 'core'
@@ -249,10 +248,9 @@ local placeAdvert = function (station, ad)
 	ads[ref] = ad
 end
 
--- return statement is nil if no advert was created, else it is bool:
--- true if a localdelivery, false for non-local
+-- return statement is the created advert or nil
 local makeAdvert = function (station, manualFlavour, nearbystations)
-	local reward, due, location, nearbysystem, dist, timeout
+	local reward, due, location, dist, timeout
 	local client = Character.New()
 
 	-- set flavour manually if a second arg is given
@@ -262,7 +260,6 @@ local makeAdvert = function (station, manualFlavour, nearbystations)
 	local risk = flavours[flavour].risk
 
 	if flavours[flavour].localdelivery then
-		nearbysystem = Game.system
 		if nearbystations == nil then
 			-- discard stations closer than 1000m and further than 20AU
 			nearbystations = findNearbyStations(station, 1000, 1.4960e11 * 20)
@@ -273,13 +270,11 @@ local makeAdvert = function (station, manualFlavour, nearbystations)
 		due =(60*60*18 + MissionUtils.TravelTimeLocal(dist)) * (1.5-urgency) * Engine.rand:Number(0.9,1.1)
 	else
 		if nearbysystems == nil then
-			nearbysystems = Game.system:GetNearbySystems(max_delivery_dist, function (s) return #s:GetStationPaths() > 0 end)
+			nearbysystems = MissionUtils.GetNearbyStationPaths(Game.system, max_delivery_dist)
 		end
 		if #nearbysystems == 0 then return nil end
-		nearbysystem = nearbysystems[Engine.rand:Integer(1,#nearbysystems)]
-		dist = nearbysystem:DistanceTo(Game.system)
-		local nearbystations = nearbysystem:GetStationPaths()
-		location = nearbystations[Engine.rand:Integer(1,#nearbystations)]
+		location = nearbysystems[Engine.rand:Integer(1,#nearbysystems)]
+		dist = location:DistanceTo(Game.system)
 		reward = ((dist / max_delivery_dist) * typical_reward * (1+risk) * (1.5+urgency) * Engine.rand:Number(0.8,1.2))
 		due = MissionUtils.TravelTime(dist, location) * (1.5-urgency) * Engine.rand:Number(0.9,1.1)
 	end
@@ -310,7 +305,7 @@ end
 
 local onCreateBB = function (station)
 	if nearbysystems == nil then
-		nearbysystems = Game.system:GetNearbySystems(max_delivery_dist, function (s) return #s:GetStationPaths() > 0 end)
+		nearbysystems = MissionUtils.GetNearbyStationPaths(Game.system, max_delivery_dist)
 	end
 	local nearbystations = findNearbyStations(station, 1000, 1.4960e11 * 20)
 	local num = Engine.rand:Integer(0, math.ceil(Game.system.population))
@@ -370,30 +365,16 @@ local onEnterSystem = function (player)
 			-- if there is some risk and still no ships, flip a tricoin
 			if ships < 1 and risk >= 0.2 and Engine.rand:Integer(2) == 1 then ships = 1 end
 
-			local shipdefs = utils.build_array(utils.filter(function (k,def) return def.tag == 'SHIP'
-				and def.hyperdriveClass > 0 and (def.roles.pirate or def.roles.mercenary) end, pairs(ShipDef)))
-			if #shipdefs == 0 then return end
-
 			local ship
 
 			while ships > 0 do
 				ships = ships-1
 
 				if Engine.rand:Number(1) <= risk then
-					local shipdef = shipdefs[Engine.rand:Integer(1,#shipdefs)]
-					local default_drive = Equipment.hyperspace['hyperdrive_'..tostring(shipdef.hyperdriveClass)]
+					local threat = 10.0 + mission.risk * 25.0
+					ship = ShipBuilder.MakeShipNear(Game.player, MissionUtils.ShipTemplates.WeakPirate, threat, 50, 100)
+					assert(ship)
 
-					local max_laser_size = shipdef.capacity - default_drive.capabilities.mass
-					local laserdefs = utils.build_array(utils.filter(
-						function (k,l) return l:IsValidSlot('laser_front') and l.capabilities.mass <= max_laser_size and l.l10n_key:find("PULSECANNON") end,
-						pairs(Equipment.laser)
-					))
-					local laserdef = laserdefs[Engine.rand:Integer(1,#laserdefs)]
-
-					ship = Space.SpawnShipNear(shipdef.id, Game.player, 50, 100)
-					ship:SetLabel(Ship.MakeRandomLabel())
-					ship:AddEquip(default_drive)
-					ship:AddEquip(laserdef)
 					ship:AIKill(Game.player)
 				end
 			end

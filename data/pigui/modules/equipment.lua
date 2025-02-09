@@ -1,7 +1,8 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Engine = require 'Engine'
+local Equipment = require 'Equipment'
 local Game = require 'Game'
 local utils = require 'utils'
 local Event = require 'Event'
@@ -59,8 +60,8 @@ end
 local function displayECM(uiPos)
 	player = Game.player
 	local current_view = Game.CurrentView()
-	if current_view == "world" then
-		local ecms = player:GetEquip('ecm')
+	if current_view == "WorldView" then
+		local ecms = player:GetComponent("EquipSet"):GetInstalledOfType("utility.ecm")
 		for i,ecm in ipairs(ecms) do
 			local size, clicked = iconEqButton(uiPos, icons[ecm.ecm_type], false, mainIconSize, "ECM", not player:IsECMReady(), mainBackgroundColor, mainForegroundColor, mainHoverColor, mainPressedColor, lec[ecm.hover_message])
 			uiPos.y = uiPos.y + size.y + 10
@@ -72,46 +73,56 @@ local function displayECM(uiPos)
 	return uiPos
 end
 
-local function getMissileIcon(missile)
-	if icons[missile.missile_type] then
-		return icons[missile.missile_type]
-	else
-		print("no icon for missile " .. missile.missile_type)
-		return icons.bullseye
-	end
-end
-
-local function fireMissile(index)
+---@param player Player
+---@param missile Equipment.MissileType
+local function fireMissile(player, missile)
 	if not player:GetCombatTarget() then
 		Game.AddCommsLogLine(lc.SELECT_A_TARGET, "", 1)
 	else
-		player:FireMissileAt(index, player:GetCombatTarget())
+		player:FireMissileAt(missile, player:GetCombatTarget())
 	end
 end
 
 local function displayMissiles(uiPos)
-	player = Game.player
-	local current_view = Game.CurrentView()
-	if current_view == "world" then
-		local missiles = player:GetEquip('missile')
-		local count = {}
-		local types = {}
-		local index = {}
-		for i,missile in ipairs(missiles) do
-			count[missile.missile_type] = (count[missile.missile_type] or 0) + 1
-			types[missile.missile_type] = missile
-			index[missile.missile_type] = i
+	if Game.CurrentView() == "WorldView" then
+
+		local paused = Game.paused
+		local docked = Game.player:GetDockedWith()
+
+		local missiles = Game.player:GetComponent("EquipSet"):GetInstalledOfType("missile") --[[@as Equipment.MissileType[] ]]
+
+		local groups = utils.automagic()
+
+		for i, missile in ipairs(missiles) do
+			local group = groups[missile.id]
+
+			group.count = (group.count or 0) + 1
+			group.size = missile.slot.size
+			group.proto = missile:GetPrototype()
+			group.index = i
 		end
-		for t,missile in pairs(types) do
-			local c = count[t]
-			local size,clicked = iconEqButton(uiPos, getMissileIcon(missile), true, mainWideIconSize, c, c == 0, mainBackgroundColor, mainForegroundColor, mainHoverColor, mainPressedColor, lec[missile.l10n_key])
+
+		local display = utils.build_array(pairs(groups))
+		table.sort(display, function(a, b) return
+			a.size < b.size or (a.size == b.size and (not a.guided and b.guided))
+		end)
+
+		for _, group in ipairs(display) do
+			local count = tostring(group.count)
+
+			-- TODO: slot size indicators should have a translated string at some point
+			local tooltip = "{} (S{})" % { group.proto:GetName(), group.size }
+			local size, clicked = iconEqButton(uiPos, icons[group.proto.icon_name], false, mainIconSize,
+				count, false, mainBackgroundColor, mainForegroundColor, mainHoverColor, mainPressedColor, tooltip)
 			uiPos.y = uiPos.y + size.y + 10
-			if clicked then
-				print("firing missile " .. t .. ", " .. index[t])
-				fireMissile(index[t])
+
+			if clicked and not paused and not docked then
+				fireMissile(Game.player, missiles[group.index])
 			end
 		end
+
 	end
+
 	return uiPos
 end
 

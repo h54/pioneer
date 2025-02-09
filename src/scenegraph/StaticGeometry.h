@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _STATICGEOMETRY_H
@@ -26,13 +26,13 @@ namespace SceneGraph {
 		};
 		StaticGeometry(Graphics::Renderer *r);
 		StaticGeometry(const StaticGeometry &, NodeCopyCache *cache = 0);
-		virtual Node *Clone(NodeCopyCache *cache = 0) override;
-		virtual const char *GetTypeName() const override { return "StaticGeometry"; }
-		virtual void Accept(NodeVisitor &nv) override;
-		virtual void Render(const matrix4x4f &trans, const RenderData *rd) override;
-		virtual void Render(const std::vector<matrix4x4f> &trans, const RenderData *rd) override;
+		Node *Clone(NodeCopyCache *cache = 0) override;
+		const char *GetTypeName() const override { return "StaticGeometry"; }
+		void Accept(NodeVisitor &nv) override;
+		void Render(const matrix4x4f &trans, const RenderData *rd) override;
+		void RenderInstanced(const std::vector<matrix4x4f> &trans, const RenderData *rd) override;
 
-		virtual void Save(NodeDatabase &) override;
+		void Save(NodeDatabase &) override;
 		static StaticGeometry *Load(NodeDatabase &);
 
 		void AddMesh(RefCountedPtr<Graphics::VertexBuffer>,

@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #ifndef _SERIALIZE_H
@@ -96,10 +96,10 @@ namespace Serializer {
 		void String(const char *s) { *this << s; }
 		void String(const std::string &s) { *this << s; }
 
-		void Vector2f(vector2f vec) { *this << vec; }
-		void Vector2d(vector2d vec) { *this << vec; }
-		void Vector3f(vector3f vec) { *this << vec; }
-		void Vector3d(vector3d vec) { *this << vec; }
+		void Vector2f(const vector2f &vec) { *this << vec; }
+		void Vector2d(const vector2d &vec) { *this << vec; }
+		void Vector3f(const vector3f &vec) { *this << vec; }
+		void Vector3d(const vector3d &vec) { *this << vec; }
 		void WrQuaternionf(const Quaternionf &q) { *this << q; }
 		void Color4UB(const Color &c) { *this << c; }
 		void WrSection(const std::string &section_label, const std::string &section_data) { *this << section_label << section_data; }
@@ -148,7 +148,7 @@ namespace Serializer {
 		template <typename T>
 		void readObject(T &out)
 		{
-#ifdef DEBUG
+#ifndef NDEBUG
 			if (!Check(sizeof(T)))
 				throw std::out_of_range("Serializer::Reader encountered truncated stream.");
 #endif

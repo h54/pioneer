@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "SectorView.h"
@@ -24,10 +24,11 @@
 #include "lua/LuaRef.h"
 #include "lua/LuaTable.h"
 #include "matrix4x4.h"
-#include <assert.h>
-#include <cmath>
-#include <sstream>
 
+#include "profiler/Profiler.h"
+
+#include <cassert>
+#include <cmath>
 #include <unordered_set>
 
 SectorView::~SectorView() {}
@@ -120,7 +121,7 @@ SectorMapContext SectorView::CreateMapContext()
 }
 
 SectorView::SectorView(Game *game) :
-	PiGuiView("sector-view"),
+	View("SectorView"),
 	InputBindings(Pi::input),
 	m_game(*game),
 	m_map(new SectorMap(CreateMapContext()))
@@ -144,7 +145,7 @@ SectorView::SectorView(Game *game) :
 }
 
 SectorView::SectorView(const Json &jsonObj, Game *game) :
-	PiGuiView("sector-view"),
+	View("SectorView"),
 	InputBindings(Pi::input),
 	m_game(*game)
 {
@@ -282,6 +283,9 @@ void SectorView::DrawPiGui()
 
 void SectorView::SetHyperspaceTarget(const SystemPath &path)
 {
+	if (m_hyperspaceTarget.IsSameSystem(path)) {
+		return;
+	}
 	m_hyperspaceTarget = path;
 	onHyperspaceTargetChanged.emit();
 }
@@ -372,7 +376,7 @@ void SectorView::ClearRoute()
 	m_setupLines = true;
 }
 
-std::vector<SystemPath> SectorView::GetRoute()
+const std::vector<SystemPath> &SectorView::GetRoute() const
 {
 	return m_route;
 }
@@ -382,7 +386,7 @@ const std::string SectorView::AutoRoute(const SystemPath &start, const SystemPat
 	const RefCountedPtr<const Sector> start_sec = m_game.GetGalaxy()->GetSector(start);
 	const RefCountedPtr<const Sector> target_sec = m_game.GetGalaxy()->GetSector(target);
 
-	LuaRef try_hdrive = LuaObject<Player>::CallMethod<LuaRef>(Pi::player, "GetEquip", "engine", 1);
+	LuaRef try_hdrive = LuaObject<Player>::CallMethod<LuaRef>(Pi::player, "GetInstalledHyperdrive");
 	if (try_hdrive.IsNil())
 		return "NO_DRIVE";
 	// Get the player's hyperdrive from Lua, later used to calculate the duration between systems

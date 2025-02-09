@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "LuaUtils.h"
@@ -301,6 +301,22 @@ static int l_readonly_table_ipairs(lua_State *l)
 	lua_getuservalue(l, 1);
 	lua_call(l, 1, 3);
 	return 3;
+}
+
+void pi_lua_push_date_time(lua_State *l, const Time::DateTime &dt)
+{
+	int year, month, day, hour, minute, second;
+	dt.GetDateParts(&year, &month, &day);
+	dt.GetTimeParts(&hour, &minute, &second);
+
+	lua_newtable(l);
+	pi_lua_settable(l, "year", year);
+	pi_lua_settable(l, "month", month);
+	pi_lua_settable(l, "day", day);
+	pi_lua_settable(l, "hour", hour);
+	pi_lua_settable(l, "minute", minute);
+	pi_lua_settable(l, "second", second);
+	pi_lua_settable(l, "timestamp", dt.ToGameTime());
 }
 
 void pi_lua_readonly_table_proxy(lua_State *l, int table_idx)

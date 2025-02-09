@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "StarSystemGenerator.h"
@@ -195,6 +195,7 @@ bool StarSystemFromSectorGenerator::Apply(Random &rng, RefCountedPtr<Galaxy> gal
 	assert(system->GetPath().systemIndex < sec->m_systems.size());
 	const Sector::System &secSys = sec->m_systems[system->GetPath().systemIndex];
 
+	system->SetPosition(secSys.GetPosition());
 	system->SetFaction(galaxy->GetFactions()->GetNearestClaimant(&secSys));
 	system->SetSeed(secSys.GetSeed());
 	system->SetName(secSys.GetName());
@@ -492,6 +493,10 @@ bool StarSystemCustomGenerator::Apply(Random &rng, RefCountedPtr<Galaxy> galaxy,
 	PROFILE_SCOPED()
 	RefCountedPtr<const Sector> sec = galaxy->GetSector(system->GetPath());
 	system->SetCustom(false, false);
+
+	// No system entry in the Sector, may be a "new" custom system from the Editor
+	if (system->GetPath().systemIndex >= sec->m_systems.size())
+		return true;
 
 	if (const CustomSystem *customSys = sec->m_systems[system->GetPath().systemIndex].GetCustomSystem())
 		config->isCustomOnly = ApplyToSystem(rng, system, customSys);
@@ -1220,25 +1225,31 @@ void StarSystemRandomGenerator::MakeBinaryPair(SystemBody *a, SystemBody *b, fix
 	fixed m = a->GetMassAsFixed() + b->GetMassAsFixed();
 	fixed a0 = b->GetMassAsFixed() / m;
 	fixed a1 = a->GetMassAsFixed() / m;
-	a->m_eccentricity = rand.NFixed(3);
+	fixed ecc = rand.NFixed(3);
+	fixed axis = fixed(0);
 	int mul = 1;
 
 	do {
 		switch (rand.Int32(3)) {
-		case 2: a->m_semiMajorAxis = fixed(rand.Int32(100, 10000), 100); break;
-		case 1: a->m_semiMajorAxis = fixed(rand.Int32(10, 1000), 100); break;
+		case 2: axis = fixed(rand.Int32(100, 10000), 100); break;
+		case 1: axis = fixed(rand.Int32(10, 1000), 100); break;
 		default:
-		case 0: a->m_semiMajorAxis = fixed(rand.Int32(1, 100), 100); break;
+		case 0: axis = fixed(rand.Int32(1, 100), 100); break;
 		}
-		a->m_semiMajorAxis *= mul;
+		axis *= mul;
 		mul *= 2;
-	} while (a->m_semiMajorAxis - a->m_eccentricity * a->m_semiMajorAxis < minDist);
+	} while (axis - ecc * axis < minDist);
+
+	a->m_semiMajorAxis = axis * a0;
+	b->m_semiMajorAxis = axis * a1;
+	a->m_eccentricity = ecc;
+	b->m_eccentricity = ecc;
 
 	const double total_mass = a->GetMass() + b->GetMass();
-	const double e = a->m_eccentricity.ToDouble();
+	const double e = ecc.ToDouble();
 
-	a->m_orbit.SetShapeAroundBarycentre(AU * (a->m_semiMajorAxis * a0).ToDouble(), total_mass, a->GetMass(), e);
-	b->m_orbit.SetShapeAroundBarycentre(AU * (a->m_semiMajorAxis * a1).ToDouble(), total_mass, b->GetMass(), e);
+	a->m_orbit.SetShapeAroundBarycentre(AU * a->m_semiMajorAxis.ToDouble(), total_mass, a->GetMass(), e);
+	b->m_orbit.SetShapeAroundBarycentre(AU * b->m_semiMajorAxis.ToDouble(), total_mass, b->GetMass(), e);
 
 	const float rotX = -0.5f * float(M_PI); //(float)(rand.Double()*M_PI/2.0);
 	const float rotY = static_cast<float>(rand.Double(M_PI));
@@ -1253,8 +1264,9 @@ void StarSystemRandomGenerator::MakeBinaryPair(SystemBody *a, SystemBody *b, fix
 	b->m_orbitalOffset = fixed(int(round(rotY * 10000)), 10000);
 	a->m_orbitalOffset = fixed(int(round(rotY * 10000)), 10000);
 
-	fixed orbMin = a->m_semiMajorAxis - a->m_eccentricity * a->m_semiMajorAxis;
-	fixed orbMax = 2 * a->m_semiMajorAxis - orbMin;
+	fixed orbMin = axis - ecc * axis;
+	fixed orbMax = 2 * axis - orbMin;
+
 	a->m_orbMin = orbMin;
 	b->m_orbMin = orbMin;
 	a->m_orbMax = orbMax;
@@ -1632,6 +1644,8 @@ void PopulateStarSystemGenerator::PopulateAddStations(SystemBody *sbody, StarSys
 	// with respect to well-spaced orbital shells (e.g. a "station belt" around a high-population planet)
 	// as well as generating station placement for e.g. research, industrial, or communications stations
 
+	fixed totalPop = system->GetTotalPop();
+
 	if (sbody->GetPopulationAsFixed() < fixed(1, 1000)) return;
 	fixed orbMaxS = fixed(1, 4) * fixed(CalcHillRadius(sbody));
 	fixed orbMinS = fixed().FromDouble((sbody->CalcAtmosphereParams().atmosRadius + +500000.0 / EARTH_RADIUS)) * AU_EARTH_RADIUS;
@@ -1736,6 +1750,7 @@ void PopulateStarSystemGenerator::PopulateAddStations(SystemBody *sbody, StarSys
 				sp->m_orbMax = sp->GetSemiMajorAxisAsFixed();
 
 				sp->m_name = gen_unique_station_name(sp, system, namerand);
+				PopulateStage1(sp, system, totalPop);
 			}
 		}
 	}
@@ -1760,6 +1775,7 @@ void PopulateStarSystemGenerator::PopulateAddStations(SystemBody *sbody, StarSys
 		PositionSettlementOnPlanet(sp, previousOrbits);
 		sbody->m_children.insert(sbody->m_children.begin(), sp);
 		system->AddSpaceStation(sp);
+		PopulateStage1(sp, system, totalPop);
 	}
 
 	// guarantee that there is always a star port on a populated world
@@ -1775,7 +1791,10 @@ void PopulateStarSystemGenerator::PopulateAddStations(SystemBody *sbody, StarSys
 		PositionSettlementOnPlanet(sp, previousOrbits);
 		sbody->m_children.insert(sbody->m_children.begin(), sp);
 		system->AddSpaceStation(sp);
+		PopulateStage1(sp, system, totalPop);
 	}
+
+	system->SetTotalPop(totalPop);
 }
 
 void PopulateStarSystemGenerator::SetSysPolit(RefCountedPtr<Galaxy> galaxy, RefCountedPtr<StarSystem::GeneratorAPI> system, const fixed &human_infestedness)

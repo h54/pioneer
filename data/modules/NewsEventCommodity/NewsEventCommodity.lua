@@ -1,4 +1,4 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 -- Create a news event on the BBS (to do: place it on
@@ -313,7 +313,7 @@ local onEnterSystem = function (player)
 
 	-- create a news event with low probability
 	if Engine.rand:Number(0,1) < eventProbability and
-		#news <= maxNumberNews and Game.GetStartTime() > minTime then
+		#news < maxNumberNews and Game.GetStartTime() > minTime then
 		createNewsEvent(timeInHyperspace)
 	end
 
@@ -457,21 +457,21 @@ Event.Register("onGameEnd", onGameEnd)
 Serializer:Register("NewsEventCommodity", serialize, unserialize)
 
 
-debugView.registerTab(
-	"News", function ()
-		if Game.player == nil then return end
-		if not ui.beginTabItem("News") then return end
-
-
+debugView.registerTab("news", {
+	label = "News",
+	icon = ui.theme.icons.info,
+	show = function() return Game.player end,
+	draw = function ()
+		ui.textWrapped("Note: Display of News on the BBS will not update until docking at new station.")
 		if ui.button("Make News", Vector2(100, 0)) then
 			createNewsEvent(0)
 		end
 		ui.sameLine()
-		ui.text("Radius: " .. maxDist .. " ly. (Usually no News before: " .. Format.DateOnly(minTime) ..")")
-		ui.sameLine()
-		ui.text("and max simultaneous news events: " .. maxNumberNews)
+		ui.text("Radius: " .. maxDist .. " ly.")
 
-		for _ ,n in pairs(news) do
+		ui.textWrapped("There are usually no News before: " .. Format.DateOnly(minTime) .." and max simultaneous news events: " .. maxNumberNews)
+
+		for i ,n in pairs(news) do
 			local system_name = n.syspath:GetStarSystem().name
 			local commodity_name = Commodities[n.cargo]:GetName()
 
@@ -489,7 +489,8 @@ debugView.registerTab(
 						cargo = commodity_name,
 						date  = Format.DateOnly(n.date),
 				})
-				ui.text(headline)
+				ui.textWrapped(headline)
+				ui.spacing()
 
 				local newsbody = string.interp(
 					flavours[n.flavour].newsbody,
@@ -502,10 +503,20 @@ debugView.registerTab(
 				ui.textWrapped(newsbody)
 
 				ui.text("Flavour idx: " .. n.flavour)
-				ui.text("Price multiplier: " .. n.multiplier .. " on cargo: " .. n.cargo)
+				-- Be compatible with saves before 2024-07-10 version:
+				if n.multiplier then
+					ui.text("Price multiplier: " .. n.multiplier .. " on cargo: " .. n.cargo)
+				else
+					ui.text("Price demand: " .. n.demand .. " on cargo: " .. n.cargo)
+				end
 				ui.text("Start: " .. Format.DateOnly(n.date))
 				ui.text("End: " .. Format.DateOnly(n.expires))
+
+				if ui.button("Delete news", Vector2(100, 0)) then
+					table.remove(news, i)
+				end
 				ui.separator()
 			end
 		end
-end)
+	end
+})

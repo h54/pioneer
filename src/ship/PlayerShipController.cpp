@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "PlayerShipController.h"
@@ -15,8 +15,8 @@
 #include "Space.h"
 #include "SystemView.h"
 #include "WorldView.h"
-#include "core/OS.h"
 #include "lua/LuaObject.h"
+#include "ship/GunManager.h"
 #include "ship/ShipController.h"
 #include "Sensors.h"
 
@@ -708,7 +708,8 @@ void PlayerShipController::PollControls(const float timeStep, int *mouseMotion, 
 		wantAngVel += Util::NeededAngVelocityToFaceDirection(*this, timeStep, GetMouseDir(), outParams.angPower);
 	}
 
-	if (InputBindings.killRot->IsActive()) SetFlightControlState(CONTROL_FIXHEADING_KILLROT);
+	if (InputBindings.killRot->IsActive() && GetFlightControlState() != CONTROL_FIXSPEED)
+		SetFlightControlState(CONTROL_FIXHEADING_KILLROT);
 
 	outParams.desiredAngular = wantAngVel;
 
@@ -968,6 +969,7 @@ void PlayerShipController::SetCombatTarget(Body *const target, bool setFollowTo)
 		SetFollowTarget(target);
 
 	m_combatTarget = target;
+	m_ship->GetComponent<GunManager>()->SetTrackingTarget(target);
 	onChangeTarget.emit();
 }
 

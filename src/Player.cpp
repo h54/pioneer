@@ -1,9 +1,8 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Player.h"
 
-#include "FixedGuns.h"
 #include "Frame.h"
 #include "Game.h"
 #include "GameConfig.h"
@@ -32,7 +31,6 @@ Player::Player(const ShipType::Id &shipId) :
 {
 	SetController(new PlayerShipController());
 	InitCockpit();
-	m_fixedGuns->SetShouldUseLeadCalc(true);
 	m_atmosAccel = vector3d(0.0f, 0.0f, 0.0f);
 }
 
@@ -40,7 +38,6 @@ Player::Player(const Json &jsonObj, Space *space) :
 	Ship(jsonObj, space)
 {
 	InitCockpit();
-	m_fixedGuns->SetShouldUseLeadCalc(true);
 }
 
 void Player::SetShipType(const ShipType::Id &shipId)
@@ -128,9 +125,9 @@ bool Player::SetWheelState(bool down)
 }
 
 //XXX all ships should make this sound
-Missile *Player::SpawnMissile(ShipType::Id missile_type, int power)
+Missile *Player::SpawnMissile(const MissileDef &def, Body *target)
 {
-	Missile *m = Ship::SpawnMissile(missile_type, power);
+	Missile *m = Ship::SpawnMissile(def, target);
 	if (m)
 		Sound::PlaySfx("Missile_launch", 1.0f, 1.0f, 0);
 	return m;
@@ -209,8 +206,6 @@ void Player::OnEnterHyperspace()
 void Player::OnEnterSystem()
 {
 	m_controller->SetFlightControlState(CONTROL_MANUAL);
-	//XXX don't call sectorview from here, use signals instead
-	Pi::game->GetSectorView()->ResetHyperspaceTarget();
 }
 
 //temporary targeting stuff
@@ -282,10 +277,6 @@ void Player::StaticUpdate(const float timeStep)
 {
 	Ship::StaticUpdate(timeStep);
 
-	for (size_t i = 0; i < GUNMOUNT_MAX; i++)
-		if (m_fixedGuns->IsGunMounted(i))
-			m_fixedGuns->UpdateLead(timeStep, i, this, GetCombatTarget());
-
 	// now insert the latest value
 	vector3d current_atmosAccel = GetAtmosForce() * (1.0 / GetMass());
 	m_atmosJerk = (current_atmosAccel - m_atmosAccel) * Pi::game->GetInvTimeAccelRate();
@@ -304,8 +295,7 @@ void Player::StaticUpdate(const float timeStep)
 			m_creakSound.VolumeAnimate(creakVol, creakVol, 0.3f, 0.3f);
 		}
 	} else if (m_creakSound.IsPlaying()) {
-		m_creakSound.VolumeAnimate(0.0f, 0.0f, 1.5f, 1.5f);
-		m_creakSound.SetOp(Sound::OP_STOP_AT_TARGET_VOLUME);
+		m_creakSound.FadeOut(1.5f);
 	}
 	m_atmosAccel = current_atmosAccel;
 

@@ -1,11 +1,10 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Lua.h"
 #include "Pi.h"
 
 #include "LuaColor.h"
-#include "LuaConsole.h"
 #include "LuaConstants.h"
 #include "LuaDev.h"
 #include "LuaEconomy.h"
@@ -35,8 +34,9 @@
 #include "SystemView.h"
 
 #include "galaxy/StarSystem.h"
-#include "pigui/LuaPiGui.h"
 #include "scenegraph/Lua.h"
+
+#include "profiler/Profiler.h"
 
 namespace Lua {
 
@@ -44,9 +44,9 @@ namespace Lua {
 
 	void InitMath();
 
-	void Init()
+	void Init(JobQueue *asyncJobQueue)
 	{
-		manager = new LuaManager();
+		manager = new LuaManager(asyncJobQueue);
 		InitMath();
 	}
 
@@ -97,6 +97,8 @@ namespace Lua {
 		LuaObject<Faction>::RegisterClass();
 		LuaObject<Galaxy>::RegisterClass();
 
+		LuaObject<GunManager>::RegisterClass();
+
 		Pi::luaSerializer = new LuaSerializer();
 		Pi::luaTimer = new LuaTimer();
 
@@ -142,6 +144,7 @@ namespace Lua {
 	void UninitModules()
 	{
 		LuaEvent::Uninit();
+		LuaInput::Uninit();
 
 		delete Pi::luaNameGen;
 

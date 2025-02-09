@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "LuaSpace.h"
@@ -318,7 +318,8 @@ static int l_space_put_ship_on_route(lua_State *l)
 		// update velocity direction
 		ship->SetVelocity((targpos - ship->GetPosition()).Normalized() * pp.getVel() + targetbody->GetVelocityRelTo(ship->GetFrame()));
 	}
-	LUA_DEBUG_END(l, 1);
+
+	LUA_DEBUG_END(l, 0);
 	return 0;
 }
 
@@ -827,6 +828,8 @@ static int l_space_spawn_cargo_near(lua_State *l)
 	} else {
 		c_body = new CargoBody(model, LuaRef(l, 1));
 	}
+	lua_pop(l, 1); // pop model_name
+
 	Body *nearbody = LuaObject<Body>::CheckFromLua(2);
 	float min_dist = luaL_checknumber(l, 3);
 	float max_dist = luaL_checknumber(l, 4);

@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "GuiApplication.h"
@@ -19,7 +19,7 @@
 #include "profiler/Profiler.h"
 #include "versioningInfo.h"
 
-GuiApplication::GuiApplication(std::string title) :
+GuiApplication::GuiApplication(const std::string &title) :
 	Application(), m_applicationTitle(title)
 {}
 

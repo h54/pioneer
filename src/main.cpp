@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "Game.h"
@@ -186,7 +186,7 @@ start:
 			// Galaxy generation is (mostly) self-contained, no need to e.g.
 			// turn on the renderer or load UI for this.
 
-			Lua::Init();
+			Lua::Init(Pi::GetAsyncJobQueue());
 			Pi::luaNameGen = new LuaNameGen(Lua::manager);
 			LuaObject<SystemBody>::RegisterClass();
 			FILE *file = filename == "-" ? stdout : fopen(filename.c_str(), "w");

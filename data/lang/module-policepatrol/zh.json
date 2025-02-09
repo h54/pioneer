@@ -51,6 +51,22 @@
     "description": "",
     "message": "您已进入 {system} 星系, 请遵守当地法律! "
   },
+  "RESTRICTIONS_ESTABLISHED_1": {
+    "description": "",
+    "message": "威胁已被消除。{ship_label}，现在武器射击限制生效。"
+  },
+  "RESTRICTIONS_ESTABLISHED_2": {
+    "description": "",
+    "message": "{ship_label}，停止开火，停止开火！"
+  },
+  "RESTRICTIONS_WITHDRAWN_1": {
+    "description": "",
+    "message": "{ship_label}，你被授权开火。"
+  },
+  "RESTRICTIONS_WITHDRAWN_2": {
+    "description": "",
+    "message": "{ship_label}，随意开火！"
+  },
   "TAKE_A_HIKE": {
     "description": "",
     "message": "好, 这次算你过关了, 赶快滚吧! "

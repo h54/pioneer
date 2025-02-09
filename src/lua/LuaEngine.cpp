@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "LuaEngine.h"
@@ -100,6 +100,28 @@ static int l_engine_attr_ticks(lua_State *l)
 static int l_engine_attr_time(lua_State *l)
 {
 	lua_pushnumber(l, Pi::GetApp()->GetTime());
+	return 1;
+}
+
+/*
+ * Attribute: nowTime
+ *
+ * Returns an arbitrary value in seconds relative to some epoch corresponding
+ * to the precise time this value is accessed. This should be used only for
+ * profiling and debugging purposes to calculate a duration in sub-millisecond
+ * units.
+ *
+ * Availability:
+ *
+ *   October 2024
+ *
+ * Status:
+ *
+ *   experimental
+ */
+static int l_engine_attr_now_time(lua_State *l)
+{
+	lua_pushnumber(l, Profiler::Clock::ms(Profiler::Clock::getticks()) / 1000.0);
 	return 1;
 }
 
@@ -577,6 +599,21 @@ static int l_engine_set_autosave_enabled(lua_State *l)
 		return luaL_error(l, "SetAutosaveEnabled takes one boolean argument");
 	const bool enabled = lua_toboolean(l, 1);
 	Pi::config->SetInt("EnableAutosave", (enabled ? 1 : 0));
+	Pi::config->Save();
+	return 0;
+}
+static int l_engine_get_reset_view_on_hyperspace_exit(lua_State *l)
+{
+	lua_pushboolean(l, Pi::config->Int("ResetViewOnHyperspaceExit") != 0);
+	return 1;
+}
+
+static int l_engine_set_reset_view_on_hyperspace_exit(lua_State *l)
+{
+	if (lua_isnone(l, 1))
+		return luaL_error(l, "SetResetViewOnHyperspaceExit takes one boolean argument");
+	const bool enabled = lua_toboolean(l, 1);
+	Pi::config->SetInt("ResetViewOnHyperspaceExit", (enabled ? 1 : 0));
 	Pi::config->Save();
 	return 0;
 }
@@ -1104,6 +1141,9 @@ void LuaEngine::Register()
 		{ "GetAutosaveEnabled", l_engine_get_autosave_enabled },
 		{ "SetAutosaveEnabled", l_engine_set_autosave_enabled },
 
+		{ "GetResetViewOnHyperspaceExit", l_engine_get_reset_view_on_hyperspace_exit },
+		{ "SetResetViewOnHyperspaceExit", l_engine_set_reset_view_on_hyperspace_exit },
+
 		{ "GetDisplayHudTrails", l_engine_get_display_hud_trails },
 		{ "SetDisplayHudTrails", l_engine_set_display_hud_trails },
 
@@ -1153,6 +1193,7 @@ void LuaEngine::Register()
 		{ "rand", l_engine_attr_rand },
 		{ "ticks", l_engine_attr_ticks },
 		{ "time", l_engine_attr_time },
+		{ "nowTime", l_engine_attr_now_time },
 		{ "frameTime", l_engine_attr_frame_time },
 		{ "pigui", l_engine_attr_pigui },
 		{ "version", l_engine_attr_version },

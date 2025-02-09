@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "FaceParts.h"
@@ -55,8 +55,8 @@ namespace {
 			prefix(prefix)
 		{}
 
-		virtual void OnRun() override;
-		virtual void OnFinish() override
+		void OnRun() override;
+		void OnFinish() override
 		{
 			for (auto &part : cache)
 				output.push_back(std::move(part));
@@ -73,7 +73,7 @@ namespace {
 
 	struct ScanGenderedPartJob : public ScanPartJob {
 		using ScanPartJob::ScanPartJob;
-		virtual void OnRun() override;
+		void OnRun() override;
 	};
 
 	class PartDb {

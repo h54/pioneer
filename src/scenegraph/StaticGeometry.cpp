@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "StaticGeometry.h"
@@ -35,7 +35,7 @@ namespace SceneGraph {
 
 	Node *StaticGeometry::Clone(NodeCopyCache *cache)
 	{
-		return this; //geometries are shared
+		return new StaticGeometry(*this, cache); // geometries cannot be shared if material overriding is supported. See Shields.cpp
 	}
 
 	void StaticGeometry::Accept(NodeVisitor &nv)
@@ -54,7 +54,7 @@ namespace SceneGraph {
 		//DrawBoundingBox(m_boundingBox);
 	}
 
-	void StaticGeometry::Render(const std::vector<matrix4x4f> &trans, const RenderData *rd)
+	void StaticGeometry::RenderInstanced(const std::vector<matrix4x4f> &trans, const RenderData *rd)
 	{
 		PROFILE_SCOPED()
 		Graphics::Renderer *r = GetRenderer();
@@ -69,6 +69,8 @@ namespace SceneGraph {
 		Graphics::InstanceBuffer *ib = m_instBuffer.Get();
 		matrix4x4f *pBuffer = ib->Map(Graphics::BUFFER_MAP_WRITE);
 		if (pBuffer) {
+			PROFILE_SCOPED_DESC("Copy Instance Data")
+
 			// Copy the transforms into the buffer
 			for (const matrix4x4f &mt : trans) {
 				(*pBuffer) = mt;
@@ -77,9 +79,6 @@ namespace SceneGraph {
 			ib->Unmap();
 			ib->SetInstanceCount(numTrans);
 		}
-
-		// we'll set the transformation within the vertex shader so identity the global one
-		r->SetTransform(matrix4x4f::Identity());
 
 		if (m_instanceMaterials.empty()) {
 			// process each mesh

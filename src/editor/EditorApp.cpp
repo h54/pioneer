@@ -1,4 +1,4 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "EditorApp.h"
@@ -108,7 +108,7 @@ void EditorApp::OnStartup()
 	m_editorCfg->Save(); // write defaults if the file doesn't exist
 
 	EnumStrings::Init();
-	Lua::Init();
+	Lua::Init(GetAsyncJobQueue());
 	ModManager::Init();
 
 	ModManager::LoadMods(m_editorCfg.get());

@@ -1,9 +1,11 @@
-// Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+// Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 // Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 #include "LuaShipDef.h"
 #include "EnumStrings.h"
+#include "JsonUtils.h"
 #include "Lua.h"
+#include "LuaJson.h"
 #include "LuaUtils.h"
 #include "ShipType.h"
 
@@ -184,21 +186,6 @@
  */
 
 /*
- * Attribute: equipSlotCapacity
- *
- * Table keyed on <Constants.EquipSlot>, containing maximum number of items
- * that can be held in that slot (ignoring mass)
- *
- * Availability:
- *
- *   alpha 32
- *
- * Status:
- *
- *   experimental
- */
-
-/*
  * Attribute: shipClass
  *
  * Class of the ship (e.g. "medium_courier").
@@ -228,6 +215,16 @@
  *   experimental
  */
 
+/*
+ * Attribute: shieldModelName
+ *
+ * Name for the shield model of this ship. Can be useful for debug purposes to determine the shield model used by the ship.
+ *
+ * Status:
+ *
+ *   experimental
+ */
+
 void LuaShipDef::Register()
 {
 	lua_State *l = Lua::manager->GetLuaState();
@@ -241,14 +238,17 @@ void LuaShipDef::Register()
 		lua_newtable(l);
 
 		pi_lua_settable(l, "id", iter.first.c_str());
+		pi_lua_settable(l, "path", st.definitionPath.c_str());
 		pi_lua_settable(l, "name", st.name.c_str());
 		pi_lua_settable(l, "shipClass", st.shipClass.c_str());
 		pi_lua_settable(l, "manufacturer", st.manufacturer.c_str());
 		pi_lua_settable(l, "modelName", st.modelName.c_str());
+		pi_lua_settable(l, "shieldModelName", st.shieldName.c_str());
 		pi_lua_settable(l, "cockpitName", st.cockpitName.c_str());
 		pi_lua_settable(l, "tag", EnumStrings::GetString("ShipTypeTag", st.tag));
 		pi_lua_settable(l, "angularThrust", st.angThrust);
-		pi_lua_settable(l, "capacity", st.capacity);
+		pi_lua_settable(l, "equipCapacity", st.capacity);
+		pi_lua_settable(l, "cargo", st.cargo);
 		pi_lua_settable(l, "hullMass", st.hullMass);
 		pi_lua_settable(l, "fuelTankMass", st.fuelTankMass);
 		pi_lua_settable(l, "basePrice", st.baseprice);
@@ -268,7 +268,7 @@ void LuaShipDef::Register()
 		pi_lua_readonly_table_proxy(l, -1);
 		lua_setfield(l, -3, "linearThrust");
 		lua_pop(l, 1);
-		
+
 		lua_newtable(l);
 		for (int t = Thruster::THRUSTER_REVERSE; t < Thruster::THRUSTER_MAX; t++)
 			pi_lua_settable(l, EnumStrings::GetString("ShipTypeThruster", t), st.linAccelerationCap[t]);
@@ -276,24 +276,7 @@ void LuaShipDef::Register()
 		lua_setfield(l, -3, "linAccelerationCap");
 		lua_pop(l, 1);
 
-		lua_newtable(l);
-		for (auto it = st.slots.cbegin(); it != st.slots.cend(); ++it) {
-			pi_lua_settable(l, it->first.c_str(), it->second);
-		}
-		pi_lua_readonly_table_proxy(l, -1);
-		luaL_getmetafield(l, -1, "__index");
-		if (!lua_getmetatable(l, -1)) {
-			lua_newtable(l);
-		}
-		pi_lua_import(l, "EquipSet");
-		luaL_getsubtable(l, -1, "default");
-		lua_setfield(l, -3, "__index");
-		lua_pop(l, 1);
-		lua_setmetatable(l, -2);
-		lua_pop(l, 1);
-		lua_setfield(l, -3, "equipSlotCapacity");
-		lua_pop(l, 1);
-
+		// Set up roles table
 		lua_newtable(l);
 		for (auto it = st.roles.cbegin(); it != st.roles.cend(); ++it) {
 			pi_lua_settable(l, it->first.c_str(), it->second);
@@ -301,6 +284,10 @@ void LuaShipDef::Register()
 		pi_lua_readonly_table_proxy(l, -1);
 		lua_setfield(l, -3, "roles");
 		lua_pop(l, 1);
+
+		Json data = JsonUtils::LoadJsonDataFile(st.definitionPath);
+		LuaJson::PushToLua(l, data);
+		lua_setfield(l, -2, "raw");
 
 		pi_lua_readonly_table_proxy(l, -1);
 		lua_setfield(l, -3, iter.first.c_str());

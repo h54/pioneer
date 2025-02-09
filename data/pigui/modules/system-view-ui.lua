@@ -1,4 +1,4 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Game = require 'Game'
@@ -57,7 +57,7 @@ local svColor = {
 	PLANNER_ORBIT = colors.systemMapPlannerOrbit,
 	PLAYER = colors.systemMapPlayer,
 	PLAYER_ORBIT = colors.systemMapPlayerOrbit,
-	SELECTED = ui.theme.styleColors.gray_200,
+	SELECTED = ui.theme.colors.font,
 	SELECTED_SHIP_ORBIT = colors.systemMapSelectedShipOrbit,
 	SHIP = colors.systemMapShip,
 	SHIP_ORBIT = colors.systemMapShipOrbit,
@@ -73,17 +73,17 @@ local colorset = ui.theme.buttonColors
 
 local buttonState = {
 	SHIPS_OFF     = { icon = icons.ships_no_orbits,    state = colorset.transparent },
-	SHIPS_ON      = { icon = icons.ships_no_orbits,    state = colorset.semi_transparent },
+	SHIPS_ON      = { icon = icons.ships_no_orbits,    state = colorset.dark },
 	SHIPS_ORBITS  = { icon = icons.ships_with_orbits },
 	LAG_OFF       = { icon = icons.lagrange_no_text,   state = colorset.transparent },
-	LAG_ICON      = { icon = icons.lagrange_no_text,   state = colorset.semi_transparent },
+	LAG_ICON      = { icon = icons.lagrange_no_text,   state = colorset.dark },
 	LAG_ICONTEXT  = { icon = icons.lagrange_with_text },
 	GRID_OFF      = { icon = icons.toggle_grid,        state = colorset.transparent },
-	GRID_ON       = { icon = icons.toggle_grid,        state = colorset.semi_transparent },
+	GRID_ON       = { icon = icons.toggle_grid,        state = colorset.dark },
 	GRID_AND_LEGS = { icon = icons.toggle_grid },
 	[true]        = {                                  state = colorset.default },
 	[false]       = {                                  state = colorset.transparent },
-	DISABLED      = {                                  state = colorset.semi_transparent }
+	DISABLED      = {                                  state = colorset.dark }
 }
 
 local ship_drawing,  nextShipDrawings = loop3items("SHIPS_OFF", "SHIPS_ON", "SHIPS_ORBITS")
@@ -270,7 +270,8 @@ end
 
 function Windows.edgeButtons.Show()
 	local isOrrery = systemView:GetDisplayMode() == "Orrery"
-	-- view control buttons
+	local isCurrent = systemView:GetSystemSelectionMode() == "CURRENT_SYSTEM"
+
 	if ui.mainMenuButton(icons.reset_view, luc.RESET_ORIENTATION_AND_ZOOM) then
 		systemView:SetVisibility("RESET_VIEW")
 	end
@@ -279,13 +280,19 @@ function Windows.edgeButtons.Show()
 	ui.mainMenuButton(icons.search_lens, luc.ZOOM)
 	systemView:SetZoomMode(ui.isItemActive())
 
-	if isOrrery and ui.mainMenuButton(icons.system_overview, luc.HUD_BUTTON_SWITCH_TO_SYSTEM_OVERVIEW) then
-		systemView:SetDisplayMode('Atlas')
-	end
-	if not isOrrery and ui.mainMenuButton(icons.system_map, luc.HUD_BUTTON_SWITCH_TO_SYSTEM_MAP) then
-		systemView:SetDisplayMode('Orrery')
-	end
 	ui.newLine()
+
+	drawWindowControlButton(Windows.objectInfo, icons.info, lc.OBJECT_INFO)
+
+	-- view control buttons
+	if not isCurrent and ui.mainMenuButton(icons.planet_grid, luc.HUD_BUTTON_SWITCH_TO_CURRENT_SYSTEM) then
+		systemView:SetSystemSelectionMode("CURRENT_SYSTEM")
+	end
+
+	if isCurrent and ui.mainMenuButton(icons.galaxy_map, luc.HUD_BUTTON_SWITCH_TO_SELECTED_SYSTEM) then
+		systemView:SetSystemSelectionMode("SELECTED_SYSTEM")
+	end
+
 	-- visibility control buttons
 	if isOrrery then
 		if ui.mainMenuButton(buttonState[ship_drawing].icon, lc.SHIPS_DISPLAY_MODE_TOGGLE, buttonState[ship_drawing].state) then
@@ -300,11 +307,6 @@ function Windows.edgeButtons.Show()
 			show_grid = nextShowGrid[show_grid]
 			systemView:SetVisibility(show_grid)
 		end
-		ui.newLine()
-	end
-
-	drawWindowControlButton(Windows.objectInfo, icons.info, lc.OBJECT_INFO)
-	if isOrrery then
 		drawWindowControlButton(Windows.orbitPlanner, icons.semi_major_axis, lc.ORBIT_PLANNER)
 	end
 end
@@ -413,7 +415,12 @@ local function getColor(obj)
 end
 
 function Windows.systemName.Show()
-	local path = Game.sectorView:GetSelectedSystemPath()
+	local path
+	if systemView:GetSystemSelectionMode() == "SELECTED_SYSTEM" then
+		path = Game.sectorView:GetSelectedSystemPath()
+	else
+		path = systemView:GetSystem().path
+	end
 	ui.text(ui.Format.SystemPath(path))
 end
 
@@ -837,17 +844,18 @@ function Windows.objectInfo:Show()
 			self.data = data
 
 		elseif obj.ref:IsShip() then -- physical body
+			---@cast body Ship
 			-- TODO: the advanced target scanner should add additional data here,
 			-- but we really do not want to hardcode that here. there should be
 			-- some kind of hook that the target scanner can hook into to display
 			-- more info here.
 			-- This is what should be inserted:
 			table.insert(data, { name = luc.SHIP_TYPE, value = body:GetShipType() })
-			if player:GetEquipCountOccupied('target_scanner') > 0 or player:GetEquipCountOccupied('advanced_target_scanner') > 0 then
-				local hd = body:GetEquip("engine", 1)
+			if (player["target_scanner_level_cap"] or 0) > 0 then
+				local hd = body:GetInstalledHyperdrive()
 				table.insert(data, { name = luc.HYPERDRIVE, value = hd and hd:GetName() or lc.NO_HYPERDRIVE })
-				table.insert(data, { name = luc.MASS, value = Format.MassTonnes(body:GetStats().staticMass) })
-				table.insert(data, { name = luc.CARGO, value = Format.MassTonnes(body:GetStats().usedCargo) })
+				table.insert(data, { name = luc.MASS, value = Format.MassTonnes(body.staticMass) })
+				table.insert(data, { name = luc.CARGO, value = Format.MassTonnes(body.usedCargo) })
 			end
 		else
 			data = {}
@@ -867,7 +875,7 @@ end
 
 function systemViewLayout:onUpdateWindowPivots(w)
 	w.systemName.anchors   = { ui.anchor.center, ui.anchor.top }
-	w.edgeButtons.anchors  = { ui.anchor.right,  ui.anchor.center }
+	w.edgeButtons.anchors  = { ui.anchor.right,  ui.anchor.top }
 	w.timeButtons.anchors  = { ui.anchor.right,  ui.anchor.bottom }
 	w.orbitPlanner.anchors = { ui.anchor.right,  ui.anchor.bottom }
 	w.objectInfo.anchors   = { ui.anchor.right,  ui.anchor.bottom }
@@ -877,7 +885,7 @@ end
 function systemViewLayout:onUpdateWindowConstraints(w)
 	-- resizing, aligning windows - static
 	w.systemName.pos.x = ui.screenWidth * 0.5
-	w.systemName.pos.y = styles.MainButtonSize.y + (styles.MainButtonPadding + styles.WindowPadding.y) * 2 -- matches fx-window.lua
+	w.systemName.pos.y = styles.MainButtonSize.y + styles.WindowPadding.y * 2 -- matches fx-window.lua
 	w.systemName.size.x = 0 -- adaptive width
 
 	w.edgeButtons.size.y = 0 -- adaptive height
@@ -894,7 +902,7 @@ local function displaySystemViewUI()
 	if not ui.shouldDrawUI() then return end
 
 	player = Game.player
-	if Game.CurrentView() == "system" then
+	if Game.CurrentView() == "SystemView" then
 		if ui.isKeyReleased(ui.keys.tab) then
 			systemViewLayout.enabled = not systemViewLayout.enabled
 		end
@@ -907,7 +915,7 @@ local function displaySystemViewUI()
 		displayOnScreenObjects()
 
 		if ui.escapeKeyReleased() then
-			Game.SetView("sector")
+			Game.SetView("SectorView")
 		end
 
 		if ui.ctrlHeld() and ui.isKeyReleased(ui.keys.delete) then
@@ -920,6 +928,6 @@ end
 
 Event.Register("onGameStart", onGameStart)
 Event.Register("onEnterSystem", onEnterSystem)
-ui.registerHandler("system-view", ui.makeFullScreenHandler("system-view", displaySystemViewUI))
+ui.registerHandler("SystemView", ui.makeFullScreenHandler("SystemView", displaySystemViewUI))
 
 return {}

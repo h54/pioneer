@@ -1,4 +1,4 @@
--- Copyright © 2008-2024 Pioneer Developers. See AUTHORS.txt for details
+-- Copyright © 2008-2025 Pioneer Developers. See AUTHORS.txt for details
 -- Licensed under the terms of the GPL v3. See licenses/GPL-3.txt
 
 local Game   = require "Game"
@@ -8,12 +8,18 @@ local utils  = require "utils"
 local AU = 149598000000
 local AU_sqrt = math.sqrt(AU)
 
-local Days = 24*60*60
+local Hours = 60*60
+local Days = 24*Hours
+local Weeks = 7*Days
 
 local MissionUtils = {
 	AU = AU,
-	Days = Days
+	Days = Days,
+	Hours = Hours,
+	Weeks = Weeks,
 }
+
+MissionUtils.ShipTemplates = require 'modules.MissionUtils.ShipTemplates'
 
 ---@class MissionUtils.Calculator
 ---@field New fun(): MissionUtils.Calculator
